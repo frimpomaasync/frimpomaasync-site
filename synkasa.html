@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<!-- ✅ diffed vs Brand Facts + Retired/Excluded: cream #FDF6ED + copper #C9975B · system fonts only (no CDN) · SynKasa = ONE product under NaNa Frimpomaa · live pricing only ($555/$999/$2,222 + $99/$222/$444; Som $33; builds $144/$344/$644) · sign-off "one simple tool you own." · faceless/value-led -->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SynKasa — Try the AI Receptionist Live | NaNa Frimpomaa</title>
+<meta name="description" content="SynKasa is a done-for-you AI receptionist for small businesses — it answers messages, books appointments, and captures leads 24/7. Try the live demo right here.">
+<meta name="theme-color" content="#FDF6ED">
+<link rel="canonical" href="https://frimpomaasync.com/synkasa.html">
+<meta property="og:title" content="Try SynKasa live — the AI receptionist that never sleeps">
+<meta property="og:description" content="Answers messages, books appointments, captures leads — 24/7. Tap the chat bubble and try it.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://frimpomaasync.com/synkasa.html">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --cream:#FDF6ED; --cream-hi:#FBF8F2; --ink:#16140F; --muted:#6B6455;
+    --copper:#C9975B; --copper-soft:#E4C79A; --copper-deep:#A8763B; --border:#E7DDCC;
+    --navy:#16233B; --navy-2:#131D31; --navy-3:#0C1322; --navy-text:#EFE7D8;
+    --sys:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    --mono:ui-monospace,'SF Mono','SFMono-Regular',Menlo,Monaco,Consolas,'Courier New',monospace;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    background-color:#FDF6ED;
+    background-image:radial-gradient(circle at 50% -6%, #FBF8F2 0%, #FDF6ED 60%);
+    color:var(--ink); font-family:var(--sys); line-height:1.6;
+    -webkit-font-smoothing:antialiased; overflow-x:hidden;
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+  a{color:inherit}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+
+  /* nav */
+  .nav{display:flex;align-items:center;justify-content:space-between;padding:20px 22px;max-width:1080px;margin:0 auto}
+  .brand{font-weight:700;letter-spacing:.5px;font-size:18px}
+  .brand .dot{color:var(--copper)}
+  .nav a.back{font-size:13px;color:var(--muted);text-decoration:none}
+  .nav a.back:hover{color:var(--copper)}
+
+  /* hero */
+  .hero{text-align:center;padding:46px 22px 30px}
+  .eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--copper-deep);margin-bottom:16px}
+  .hero h1{font-size:clamp(30px,6vw,54px);line-height:1.08;font-weight:800;letter-spacing:-.5px;margin-bottom:16px}
+  .hero h1 em{font-style:normal;color:var(--copper-deep)}
+  .hero p.sub{font-size:clamp(15px,2.3vw,18px);color:var(--muted);max-width:560px;margin:0 auto 26px}
+  .cta-row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .btn{display:inline-flex;align-items:center;gap:8px;padding:13px 24px;border-radius:10px;font-weight:700;font-size:14px;text-decoration:none;border:1px solid transparent;cursor:pointer}
+  .btn.primary{background:var(--copper);color:#1a1200}
+  .btn.primary:hover{background:var(--copper-deep);color:#fff}
+  .btn.ghost{background:transparent;color:var(--ink);border-color:var(--border)}
+  .btn.ghost:hover{border-color:var(--copper)}
+  .pulse-hint{margin-top:18px;font-size:13px;color:var(--muted)}
+  .pulse-hint b{color:var(--copper-deep)}
+
+  /* section shells */
+  section.block{padding:40px 0}
+  .kicker{font-family:var(--mono);font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--copper-deep);margin-bottom:10px;text-align:center}
+  h2.title{font-size:clamp(24px,4vw,34px);font-weight:800;text-align:center;letter-spacing:-.4px;margin-bottom:8px}
+  p.lead{text-align:center;color:var(--muted);max-width:560px;margin:0 auto 28px}
+
+  /* capability cards */
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+  .card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:22px;transition:transform .2s,box-shadow .2s}
+  .card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(168,118,59,.12)}
+  .card .ic{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--copper),var(--copper-deep));display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+  .card h3{font-size:16px;margin-bottom:6px}
+  .card p{font-size:14px;color:var(--muted)}
+
+  /* use-case switcher */
+  .demo-wrap{background:linear-gradient(160deg,var(--navy),var(--navy-3));border-radius:22px;padding:30px 22px;color:var(--navy-text);position:relative;overflow:hidden}
+  .demo-wrap::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 82% 8%,rgba(201,151,91,.18),transparent 45%);pointer-events:none}
+  .demo-wrap .kicker{color:var(--copper-soft)}
+  .demo-wrap h2.title,.demo-wrap p.lead{color:var(--navy-text)}
+  .demo-wrap p.lead{color:#C9BEA8}
+  .chips{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-bottom:8px;position:relative;z-index:1}
+  .chip{padding:9px 15px;border-radius:999px;border:1px solid rgba(228,199,154,.35);background:rgba(255,255,255,.04);color:var(--navy-text);font-size:13px;font-weight:600;cursor:pointer;transition:.18s}
+  .chip:hover{border-color:var(--copper-soft)}
+  .chip.active{background:var(--copper);color:#1a1200;border-color:var(--copper)}
+  .preset-note{text-align:center;font-size:13px;color:#C9BEA8;margin-top:14px;position:relative;z-index:1}
+  .preset-note b{color:var(--copper-soft)}
+
+  /* pricing */
+  .price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+  .price{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;text-align:center}
+  .price.feat{border-color:var(--copper);box-shadow:0 12px 30px rgba(168,118,59,.14);position:relative}
+  .price.feat .tag{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--copper);color:#1a1200;font-size:11px;font-weight:700;padding:3px 12px;border-radius:999px;letter-spacing:.5px}
+  .price .plan{font-family:var(--mono);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;color:var(--copper-deep);margin-bottom:10px}
+  .price .amt{font-size:30px;font-weight:800}
+  .price .amt small{font-size:14px;color:var(--muted);font-weight:600}
+  .price .mo{font-size:13px;color:var(--muted);margin-top:4px}
+  .price ul{list-style:none;margin:16px 0 0;text-align:left;font-size:13.5px}
+  .price li{padding:6px 0 6px 22px;position:relative;color:#40382c}
+  .price li::before{content:"✓";position:absolute;left:0;color:var(--copper-deep);font-weight:700}
+
+  /* cta band */
+  .band{background:linear-gradient(135deg,var(--navy),var(--navy-3));border-radius:22px;padding:38px 26px;text-align:center;color:var(--navy-text)}
+  .band h2{font-size:clamp(22px,3.6vw,30px);font-weight:800;margin-bottom:10px}
+  .band p{color:#C9BEA8;max-width:520px;margin:0 auto 22px}
+
+  /* footer */
+  footer{text-align:center;padding:40px 22px 60px;color:var(--muted);font-size:13px}
+  footer .sign{font-size:15px;color:var(--ink);margin-bottom:8px}
+  footer .sign b{color:var(--copper-deep)}
+  footer a{color:var(--muted);text-decoration:none;margin:0 8px}
+  footer a:hover{color:var(--copper)}
+
+  /* ===== chat widget ===== */
+  #sk-bubble{position:fixed;right:20px;bottom:20px;width:64px;height:64px;border-radius:50%;
+    background:linear-gradient(135deg,var(--copper),var(--copper-deep));color:#fff;border:none;cursor:pointer;
+    box-shadow:0 10px 28px rgba(168,118,59,.42);z-index:9998;display:flex;align-items:center;justify-content:center;
+    font-size:26px;transition:transform .2s}
+  #sk-bubble:hover{transform:scale(1.07)}
+  #sk-bubble .badge{position:absolute;top:-3px;right:-3px;width:20px;height:20px;border-radius:50%;background:#E0533B;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--cream)}
+  #sk-panel{position:fixed;right:20px;bottom:96px;width:min(380px,calc(100vw - 32px));height:min(560px,calc(100vh - 130px));
+    background:#fff;border-radius:20px;box-shadow:0 24px 60px rgba(12,19,34,.34);z-index:9999;display:none;flex-direction:column;overflow:hidden;border:1px solid var(--border)}
+  #sk-panel.open{display:flex;animation:skpop .22s ease}
+  @keyframes skpop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  .sk-head{background:linear-gradient(135deg,var(--navy),var(--navy-2));padding:16px 18px;color:var(--navy-text);display:flex;align-items:center;gap:12px}
+  .sk-head .av{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--copper),var(--copper-deep));display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;flex-shrink:0}
+  .sk-head .who{flex:1;min-width:0}
+  .sk-head .who .n{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sk-head .who .s{font-size:11px;color:#9FE6B5;display:flex;align-items:center;gap:5px}
+  .sk-head .who .s::before{content:"";width:7px;height:7px;border-radius:50%;background:#4ADE80;box-shadow:0 0 0 0 rgba(74,222,128,.6);animation:live 2s infinite}
+  @keyframes live{0%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}70%{box-shadow:0 0 0 7px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+  .sk-head .x{background:none;border:none;color:rgba(255,255,255,.6);font-size:22px;cursor:pointer;line-height:1;padding:2px 6px}
+  .sk-head .x:hover{color:#fff}
+  .sk-body{flex:1;overflow-y:auto;padding:16px;background:#F7F4EE;display:flex;flex-direction:column;gap:10px}
+  .msg{max-width:82%;padding:10px 13px;border-radius:14px;font-size:14px;line-height:1.5;white-space:pre-wrap;word-wrap:break-word}
+  .msg.bot{background:#fff;border:1px solid var(--border);border-bottom-left-radius:4px;align-self:flex-start;color:#2b2419}
+  .msg.me{background:linear-gradient(135deg,var(--copper),var(--copper-deep));color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+  .msg a{color:var(--copper-deep);font-weight:600}
+  .msg.me a{color:#fff}
+  .typing{align-self:flex-start;background:#fff;border:1px solid var(--border);border-radius:14px;border-bottom-left-radius:4px;padding:12px 14px;display:flex;gap:4px}
+  .typing span{width:7px;height:7px;border-radius:50%;background:var(--copper);animation:bnc 1.2s infinite}
+  .typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+  @keyframes bnc{0%,60%,100%{transform:translateY(0);opacity:.5}30%{transform:translateY(-5px);opacity:1}}
+  .sk-quick{display:flex;gap:7px;flex-wrap:wrap;padding:0 16px 8px;background:#F7F4EE}
+  .sk-quick button{background:#fff;border:1px solid var(--copper-soft);color:var(--copper-deep);font-size:12.5px;font-weight:600;padding:7px 12px;border-radius:999px;cursor:pointer}
+  .sk-quick button:hover{background:var(--copper);color:#fff;border-color:var(--copper)}
+  .sk-input{display:flex;gap:8px;padding:12px;border-top:1px solid var(--border);background:#fff}
+  .sk-input input{flex:1;border:1px solid var(--border);border-radius:999px;padding:11px 15px;font-size:14px;font-family:var(--sys);outline:none}
+  .sk-input input:focus{border-color:var(--copper)}
+  .sk-input button{background:var(--copper);border:none;color:#fff;width:42px;height:42px;border-radius:50%;cursor:pointer;font-size:17px;flex-shrink:0}
+  .sk-input button:hover{background:var(--copper-deep)}
+  .sk-foot{text-align:center;font-size:10.5px;color:var(--muted);padding:7px;background:#fff;border-top:1px solid #F0E9DC}
+  .sk-foot a{color:var(--copper-deep);text-decoration:none;font-weight:600}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" style="text-decoration:none"><span class="brand">NaNa Frimpomaa<span class="dot">.</span></span></a>
+  <a class="back" href="index.html">← back to frimpomaasync.com</a>
+</nav>
+
+<header class="hero">
+  <div class="eyebrow">Live demo · no sign-up</div>
+  <h1>Meet <em>SynKasa</em> — the receptionist<br>that never sleeps.</h1>
+  <p class="sub">A done-for-you AI receptionist for small businesses. It answers every message, books appointments, and captures leads — 24/7, in your voice. This one is answering as my business right now.</p>
+  <div class="cta-row">
+    <button class="btn primary" onclick="skOpen()">💬 Try it live</button>
+    <a class="btn ghost" href="https://synkasa.com" target="_blank" rel="noopener">Get SynKasa →</a>
+  </div>
+  <div class="pulse-hint">Tap the <b>copper bubble</b> in the corner and ask it anything.</div>
+</header>
+
+<div class="wrap">
+
+  <section class="block">
+    <div class="kicker">What it does</div>
+    <h2 class="title">Everything a front desk does — without the front desk</h2>
+    <p class="lead">SynKasa reads like a real receptionist because it knows your business cold. Here's what it handles the second a customer reaches out.</p>
+    <div class="grid">
+      <div class="card"><div class="ic">💬</div><h3>Answers 24/7</h3><p>Every DM, text, and website message gets a warm, on-brand reply in seconds — 3am included.</p></div>
+      <div class="card"><div class="ic">📅</div><h3>Books appointments</h3><p>Walks the customer to a time and drops the booking link — no back-and-forth.</p></div>
+      <div class="card"><div class="ic">🎯</div><h3>Captures leads</h3><p>Grabs the name + contact of anyone interested so a hot lead never slips away.</p></div>
+      <div class="card"><div class="ic">💰</div><h3>Quotes prices</h3><p>Knows your services and prices and answers "how much?" instantly and consistently.</p></div>
+      <div class="card"><div class="ic">❓</div><h3>Handles FAQs</h3><p>Hours, location, parking, walk-ins, payment methods — answered before you'd even see the message.</p></div>
+      <div class="card"><div class="ic">🤝</div><h3>Hands off to you</h3><p>When it's a real human moment, it takes a message and passes it straight to you.</p></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="demo-wrap">
+      <div class="kicker">Use cases · one AI, every business</div>
+      <h2 class="title">See SynKasa run any business</h2>
+      <p class="lead">Pick a business below — the live chat instantly becomes that receptionist. Great for seeing how it'd sound for you.</p>
+      <div class="chips" id="sk-presets"></div>
+      <div class="preset-note" id="sk-preset-note"></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="kicker">The offer</div>
+    <h2 class="title">Done-for-you. Live in 48 hours.</h2>
+    <p class="lead">Built for minority-owned small businesses. You do nothing — I build it, wire it to your site and socials, and hand you the keys.</p>
+    <div class="price-grid">
+      <div class="price">
+        <div class="plan">Starter</div>
+        <div class="amt">$555<small> setup</small></div>
+        <div class="mo">+ $99 / month</div>
+        <ul><li>AI receptionist on 1 channel</li><li>Answers + FAQs + hours</li><li>Lead capture to your inbox</li><li>Live in 48 hours</li></ul>
+      </div>
+      <div class="price feat">
+        <div class="tag">MOST POPULAR</div>
+        <div class="plan">Growth</div>
+        <div class="amt">$999<small> setup</small></div>
+        <div class="mo">+ $222 / month</div>
+        <ul><li>Everything in Starter</li><li>Appointment booking</li><li>Website + Instagram + Facebook</li><li>Monthly tune-ups</li></ul>
+      </div>
+      <div class="price">
+        <div class="plan">Signature</div>
+        <div class="amt">$2,222<small> setup</small></div>
+        <div class="mo">+ $444 / month</div>
+        <ul><li>Everything in Growth</li><li>All channels + custom flows</li><li>Priority support</li><li>Hands-on optimization</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="block">
+    <div class="band">
+      <h2>Want this answering for your business?</h2>
+      <p>Book a free 15-minute build call. I'll show you exactly how SynKasa would sound for you — then build it in 48 hours.</p>
+      <div class="cta-row">
+        <a class="btn primary" href="https://calendar.app.google/p9Te84R34vPm2U3z9" target="_blank" rel="noopener">Book a free 15-min call</a>
+        <a class="btn ghost" style="color:var(--navy-text);border-color:rgba(228,199,154,.4)" href="https://synkasa.com" target="_blank" rel="noopener">Visit synkasa.com</a>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="sign">Calm isn't a personality trait. It's <b>one simple tool you own.</b></div>
+  <div>NaNa Frimpomaa · @frimpomaasync</div>
+  <div style="margin-top:8px">
+    <a href="index.html">Home</a> · <a href="products.html">Products</a> · <a href="https://synkasa.com" target="_blank" rel="noopener">SynKasa</a> · <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a>
+  </div>
+</footer>
+
+<!-- ============ WIDGET ============ -->
+<button id="sk-bubble" aria-label="Open SynKasa chat" onclick="skToggle()">💬<span class="badge">1</span></button>
+<div id="sk-panel" role="dialog" aria-label="SynKasa chat">
+  <div class="sk-head">
+    <div class="av" id="sk-av">S</div>
+    <div class="who"><div class="n" id="sk-name">SynKasa</div><div class="s">Online now</div></div>
+    <button class="x" aria-label="Close chat" onclick="skToggle()">×</button>
+  </div>
+  <div class="sk-body" id="sk-body"></div>
+  <div class="sk-quick" id="sk-quick"></div>
+  <div class="sk-input">
+    <input id="sk-text" type="text" placeholder="Type a message…" autocomplete="off"
+      onkeydown="if(event.key==='Enter')skSend()">
+    <button aria-label="Send" onclick="skSend()">➤</button>
+  </div>
+  <div class="sk-foot">Powered by <a href="https://synkasa.com" target="_blank" rel="noopener">SynKasa</a> — your AI receptionist</div>
+</div>
+
+<script>
+/* ============================================================
+   SynKasa self-contained demo widget — no backend, no API key.
+   Answers from a per-business knowledge base (scripted intents).
+   Default business = NaNa Frimpomaa / frimpomaasync.com.
+   ============================================================ */
+var BOOK = "https://calendar.app.google/p9Te84R34vPm2U3z9";
+
+var PRESETS = {
+  frimpomaa: {
+    label:"NaNa Frimpomaa", av:"N",
+    name:"NaNa's Assistant",
+    greeting:"Hey — welcome 👋 I'm NaNa's AI assistant. I can tell you about Som, Soma, custom builds, or SynKasa, or get you booked for a free call. What are you here for?",
+    booking:BOOK, email:"hello@frimpomaasync.com",
+    services:[
+      {name:"Som (capture tool)",price:"$33 · one-time"},
+      {name:"Soma (free demo)",price:"free"},
+      {name:"Spark build",price:"$144"},
+      {name:"Build",price:"$344"},
+      {name:"System build",price:"$644"},
+      {name:"SynKasa AI receptionist",price:"from $555 setup + $99/mo"}
+    ],
+    faqs:[
+      {keys:["build","make","offer","services","service","create"],a:"I build small AI tools and systems that do real jobs. The ready-made ones are Som ($33, captures anything before it slips away) and Soma (a free demo). I also do custom builds — Spark $144, Build $344, System $644 — and SynKasa, a done-for-you AI receptionist for small businesses."},
+      {keys:["soma"],a:"Soma is my free demo — it shows you the 'type it once, watch it land everywhere' idea with zero commitment. Want me to point you to it?"},
+      {keys:["som"],a:"Som is a $33 one-time tool — it catches the things you'd normally lose: ideas, links, follow-ups. Type it once and it's held for you. Want the link to grab it?"},
+      {keys:["synkasa","receptionist","chatbot","assistant","answer"],a:"SynKasa is exactly what you're talking to — a done-for-you AI receptionist. It answers messages, books appointments, and captures leads 24/7, built for your business in 48 hours. Setup is from $555 + $99/mo. Want a free call to see it built for you?"},
+      {keys:["custom","website","site","app","tool"],a:"Custom builds come in three sizes: Spark $144 (one focused tool), Build $344 (a small system), System $644 (the full thing). Tell me what you're trying to make and I'll point you to the right one — or book a free call."},
+      {keys:["who","nana","frimpomaa","yourself"],a:"NaNa Frimpomaa — a solo founder who builds calm AI tools for people and small businesses. Everything here is real and live. What can I help you with?"}
+    ],
+    quick:[
+      {label:"What can you build?",msg:"What do you build?"},
+      {label:"What's SynKasa?",msg:"What is SynKasa?"},
+      {label:"Pricing",msg:"How much does it cost?"},
+      {label:"Book a call",msg:"I'd like to book a call"}
+    ]
+  },
+  barbershop:{
+    label:"Barbershop", av:"K",
+    name:"King's Barbershop",
+    greeting:"Hey! Welcome to King's Barbershop 💈 How can I help — a cut, a time, or a price?",
+    booking:BOOK, email:"hello@kingsbarbershop.com",
+    services:[{name:"Classic Cut",price:"$35 · 30 min"},{name:"Fade + Line Up",price:"$45 · 45 min"},{name:"Hot Towel Shave",price:"$40 · 30 min"},{name:"Full Groom",price:"$80 · 75 min"},{name:"Kids Cut (under 12)",price:"$25"}],
+    faqs:[
+      {keys:["walk","in","appointment","wait"],a:"Walk-ins are always welcome 💈 Saturday mornings run about a 20-min wait; appointments get priority. Want me to book you a time?"},
+      {keys:["hour","open","close","time"],a:"We're open Mon–Fri 9AM–8PM and Sat 8AM–6PM. Closed Sundays. Want to grab a slot?"},
+      {keys:["kid","child","son"],a:"Absolutely — kids under 12 are $25 and our barbers are great with them. Want to book?"},
+      {keys:["card","cash","pay","apple"],a:"We take all major cards, cash, Apple Pay, and Cash App."}
+    ],
+    quick:[{label:"Walk-ins?",msg:"Do you take walk-ins?"},{label:"Prices",msg:"What are your prices?"},{label:"Book a cut",msg:"I'd like to book an appointment"},{label:"Hours",msg:"What are your hours?"}]
+  },
+  braids:{
+    label:"Braids & Hair", av:"A",
+    name:"Adwoa Braiding Studio",
+    greeting:"Hi love 🌸 Welcome to Adwoa Braiding Studio. Looking for a style, a price, or a time?",
+    booking:BOOK, email:"hello@adwoabraids.com",
+    services:[{name:"Knotless Braids",price:"$180 · 4–5 hrs"},{name:"Box Braids",price:"$150 · 4 hrs"},{name:"Cornrows",price:"$90 · 2 hrs"},{name:"Kids Braids",price:"$70"},{name:"Takedown / Wash",price:"$45"}],
+    faqs:[
+      {keys:["hair","provide","bring","own"],a:"Hair is included for knotless and box braids 🌸 If you have a specific brand or color you love, feel free to bring it. Want me to book you in?"},
+      {keys:["how","long","time","hour"],a:"Most styles take 2–5 hours depending on size and length. Knotless runs 4–5 hrs. I can find you a start time — want one?"},
+      {keys:["deposit","hold","cancel"],a:"A $30 deposit holds your slot and goes toward your total. Want me to send the booking link?"},
+      {keys:["kid","child","daughter"],a:"Yes! Kids braids start at $70. Want to book a time for them?"}
+    ],
+    quick:[{label:"Styles & prices",msg:"What are your prices?"},{label:"Do you provide hair?",msg:"Do you provide the hair?"},{label:"How long?",msg:"How long does it take?"},{label:"Book me in",msg:"I'd like to book an appointment"}]
+  },
+  cleaning:{
+    label:"Cleaning", av:"A",
+    name:"Asase Cleans",
+    greeting:"Hi there ✨ Welcome to Asase Cleans. I can give you a quote, our services, or get you scheduled. What do you need?",
+    booking:BOOK, email:"hello@asasecleans.com",
+    services:[{name:"Standard Home Clean",price:"from $120"},{name:"Deep Clean",price:"from $220"},{name:"Move-In / Move-Out",price:"from $280"},{name:"Office Clean",price:"custom quote"},{name:"Recurring (weekly/biweekly)",price:"10% off"}],
+    faqs:[
+      {keys:["quote","price","cost","how","much"],a:"A standard home clean starts at $120, deep cleans from $220, and move-in/out from $280 ✨ For an exact quote I just need your home size — or I can book a quick call. Which works?"},
+      {keys:["supply","product","bring","own"],a:"We bring all our own supplies and eco-friendly products — you don't lift a finger. Want to get scheduled?"},
+      {keys:["recur","weekly","monthly","regular"],a:"Recurring cleans (weekly or biweekly) get 10% off every visit. Want me to set that up?"},
+      {keys:["area","where","travel","location"],a:"We cover the metro area and nearby suburbs. Tell me your zip and I'll confirm — or book a call."}
+    ],
+    quick:[{label:"Get a quote",msg:"How much for a clean?"},{label:"Do you bring supplies?",msg:"Do you bring your own supplies?"},{label:"Recurring?",msg:"Do you offer recurring cleans?"},{label:"Book a clean",msg:"I'd like to book a cleaning"}]
+  },
+  catering:{
+    label:"Catering", av:"M",
+    name:"Mama's Kitchen Catering",
+    greeting:"Welcome to Mama's Kitchen 🍲 Planning something? I can share our menu, pricing, or check your date.",
+    booking:BOOK, email:"hello@mamaskitchen.com",
+    services:[{name:"Drop-off Catering",price:"from $14/person"},{name:"Full-Service Event",price:"from $28/person"},{name:"Jollof + Sides Tray",price:"$85 · feeds 8–10"},{name:"Small Bites Package",price:"from $10/person"},{name:"Custom Menu",price:"let's talk"}],
+    faqs:[
+      {keys:["menu","food","serve","dish"],a:"We do West African + soul food — jollof, grilled proteins, sides, small bites, and custom menus 🍲 Want the full menu or a quote for your headcount?"},
+      {keys:["how","many","people","headcount","guest"],a:"We cater anywhere from 10 to 300+ guests. Drop-off starts at $14/person, full-service from $28. What's your date and headcount?"},
+      {keys:["date","available","book","when"],a:"I can check your date right now — go ahead and book a quick call and we'll lock it in. Weekends fill fast!"},
+      {keys:["deposit","pay","cost"],a:"A 50% deposit holds your date; the balance is due 3 days before. Want me to get you scheduled?"}
+    ],
+    quick:[{label:"See the menu",msg:"What's on your menu?"},{label:"Price per person",msg:"How much per person?"},{label:"Check my date",msg:"Is my date available?"},{label:"Book a call",msg:"I'd like to book a call"}]
+  },
+  nails:{
+    label:"Nail Salon", av:"L",
+    name:"Lush Nail Bar",
+    greeting:"Hi gorgeous 💅 Welcome to Lush Nail Bar. Want a set, a price, or a time?",
+    booking:BOOK, email:"hello@lushnailbar.com",
+    services:[{name:"Gel Manicure",price:"$45 · 45 min"},{name:"Full Acrylic Set",price:"$65 · 75 min"},{name:"Pedicure (Spa)",price:"$55 · 50 min"},{name:"Nail Art (per nail)",price:"from $5"},{name:"Soak-off + Repair",price:"$20"}],
+    faqs:[
+      {keys:["walk","in","appointment","wait"],a:"We take walk-ins when we can, but appointments guarantee your spot 💅 Want me to book you?"},
+      {keys:["how","long","time"],a:"Gel mani runs about 45 min, a full acrylic set about 75. Want me to find you a time?"},
+      {keys:["design","art","nail art"],a:"Nail art starts at $5 a nail — bring an inspo pic and we'll recreate it! Want to book?"},
+      {keys:["hour","open","close"],a:"We're open Tue–Sun 10AM–7PM, closed Mondays. Want a slot?"}
+    ],
+    quick:[{label:"Prices",msg:"What are your prices?"},{label:"Walk-ins?",msg:"Do you take walk-ins?"},{label:"Nail art",msg:"Do you do nail art?"},{label:"Book me",msg:"I'd like to book an appointment"}]
+  }
+};
+
+var cur = "frimpomaa";
+var convo = {mode:"idle", lead:{}};
+var started = false;
+
+/* ---------- UI plumbing ---------- */
+function el(id){return document.getElementById(id);}
+function skToggle(){var p=el('sk-panel');if(p.classList.contains('open')){p.classList.remove('open');}else{p.classList.add('open');el('sk-bubble').querySelector('.badge').style.display='none';if(!started){started=true;greet();}el('sk-text').focus();}}
+function skOpen(){var p=el('sk-panel');if(!p.classList.contains('open')){skToggle();}window.scrollTo({top:0,behavior:'smooth'});}
+function bubble(text,who){var b=el('sk-body');var d=document.createElement('div');d.className='msg '+(who||'bot');d.innerHTML=text;b.appendChild(d);b.scrollTop=b.scrollHeight;}
+function typing(){var b=el('sk-body');var t=document.createElement('div');t.className='typing';t.id='sk-typing';t.innerHTML='<span></span><span></span><span></span>';b.appendChild(t);b.scrollTop=b.scrollHeight;}
+function untyping(){var t=el('sk-typing');if(t)t.remove();}
+function say(text,who){typing();setTimeout(function(){untyping();bubble(text,who||'bot');},520);}
+
+function renderQuick(){var q=el('sk-quick');q.innerHTML='';PRESETS[cur].quick.forEach(function(item){var btn=document.createElement('button');btn.textContent=item.label;btn.onclick=function(){handle(item.msg);};q.appendChild(btn);});}
+
+function applyPreset(key){cur=key;convo={mode:"idle",lead:{}};started=true;var p=PRESETS[key];el('sk-name').textContent=p.name;el('sk-av').textContent=p.av;el('sk-body').innerHTML='';renderQuick();bubble(p.greeting,'bot');document.querySelectorAll('#sk-presets .chip').forEach(function(c){c.classList.toggle('active',c.dataset.k===key);});el('sk-preset-note').innerHTML='Now chatting as <b>'+p.name+'</b>. Open the chat and ask it anything.';var pan=el('sk-panel');if(!pan.classList.contains('open')){skToggle();}}
+
+function greet(){renderQuick();bubble(PRESETS[cur].greeting,'bot');}
+
+/* ---------- intent engine ---------- */
+function norm(s){return (' '+s.toLowerCase()+' ').replace(/[^a-z0-9\s]/g,' ');}
+function has(t){for(var i=1;i<arguments.length;i++){var a=arguments[i];var hit=a.indexOf(' ')>-1?(t.indexOf(a)>-1):(t.indexOf(' '+a+' ')>-1);if(hit)return true;}return false;}
+
+function servicesReply(){var p=PRESETS[cur];var lines=p.services.map(function(s){return '• '+s.name+' — '+s.price;}).join('\n');return lines+'\n\nWant me to book you a time?';}
+
+function handle(text){
+  bubble(text.replace(/</g,'&lt;'),'me');
+  el('sk-text').value='';
+  var p=PRESETS[cur];var t=norm(text);
+
+  /* lead-capture state machine */
+  if(convo.mode==='lead-name'){convo.lead.name=text.trim();convo.mode='lead-contact';say("Lovely to meet you, "+convo.lead.name+"! What's the best email or phone to reach you?");return;}
+  if(convo.mode==='lead-contact'){convo.lead.contact=text.trim();convo.mode='idle';
+    var mail='mailto:'+p.email+'?subject='+encodeURIComponent('New lead from SynKasa demo')+'&body='+encodeURIComponent('Name: '+convo.lead.name+'\nContact: '+convo.lead.contact);
+    try{var L=JSON.parse(localStorage.getItem('sk_leads')||'[]');L.push({biz:p.name,name:convo.lead.name,contact:convo.lead.contact,at:new Date().toISOString()});localStorage.setItem('sk_leads',JSON.stringify(L));}catch(e){}
+    say("Perfect — got it, "+convo.lead.name+" ✅ I've passed your details along and someone will reach out shortly. Want to grab a time now so you don't wait?\n\n👉 <a href='"+p.booking+"' target='_blank' rel='noopener'>Pick a time</a>");
+    return;}
+
+  /* booking / get-started intent */
+  if(has(t,'book','appointment','schedule','get started','sign up','start','reserve','slot','come in')){
+    convo.mode='lead-name';
+    say("Love it 🎉 I can set that up. First — what's your name?");
+    return;}
+
+  /* pricing */
+  if(has(t,'price','pricing','cost','how much','rate','fee','charge','$')){say(servicesReply());return;}
+
+  /* hours */
+  if(has(t,'hour','open','close','when are you','what time')){
+    var hoursFaq=p.faqs.find(function(f){return f.keys.indexOf('hour')>-1||f.keys.indexOf('open')>-1;});
+    if(hoursFaq){say(hoursFaq.a);return;}}
+
+  /* contact */
+  if(has(t,'email','phone','call you','reach','contact','number')){say("You can reach us at "+p.email+", or I can take your details right here — want to do that? Just say 'book me'.");return;}
+
+  /* greeting */
+  if(has(t,'hi','hello','hey','yo','good morning','good evening')&&text.trim().length<14){say(p.greeting);return;}
+
+  /* thanks */
+  if(has(t,'thank','thanks','appreciate')){say("Anytime 💛 Want me to get you booked before you go?");return;}
+
+  /* score faqs */
+  var best=null,bestScore=0;
+  p.faqs.forEach(function(f){var sc=0;f.keys.forEach(function(k){if(t.indexOf(k)>-1)sc++;});if(sc>bestScore){bestScore=sc;best=f;}});
+  if(best&&bestScore>0){say(best.a);return;}
+
+  /* fallback */
+  say("Great question — let me get that right for you. I can help with prices, hours, what we offer, or booking you in. Which would you like?\n\nOr reach us directly at "+p.email+".");
+}
+
+function skSend(){var v=el('sk-text').value.trim();if(!v)return;handle(v);}
+
+/* ---------- presets bar ---------- */
+(function(){
+  var bar=el('sk-presets');
+  Object.keys(PRESETS).forEach(function(k){
+    var c=document.createElement('button');c.className='chip'+(k===cur?' active':'');c.dataset.k=k;
+    c.textContent=(k==='frimpomaa'?'⭐ '+PRESETS[k].label:PRESETS[k].label);
+    c.onclick=function(){applyPreset(k);};bar.appendChild(c);
+  });
+  el('sk-preset-note').innerHTML='Now chatting as <b>'+PRESETS[cur].name+'</b> (my own business). Tap a chip to switch, then open the chat.';
+})();
+</script>
+</body>
+</html>
