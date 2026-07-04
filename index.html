@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>NaNa Frimpomaa — Builder & Systems Translator</title>
+<meta name="description" content="NaNa Frimpomaa builds simple custom AI tools, dashboards, and automations you own outright — no subscriptions, no templates. Book a free 15-minute build call.">
+<link rel="canonical" href="https://frimpomaasync.com/">
+<meta name="theme-color" content="#FDF6ED">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NaNa Frimpomaa">
+<meta property="og:title" content="NaNa Frimpomaa — Builder & Systems Translator">
+<meta property="og:description" content="Simple custom AI tools, dashboards, and automations you own outright. No subscriptions, no templates.">
+<meta property="og:url" content="https://frimpomaasync.com/">
+<meta property="og:image" content="https://frimpomaasync.com/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="NaNa Frimpomaa — Builder & Systems Translator">
+<meta name="twitter:description" content="Simple custom AI tools, dashboards, and automations you own outright.">
+<meta name="twitter:image" content="https://frimpomaasync.com/og-cover.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"NaNa Frimpomaa","url":"https://frimpomaasync.com/","jobTitle":"Builder & Systems Translator","description":"Builds simple custom AI tools, dashboards, and automations you own outright.","sameAs":["https://www.instagram.com/frimpomaasync","https://www.facebook.com/share/18qcDjQme8/?mibextid=wwXIfr","https://youtube.com/@frimpomaasync","https://www.tiktok.com/@frimpomaasync","https://www.linkedin.com/in/frimpomaasync"]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"NaNa Frimpomaa","url":"https://frimpomaasync.com/"}</script>
+<!-- No external resources. System-font stack only — nothing to load, nothing to fail, works in any sandbox or offline. -->
+<style id="font-fallback">
+  /* Loud editorial sans via system fonts; mono via system mono. */
+</style>
+<style>
+  :root{
+    --cream:#FDF6ED; --cream-hi:#FBF8F2; --ink:#16140F;
+    --copper:#C9975B; --copper-soft:#E4C79A; --copper-deep:#A8763B;
+    --card:#FFFFFF; --muted:#6B6458; --hairline:#E4DDD0; --line:#B8AE9C;
+    --term-bg:#1A1813;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  html,body{height:100%;}
+  body{
+    background-color:#FDF6ED;
+    background-image:radial-gradient(circle at 50% -6%, #FBF8F2 0%, #FDF6ED 60%);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden;
+  }
+  body.locked{ overflow:hidden; height:100vh; }
+  body::before{
+    content:""; position:fixed; inset:0;
+    background-image:radial-gradient(var(--hairline) 1px, transparent 1px);
+    background-size:28px 28px; opacity:0.45; pointer-events:none; z-index:0;
+  }
+  .mono{ font-family:ui-monospace,'SF Mono','SFMono-Regular',Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace; }
+
+  /* ================= BOOT TERMINAL ================= */
+  .boot{
+    position:fixed; inset:0; z-index:200;
+    background:var(--term-bg);
+    background-image:radial-gradient(circle at 50% 38%, #221F18 0%, #14120E 92%);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    transition:opacity .55s ease, visibility .55s ease;
+  }
+  .boot.gone{ opacity:0; visibility:hidden; pointer-events:none; }
+  .boot-window{
+    width:100%; max-width:620px;
+    background:rgba(10,9,7,0.6); border:1px solid rgba(201,151,91,0.28);
+    border-radius:14px; box-shadow:0 30px 90px rgba(0,0,0,0.5); overflow:hidden;
+  }
+  .boot-bar{
+    display:flex; align-items:center; gap:8px; padding:13px 16px;
+    background:rgba(255,255,255,0.03); border-bottom:1px solid rgba(201,151,91,0.18);
+  }
+  .boot-bar .d{width:11px;height:11px;border-radius:50%;}
+  .boot-bar .d.r{background:#E0A38C;}.boot-bar .d.y{background:var(--copper-soft);}.boot-bar .d.g{background:#B9C7A6;}
+  .boot-bar .t{ margin-left:8px; font-size:12px; color:rgba(245,240,232,0.5); letter-spacing:0.04em; }
+  .boot-body{
+    padding:24px 22px 28px; font-size:14px; line-height:1.9;
+    color:rgba(245,240,232,0.92); min-height:340px;
+  }
+  .boot-line{ white-space:pre-wrap; opacity:0; transition:opacity .15s ease; }
+  .boot-line.in{ opacity:1; }
+  .boot-line .ok{ color:var(--copper); font-weight:600; }
+  .boot-line .dim{ color:rgba(245,240,232,0.45); }
+  .boot-line .big{ color:#fff; font-weight:700; font-size:15px; }
+  .boot-cursor{
+    display:inline-block; width:9px; height:17px; background:var(--copper);
+    margin-left:3px; transform:translateY(3px); animation:bcblink 1s step-end infinite;
+  }
+  @keyframes bcblink{0%,100%{opacity:1;}50%{opacity:0;}}
+  .boot-prog{ margin-top:18px; height:6px; border-radius:4px; background:rgba(255,255,255,0.08); overflow:hidden; }
+  .boot-prog i{ display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--copper-soft),var(--copper)); transition:width .3s ease; }
+  .boot-skip{
+    position:fixed; bottom:22px; right:24px; z-index:201; font-size:11px;
+    letter-spacing:0.08em; text-transform:uppercase; color:rgba(245,240,232,0.4);
+    background:none; border:1px solid rgba(245,240,232,0.2); padding:8px 14px;
+    border-radius:8px; cursor:pointer; transition:color .2s,border-color .2s;
+  }
+  .boot-skip:hover{ color:rgba(245,240,232,0.85); border-color:rgba(245,240,232,0.5); }
+
+  /* ================= SINGLE-CLICK BUILD OVERLAY ================= */
+  /* fires when someone taps ONE block — runs a full build, then navigates */
+  .builder{
+    position:fixed; inset:0; z-index:300;
+    background:rgba(20,18,14,0.55);
+    backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    opacity:0; visibility:hidden; transition:opacity .35s ease, visibility .35s ease;
+  }
+  .builder.show{ opacity:1; visibility:visible; }
+  .builder-card{
+    width:100%; max-width:420px;
+    background:var(--term-bg);
+    background-image:radial-gradient(circle at 50% 30%, #242017 0%, #16130E 95%);
+    border:1px solid rgba(201,151,91,0.35); border-radius:20px;
+    box-shadow:0 40px 100px rgba(0,0,0,0.55);
+    padding:30px 26px 26px; transform:translateY(14px) scale(0.97);
+    transition:transform .4s cubic-bezier(.2,.7,.2,1);
+  }
+  .builder.show .builder-card{ transform:translateY(0) scale(1); }
+  .builder-head{
+    display:flex; align-items:center; gap:9px; margin-bottom:20px;
+    font-size:12px; color:rgba(245,240,232,0.6); letter-spacing:0.06em;
+  }
+  .builder-head .spin{
+    width:16px;height:16px;border-radius:50%;
+    border:2px solid rgba(201,151,91,0.3); border-top-color:var(--copper);
+    animation:spin .7s linear infinite;
+  }
+  .builder.done .builder-head .spin{ animation:none; border:2px solid var(--copper); }
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .builder-target{ color:#fff; font-weight:700; }
+  .builder-steps{ display:flex; flex-direction:column; gap:11px; margin-bottom:22px; }
+  .bstep{
+    display:flex; align-items:center; gap:11px; font-size:13px;
+    color:rgba(245,240,232,0.4); transition:color .3s ease;
+  }
+  .bstep.active{ color:rgba(245,240,232,0.95); }
+  .bstep.complete{ color:var(--copper); }
+  .bstep .ic{
+    width:18px;height:18px;border-radius:50%; flex-shrink:0;
+    border:2px solid rgba(245,240,232,0.2);
+    display:flex; align-items:center; justify-content:center; font-size:10px;
+    transition:all .3s ease;
+  }
+  .bstep.active .ic{ border-color:var(--copper); }
+  .bstep.complete .ic{ background:var(--copper); border-color:var(--copper); color:#fff; }
+  .builder-prog{ height:8px; border-radius:5px; background:rgba(255,255,255,0.1); overflow:hidden; margin-bottom:14px; }
+  .builder-prog i{ display:block; height:100%; width:0%; background:linear-gradient(90deg,var(--copper-soft),var(--copper)); transition:width .4s cubic-bezier(.2,.7,.2,1); }
+  .builder-foot{
+    display:flex; align-items:center; justify-content:space-between;
+    font-size:11px; color:rgba(245,240,232,0.5); letter-spacing:0.04em;
+  }
+  .builder-pct{ color:#fff; font-weight:700; font-size:13px; }
+  .builder-go{
+    margin-top:18px; width:100%; text-align:center; display:block; text-decoration:none;
+    padding:14px; border-radius:12px; background:var(--copper); color:#fff;
+    font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase;
+    opacity:0; transform:translateY(8px); transition:opacity .4s ease, transform .4s ease;
+    pointer-events:none;
+  }
+  .builder.done .builder-go{ opacity:1; transform:translateY(0); pointer-events:auto; }
+
+  /* ================= STICKY CONSOLE ================= */
+  .console{
+    position:fixed; top:0; left:0; right:0; z-index:90;
+    background:rgba(26,24,19,0.94);
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(201,151,91,0.3);
+    transform:translateY(-100%); transition:transform .5s cubic-bezier(.2,.7,.2,1);
+  }
+  .console.show{ transform:translateY(0); }
+  .console-inner{ max-width:680px; margin:0 auto; padding:9px 18px; display:flex; align-items:center; gap:14px; }
+  .console-tag{ display:flex; align-items:center; gap:7px; font-size:11px; color:rgba(245,240,232,0.55); letter-spacing:0.04em; white-space:nowrap; }
+  .console-tag .live{ width:7px;height:7px;border-radius:50%;background:var(--copper); box-shadow:0 0 8px var(--copper); animation:livepulse 1.6s ease-in-out infinite; }
+  @keyframes livepulse{0%,100%{opacity:1;}50%{opacity:0.35;}}
+  .console-track{ flex:1; height:7px; border-radius:4px; background:rgba(255,255,255,0.1); overflow:hidden; position:relative; }
+  .console-track i{ position:absolute; left:0; top:0; height:100%; width:0%; background:linear-gradient(90deg,var(--copper-soft),var(--copper)); transition:width .5s cubic-bezier(.2,.7,.2,1); }
+  .console-pct{ font-size:12px; font-weight:700; color:#fff; white-space:nowrap; min-width:42px; text-align:right; }
+  .console-status{ font-size:11px; color:var(--copper); white-space:nowrap; max-width:140px; overflow:hidden; text-overflow:ellipsis; }
+  @media (max-width:560px){ .console-status{ display:none; } .console-inner{ gap:10px; padding:8px 14px; } }
+
+  .stage{ position:relative; z-index:1; max-width:680px; margin:0 auto; padding:42px 20px 90px; opacity:0; transition:opacity .8s ease; }
+  .stage.revealed{ opacity:1; }
+
+  .chrome{ display:flex; align-items:center; gap:8px; padding:0 2px 16px; }
+  .dot{width:11px;height:11px;border-radius:50%;}
+  .dot.r{background:#E0A38C;}.dot.y{background:var(--copper-soft);}.dot.g{background:#B9C7A6;}
+  .chrome-label{ margin-left:10px; font-size:12px; letter-spacing:0.04em; color:var(--muted); }
+
+  .hero{ padding:8px 2px 2px; }
+  .eyebrow{ font-size:12px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--copper); margin-bottom:16px; }
+  .name{ font-size:clamp(38px,10vw,60px); font-weight:800; letter-spacing:-0.035em; line-height:0.9; }
+  .name .period{ color:var(--copper); }
+  .tagline{ margin-top:18px; font-size:16px; color:var(--muted); line-height:1.5; max-width:430px; }
+  .tagline .accent{ font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:500; font-size:20px; color:var(--ink); }
+
+  .runbar{
+    display:flex; align-items:center; gap:11px; margin-top:26px; padding:13px 18px;
+    background:var(--cream-hi); border:1px solid var(--hairline); border-radius:12px;
+    font-size:12.5px; letter-spacing:0.02em; color:var(--muted);
+  }
+  .runbar .pip{ width:9px;height:9px;border-radius:50%; background:var(--copper); box-shadow:0 0 0 4px rgba(201,151,91,0.18); animation:pulse 2s ease-in-out infinite; flex-shrink:0; }
+  @keyframes pulse{0%,100%{box-shadow:0 0 0 4px rgba(201,151,91,0.18);}50%{box-shadow:0 0 0 8px rgba(201,151,91,0.04);}}
+  .runbar b{ color:var(--ink); font-weight:600; }
+
+  .flow{ position:relative; margin-top:14px; display:flex; flex-direction:column; align-items:center; }
+  .connector{ width:3px; height:54px; position:relative; overflow:visible; flex-shrink:0; }
+  .connector .rail{ position:absolute; left:50%; top:0; transform:translateX(-50%) scaleY(0); width:3px; height:100%; background:var(--line); transform-origin:top; transition:transform .5s ease; }
+  .connector.lit .rail{ transform:translateX(-50%) scaleY(1); }
+  .connector .pulse{ position:absolute; left:50%; top:-4px; width:14px;height:14px;border-radius:50%; background:var(--copper); transform:translateX(-50%); box-shadow:0 0 18px 4px rgba(201,151,91,0.8),0 0 40px 8px rgba(201,151,91,0.35); opacity:0; }
+  .connector.lit .pulse{ animation:travel 0.7s cubic-bezier(.4,0,.6,1) forwards; }
+  @keyframes travel{0%{top:-6px;opacity:0;transform:translateX(-50%) scale(0.5);}15%{opacity:1;transform:translateX(-50%) scale(1);}85%{opacity:1;transform:translateX(-50%) scale(1);}100%{top:100%;opacity:0;transform:translateX(-50%) scale(0.5);}}
+  .connector::after{ content:""; position:absolute; left:50%; bottom:-2px; transform:translateX(-50%); width:0;height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-top:9px solid var(--line); opacity:0; transition:opacity .3s ease .35s; }
+  .connector.lit::after{ opacity:1; }
+
+  .block{
+    position:relative; width:100%; background:var(--card); border:1.5px solid var(--hairline);
+    border-radius:26px; padding:40px 34px; text-decoration:none; color:var(--ink); display:block;
+    opacity:0; transform:translateY(40px) scale(0.94);
+    transition:opacity .5s cubic-bezier(.2,.7,.2,1), transform .55s cubic-bezier(.2,.7,.2,1), box-shadow .2s ease, border-color .2s ease;
+    overflow:hidden; cursor:pointer;
+  }
+  .block.constructing{ opacity:1; transform:translateY(0) scale(1); border-style:dashed; border-color:var(--copper-soft); background:var(--cream-hi); }
+  .block.placed{ opacity:1; transform:translateY(0) scale(1); border-style:solid; border-color:var(--hairline); background:var(--card); }
+  .block.snap{ animation:snap .6s ease; }
+  @keyframes snap{0%{box-shadow:0 0 0 0 rgba(201,151,91,0);}30%{box-shadow:0 0 0 6px rgba(201,151,91,0.35),0 18px 50px rgba(201,151,91,0.25);}100%{box-shadow:0 0 0 0 rgba(201,151,91,0);}}
+  .block:hover{ transform:translateY(-4px); box-shadow:0 18px 44px rgba(22,20,15,0.12); border-color:var(--copper-soft); }
+  .block:focus-visible{ outline:2px solid var(--copper); outline-offset:4px; }
+
+  .stamp{ position:absolute; top:16px; right:18px; font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--copper); display:flex; align-items:center; gap:5px; opacity:0; transform:scale(0.8); z-index:3; }
+  .stamp.on{ animation:stampin .45s cubic-bezier(.2,.7,.2,1) forwards; }
+  @keyframes stampin{to{opacity:1;transform:scale(1);}}
+  .stamp .tick{ width:14px;height:14px;border-radius:50%; background:var(--copper); color:#fff; display:flex; align-items:center; justify-content:center; font-size:9px; }
+  .block.trigger .stamp{ color:#fff; } .block.trigger .stamp .tick{ background:#fff; color:var(--copper); }
+
+  .block .port{ position:absolute; left:50%; width:13px;height:13px; border-radius:50%; background:var(--cream); border:2.5px solid var(--line); transform:translateX(-50%); transition:background .25s,border-color .25s,box-shadow .25s; z-index:2; }
+  .block .port.top{ top:-6.5px; } .block .port.bot{ bottom:-6.5px; }
+  .block.placed .port{ background:var(--copper); border-color:var(--copper); box-shadow:0 0 10px rgba(201,151,91,0.5); }
+
+  .block-meta{ display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+  .step-tag{ font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--copper); }
+  .step-num{ font-size:11px; color:var(--muted); letter-spacing:0.08em; }
+  .block-title{ font-size:clamp(40px,12vw,76px); font-weight:800; letter-spacing:-0.045em; line-height:0.86; color:var(--ink); position:relative; }
+  .block-title .period{ color:var(--copper); }
+  .block.constructing .block-title, .block.constructing .block-sub, .block.constructing .block-go{ opacity:0.25; }
+  .block-sub{ margin-top:16px; font-size:15px; color:var(--muted); line-height:1.45; max-width:90%; }
+  .block-go{ display:inline-flex; align-items:center; gap:8px; margin-top:20px; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink); }
+  .block-go .arr{ transition:transform .2s ease; }
+  .block:hover .block-go .arr{ transform:translateX(5px); }
+
+  .block.trigger{ background:var(--copper); border-color:var(--copper); color:#fff; }
+  .block.trigger.constructing{ background:var(--copper-deep); border-color:var(--copper-soft); }
+  .block.trigger .step-tag{ color:rgba(255,255,255,0.85); } .block.trigger .step-num{ color:rgba(255,255,255,0.7); }
+  .block.trigger .block-title{ color:#fff; } .block.trigger .block-title .period{ color:var(--ink); }
+  .block.trigger .block-sub{ color:rgba(255,255,255,0.9); } .block.trigger .block-go{ color:#fff; }
+  .block.trigger .port{ background:#fff; border-color:#fff; }
+  .block.trigger:hover{ box-shadow:0 18px 46px rgba(201,151,91,0.4); border-color:var(--copper); }
+  .block.trigger::after{ content:"⚡"; position:absolute; right:-10px; bottom:-26px; font-size:150px; opacity:0.13; color:#fff; pointer-events:none; line-height:1; }
+
+  .panel{ width:100%; max-height:0; overflow:hidden; opacity:0; transition:max-height .34s ease, opacity .3s ease; }
+  .panel.open{ max-height:260px; opacity:1; }
+  .panel-inner{ margin-top:14px; background:var(--cream-hi); border:1.5px solid var(--hairline); border-radius:20px; padding:24px 28px; }
+  .panel-inner p{ font-size:14.5px; color:var(--muted); line-height:1.55; margin-bottom:14px; }
+  .panel-inner form{ display:flex; gap:9px; flex-wrap:wrap; }
+  .panel-inner input{ flex:1; min-width:180px; padding:13px 16px; border:1.5px solid var(--hairline); border-radius:11px; font-family:inherit; font-size:15px; background:#fff; color:var(--ink); }
+  .panel-inner input:focus{ outline:2px solid var(--copper-soft); outline-offset:1px; }
+  .panel-inner button{ padding:13px 26px; border:none; border-radius:11px; background:var(--copper); color:#fff; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; }
+  .panel-inner .go-link{ display:inline-flex; align-items:center; gap:8px; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink); text-decoration:none; border-bottom:2px solid var(--copper); padding-bottom:3px; }
+
+  .finale{ margin-top:16px; width:100%; display:flex; flex-direction:column; align-items:center; gap:16px; padding:40px 24px; opacity:0; transform:translateY(20px); transition:opacity .6s ease, transform .6s ease; }
+  .finale.show{ opacity:1; transform:translateY(0); }
+  .finale .big-ring{ width:64px;height:64px;border-radius:50%; border:3px solid var(--copper); display:flex; align-items:center; justify-content:center; color:var(--copper); font-size:30px; font-weight:700; background:var(--cream-hi); box-shadow:0 0 0 0 rgba(201,151,91,0.4); }
+  .finale.show .big-ring{ animation:finalpop .7s cubic-bezier(.2,.7,.2,1), ringglow 2.4s ease-in-out .7s infinite; }
+  @keyframes finalpop{0%{transform:scale(0.5);opacity:0;}60%{transform:scale(1.15);}100%{transform:scale(1);opacity:1;}}
+  @keyframes ringglow{0%,100%{box-shadow:0 0 0 0 rgba(201,151,91,0.35);}50%{box-shadow:0 0 0 14px rgba(201,151,91,0);}}
+  .finale .head{ font-size:clamp(30px,9vw,52px); font-weight:800; letter-spacing:-0.04em; line-height:0.9; text-align:center; color:var(--ink); }
+  .finale .head .period{ color:var(--copper); }
+  .finale .sub{ font-size:12px; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); text-align:center; }
+  .finale .cta{ margin-top:8px; display:inline-flex; align-items:center; gap:9px; padding:15px 30px; border-radius:14px; background:var(--copper); color:#fff; text-decoration:none; font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 14px 36px rgba(201,151,91,0.32); transition:transform .2s ease,box-shadow .2s ease; }
+  .finale .cta:hover{ transform:translateY(-3px); box-shadow:0 20px 44px rgba(201,151,91,0.42); }
+
+  .foot{ margin-top:30px; text-align:center; font-size:12px; color:var(--muted); line-height:1.8; }
+  .foot .brand{ font-weight:600; color:var(--ink); }
+
+  /* ===== high-ticket proof bar ===== */
+  .ht-proofbar{position:relative;z-index:1;overflow:hidden;margin:32px 0 2px;display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:30px 30px;border-radius:24px;background:linear-gradient(165deg,#16233B 0%,#131D31 46%,#0C1322 100%);border:1px solid rgba(201,151,91,0.4);box-shadow:0 22px 50px rgba(8,6,4,0.36)}
+  .ht-proofbar::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(40% 60% at 92% 0%,rgba(201,151,91,0.2),transparent 60%)}
+  .ht-proofbar .pb{position:relative;padding:2px 26px;border-left:1px solid rgba(245,240,232,0.12)}
+  .ht-proofbar .pb:first-child{border-left:none;padding-left:2px}
+  .ht-proofbar .pb b{display:block;font-size:36px;font-weight:800;letter-spacing:-0.03em;color:#F5F0E8;line-height:1}
+  .ht-proofbar .pb span{display:block;margin-top:9px;font-size:12.5px;color:#CBC4B5;line-height:1.35}
+  .ht-proofbar .pb .src{display:block;margin-top:9px;font-size:9px;color:#9AA1AD}
+  @media(max-width:560px){.ht-proofbar{grid-template-columns:1fr;padding:24px 22px}.ht-proofbar .pb{border-left:none;border-top:1px solid rgba(245,240,232,0.12);padding:16px 2px 0}.ht-proofbar .pb:first-child{border-top:none;padding-top:0}}
+  /* ===== the build.run method ===== */
+  .ht-method{position:relative;z-index:1;margin:34px 0 6px}
+  .ht-method-h{display:flex;align-items:baseline;gap:13px;margin-bottom:14px;flex-wrap:wrap}
+  .ht-method-h .k{font-size:12px;font-weight:600;letter-spacing:0.16em;text-transform:uppercase;color:var(--copper)}
+  .ht-method-h .t{font-size:14px;color:var(--muted)}
+  .ht-method-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .ms{background:var(--card);border:1.5px solid var(--hairline);border-radius:16px;padding:18px 16px}
+  .ms .n{font-size:12px;color:var(--copper);letter-spacing:0.1em}
+  .ms b{display:block;margin:6px 0;font-size:19px;font-weight:800;letter-spacing:-0.02em;color:var(--ink)}
+  .ms span{font-size:12px;color:var(--muted);line-height:1.4}
+  a.ms{text-decoration:none;display:block;transition:border-color .16s ease,transform .16s ease,box-shadow .16s ease}
+  a.ms:hover{border-color:var(--copper);transform:translateY(-2px);box-shadow:0 12px 28px rgba(201,151,91,0.18)}
+  .ht-socials .ms b{color:var(--ink)}
+  @media(max-width:560px){.ht-method-steps{grid-template-columns:1fr 1fr}}
+
+  @media (max-width:520px){
+    .stage{ padding:36px 16px 80px; } .block{ padding:32px 24px; border-radius:22px; }
+    .block-sub{ max-width:100%; } .boot-body{ font-size:12.5px; min-height:300px; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important;}
+    .boot{display:none;} .console{transform:translateY(0);} .stage{opacity:1;}
+    .block,.finale{opacity:1;transform:none;} .block{border-style:solid;border-color:var(--hairline);background:var(--card);}
+    .block .port{background:var(--copper);border-color:var(--copper);}
+    .connector .rail{transform:translateX(-50%) scaleY(1);} .connector::after{opacity:1;} .connector .pulse{display:none;}
+    .stamp{opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body class="locked">
+
+  <!-- BOOT -->
+  <div class="boot" id="boot">
+    <div class="boot-window">
+      <div class="boot-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span><span class="t mono">frimpomaasync.com — build.run</span></div>
+      <div class="boot-body mono" id="bootBody"></div>
+    </div>
+  </div>
+  <button class="boot-skip mono" id="bootSkip">skip ⏭</button>
+
+  <!-- SINGLE-CLICK BUILD OVERLAY -->
+  <div class="builder" id="builder" aria-hidden="true">
+    <div class="builder-card">
+      <div class="builder-head mono"><span class="spin"></span><span>compiling <span class="builder-target" id="bTarget">your tool</span>…</span></div>
+      <div class="builder-steps mono" id="bSteps">
+        <div class="bstep" data-s="0"><span class="ic"></span><span>reading your request</span></div>
+        <div class="bstep" data-s="1"><span class="ic"></span><span>assembling modules</span></div>
+        <div class="bstep" data-s="2"><span class="ic"></span><span>wiring automation</span></div>
+        <div class="bstep" data-s="3"><span class="ic"></span><span>finalizing your tool</span></div>
+      </div>
+      <div class="builder-prog"><i id="bProg"></i></div>
+      <div class="builder-foot mono"><span id="bStatus">starting…</span><span class="builder-pct" id="bPct">0%</span></div>
+      <a class="builder-go mono" id="bGo" href="#">open →</a>
+    </div>
+  </div>
+
+  <!-- CONSOLE -->
+  <div class="console" id="console">
+    <div class="console-inner mono">
+      <span class="console-tag"><span class="live"></span>BUILD</span>
+      <span class="console-track"><i id="consoleBar"></i></span>
+      <span class="console-status" id="consoleStatus">initializing…</span>
+      <span class="console-pct" id="consolePct">0%</span>
+    </div>
+  </div>
+
+  <div class="stage" id="stage">
+    <div class="chrome"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span><span class="chrome-label mono">frimpomaasync.com / build.run</span></div>
+
+    <header class="hero">
+      <div class="eyebrow mono">Builder of AI systems · Built in public</div>
+      <h1 class="name">NaNa<br>Frimpomaa<span class="period">.</span></h1>
+      <p class="tagline">I build the AI systems that run your busywork — <span class="accent">so a small team performs like a big one.</span></p>
+      <div class="runbar mono"><span class="pip"></span><span><b>build running</b> — tap any module and I'll build it for you. start anywhere.</span></div>
+    </header>
+
+    <!-- ===== PROOF BAR (the opportunity, industry data) ===== -->
+    <div class="ht-proofbar">
+      <div class="pb"><b>62%</b><span>of business calls go unanswered</span><span class="src">Aira / SkipCalls, 2026</span></div>
+      <div class="pb"><b>85%</b><span>of missed callers never call back</span><span class="src">Nextiva / Dialzara</span></div>
+      <div class="pb"><b>$3.50</b><span>back per $1 on AI answering</span><span class="src">Dialzara ROI, 2025</span></div>
+    </div>
+
+    <!-- ===== THE BUILD.RUN METHOD ===== -->
+    <section class="ht-method">
+      <div class="ht-method-h"><span class="k mono">The build.run method™</span><span class="t">how every module below gets built</span></div>
+      <div class="ht-method-steps">
+        <div class="ms"><span class="n mono">01</span><b>map</b><span>find the busywork leaking time and money.</span></div>
+        <div class="ms"><span class="n mono">02</span><b>build</b><span>design the tool around how you work.</span></div>
+        <div class="ms"><span class="n mono">03</span><b>wire</b><span>connect it — calls, calendar, CRM, sheets.</span></div>
+        <div class="ms"><span class="n mono">04</span><b>handoff</b><span>you own it — walkthrough + 90 days polish.</span></div>
+      </div>
+    </section>
+
+    <main class="flow" id="flow">
+
+      <a class="block trigger" data-block data-label="book a call" data-dest="https://calendar.app.google/p9Te84R34vPm2U3z9" data-newtab="1" href="https://calendar.app.google/p9Te84R34vPm2U3z9">
+        <span class="port bot"></span><span class="stamp mono"><span class="tick">✓</span> installed</span>
+        <div class="block-meta"><span class="step-tag mono">⚡ Trigger</span><span class="step-num mono">module 01 / 09</span></div>
+        <div class="block-title">book a call<span class="period">.</span></div>
+        <div class="block-sub">Free 15-minute demo. We map the one annoying thing you wish was just a button.</div>
+        <span class="block-go mono">start here <span class="arr">→</span></span>
+      </a>
+
+      <div class="connector"><span class="rail"></span><span class="pulse"></span></div>
+
+      <a class="block" data-block data-label="services" data-dest="services.html" href="services.html">
+        <span class="port top"></span><span class="port bot"></span><span class="stamp mono"><span class="tick">✓</span> installed</span>
+        <div class="block-meta"><span class="step-tag mono">Action · Build</span><span class="step-num mono">module 02 / 09</span></div>
+        <div class="block-title">services<span class="period">.</span></div>
+        <div class="block-sub">Done-for-you custom tools, dashboards &amp; automations. Built around how you already work.</div>
+        <span class="block-go mono">see services <span class="arr">→</span></span>
+      </a>
+
+      <div class="connector"><span class="rail"></span><span class="pulse"></span></div>
+
+      <a class="block" data-block data-label="the tools" data-dest="products.html" href="products.html">
+        <span class="port top"></span><span class="port bot"></span><span class="stamp mono"><span class="tick">✓</span> installed</span>
+        <div class="block-meta"><span class="step-tag mono">Output · Proof</span><span class="step-num mono">module 03 / 09</span></div>
+        <div class="block-title">the tools<span class="period">.</span></div>
+        <div class="block-sub">Real tools I've built and shipped — try Som and Soma live. Proof, not promises.</div>
+        <span class="block-go mono">view tools <span class="arr">→</span></span>
+      </a>
+
+      <div class="connector"><span class="rail"></span><span class="pulse"></span></div>
+
+      <a class="block" data-block data-label="synkasa" data-dest="https://synkasa.com" data-newtab="1" href="https://synkasa.com">
+        <span class="port top"></span><span class="port bot"></span><span class="stamp mono"><span class="tick">✓</span> installed</span>
+        <div class="block-meta"><span class="step-tag mono">Product · SynKasa</span><span class="step-num mono">module 04 / 09</span></div>
+        <div class="block-title">synkasa<span class="period">.</span></div>
+        <div class="block-sub">My flagship — a done-for-you AI receptionist that answers, books, and captures leads 24/7. Built for you in 48h.</div>
+        <span class="block-go mono">visit synkasa <span class="arr">→</span></span>
+      </a>
+
+      <div class="connector"><span class="rail"></span><span class="pulse"></span></div>
+
+      <a class="block" data-block data-label="som" data-dest="som.html" href="som.html">
+        <span class="port top"></span><span class="port bot"></span><span class="stamp mono"><span class="tick">✓</span> installed</span>
+        <div class="block-meta"><span class="step-tag mono">Product · Som</span><span class="step-num mono">module 05 / 09</span></div>
+        <div class="block-title">som<span class="period">.</span></div>
+        <div class="block-sub">Twi for <i>take it</i>. A downloadable capture tool you own forever. Plug in and go.</div>
+        <span class="block-go mono">get som <span class="arr">→</span></span>
+      </a>
+
+      <div class="connector"><span class="rail"></span><span class="pulse"></span></div>
+
+      <a class="block" data-block data-label="soma" data-dest="soma.html" href="soma.html">
+        <span class="port top"></span><span class="port bot"></span><span class="stamp mono"><span class="tick">✓</span> installed</span>
+        <div class="block-meta"><span class="step-tag mono">Product · Soma</span><span class="step-num mono">module 06 / 09</span></div>
+        <div class="block-title">soma<span class="period">.</span></div>
+        <div class="block-sub">A live automation demo you can run right now — watch one entry land in four tools.</div>
+        <span class="block-go mono">try soma <span class="arr">→</span></span>
+      </a>
+
+      <div class="connector"><span class="rail"></span><span class="pulse"></span></div>
+
+      <a class="block" data-block data-label="blog" data-dest="blog.html" href="blog.html">
+        <span class="port top"></span><span class="port bot"></span><span class="stamp mono"><span class="tick">✓</span> installed</span>
+        <div class="block-meta"><span class="step-tag mono">Log · Notes</span><span class="step-num mono">module 07 / 09</span></div>
+        <div class="block-title">blog<span class="period">.</span></div>
+        <div class="block-sub">Systems, strategy, and building in public. Take what you need, leave what you don't.</div>
+        <span class="block-go mono">read posts <span class="arr">→</span></span>
+      </a>
+
+      <div class="connector"><span class="rail"></span><span class="pulse"></span></div>
+
+      <div class="block expandable" data-block data-label="the list" data-expand="email" tabindex="0" role="button" aria-expanded="false">
+        <span class="port top"></span><span class="port bot"></span><span class="stamp mono"><span class="tick">✓</span> installed</span>
+        <div class="block-meta"><span class="step-tag mono">Subscribe · Loop</span><span class="step-num mono">module 08 / 09</span></div>
+        <div class="block-title">the list<span class="period">.</span></div>
+        <div class="block-sub">Inside-the-build notes and new tools, sent regularly. Tap to join the loop.</div>
+        <span class="block-go mono">join <span class="arr">＋</span></span>
+        <div class="panel" id="panel-email"><div class="panel-inner"><p>Build notes, new tools, and behind-the-scenes — no spam, ever.</p><!-- Connected to Formspree (mnjkqydb) --><form action="https://formspree.io/f/mnjkqydb" method="POST" target="_blank"><input type="email" name="email" placeholder="your@email.com" aria-label="Email address" required><input type="hidden" name="_subject" value="New list signup — frimpomaasync.com"><button type="submit">Join the loop</button></form></div></div>
+      </div>
+
+      <!-- ===== SOCIAL CHANNELS — build.run method™ card style ===== -->
+      <section class="ht-method ht-socials">
+        <div class="ht-method-h"><span class="k mono">find me everywhere</span><span class="t">building in public, daily — pick your platform</span></div>
+        <div class="ht-method-steps">
+          <a class="ms" href="https://www.instagram.com/frimpomaasync" target="_blank" rel="noopener"><span class="n mono">IG</span><b>Instagram</b><span>@frimpomaasync</span></a>
+          <a class="ms" href="https://www.facebook.com/share/18qcDjQme8/?mibextid=wwXIfr" target="_blank" rel="noopener"><span class="n mono">FB</span><b>Facebook</b><span>@frimpomaasync</span></a>
+          <a class="ms" href="https://youtube.com/@frimpomaasync?si=KKimG0QwsgOsB1Xl" target="_blank" rel="noopener"><span class="n mono">YT</span><b>YouTube</b><span>@frimpomaasync</span></a>
+          <a class="ms" href="https://www.tiktok.com/@frimpomaasync?_r=1&amp;_t=ZT-97e6dr2nWms" target="_blank" rel="noopener"><span class="n mono">TT</span><b>TikTok</b><span>@frimpomaasync</span></a>
+        </div>
+      </section>
+
+      <div class="connector"><span class="rail"></span><span class="pulse"></span></div>
+
+      <a class="block" data-block data-label="ai products" data-dest="ai-products.html" href="ai-products.html">
+        <span class="port top"></span><span class="port bot"></span><span class="stamp mono"><span class="tick">✓</span> installed</span>
+        <div class="block-meta"><span class="step-tag mono">Portfolio · Build log</span><span class="step-num mono">module 09 / 09</span></div>
+        <div class="block-title">ai products<span class="period">.</span></div>
+        <div class="block-sub">The full portfolio — what I've shipped, what's compiling, and what I can build for you. Watch it build.</div>
+        <span class="block-go mono">open portfolio <span class="arr">→</span></span>
+      </a>
+
+      <div class="connector"><span class="rail"></span><span class="pulse"></span></div>
+
+      <div class="finale" id="finale">
+        <div class="big-ring">✓</div>
+        <div class="head">build complete<span class="period">.</span></div>
+        <div class="sub mono">your tool is assembled · 10 / 10 modules installed</div>
+        <a class="cta mono" href="https://calendar.app.google/p9Te84R34vPm2U3z9" target="_blank" rel="noopener">ship yours → book a call</a>
+      </div>
+    </main>
+
+    <footer class="foot"><div class="brand">NaNa Frimpomaa</div>Custom AI tools, dashboards &amp; automations<br>© 2026 · Built in public</footer>
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  // GLOBAL FAIL-SAFE: if anything ever throws, force the whole build to "complete"
+  // so the page can never freeze at 0% — no matter the cause or environment.
+  var FORCED = false;
+  function forceComplete(){
+    FORCED = true;
+    try{
+      if(window.__io && window.__io.disconnect) window.__io.disconnect();
+      document.body.classList.remove('locked');
+      var bootEl = document.getElementById('boot'); if(bootEl) bootEl.classList.add('gone');
+      var skipEl = document.getElementById('bootSkip'); if(skipEl) skipEl.style.display='none';
+      var st = document.getElementById('stage'); if(st) st.classList.add('revealed');
+      var con = document.getElementById('console'); if(con) con.classList.add('show');
+      var blks = [].slice.call(document.querySelectorAll('[data-block]'));
+      blks.forEach(function(b){ b.classList.add('placed'); var s=b.querySelector('.stamp'); if(s) s.classList.add('on'); });
+      [].slice.call(document.querySelectorAll('.connector')).forEach(function(c){ c.classList.add('lit'); });
+      var cb=document.getElementById('consoleBar'); if(cb){ cb.style.transition='none'; cb.style.width='100%'; }
+      var cp=document.getElementById('consolePct'); if(cp) cp.textContent='100%';
+      var cs=document.getElementById('consoleStatus'); if(cs) cs.textContent='build complete';
+      var fin=document.getElementById('finale'); if(fin) fin.classList.add('show');
+    }catch(_){}
+  }
+  window.addEventListener('error', function(){ forceComplete(); });
+  window.addEventListener('unhandledrejection', function(){ forceComplete(); });
+
+  function $(id){ return document.getElementById(id); }
+  var reduce = false;
+  try { reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch(e){}
+
+  var body = document.body;
+  var boot = $('boot'), bootBody = $('bootBody'), bootSkip = $('bootSkip');
+  var consoleEl = $('console'), stage = $('stage');
+
+  /* ---------- BOOT ---------- */
+  var bootLines = [
+    {t:'<span class="dim">$</span> initializing <span class="ok">frimpomaasync.com</span>…', d:60},
+    {t:'<span class="dim">›</span> loading build environment <span class="ok">[ok]</span>', d:55},
+    {t:'<span class="dim">›</span> scanning request… <span class="ok">10 modules found</span>', d:55},
+    {t:'<span class="dim">›</span> compiling <span class="big">your_tool</span>…', d:80, prog:35},
+    {t:'<span class="dim">›</span> wiring automation flow <span class="ok">[ok]</span>', d:55, prog:62},
+    {t:'<span class="dim">›</span> optimizing for owner <span class="ok">[ok]</span>', d:55, prog:84},
+    {t:'<span class="dim">›</span> finalizing… <span class="ok">[done]</span>', d:60, prog:100},
+    {t:'<span class="big ok">✓ build ready — launching hub</span>', d:80}
+  ];
+
+  function finishBoot(){
+    if(!boot) return;
+    boot.classList.add('gone');
+    body.classList.remove('locked');
+    if(bootSkip) bootSkip.style.display='none';
+    if(consoleEl) consoleEl.classList.add('show');
+    setTimeout(function(){ if(stage) stage.classList.add('revealed'); }, 250);
+    startFlow();
+  }
+
+  if(reduce){
+    body.classList.remove('locked');
+    if(stage) stage.classList.add('revealed');
+    if(consoleEl) consoleEl.classList.add('show');
+    revealAllImmediate();
+  } else {
+    var progEl = null, li = 0, finished = false;
+    function nextLine(){
+      if(finished) return;
+      if(li >= bootLines.length){ setTimeout(finishBoot, 550); return; }
+      var line = bootLines[li];
+      var div = document.createElement('div');
+      div.className = 'boot-line';
+      div.innerHTML = line.t + '<span class="boot-cursor"></span>';
+      var prevCursor = bootBody ? bootBody.querySelector('.boot-line:last-child .boot-cursor') : null;
+      if(prevCursor && prevCursor.parentNode) prevCursor.parentNode.removeChild(prevCursor);
+      if(bootBody) bootBody.appendChild(div);
+      (function(d){ setTimeout(function(){ d.classList.add('in'); }, 16); })(div);
+      if(line.prog != null && bootBody){
+        if(!progEl){
+          var pwrap = document.createElement('div');
+          pwrap.className='boot-prog'; pwrap.innerHTML='<i></i>';
+          bootBody.appendChild(pwrap);
+          progEl = pwrap.querySelector('i');
+        }
+        if(progEl) progEl.style.width = line.prog + '%';
+      }
+      li++;
+      setTimeout(nextLine, line.d + 320);
+    }
+    setTimeout(nextLine, 400);
+    if(bootSkip) bootSkip.addEventListener('click', function(){ finished = true; finishBoot(); });
+    // safety: never let boot trap the user
+    setTimeout(function(){ if(boot && !boot.classList.contains('gone')){ finished = true; finishBoot(); } }, 9000);
+  }
+
+  /* ---------- FLOW + CONSOLE ---------- */
+  var blocks = [].slice.call(document.querySelectorAll('[data-block]'));
+  var connectors = [].slice.call(document.querySelectorAll('.connector'));
+  var finale = $('finale');
+  var consoleBar = $('consoleBar'), consolePct = $('consolePct'), consoleStatus = $('consoleStatus');
+  var total = blocks.length, placedSet = {}, placedCount = 0;
+
+  function updateConsole(){
+    if(FORCED) return;
+    var pct = Math.round((placedCount/total)*100);
+    if(consoleBar) consoleBar.style.width = pct + '%';
+    if(consolePct) consolePct.textContent = pct + '%';
+  }
+  function constructBlock(idx){
+    if(FORCED) return;
+    if(placedSet[idx]) return;
+    placedSet[idx] = true;
+    var b = blocks[idx];
+    if(!b) return;
+    var label = b.getAttribute('data-label') || 'module';
+    if(consoleStatus) consoleStatus.textContent = 'installing ' + label + '…';
+    if(reduce){ b.classList.add('placed'); finishConstruct(label); return; }
+    b.classList.add('constructing');
+    setTimeout(function(){
+      b.classList.remove('constructing'); b.classList.add('placed','snap');
+      var stamp = b.querySelector('.stamp'); if(stamp) stamp.classList.add('on');
+      setTimeout(function(){ b.classList.remove('snap'); }, 620);
+      var conn = connectors[idx]; if(conn) conn.classList.add('lit');
+      finishConstruct(label);
+    }, 430);
+  }
+  function finishConstruct(label){
+    placedCount++; updateConsole();
+    if(consoleStatus) consoleStatus.textContent = label + ' installed';
+    if(placedCount >= total){
+      if(consoleStatus) consoleStatus.textContent = 'build complete';
+      setTimeout(function(){ if(finale) finale.classList.add('show'); }, 300);
+    }
+  }
+  var io = null;
+  function startFlow(){
+    if('IntersectionObserver' in window){
+      io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){
+            var idx = blocks.indexOf(e.target);
+            if(idx > -1){ constructBlock(idx); io.unobserve(e.target); }
+          }
+        });
+      }, { threshold:0.4, rootMargin:'0px 0px -10% 0px' });
+      window.__io = io;
+      blocks.forEach(function(b){ io.observe(b); });
+    } else {
+      blocks.forEach(function(_,idx){ constructBlock(idx); });
+    }
+  }
+  function revealAllImmediate(){
+    blocks.forEach(function(b,idx){
+      b.classList.add('placed');
+      var st = b.querySelector('.stamp'); if(st) st.classList.add('on');
+      placedSet[idx]=true; placedCount++;
+    });
+    connectors.forEach(function(c){ c.classList.add('lit'); });
+    updateConsole();
+    if(consoleStatus) consoleStatus.textContent='build complete';
+    if(finale) finale.classList.add('show');
+  }
+
+  /* ---------- SINGLE-CLICK FULL BUILD ---------- */
+  var builder = $('builder'), bTarget = $('bTarget'), bProg = $('bProg'),
+      bPct = $('bPct'), bStatus = $('bStatus'), bGo = $('bGo');
+  var bSteps = [].slice.call(document.querySelectorAll('.bstep'));
+  var building = false;
+
+  function runSingleBuild(label, dest, newtab){
+    if(building) return;
+    building = true;
+    body.classList.add('locked');
+    if(bTarget) bTarget.textContent = label;
+    if(builder){ builder.classList.remove('done'); builder.classList.add('show'); builder.setAttribute('aria-hidden','false'); }
+    bSteps.forEach(function(s){ s.classList.remove('active','complete'); var ic=s.querySelector('.ic'); if(ic) ic.textContent=''; });
+    if(bProg) bProg.style.width='0%';
+    if(bPct) bPct.textContent='0%';
+    if(bGo){ bGo.setAttribute('href', dest || '#'); if(newtab){ bGo.setAttribute('target','_blank'); bGo.setAttribute('rel','noopener'); } else { bGo.removeAttribute('target'); } }
+
+    var statuses = ['reading your request','assembling modules','wiring automation','finalizing your tool'];
+    var pcts = [25,55,82,100];
+    var i = 0;
+    function step(){
+      if(i > 0){
+        var prev = bSteps[i-1]; if(prev){ prev.classList.remove('active'); prev.classList.add('complete'); var pic=prev.querySelector('.ic'); if(pic) pic.textContent='✓'; }
+      }
+      if(i >= bSteps.length){
+        if(builder) builder.classList.add('done');
+        if(bStatus) bStatus.textContent='build complete ✓';
+        building = false;
+        // auto-advance after a beat so it feels finished, but the button is there too
+        if(dest && dest !== '#'){
+          setTimeout(function(){
+            if(newtab){ window.open(dest,'_blank','noopener'); }
+            else { window.location.href = dest; }
+          }, 1100);
+        }
+        return;
+      }
+      var s = bSteps[i]; if(s) s.classList.add('active');
+      if(bStatus) bStatus.textContent = statuses[i];
+      if(bProg) bProg.style.width = pcts[i] + '%';
+      if(bPct) bPct.textContent = pcts[i] + '%';
+      i++;
+      setTimeout(step, 480);
+    }
+    step();
+  }
+
+  /* ---------- block interactions ---------- */
+  function isExpandable(b){ return b.classList.contains('expandable'); }
+
+  function toggle(block){
+    var key = block.getAttribute('data-expand');
+    var panel = $('panel-'+key);
+    if(!panel) return;
+    var open = panel.classList.toggle('open');
+    block.setAttribute('aria-expanded', open ? 'true':'false');
+    var arr = block.querySelector('.block-go .arr');
+    if(arr) arr.textContent = open ? '－' : '＋';
+  }
+
+  blocks.forEach(function(b){
+    b.addEventListener('click', function(e){
+      // expandable blocks: open inline unless an inner link was tapped
+      if(isExpandable(b)){
+        if(e.target.closest('a')) return;
+        e.preventDefault();
+        toggle(b);
+        return;
+      }
+      // navigational blocks: run the single-click full build, then go
+      e.preventDefault();
+      var label = b.getAttribute('data-label') || 'your tool';
+      var dest = b.getAttribute('data-dest') || b.getAttribute('href') || '#';
+      var newtab = b.getAttribute('data-newtab') === '1';
+      runSingleBuild(label, dest, newtab);
+    });
+    b.addEventListener('keydown', function(e){
+      if(e.key==='Enter'||e.key===' '){
+        e.preventDefault();
+        if(isExpandable(b)){ toggle(b); }
+        else { b.click(); }
+      }
+    });
+  });
+
+  // tapping the dimmed backdrop cancels (only before completion)
+  if(builder){
+    builder.addEventListener('click', function(e){
+      if(e.target === builder && !builder.classList.contains('done')){
+        builder.classList.remove('show'); builder.setAttribute('aria-hidden','true');
+        body.classList.remove('locked'); building=false;
+      }
+    });
+  }
+})();
+</script>
+</body>
+</html>

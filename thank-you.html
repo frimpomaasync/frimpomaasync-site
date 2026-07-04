@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thank you — your Som download · NaNa Frimpomaa</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="robots" content="noindex, follow">
+<meta name="description" content="Your Som download — thanks for your order.">
+<meta name="theme-color" content="#FDF6ED">
+<!-- Post-payment download page. Stripe redirects buyers here after they pay. Self-contained, system fonts. -->
+<style>
+  :root{
+    --cream:#FDF6ED; --cream-hi:#FBF8F2; --ink:#16140F;
+    --copper:#C9975B; --copper-soft:#E4C79A; --copper-deep:#A8763B;
+    --card:#FFFFFF; --muted:#6B6458; --hairline:#E4DDD0; --line:#B8AE9C;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  html,body{height:100%;}
+  body{
+    background-color:#FDF6ED;
+    background-image:radial-gradient(circle at 50% -6%, #FBF8F2 0%, #FDF6ED 60%);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden;
+  }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(var(--hairline) 1px, transparent 1px); background-size:28px 28px; opacity:0.45; pointer-events:none; z-index:0; }
+  .mono{ font-family:ui-monospace,'SF Mono','SFMono-Regular',Menlo,Monaco,Consolas,'Courier New',monospace; }
+
+  .stage{ position:relative; z-index:1; max-width:600px; margin:0 auto; padding:46px 20px 90px; }
+
+  .chrome{ display:flex; align-items:center; gap:8px; padding:0 2px 16px; }
+  .dot{width:11px;height:11px;border-radius:50%;}
+  .dot.r{background:#E0A38C;}.dot.y{background:var(--copper-soft);}.dot.g{background:#B9C7A6;}
+  .chrome-label{ margin-left:10px; font-size:12px; letter-spacing:0.04em; color:var(--muted); }
+
+  .ring{ width:66px;height:66px;border-radius:50%; border:3px solid var(--copper); display:flex; align-items:center; justify-content:center; color:var(--copper); font-size:32px; margin:14px 0 22px; background:var(--cream-hi); }
+
+  .eyebrow{ font-size:12px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--copper); margin-bottom:14px; }
+  .title{ font-size:clamp(40px,12vw,68px); font-weight:800; letter-spacing:-0.045em; line-height:0.88; }
+  .title .period{ color:var(--copper); }
+  .lede{ margin-top:18px; font-size:16px; color:var(--muted); line-height:1.55; max-width:480px; }
+  .lede .accent{ font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:500; font-size:20px; color:var(--ink); }
+
+  /* download card */
+  .dl{ margin-top:32px; background:var(--ink); color:#fff; border-radius:24px; padding:34px 30px; text-align:center; }
+  .dl .dl-k{ font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--copper-soft); margin-bottom:12px; }
+  .dl h2{ font-size:clamp(24px,7vw,34px); font-weight:800; letter-spacing:-0.03em; margin-bottom:10px; }
+  .dl h2 .period{ color:var(--copper); }
+  .dl p{ font-size:14px; color:rgba(245,240,232,0.72); line-height:1.5; margin-bottom:22px; max-width:380px; margin-left:auto; margin-right:auto; }
+  .dl-btn{ display:inline-flex; align-items:center; gap:10px; text-decoration:none; padding:18px 38px; border-radius:14px; background:var(--copper); color:#fff; font-size:14px; font-weight:700; letter-spacing:0.04em; text-transform:uppercase; box-shadow:0 14px 36px rgba(201,151,91,0.32); transition:transform .2s ease, box-shadow .2s ease; }
+  .dl-btn:hover{ transform:translateY(-2px); box-shadow:0 20px 46px rgba(201,151,91,0.44); }
+
+  .note{ margin-top:18px; font-size:13px; color:var(--muted); background:var(--cream-hi); border:1px solid var(--hairline); border-radius:13px; padding:15px 18px; line-height:1.55; }
+  .note b{ color:var(--ink); }
+
+  .next{ margin-top:30px; }
+  .next h3{ font-size:18px; font-weight:800; letter-spacing:-0.02em; margin-bottom:14px; }
+  .next h3 .period{ color:var(--copper); }
+  .next ol{ list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:11px; counter-reset:s; }
+  .next li{ font-size:14.5px; color:var(--ink); line-height:1.5; padding-left:34px; position:relative; }
+  .next li::before{ counter-increment:s; content:counter(s); position:absolute; left:0; top:0; width:24px; height:24px; border-radius:50%; background:var(--copper); color:#fff; font-size:12px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .next li b{ color:var(--ink); }
+
+  .foot{ margin-top:38px; text-align:center; font-size:12px; color:var(--muted); line-height:1.8; }
+  .foot .brand{ font-weight:600; color:var(--ink); }
+  .foot a{ color:var(--copper); text-decoration:none; }
+
+  @media (max-width:520px){ .stage{ padding:34px 16px 80px; } .dl{ padding:28px 22px; } }
+  @media (prefers-reduced-motion: reduce){ *{ animation:none !important; transition:none !important; } html{ scroll-behavior:auto; } }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="chrome-label mono">frimpomaasync.com / thank-you</span>
+    </div>
+
+    <div class="ring">✓</div>
+    <div class="eyebrow mono">Payment received · Thank you</div>
+    <h1 class="title">you're in<span class="period">.</span></h1>
+    <p class="lede">
+      Thank you for getting Som. <span class="accent">It's yours now</span> — download it below, and it lives on your device forever. No accounts, no subscription, nothing to log into.
+    </p>
+
+    <!-- DOWNLOAD -->
+    <section class="dl">
+      <div class="dl-k mono">Your download</div>
+      <h2>som<span class="period">.</span></h2>
+      <p>One zip with the tool and a quick start guide. Save it somewhere easy, then open it any time.</p>
+      <a class="dl-btn" href="Som.zip" download>↓ Download Som</a>
+    </section>
+
+    <div class="note">
+      <b>Didn't download?</b> Tap the button above. The file is <b>Som.zip</b> — open it to find <b>Start-Here.html</b> (a quick guide) and <b>som.html</b> (the tool). On a phone: download it, then open <b>som.html</b> in your browser and tap Share → Add to Home Screen so it opens like an app.
+    </div>
+
+    <div class="next">
+      <h3>What to do next<span class="period">.</span></h3>
+      <ol>
+        <li><b>Open Som.zip</b> and unzip it (double-tap on most phones/computers).</li>
+        <li><b>Open Start-Here.html</b> first — it walks you through everything in 30 seconds.</li>
+        <li><b>Open som.html</b> and start catching your thoughts. It saves automatically to that device.</li>
+      </ol>
+    </div>
+
+    <footer class="foot">
+      <div class="brand">NaNa Frimpomaa</div>
+      Questions? hello@frimpomaasync.com<br>
+      <a href="/">← back to the hub</a> · <a href="products.html">more tools</a>
+    </footer>
+
+  </div>
+</body>
+</html>

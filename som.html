@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Som — catch the thought before it's gone</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="description" content="Som — a simple $33 tool to catch the thought before it's gone. Yours forever, on your device, no subscription, nothing to log into.">
+<link rel="canonical" href="https://frimpomaasync.com/som.html">
+<meta name="theme-color" content="#FDF6ED">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NaNa Frimpomaa">
+<meta property="og:title" content="Som — catch the thought before it's gone">
+<meta property="og:description" content="A simple $33 tool to catch the thought before it's gone. Yours forever, no subscription.">
+<meta property="og:url" content="https://frimpomaasync.com/som.html">
+<meta property="og:image" content="https://frimpomaasync.com/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Som — catch the thought before it's gone">
+<meta name="twitter:description" content="A simple $33 tool to catch the thought before it's gone. Yours forever.">
+<meta name="twitter:image" content="https://frimpomaasync.com/og-cover.png">
+<!-- Self-contained. No external resources. System fonts only. Vanilla JS, saves to your device. -->
+<style>
+  :root{
+    --cream:#FDF6ED; --cream-hi:#FBF8F2; --ink:#1A1916;
+    --accent:#B07D3F; --accent-soft:#E4C79A; --accent-deep:#8A5F2C;
+    --card:#FFFFFF; --muted:#6B6458; --hairline:#E2DCD0; --line:#B8AE9C;
+    --thought:#5E7A5C; --task:#3F6FA8; --reminder:#B0563F;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  html,body{height:100%;}
+  body{
+    background-color:#FDF6ED;
+    background-image:radial-gradient(120% 80% at 50% 0%, #F8F5EF 0%, #F2EEE6 55%, #EEEAE1 100%);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; min-height:100vh; min-height:100dvh; overflow-x:hidden;
+  }
+  .mono{ font-family:ui-monospace,'SF Mono','SFMono-Regular',Menlo,Monaco,Consolas,'Courier New',monospace; }
+
+  .wrap{ width:100%; max-width:600px; margin:0 auto; padding:clamp(30px,7vw,56px) clamp(16px,5vw,26px) 96px; }
+
+  .back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:9px 15px; border:1px solid var(--hairline); border-radius:999px; background:var(--cream-hi); transition:border-color .2s, color .2s; margin-bottom:26px; }
+  .back:hover{ border-color:var(--accent-soft); color:var(--ink); }
+  .back:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+
+  /* masthead */
+  .masthead{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:26px; }
+  .mast-left{ display:flex; align-items:flex-start; gap:15px; }
+  .bigday{ font-weight:800; font-size:clamp(54px,15vw,72px); line-height:0.8; letter-spacing:-0.045em; }
+  .datecol{ padding-top:5px; }
+  .datecol .mname{ font-size:13px; font-weight:700; letter-spacing:0.02em; text-transform:uppercase; }
+  .datecol .yr{ font-size:13px; color:var(--muted); }
+  .datecol .wd{ font-size:12px; color:var(--muted); margin-top:2px; }
+  .brandcol{ text-align:right; }
+  .brandname{ font-weight:800; font-size:23px; letter-spacing:-0.02em; }
+  .brandname .dot{ color:var(--accent); }
+  .tagline{ font-size:12.5px; color:var(--muted); line-height:1.35; margin-top:4px; max-width:170px; }
+
+  /* yesterday nudge */
+  .nudge{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:rgba(255,255,255,0.7); border:1px solid var(--hairline); border-radius:14px; padding:13px 16px; margin-bottom:18px; animation:nudgeIn .4s ease; }
+  .nudge .ntext{ font-size:13.5px; color:var(--ink); line-height:1.4; }
+  .nudge .ntext b{ color:var(--accent-deep); }
+  .nudge .nactions{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
+  .nudge a.review{ font-size:12px; font-weight:600; color:var(--accent-deep); text-decoration:none; white-space:nowrap; cursor:pointer; }
+  .nudge button.dismiss{ background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px; line-height:1; padding:2px 4px; border-radius:6px; }
+  .nudge button.dismiss:hover{ background:rgba(0,0,0,0.05); }
+
+  /* capture card */
+  .capture{ background:var(--card); border:1.5px solid var(--hairline); border-radius:18px; padding:6px 6px 6px; box-shadow:0 1px 2px rgba(26,25,22,.04), 0 10px 30px rgba(26,25,22,.05); transition:border-color .2s, box-shadow .2s; margin-bottom:14px; }
+  .capture:focus-within{ border-color:var(--accent); box-shadow:0 1px 2px rgba(26,25,22,.04), 0 14px 38px rgba(176,125,63,.13); }
+  .capture textarea{ width:100%; border:none; outline:none; resize:none; background:transparent; font-family:inherit; font-size:17px; line-height:1.5; color:var(--ink); padding:16px 16px 6px; min-height:56px; }
+  .capture textarea::placeholder{ color:#A8A398; }
+  .capture-bottom{ display:flex; align-items:center; justify-content:space-between; padding:4px 12px 10px; }
+  .hint{ font-size:11.5px; color:var(--muted); }
+  .hint kbd{ font-family:inherit; background:var(--cream); border:1px solid var(--hairline); border-radius:5px; padding:1px 6px; font-size:10.5px; }
+  .save{ border:none; border-radius:11px; background:var(--accent); color:#fff; font-family:inherit; font-size:13px; font-weight:600; letter-spacing:0.03em; padding:10px 22px; cursor:pointer; transition:transform .15s ease, opacity .2s ease; }
+  .save:hover:not(:disabled){ transform:translateY(-1px); }
+  .save:disabled{ opacity:0.4; cursor:default; }
+
+  /* search */
+  .toolbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:18px 2px 12px; }
+  .tabs{ display:flex; gap:7px; }
+  .tab{ border:1.5px solid var(--hairline); background:var(--cream-hi); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .15s ease; }
+  .tab:hover{ filter:brightness(0.97); }
+  .tab.active{ background:var(--ink); border-color:var(--ink); color:#fff; }
+  .tab .ct{ opacity:0.7; font-weight:500; }
+  .searchbtn{ width:38px; height:38px; border-radius:50%; border:1.5px solid var(--hairline); background:var(--cream-hi); cursor:pointer; color:var(--muted); font-size:15px; display:flex; align-items:center; justify-content:center; transition:all .15s ease; flex-shrink:0; }
+  .searchbtn:hover{ border-color:var(--accent-soft); color:var(--ink); }
+  .searchbtn.on{ background:var(--accent); border-color:var(--accent); color:#fff; }
+  .searchbox{ overflow:hidden; max-height:0; opacity:0; transition:max-height .25s ease, opacity .2s ease, margin .25s ease; margin:0 2px; }
+  .searchbox.open{ max-height:60px; opacity:1; margin:0 2px 12px; }
+  .searchbox input{ width:100%; border:1.5px solid var(--hairline); border-radius:12px; padding:12px 16px; font-family:inherit; font-size:15px; background:#fff; color:var(--ink); outline:none; }
+  .searchbox input:focus{ border-color:var(--accent); box-shadow:0 0 0 4px rgba(176,125,63,.08); }
+
+  /* list */
+  .list{ display:flex; flex-direction:column; gap:9px; }
+  .grouphdr{ font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin:16px 2px 2px; display:flex; align-items:center; gap:8px; }
+  .grouphdr .gct{ color:var(--accent); font-weight:600; }
+  .item{ display:flex; align-items:flex-start; gap:13px; background:var(--card); border:1.5px solid var(--hairline); border-radius:15px; padding:15px 16px; animation:itemIn .3s ease; transition:border-color .15s ease, box-shadow .15s ease; }
+  .item:focus-within{ border-color:var(--accent); }
+  .item.removing{ animation:itemOut .3s ease forwards; }
+  .item.done{ opacity:0.62; }
+  .check{ width:21px; height:21px; border-radius:50%; border:2px solid var(--line); background:transparent; cursor:pointer; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px; transition:all .15s ease; padding:0; }
+  .check:hover{ border-color:var(--accent); }
+  .check.on{ background:var(--accent); border-color:var(--accent); }
+  .item-body{ flex:1; min-width:0; }
+  .item-text{ font-size:15.5px; line-height:1.45; color:var(--ink); word-wrap:break-word; }
+  .item.done .item-text{ text-decoration:line-through; text-decoration-color:var(--line); color:var(--muted); }
+  .item-meta{ display:flex; align-items:center; gap:9px; margin-top:7px; }
+  .chip{ display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; letter-spacing:0.02em; padding:3px 9px; border-radius:999px; }
+  .chip .cdot{ width:6px; height:6px; border-radius:50%; }
+  .chip.thought{ background:rgba(94,122,92,0.12); color:var(--thought); }
+  .chip.thought .cdot{ background:var(--thought); }
+  .chip.task{ background:rgba(63,111,168,0.12); color:var(--task); }
+  .chip.task .cdot{ background:var(--task); }
+  .chip.reminder{ background:rgba(176,86,63,0.12); color:var(--reminder); }
+  .chip.reminder .cdot{ background:var(--reminder); }
+  .time{ font-size:11.5px; color:var(--muted); }
+  .del{ background:none; border:none; color:var(--line); cursor:pointer; font-size:17px; line-height:1; padding:3px 5px; border-radius:7px; flex-shrink:0; opacity:0; transition:opacity .15s ease, background .15s ease, color .15s ease; }
+  .item:hover .del, .item:focus-within .del{ opacity:1; }
+  .del:hover{ background:rgba(176,86,63,0.1); color:var(--reminder); }
+
+  /* empty */
+  .empty{ text-align:center; padding:54px 24px; }
+  .empty .etitle{ font-size:18px; font-weight:700; letter-spacing:-0.01em; margin-bottom:8px; }
+  .empty .esub{ font-size:14px; color:var(--muted); line-height:1.5; max-width:320px; margin:0 auto; }
+
+  .footer{ margin-top:40px; text-align:center; font-size:11.5px; color:var(--muted); line-height:1.7; }
+  .footer .brand{ font-weight:600; color:var(--ink); }
+  .footer a{ color:var(--accent-deep); text-decoration:none; }
+
+  @keyframes itemIn{ from{opacity:0; transform:translateY(-10px) scale(.985);} to{opacity:1; transform:none;} }
+  @keyframes itemOut{ to{opacity:0; transform:translateX(-12px); max-height:0; padding-top:0; padding-bottom:0; margin:0;} }
+  @keyframes nudgeIn{ from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:none;} }
+
+  @media (max-width:520px){
+    .wrap{ padding:24px 14px 84px; }
+    .tagline{ display:none; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <a class="back mono" href="/">← back to the hub</a>
+
+    <div class="masthead">
+      <div class="mast-left">
+        <div class="bigday" id="bigDay">—</div>
+        <div class="datecol">
+          <div class="mname" id="monthName">—</div>
+          <div class="yr" id="year">—</div>
+          <div class="wd" id="weekday">—</div>
+        </div>
+      </div>
+      <div class="brandcol">
+        <div class="brandname">som<span class="dot">.</span></div>
+        <div class="tagline">Catch the thought before it's gone.</div>
+      </div>
+    </div>
+
+    <div class="nudge" id="nudge" style="display:none;">
+      <div class="ntext" id="nudgeText"></div>
+      <div class="nactions">
+        <a class="review" id="nudgeReview">Review →</a>
+        <button class="dismiss" id="nudgeDismiss" aria-label="Dismiss">×</button>
+      </div>
+    </div>
+
+    <div class="capture">
+      <textarea id="draft" rows="1" placeholder="What's on your mind?" aria-label="Capture a thought"></textarea>
+      <div class="capture-bottom">
+        <span class="hint"><kbd>Enter</kbd> to save · <kbd>Shift</kbd>+<kbd>Enter</kbd> for a line</span>
+        <button class="save" id="saveBtn" disabled>Save</button>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-filter="open">Open <span class="ct" id="ctOpen"></span></button>
+        <button class="tab" data-filter="all">All</button>
+        <button class="tab" data-filter="done">Done</button>
+      </div>
+      <button class="searchbtn" id="searchBtn" aria-label="Search">⌕</button>
+    </div>
+
+    <div class="searchbox" id="searchBox">
+      <input type="text" id="searchInput" placeholder="Search your captures…" aria-label="Search captures">
+    </div>
+
+    <div class="list" id="list"></div>
+
+    <div class="footer">
+      <div class="brand">Som · by NaNa Frimpomaa</div>
+      Saves to this device · works offline · yours to keep<br>
+      <a href="/">home</a> · <a href="products.html">tools</a> · <a href="services.html">services</a> · <a href="blog.html">blog</a>
+    </div>
+
+  </div>
+
+<script>
+(function(){
+  "use strict";
+
+  var KEY='thoughtcapture.items.v2', OLD_KEY='thoughtcapture.items.v1', NUDGE_KEY='thoughtcapture.nudge';
+
+  // ---------- classification (faithful to the original) ----------
+  function classifyText(text){
+    var t=(text||'').trim();
+    if(!t) return 'thought';
+    if(/^(idea|note|thought|wondering|wonder|maybe|hmm|observation|question)\b/i.test(t)) return 'thought';
+    var reminderRe=/\b(today|tomorrow|tonight|yesterday|monday|tuesday|wednesday|thursday|friday|saturday|sunday|next\s+(week|month|year|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|this\s+(week|weekend|month|afternoon|evening|morning)|in\s+\d+\s*(min|mins|minutes|hour|hours|hr|hrs|day|days|week|weeks|month|months)|at\s+\d{1,2}(:\d{2})?\s*(am|pm)?|by\s+\d{1,2}(:\d{2})?\s*(am|pm)?|by\s+(eod|noon|midnight|tomorrow|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday|next\s+week|the\s+\w+)|before\s+\d{1,2}|\d{1,2}(:\d{2})?\s*(am|pm))\b/i;
+    if(reminderRe.test(t)) return 'reminder';
+    var taskVerbs=new Set(['call','email','text','message','dm','write','send','pick','buy','order','fix','finish','schedule','book','reschedule','review','check','remind','make','create','prepare','plan','draft','update','reply','respond','pay','clean','wash','file','submit','print','sign','ship','deliver','ask','tell','meet','set','do','get','go','find','build','design','test','launch','publish','post','share','add','remove','delete','rename','move','copy','organize','sort','collect','gather','setup']);
+    var first=t.toLowerCase().split(/[\s,]+/)[0];
+    if(taskVerbs.has(first)) return 'task';
+    return 'thought';
+  }
+
+  function relTime(createdAt){
+    var s=Math.max(0,(Date.now()-createdAt)/1000);
+    if(s<45) return 'just now';
+    var m=Math.floor(s/60);
+    if(m<1) return 'just now';
+    if(m<60) return m+'m ago';
+    var h=Math.floor(m/60);
+    if(h<24) return h+'h ago';
+    var d=Math.floor(h/24);
+    return d+'d ago';
+  }
+
+  var TYPE_LABEL={thought:'thought', task:'to-do', reminder:'reminder'};
+
+  // ---------- state ----------
+  var items=loadItems(), draft='', filter='open', query='', searchOpen=false;
+
+  function loadItems(){
+    try{ var raw=localStorage.getItem(KEY); if(raw){ var p=JSON.parse(raw); if(Array.isArray(p)) return p; } }catch(e){}
+    // migrate v1
+    try{ var r1=localStorage.getItem(OLD_KEY); if(r1){ var p1=JSON.parse(r1); if(Array.isArray(p1)) return p1.map(function(it){ return Object.assign({},it,{type:classifyText(it.text),archived:false}); }); } }catch(e){}
+    var now=Date.now();
+    return [
+      {id:'s1', text:'Idea: a calmer onboarding — one screen, one action.', type:'thought', done:false, archived:false, createdAt:now-12*60*1000},
+      {id:'s2', text:'Email Dana about the Q3 handoff by Thursday.', type:'reminder', done:false, archived:false, createdAt:now-2*60*60*1000},
+      {id:'s3', text:'Pick up the dry cleaning.', type:'task', done:true, archived:false, createdAt:now-26*60*60*1000},
+      {id:'s4', text:'The way light hits the kitchen counter at 4pm — there’s a painting in that.', type:'thought', done:false, archived:false, createdAt:now-28*60*60*1000},
+      {id:'s5', text:'Call the dentist tomorrow morning.', type:'reminder', done:false, archived:false, createdAt:now-30*60*60*1000}
+    ];
+  }
+  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(items)); }catch(e){} }
+
+  // ---------- date masthead ----------
+  function paintDate(){
+    var d=new Date();
+    var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+    var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    el('bigDay').textContent=d.getDate();
+    el('monthName').textContent=months[d.getMonth()];
+    el('year').textContent=d.getFullYear();
+    el('weekday').textContent=days[d.getDay()];
+  }
+
+  // ---------- yesterday nudge ----------
+  function setupNudge(){
+    var todayKey=new Date().toDateString();
+    var dismissed=false;
+    try{ if(localStorage.getItem(NUDGE_KEY)===todayKey) dismissed=true; }catch(e){}
+    // count items created yesterday
+    var now=new Date(), y=new Date(now); y.setDate(now.getDate()-1);
+    var yKey=y.toDateString();
+    var yItems=items.filter(function(it){ return new Date(it.createdAt).toDateString()===yKey; });
+    var yOpen=yItems.filter(function(it){ return !it.done; }).length;
+    if(dismissed || yItems.length===0){ el('nudge').style.display='none'; return; }
+    el('nudge').style.display='flex';
+    el('nudgeText').innerHTML='You captured <b>'+yItems.length+'</b> '+(yItems.length===1?'thing':'things')+' yesterday'+(yOpen?' — '+yOpen+' still open.':'.');
+    el('nudgeReview').onclick=function(){ filter='all'; query=''; renderTabs(); render(); el('nudge').style.display='none'; window.scrollTo({top:300,behavior:'smooth'}); };
+    el('nudgeDismiss').onclick=function(){ try{ localStorage.setItem(NUDGE_KEY, todayKey); }catch(e){} el('nudge').style.display='none'; };
+  }
+
+  // ---------- rendering ----------
+  function visibleItems(){
+    var out=items.filter(function(it){ return !it.archived; });
+    if(filter==='open') out=out.filter(function(it){ return !it.done; });
+    else if(filter==='done') out=out.filter(function(it){ return it.done; });
+    if(query.trim()){ var q=query.trim().toLowerCase(); out=out.filter(function(it){ return it.text.toLowerCase().indexOf(q)>-1; }); }
+    out.sort(function(a,b){ return b.createdAt-a.createdAt; });
+    return out;
+  }
+
+  function render(){
+    var list=el('list'); list.innerHTML='';
+    var vis=visibleItems();
+    if(vis.length===0){ list.appendChild(emptyState()); return; }
+    vis.forEach(function(it){ list.appendChild(itemEl(it)); });
+  }
+
+  function emptyState(){
+    var d=document.createElement('div'); d.className='empty';
+    var t='Nothing here yet.', s='Type a thought above and press Enter. Som figures out if it’s an idea, a to-do, or a reminder.';
+    if(query.trim()){ t='No matches.'; s='Nothing matches “'+query.trim()+'”. Try another word.'; }
+    else if(filter==='done'){ t='Nothing done yet.'; s='Items you check off will gather here.'; }
+    else if(filter==='open'){ t='All clear.'; s='No open items. Your mind can rest.'; }
+    d.innerHTML='<div class="etitle">'+t+'</div><div class="esub">'+s+'</div>';
+    return d;
+  }
+
+  function itemEl(it){
+    var row=document.createElement('div');
+    row.className='item'+(it.done?' done':'');
+    var checked=it.done?' on':'';
+    var label=TYPE_LABEL[it.type]||'thought';
+    row.innerHTML=
+      '<button class="check'+checked+'" aria-label="Mark done">'+(it.done?'✓':'')+'</button>'+
+      '<div class="item-body">'+
+        '<div class="item-text"></div>'+
+        '<div class="item-meta">'+
+          '<span class="chip '+it.type+'"><span class="cdot"></span>'+label+'</span>'+
+          '<span class="time">'+relTime(it.createdAt)+'</span>'+
+        '</div>'+
+      '</div>'+
+      '<button class="del" aria-label="Delete">×</button>';
+    row.querySelector('.item-text').textContent=it.text;
+    row.querySelector('.check').onclick=function(){ it.done=!it.done; save(); renderTabs(); render(); };
+    row.querySelector('.del').onclick=function(){
+      row.classList.add('removing');
+      setTimeout(function(){ items=items.filter(function(x){ return x.id!==it.id; }); save(); renderTabs(); render(); }, 280);
+    };
+    return row;
+  }
+
+  function renderTabs(){
+    var open=items.filter(function(it){ return !it.archived && !it.done; }).length;
+    el('ctOpen').textContent=open?'('+open+')':'';
+    [].forEach.call(document.querySelectorAll('.tab'), function(t){
+      t.classList.toggle('active', t.getAttribute('data-filter')===filter);
+    });
+  }
+
+  // ---------- capture ----------
+  function addThought(){
+    var text=draft.trim();
+    if(!text) return;
+    items.unshift({ id:'i'+Date.now()+Math.random().toString(36).slice(2,6), text:text, type:classifyText(text), done:false, archived:false, createdAt:Date.now() });
+    draft=''; var ta=el('draft'); ta.value=''; autoGrow(ta); el('saveBtn').disabled=true;
+    save(); renderTabs(); render(); ta.focus();
+  }
+
+  function autoGrow(ta){ ta.style.height='auto'; ta.style.height=Math.max(56, ta.scrollHeight)+'px'; }
+
+  // ---------- wire up ----------
+  function el(id){ return document.getElementById(id); }
+
+  var ta=el('draft');
+  ta.addEventListener('input', function(){ draft=ta.value; el('saveBtn').disabled=!draft.trim(); autoGrow(ta); });
+  ta.addEventListener('keydown', function(e){
+    if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); addThought(); }
+  });
+  el('saveBtn').addEventListener('click', addThought);
+
+  el('tabs').addEventListener('click', function(e){
+    var t=e.target.closest('.tab'); if(!t) return;
+    filter=t.getAttribute('data-filter'); renderTabs(); render();
+  });
+
+  el('searchBtn').addEventListener('click', function(){
+    searchOpen=!searchOpen;
+    el('searchBox').classList.toggle('open', searchOpen);
+    el('searchBtn').classList.toggle('on', searchOpen);
+    if(searchOpen){ el('searchInput').focus(); } else { query=''; el('searchInput').value=''; render(); }
+  });
+  el('searchInput').addEventListener('input', function(){ query=el('searchInput').value; render(); });
+  el('searchInput').addEventListener('keydown', function(e){ if(e.key==='Escape'){ el('searchBtn').click(); } });
+
+  // refresh relative times every minute
+  setInterval(render, 60000);
+
+  // init
+  paintDate();
+  setupNudge();
+  renderTabs();
+  render();
+})();
+</script>
+</body>
+</html>

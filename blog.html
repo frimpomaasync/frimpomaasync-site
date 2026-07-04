@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — NaNa Frimpomaa</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="description" content="Notes on building simple tools you actually own — no subscriptions, no templates, no tech headaches — by NaNa Frimpomaa.">
+<link rel="canonical" href="https://frimpomaasync.com/blog.html">
+<meta name="theme-color" content="#FDF6ED">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NaNa Frimpomaa">
+<meta property="og:title" content="Blog — NaNa Frimpomaa">
+<meta property="og:description" content="Notes on building simple tools you actually own — no subscriptions, no templates.">
+<meta property="og:url" content="https://frimpomaasync.com/blog.html">
+<meta property="og:image" content="https://frimpomaasync.com/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Blog — NaNa Frimpomaa">
+<meta name="twitter:description" content="Notes on building simple tools you actually own.">
+<meta name="twitter:image" content="https://frimpomaasync.com/og-cover.png">
+<!-- Self-contained. No external resources. System fonts only. -->
+<style>
+  :root{
+    --cream:#FDF6ED; --cream-hi:#FBF8F2; --ink:#16140F;
+    --copper:#C9975B; --copper-soft:#E4C79A; --copper-deep:#A8763B;
+    --card:#FFFFFF; --muted:#6B6458; --hairline:#E4DDD0; --line:#B8AE9C;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  html,body{height:100%;}
+  body{
+    background-color:#FDF6ED;
+    background-image:radial-gradient(circle at 50% -6%, #FBF8F2 0%, #FDF6ED 60%);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden;
+  }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(var(--hairline) 1px, transparent 1px); background-size:28px 28px; opacity:0.45; pointer-events:none; z-index:0; }
+  .mono{ font-family:ui-monospace,'SF Mono','SFMono-Regular',Menlo,Monaco,Consolas,'Courier New',monospace; }
+
+  .stage{ position:relative; z-index:1; max-width:680px; margin:0 auto; padding:30px 20px 90px; }
+
+  .back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:9px 15px; border:1px solid var(--hairline); border-radius:999px; background:var(--cream-hi); transition:border-color .2s, color .2s; margin-bottom:26px; }
+  .back:hover{ border-color:var(--copper-soft); color:var(--ink); }
+  .back:focus-visible{ outline:2px solid var(--copper); outline-offset:3px; }
+
+  .chrome{ display:flex; align-items:center; gap:8px; padding:0 2px 16px; }
+  .dot{width:11px;height:11px;border-radius:50%;}
+  .dot.r{background:#E0A38C;}.dot.y{background:var(--copper-soft);}.dot.g{background:#B9C7A6;}
+  .chrome-label{ margin-left:10px; font-size:12px; letter-spacing:0.04em; color:var(--muted); }
+
+  .hero{ padding:4px 2px 2px; }
+  .eyebrow{ font-size:12px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--copper); margin-bottom:14px; }
+  .title{ font-size:clamp(46px,14vw,86px); font-weight:800; letter-spacing:-0.045em; line-height:0.84; }
+  .title .period{ color:var(--copper); }
+  .lede{ margin-top:20px; font-size:16px; color:var(--muted); line-height:1.5; max-width:470px; }
+  .lede .accent{ font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:500; font-size:20px; color:var(--ink); }
+
+  /* ===== POST LIST ===== */
+  .posts{ margin-top:38px; display:flex; flex-direction:column; gap:18px; }
+
+  .post{
+    position:relative; background:var(--card); border:1.5px solid var(--hairline);
+    border-radius:24px; overflow:hidden;
+    transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+  }
+  .post:hover{ transform:translateY(-3px); box-shadow:0 18px 44px rgba(22,20,15,0.10); border-color:var(--copper-soft); }
+  .post.open{ transform:none; border-color:var(--copper-soft); box-shadow:0 18px 44px rgba(22,20,15,0.08); }
+
+  .post-head{
+    width:100%; text-align:left; background:none; border:none; cursor:pointer;
+    display:block; padding:30px 30px 26px; color:var(--ink); font-family:inherit;
+  }
+  .post-head:focus-visible{ outline:2px solid var(--copper); outline-offset:-4px; border-radius:24px; }
+
+  .post-meta{ display:flex; align-items:center; gap:12px; margin-bottom:14px; flex-wrap:wrap; }
+  .post-num{ font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--copper); }
+  .post-date{ font-size:11px; letter-spacing:0.06em; color:var(--muted); }
+  .post-tag{ font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:4px 10px; border-radius:999px; background:rgba(201,151,91,0.14); color:var(--copper-deep); border:1px solid var(--copper-soft); }
+
+  .post-title{ font-size:clamp(25px,6.6vw,38px); font-weight:800; letter-spacing:-0.035em; line-height:1.02; margin-bottom:13px; }
+  .post-title .period{ color:var(--copper); }
+  .post-excerpt{ font-size:15px; color:var(--muted); line-height:1.5; max-width:96%; }
+
+  .post-go{ display:inline-flex; align-items:center; gap:8px; margin-top:18px; font-size:12px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--ink); }
+  .post-go .arr{ transition:transform .2s ease; }
+  .post-head:hover .post-go .arr{ transform:translateX(5px); }
+
+  /* expanding body */
+  .post-body{ max-height:0; overflow:hidden; opacity:0; transition:max-height .4s ease, opacity .35s ease; }
+  .post-body.open{ max-height:5200px; opacity:1; }
+  .post-body-inner{ padding:2px 30px 34px; }
+  .post-rule{ height:1px; background:var(--hairline); margin:0 0 24px; }
+  .post-body-inner p{ font-size:15.5px; color:var(--ink); line-height:1.62; margin-bottom:18px; }
+  .post-body-inner p .muted{ color:var(--muted); }
+  .post-body-inner h3{ font-size:19px; font-weight:700; letter-spacing:-0.02em; margin:28px 0 12px; }
+  .post-body-inner h3 .period{ color:var(--copper); }
+  .post-body-inner strong{ font-weight:700; color:var(--ink); }
+  .post-body-inner .pull{
+    font-family:Georgia,'Times New Roman',serif; font-style:italic; font-size:20px;
+    line-height:1.45; color:var(--ink); border-left:3px solid var(--copper);
+    padding:4px 0 4px 20px; margin:26px 0;
+  }
+  .post-body-inner ul{ list-style:none; margin:0 0 20px; padding:0; display:flex; flex-direction:column; gap:9px; }
+  .post-body-inner ul li{ font-size:15px; color:var(--ink); line-height:1.45; padding-left:22px; position:relative; }
+  .post-body-inner ul li::before{ content:"→"; position:absolute; left:0; color:var(--copper); font-weight:700; }
+  .post-sign{ margin-top:26px; font-size:14px; color:var(--muted); }
+  .post-sign b{ color:var(--ink); font-weight:600; }
+  .post-cta-row{ margin-top:24px; display:flex; gap:10px; flex-wrap:wrap; }
+  .pcta{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; padding:13px 24px; border-radius:12px; font-size:12px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+  .pcta.primary{ background:var(--copper); color:#fff; box-shadow:0 12px 28px rgba(201,151,91,0.26); }
+  .pcta.primary:hover{ transform:translateY(-2px); box-shadow:0 16px 36px rgba(201,151,91,0.36); }
+  .pcta.ghost{ background:var(--cream-hi); color:var(--ink); border:1.5px solid var(--hairline); }
+  .pcta.ghost:hover{ transform:translateY(-2px); border-color:var(--copper); }
+  .pcta:focus-visible{ outline:2px solid var(--copper); outline-offset:3px; }
+  .pcta .arr{ transition:transform .2s ease; } .pcta:hover .arr{ transform:translateX(4px); }
+
+  /* coming-soon row */
+  .more{ margin-top:30px; background:var(--cream-hi); border:1px dashed var(--copper-soft); border-radius:20px; padding:26px 28px; text-align:center; }
+  .more .k{ font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--copper); margin-bottom:8px; }
+  .more p{ font-size:14.5px; color:var(--muted); line-height:1.5; max-width:420px; margin:0 auto; }
+  .more p a{ color:var(--copper); text-decoration:none; border-bottom:1.5px solid var(--copper-soft); }
+
+  .foot{ margin-top:34px; text-align:center; font-size:12px; color:var(--muted); line-height:1.8; }
+  .foot .brand{ font-weight:600; color:var(--ink); }
+  .foot a{ color:var(--copper); text-decoration:none; }
+
+  @media (max-width:520px){
+    .stage{ padding:26px 16px 80px; }
+    .post-head{ padding:26px 22px 22px; }
+    .post-body-inner{ padding:2px 22px 30px; }
+    .post-excerpt{ max-width:100%; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <a class="back mono" href="/">← back to the hub</a>
+
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="chrome-label mono">frimpomaasync.com / blog</span>
+    </div>
+
+    <header class="hero">
+      <div class="eyebrow mono">Notes from the build</div>
+      <h1 class="title">blog<span class="period">.</span></h1>
+      <p class="lede">
+        Systems, strategy, and the real work of building in public.
+        <span class="accent">Take what you need, leave what you don't.</span>
+      </p>
+    </header>
+
+    <main class="posts">
+
+      <!-- ===== POST 01 ===== -->
+      <article class="post" id="post-1">
+        <button class="post-head" type="button" aria-expanded="false" aria-controls="post-1-body">
+          <div class="post-meta">
+            <span class="post-num mono">post 01</span>
+            <span class="post-date mono">Jun 2026</span>
+            <span class="post-tag mono">Building in public</span>
+          </div>
+          <h2 class="post-title">your website doesn't have to be Squarespace or Shopify<span class="period">.</span></h2>
+          <p class="post-excerpt">Everyone told me to pick a platform and pay monthly forever. So I built my own front door instead — and you can too.</p>
+          <span class="post-go mono">read <span class="arr">→</span></span>
+        </button>
+
+        <div class="post-body" id="post-1-body" role="region" aria-label="Full post">
+          <div class="post-body-inner">
+            <div class="post-rule"></div>
+
+            <p>When I decided I needed a website, every single answer was the same: pick a platform. Squarespace. Shopify. Wix. Wordpress with seven plugins. Pay the monthly fee. Learn their dashboard. Squeeze your idea into their template until it sort of looks like you.</p>
+
+            <p>And I almost did it. I had the Squarespace tab open. I had my card ready. <strong>Then I stopped and asked myself a simple question:</strong> why am I about to rent a worse version of the exact thing I build for other people?</p>
+
+            <div class="pull">Because that's what those platforms are — rent. You don't own the thing. You own the right to keep paying for it.</div>
+
+            <p>I'm not anti-Squarespace. If you need a big store with a hundred products and inventory syncing, by all means. Those tools exist for a reason. But that's not what most of us actually need. What I needed was a clean front door. A page that said who I am, showed what I make, and let someone book a call or grab a tool. That's it.</p>
+
+            <h3>What I actually wanted<span class="period">.</span></h3>
+
+            <p>I sat down and wrote the list of what mattered. It was short:</p>
+
+            <ul>
+              <li>It should feel like <strong>me</strong>, not a theme everyone else also uses</li>
+              <li>It should load instantly, even on a spotty phone signal</li>
+              <li>No monthly fee draining out of my account forever</li>
+              <li>I should be able to change a word without asking permission from a dashboard</li>
+              <li>It should be <strong>mine</strong> — something I own, not something I lease</li>
+            </ul>
+
+            <p>Look at that list. Not one thing on it requires a platform. Every single one is actually <em>easier</em> without one.</p>
+
+            <h3>So I built my own front door<span class="period">.</span></h3>
+
+            <p>The site you're reading this on right now is the answer. It's a handful of simple pages I built and own outright. No subscription. No plugins to update. No theme to fight. When I want to change something, I open the file, change the word, and it's done. <span class="muted">It costs me almost nothing to keep online.</span></p>
+
+            <p>And here's the part that still makes me smile: the whole site behaves like one of my tools — it builds itself in front of you as you scroll, because that's literally what I do for a living. I couldn't have done that on Squarespace. The thing that makes it <em>mine</em> is the exact thing a template would have flattened.</p>
+
+            <div class="pull">The goal was never "a website." The goal was a thing I own that does one job well. Turns out that's a much smaller, much friendlier problem than the internet makes it sound.</div>
+
+            <h3>What this means for you<span class="period">.</span></h3>
+
+            <p>If you've been putting off your own site because the whole platform decision feels heavy and expensive and locked-in — good news. You might not need any of that. You might just need a simple page that's yours, built around how you actually work, that you never have to pay rent on again.</p>
+
+            <p>That's the whole idea behind what I make. One simple tool you own. A front door included. No template, no subscription to me, no tech headache on your end. You tell me what you want it to do, and I build it around your life instead of forcing your life into someone else's box.</p>
+
+            <p class="post-sign"><b>— NaNa</b> · building in public, one tool at a time.</p>
+
+            <div class="post-cta-row">
+              <a class="pcta primary mono" href="services.html">build mine <span class="arr">→</span></a>
+              <a class="pcta ghost mono" href="products.html">see the tools <span class="arr">→</span></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- more posts go here: copy an <article class="post"> block, bump the number/date -->
+
+    </main>
+
+    <div class="more">
+      <div class="k mono">more coming</div>
+      <p>New notes drop as I build. Want them in your inbox? <a href="/">Join the list on the hub →</a></p>
+    </div>
+
+    <footer class="foot">
+      <div class="brand">NaNa Frimpomaa</div>
+      Custom AI tools, dashboards &amp; automations<br>
+      <a href="/">← back to the hub</a> · © 2026 · Built in public
+    </footer>
+
+  </div>
+
+<script>
+(function(){
+  "use strict";
+  // Self-contained, no dependencies. Expand/collapse posts inline.
+  var heads = [].slice.call(document.querySelectorAll('.post-head'));
+  heads.forEach(function(head){
+    head.addEventListener('click', function(){
+      var post = head.closest('.post');
+      var body = post.querySelector('.post-body');
+      var isOpen = body.classList.toggle('open');
+      post.classList.toggle('open', isOpen);
+      head.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      var arr = head.querySelector('.post-go .arr');
+      if(arr) arr.textContent = isOpen ? '↑' : '→';
+      var go = head.querySelector('.post-go');
+      if(go) go.childNodes[0].nodeValue = isOpen ? 'close ' : 'read ';
+    });
+  });
+})();
+</script>
+</body>
+</html>

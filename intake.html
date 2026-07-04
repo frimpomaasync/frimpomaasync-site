@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Build Brief — NaNa Frimpomaa</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<meta name="robots" content="noindex, follow">
+<meta name="description" content="Your build brief — tell NaNa exactly what to build after your order. Takes about 3 minutes.">
+<meta name="theme-color" content="#FDF6ED">
+<!-- Self-contained. No external resources. System fonts only.
+     SETUP: see the SETUP NOTE near the </form> tag to connect this form to your email/inbox. -->
+<style>
+  :root{
+    --cream:#FDF6ED; --cream-hi:#FBF8F2; --ink:#16140F;
+    --copper:#C9975B; --copper-soft:#E4C79A; --copper-deep:#A8763B;
+    --card:#FFFFFF; --muted:#6B6458; --hairline:#E4DDD0; --line:#B8AE9C;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    background-color:#FDF6ED;
+    background-image:radial-gradient(circle at 50% -6%, #FBF8F2 0%, #FDF6ED 60%);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
+    -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden;
+  }
+  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(var(--hairline) 1px, transparent 1px); background-size:28px 28px; opacity:0.45; pointer-events:none; z-index:0; }
+  .mono{ font-family:ui-monospace,'SF Mono','SFMono-Regular',Menlo,Monaco,Consolas,'Courier New',monospace; }
+
+  .stage{ position:relative; z-index:1; max-width:600px; margin:0 auto; padding:34px 20px 90px; }
+
+  .chrome{ display:flex; align-items:center; gap:8px; padding:0 2px 16px; }
+  .dot{width:11px;height:11px;border-radius:50%;}
+  .dot.r{background:#E0A38C;}.dot.y{background:var(--copper-soft);}.dot.g{background:#B9C7A6;}
+  .chrome-label{ margin-left:10px; font-size:12px; letter-spacing:0.04em; color:var(--muted); }
+
+  .hero{ padding:4px 2px 2px; margin-bottom:8px; }
+  .eyebrow{ font-size:12px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--copper); margin-bottom:14px; }
+  .title{ font-size:clamp(40px,12vw,68px); font-weight:800; letter-spacing:-0.045em; line-height:0.86; }
+  .title .period{ color:var(--copper); }
+  .lede{ margin-top:18px; font-size:15.5px; color:var(--muted); line-height:1.5; max-width:480px; }
+  .lede .accent{ font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:500; font-size:19px; color:var(--ink); }
+
+  /* paid confirmation banner */
+  .paid{
+    display:flex; align-items:center; gap:12px; margin-top:24px;
+    background:rgba(185,199,166,0.22); border:1px solid #B9C7A6;
+    border-radius:14px; padding:15px 18px;
+  }
+  .paid .check{ width:26px;height:26px;border-radius:50%; background:#7d9460; color:#fff; display:flex; align-items:center; justify-content:center; font-size:14px; flex-shrink:0; }
+  .paid .txt{ font-size:13.5px; color:#4a5838; line-height:1.4; }
+  .paid .txt b{ color:#3a4a2c; }
+
+  form{ margin-top:30px; }
+  .section-label{
+    font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase;
+    color:var(--copper); margin:34px 0 4px;
+  }
+  .section-label:first-of-type{ margin-top:0; }
+
+  .field{ margin-top:18px; }
+  .field label{ display:block; font-size:14.5px; font-weight:600; color:var(--ink); margin-bottom:7px; letter-spacing:-0.01em; }
+  .field .hint{ font-size:13px; color:var(--muted); margin-bottom:9px; line-height:1.4; font-weight:400; }
+  .field .req{ color:var(--copper); }
+
+  input[type=text], input[type=email], input[type=url], textarea, select{
+    width:100%; padding:14px 16px; border:1.5px solid var(--hairline); border-radius:12px;
+    font-family:inherit; font-size:15px; background:#fff; color:var(--ink); transition:border-color .18s ease, box-shadow .18s ease;
+  }
+  input:focus, textarea:focus, select:focus{ outline:none; border-color:var(--copper); box-shadow:0 0 0 3px rgba(201,151,91,0.15); }
+  textarea{ resize:vertical; min-height:110px; line-height:1.5; }
+  select{ appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%23C9975B' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; padding-right:42px; }
+
+  /* radio / checkbox groups as tappable chips */
+  .chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:4px; }
+  .chip{ position:relative; }
+  .chip input{ position:absolute; opacity:0; pointer-events:none; }
+  .chip label{
+    display:inline-block; margin:0; padding:11px 18px; border:1.5px solid var(--hairline);
+    border-radius:999px; font-size:14px; font-weight:500; color:var(--muted); cursor:pointer;
+    background:var(--cream-hi); transition:all .16s ease; user-select:none;
+  }
+  .chip input:checked + label{ background:var(--copper); border-color:var(--copper); color:#fff; }
+  .chip input:focus-visible + label{ box-shadow:0 0 0 3px rgba(201,151,91,0.3); }
+
+  .submit{
+    margin-top:36px; width:100%; padding:17px; border:none; border-radius:14px;
+    background:var(--copper); color:#fff; font-family:inherit; font-size:14px; font-weight:600;
+    letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;
+    box-shadow:0 14px 36px rgba(201,151,91,0.3); transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .submit:hover{ transform:translateY(-2px); box-shadow:0 20px 46px rgba(201,151,91,0.42); }
+  .privacy{ margin-top:14px; text-align:center; font-size:12px; color:var(--muted); line-height:1.5; }
+
+  /* success state */
+  .done{ display:none; text-align:center; padding:50px 24px; }
+  .done.show{ display:block; }
+  .done .ring{ width:64px;height:64px;border-radius:50%; border:3px solid var(--copper); display:flex; align-items:center; justify-content:center; color:var(--copper); font-size:30px; margin:0 auto 22px; background:var(--cream-hi); }
+  .done h2{ font-size:clamp(28px,8vw,44px); font-weight:800; letter-spacing:-0.035em; line-height:0.92; margin-bottom:12px; }
+  .done h2 .period{ color:var(--copper); }
+  .done p{ font-size:15px; color:var(--muted); line-height:1.55; max-width:400px; margin:0 auto 24px; }
+  .done .cta{ display:inline-flex; align-items:center; gap:9px; text-decoration:none; padding:15px 30px; border-radius:13px; background:var(--ink); color:#fff; font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; }
+
+  .foot{ margin-top:40px; text-align:center; font-size:12px; color:var(--muted); line-height:1.8; }
+  .foot .brand{ font-weight:600; color:var(--ink); }
+  .foot a{ color:var(--copper); text-decoration:none; }
+
+  @media (max-width:520px){ .stage{ padding:28px 16px 80px; } }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation:none !important; transition:none !important; }
+    html{ scroll-behavior:auto; }
+  }
+</style>
+</head>
+<body>
+  <div class="stage">
+
+    <div class="chrome">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="chrome-label mono">frimpomaasync.com / build-brief</span>
+    </div>
+
+    <header class="hero">
+      <div class="eyebrow mono">Step 2 · Tell me what to build</div>
+      <h1 class="title">your build brief<span class="period">.</span></h1>
+      <p class="lede">
+        Payment's in — now the fun part. Tell me about the tool you want and I'll get to work.
+        <span class="accent">The more detail, the better the build.</span> Takes about 3 minutes.
+      </p>
+      <div class="paid">
+        <span class="check">✓</span>
+        <span class="txt"><b>Payment received.</b> This form connects your order to your build. Fill it out and you're all set.</span>
+      </div>
+    </header>
+
+    <!-- ============ THE FORM ============ -->
+    <!-- Connected to Formspree (mnjkqydb). Submissions email to NaNa. -->
+    <form id="briefForm" action="https://formspree.io/f/mnjkqydb" method="POST" onsubmit="return handleSubmit(event)">
+
+      <div class="section-label mono">Who you are</div>
+
+      <div class="field">
+        <label>Your name <span class="req">*</span></label>
+        <input type="text" name="name" required placeholder="First and last">
+      </div>
+
+      <div class="field">
+        <label>Best email <span class="req">*</span></label>
+        <div class="hint">Where I'll send updates and your finished tool.</div>
+        <input type="email" name="email" required placeholder="you@email.com">
+      </div>
+
+      <div class="field">
+        <label>Order number or the email you paid with</label>
+        <div class="hint">So I can match this to your payment. If you're not sure, just put the email you used.</div>
+        <input type="text" name="order" placeholder="Order # or payment email">
+      </div>
+
+      <div class="section-label mono">What you bought</div>
+
+      <div class="field">
+        <label>Which build is this? <span class="req">*</span></label>
+        <div class="chips">
+          <span class="chip"><input type="radio" name="tier" id="t-spark" value="Spark — $144" required><label for="t-spark">Spark · $144</label></span>
+          <span class="chip"><input type="radio" name="tier" id="t-build" value="Build — $344"><label for="t-build">Build · $344</label></span>
+          <span class="chip"><input type="radio" name="tier" id="t-system" value="System — $644"><label for="t-system">System · $644</label></span>
+          <span class="chip"><input type="radio" name="tier" id="t-custom" value="Custom / not sure"><label for="t-custom">Custom / not sure</label></span>
+        </div>
+      </div>
+
+      <div class="section-label mono">The build</div>
+
+      <div class="field">
+        <label>What is it for? <span class="req">*</span></label>
+        <div class="chips">
+          <span class="chip"><input type="radio" name="forwhat" id="f-biz" value="My business" required><label for="f-biz">My business</label></span>
+          <span class="chip"><input type="radio" name="forwhat" id="f-hustle" value="A side hustle" ><label for="f-hustle">A side hustle</label></span>
+          <span class="chip"><input type="radio" name="forwhat" id="f-personal" value="Personal / home"><label for="f-personal">Personal / home</label></span>
+          <span class="chip"><input type="radio" name="forwhat" id="f-idea" value="An idea I have"><label for="f-idea">An idea I have</label></span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>In one line, what do you want me to build? <span class="req">*</span></label>
+        <div class="hint">Like: "a booking tracker for my braiding business" or "a tool that reminds me what's due."</div>
+        <input type="text" name="oneliner" required placeholder="The tool I want is…">
+      </div>
+
+      <div class="field">
+        <label>Tell me the whole story <span class="req">*</span></label>
+        <div class="hint">What's the problem or idea? What should the tool do? Walk me through how you'd use it. Don't worry about tech words — just describe it like you'd tell a friend.</div>
+        <textarea name="details" required placeholder="Right now I… / I wish I had something that… / It should let me…"></textarea>
+      </div>
+
+      <div class="field">
+        <label>What should it help you do? <span class="req">*</span></label>
+        <div class="hint">Pick all that fit.</div>
+        <div class="chips">
+          <span class="chip"><input type="checkbox" name="goals" id="g-track" value="Track things"><label for="g-track">Track things</label></span>
+          <span class="chip"><input type="checkbox" name="goals" id="g-remember" value="Remember / capture"><label for="g-remember">Remember things</label></span>
+          <span class="chip"><input type="checkbox" name="goals" id="g-auto" value="Automate a task"><label for="g-auto">Automate a task</label></span>
+          <span class="chip"><input type="checkbox" name="goals" id="g-organize" value="Organize info"><label for="g-organize">Organize info</label></span>
+          <span class="chip"><input type="checkbox" name="goals" id="g-see" value="See things at a glance"><label for="g-see">See at a glance</label></span>
+          <span class="chip"><input type="checkbox" name="goals" id="g-sell" value="Sell / take orders"><label for="g-sell">Sell / take orders</label></span>
+        </div>
+      </div>
+
+      <div class="section-label mono">Make it yours</div>
+
+      <div class="field">
+        <label>Any look, colors, or brand you want?</label>
+        <div class="hint">Drop a link to your Instagram, website, or anything that shows your vibe. Or describe it.</div>
+        <input type="url" name="brandlink" placeholder="https:// … (optional)">
+      </div>
+
+      <div class="field">
+        <label>Anything I should see? Examples, screenshots, notes</label>
+        <div class="hint">Links to a tool you like, a sketch, a spreadsheet you use now — paste any links here.</div>
+        <textarea name="references" placeholder="Links or notes… (optional)" style="min-height:80px;"></textarea>
+      </div>
+
+      <div class="field">
+        <label>When do you need it?</label>
+        <select name="timeline">
+          <option value="">No rush</option>
+          <option value="ASAP">As soon as possible</option>
+          <option value="1-2 weeks">Within 1–2 weeks</option>
+          <option value="This month">This month</option>
+          <option value="Flexible">Flexible</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Anything else you want me to know?</label>
+        <textarea name="anything" placeholder="Optional — anything at all." style="min-height:80px;"></textarea>
+      </div>
+
+      <!-- ============================================================
+           SETUP NOTE — CONNECT THIS FORM (pick ONE, takes 2 minutes):
+
+           OPTION A — Formspree (easiest, free):
+             1. Make a free form at formspree.io
+             2. Copy your form ID (looks like: xayzwkqd)
+             3. In the <form> tag above, add:
+                  action="https://formspree.io/f/YOUR_ID"  method="POST"
+             4. In the JS below, set USE_FORMSPREE = true
+             → submissions land in your email automatically.
+
+           OPTION B — Email fallback (no signup):
+             Leave as-is. On submit it opens the visitor's email app
+             with everything filled in, addressed to you. Just set
+             YOUR_EMAIL below.
+
+           OPTION C — Google Forms / Tally / Jotform:
+             Use their embed instead of this page.
+        ============================================================ -->
+
+      <button type="submit" class="submit mono">send my build brief →</button>
+      <p class="privacy">Your details go straight to NaNa and are only used to build your tool.</p>
+    </form>
+
+    <!-- success -->
+    <div class="done" id="done">
+      <div class="ring">✓</div>
+      <h2>got it<span class="period">.</span></h2>
+      <p>Your build brief is on its way to me. I'll review it and email you next steps — usually within a day. Talk soon.</p>
+      <a class="cta mono" href="/">back to the hub →</a>
+    </div>
+
+    <footer class="foot">
+      <div class="brand">NaNa Frimpomaa</div>
+      Custom AI tools, dashboards &amp; automations<br>
+      <a href="/">← back to the hub</a> · © 2026 · Built in public
+    </footer>
+
+  </div>
+
+<script>
+  // ===== CONFIG — EDIT THESE TWO LINES =====
+  var YOUR_EMAIL = "nanafrimpgskc@gmail.com";    // <-- fallback inbox (build briefs land here if Formspree isn't on yet)
+  var USE_FORMSPREE = true;                     // <-- set to true AFTER you paste your real Formspree ID into the <form> action above
+  // =========================================
+
+  function handleSubmit(e){
+    e.preventDefault();
+    var form = document.getElementById('briefForm');
+
+    // If Formspree is wired up, let the form post normally to its action.
+    if(USE_FORMSPREE && form.getAttribute('action')){
+      form.submit();
+      return false;
+    }
+
+    // Otherwise: build a tidy email and open the visitor's mail app (no backend needed).
+    var data = new FormData(form);
+    var lines = [];
+    function add(label, key){
+      var vals = data.getAll(key);
+      if(vals.length && vals.join("").trim()) lines.push(label + ": " + vals.join(", "));
+    }
+    add("Name","name"); add("Email","email"); add("Order","order");
+    add("Tier","tier"); add("For","forwhat");
+    add("One-liner","oneliner"); add("Details","details");
+    add("Goals","goals"); add("Brand link","brandlink");
+    add("References","references"); add("Timeline","timeline");
+    add("Anything else","anything");
+
+    var subject = "New Build Brief — " + (data.get('name') || 'SynKasa');
+    var body = "MY BUILD BRIEF\n\n" + lines.join("\n\n");
+    var href = "mailto:" + YOUR_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+
+    // show success state, then open mail app
+    document.getElementById('briefForm').style.display = 'none';
+    document.querySelector('.paid').style.display = 'none';
+    document.querySelector('.hero .lede').style.display = 'none';
+    document.getElementById('done').classList.add('show');
+    window.location.href = href;
+    return false;
+  }
+</script>
+</body>
+</html>
