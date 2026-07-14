@@ -24,16 +24,16 @@
       { label: "Book a free call", msg: "I’d like to book a call" }
     ],
     kb: [
-      { keys: ["build", "make", "offer", "services", "service", "create", "do you do", "what do you"], a: "NaNa builds small AI tools and systems that do real jobs for you:\n\n• Som — $33, catches ideas/links/follow-ups before you lose them\n• Soma — free demo, “type it once, watch it land everywhere”\n• Custom builds — Spark $144 · Build $344 · System $644\n• SynKasa — a done-for-you AI receptionist (like me!)\n\nWant me to point you to one, or book a free call?" },
+      { keys: ["build", "make", "offer", "services", "service", "create", "do you do", "what do you"], a: "NaNa builds small AI tools and systems that do real jobs for you:\n\n• Som — $33, catches ideas/links/follow-ups before you lose them\n• Soma — free demo, “type it once, watch it land everywhere”\n• The Solo Business System — booking, leads & follow-up automated, done for you: $1,500, live in 7 days\n• SynKasa — a done-for-you AI receptionist (like me!)\n\nWant me to point you to one, or book a free call?" },
       { keys: ["soma"], a: "Soma is the free demo — “type it once, watch it land everywhere.” It shows you the idea with zero commitment. Want the link to try it?" },
       { keys: ["som"], a: "Som is a $33 one-time tool that catches what you’d normally lose — ideas, links, follow-ups. Type it once and it’s held for you. Want the link to grab it?" },
       { keys: ["synkasa", "receptionist", "chatbot", "assistant", "widget", "this thing", "are you"], a: "I’m SynKasa — a done-for-you AI receptionist. I answer messages, book appointments, and capture leads 24/7, built for your business in 48 hours. NaNa can put one exactly like me on your site. Setup is from $555 + $99/mo. Want a free call to see it built for you?" },
-      { keys: ["custom", "website", "site", "app", "tool", "software", "system"], a: "Custom builds come in three sizes: Spark $144 (one focused tool), Build $344 (a small system), System $644 (the full thing). Tell me what you’re trying to make and I’ll point you to the right one — or book a free call." },
+      { keys: ["custom", "website", "site", "app", "tool", "software", "system"], a: "The main offer is the Solo Business System: your booking, lead capture, and follow-up automated into one connected system — $1,500, live in 7 days, optional $99/mo care plan. The first 3 founding clients get it for $750. Smaller or personal ideas get an exact quote on the free call." },
       { keys: ["who", "nana", "frimpomaa", "about", "yourself", "you guys"], a: "NaNa Frimpomaa is a solo founder who builds calm AI tools for people and small businesses — everything here is real and live. What can I help you with?" },
-      { keys: ["free", "cost nothing", "no cost", "try free"], a: "Soma is completely free to try, and the 15-minute build call is free too. Som is $33 one-time, and custom builds start at $144. Want the free call?" },
-      { keys: ["how long", "turnaround", "how fast", "timeline", "when can", "how quick"], a: "SynKasa is built and live in 48 hours. Custom builds depend on size — a Spark ($144) is quick, a System ($644) is more involved. Want to talk timing on a free call?" },
-      { keys: ["small business", "minority", "black owned", "my business", "for me"], a: "Yes — NaNa builds specifically for small and minority-owned businesses. SynKasa (the AI receptionist) was made for exactly that. Want to see what it’d look like for your business? I can book you a free call." },
-      { keys: ["guarantee", "risk", "refund", "what if"], a: "The bigger AI Operating System builds come with a 30-day guarantee — live in 30 days or you don’t pay the build fee. For the smaller tools, you can try Soma free first. Want to talk it through on a call?" },
+      { keys: ["free", "cost nothing", "no cost", "try free"], a: "Soma is completely free to try, and the 15-minute build call is free too. Som is $33 one-time, and the Solo Business System is $1,500 ($750 for the first 3 founding clients). Want the free call?" },
+      { keys: ["how long", "turnaround", "how fast", "timeline", "when can", "how quick"], a: "SynKasa is built and live in 48 hours, and the Solo Business System is live in 7 days — guaranteed, or you don’t pay the build fee. Want to talk timing on a free call?" },
+      { keys: ["small business", "my business", "for me"], a: "Yes — NaNa builds specifically for small businesses and solo owners. The Solo Business System and SynKasa were made for exactly that. Want to see what it’d look like for your business? I can book you a free call." },
+      { keys: ["guarantee", "risk", "refund", "what if"], a: "The Solo Business System comes with a 7-day guarantee — live in 7 days or you don’t pay the build fee. And you can try Soma free first to feel the quality. Want to talk it through on a call?" },
       { keys: ["upwork", "hire", "freelance", "work with"], a: "You can work with NaNa directly here — the fastest start is a free 15-minute build call. Want me to grab you a time?" }
     ]
   };
@@ -127,7 +127,7 @@
   function has(t) { for (var i = 1; i < arguments.length; i++) { var a = arguments[i]; var hit = a.indexOf(' ') > -1 ? (t.indexOf(a) > -1) : (t.indexOf(' ' + a + ' ') > -1); if (hit) return true; } return false; }
 
   function priceList() {
-    return "Here’s the full menu:\n\n• Som — $33 one-time\n• Soma — free\n• Spark build — $144\n• Build — $344\n• System build — $644\n• SynKasa AI receptionist — from $555 setup + $99/mo\n\nWant me to book you a free call to figure out the right fit?";
+    return "Here’s the full menu:\n\n• Som — $33 one-time\n• Soma — free\n• The Solo Business System — $1,500, live in 7 days ($750 for the first 3 founding clients) + optional $99/mo care\n• SynKasa AI receptionist — from $555 setup + $99/mo\n\nWant me to book you a free call to figure out the right fit?";
   }
 
   function handle(text) {
