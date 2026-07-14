@@ -113,6 +113,21 @@ a{color:inherit}
 .proof .more a{font-weight:600;color:var(--copper-deep);text-decoration:none;font-size:15.5px}
 .proof .more a:hover{text-decoration:underline}
 
+/* steal these — free value */
+.steal{padding:90px 0;border-top:1px solid var(--line)}
+.steal h2{font-family:var(--serif);font-size:clamp(28px,5vw,46px);font-weight:700;letter-spacing:-.02em;color:var(--ink);text-align:center}
+.steal .sub{text-align:center;color:var(--muted);margin-top:12px;font-size:15.5px;max-width:520px;margin-left:auto;margin-right:auto}
+.steal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:980px;margin:40px auto 0}
+.steal-card{background:var(--panel);border-radius:18px;padding:26px 24px}
+.steal-card .n{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--copper-deep)}
+.steal-card b{display:block;font-family:var(--serif);font-size:21px;color:var(--ink);margin-top:10px}
+.steal-card p{font-size:14px;color:var(--ink-2);margin-top:10px;line-height:1.6}
+.steal-card p i{font-style:normal;background:#fff;border:1px solid var(--line);border-radius:8px;padding:1px 6px;color:var(--ink)}
+.steal-more{text-align:center;margin-top:30px;font-size:15.5px;color:var(--muted)}
+.steal-more a{color:var(--copper-deep);font-weight:600;text-decoration:none}
+.steal-more a:hover{text-decoration:underline}
+@media(max-width:820px){.steal-grid{grid-template-columns:1fr}}
+
 /* tools ladder */
 .tools{padding:90px 0;border-top:1px solid var(--line)}
 .tools h2{font-family:var(--serif);font-size:clamp(26px,4.4vw,40px);font-weight:700;letter-spacing:-.02em;color:var(--ink);text-align:center}
@@ -160,6 +175,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
 <nav class="nav"><div class="nav-in">
   <a class="logo" href="/">NaNa Frimpomaa<span class="dot">.</span></a>
   <div class="nav-links">
+    <a href="#steal">free tools</a>
     <a href="#system">the system</a>
     <a href="portfolio.html">portfolio</a>
     <a href="products.html">tools</a>
@@ -224,6 +240,33 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
     <p class="sub">Real systems I've built and shipped — 59 seconds, no talking heads, just the screen.</p>
     <div class="reel"><video src="videos/00-sizzle-reel.mp4" controls preload="metadata" playsinline></video></div>
     <div class="more"><a href="portfolio.html">see the full portfolio →</a></div>
+  </div>
+</section>
+
+<!-- ===== FREE VALUE — steal these ===== -->
+<section class="steal" id="steal">
+  <div class="wrap">
+    <div class="kicker">Free · No email needed</div>
+    <h2>Steal these three.</h2>
+    <p class="sub">Real pieces of the System you can install yourself, today. If you never book a call, install these anyway.</p>
+    <div class="steal-grid">
+      <div class="steal-card">
+        <div class="n">01 · 15 minutes · $0</div>
+        <b>The booking link</b>
+        <p>Google Calendar → <i>Appointment schedules</i>. Add your services, block the hours you refuse to work, copy the link. Paste it in your Instagram bio, your Facebook Page button, and your text replies. Clients book themselves while you sleep.</p>
+      </div>
+      <div class="steal-card">
+        <div class="n">02 · 2 minutes · $0</div>
+        <b>The after-hours text</b>
+        <p>Set an auto-reply on your business line with this, word for word: <i>"Got your message! I'm with a client — I reply to everyone by [time]. Need an appointment now? Book here: [your link]."</i> Every message answered, hands never leave the client in front of you.</p>
+      </div>
+      <div class="steal-card">
+        <div class="n">03 · 5 minutes · $0</div>
+        <b>The 24-hour follow-up</b>
+        <p>Save this as a text shortcut and send it the day after every quote: <i>"Hi [name] — wanted to make sure my quote reached you. Happy to answer anything. If the timing's wrong, no pressure — the number holds for 30 days."</i> Quotes die in silence; this one line revives them.</p>
+      </div>
+    </div>
+    <p class="steal-more">Want all 12, organized into a plan? <a href="planner.html">Get the free Automated Small Business Blueprint →</a></p>
   </div>
 </section>
 
