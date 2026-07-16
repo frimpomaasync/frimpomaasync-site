@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Client Catcher — Done-For-You AI Back Office · NaNa Frimpomaa</title>
+<meta name="description" content="Never lose a lead. A done-for-you AI back office for real estate agents and home-services owners — catches every missed call, follows up in your voice, books the appointment. Live in 7 days or you don't pay.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://frimpomaasync.com/client-catcher.html">
+<meta property="og:title" content="The Client Catcher — Never lose a lead again">
+<meta property="og:description" content="A done-for-you AI back office that catches missed calls, follows up in your voice, and books the job. Live in 7 days, booking in 30 — or you don't pay.">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="The Client Catcher — Never lose a lead again">
+<meta name="twitter:description" content="Done-for-you AI back office for real estate & home services. Live in 7 days, booking in 30 — or you don't pay.">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+ {"@type":"Question","name":"Do I need a Claude subscription or any software account?","acceptedAnswer":{"@type":"Answer","text":"No. The whole system runs on the provider's account — you don't sign up for anything, install anything, or pay any AI bill. Your only tools stay the ones you already use: your phone, your calendar, your inbox."}},
+ {"@type":"Question","name":"How much of my time does this take?","acceptedAnswer":{"@type":"Answer","text":"One 20-minute mapping call, then about 30 minutes reviewing the finished system before it goes live. It's a done-for-you build."}},
+ {"@type":"Question","name":"Will it work with what I already use?","acceptedAnswer":{"@type":"Answer","text":"It's built around your current setup — your existing phone number, Google or Outlook calendar, and whatever you use to track customers today."}},
+ {"@type":"Question","name":"What happens if it doesn't get me bookings?","acceptedAnswer":{"@type":"Answer","text":"Then you don't pay. The guarantee is in the agreement: live and working in 7 days, booking appointments within 30 — or you don't pay."}}
+]}
+</script>
+<style>
+:root{
+  --ink:#1A1A1A; --ink2:#33302B; --muted:#6E6A62; --faint:#9A948A;
+  --line:#E3E0DA; --line-strong:#CFC9BF; --copper:#C9975B; --copper-deep:#A97B3F;
+  --bg:#FFFFFF; --panel:#F6F5F3; --panel2:#FAFAF8;
+  --navy:#1E2A45; --navy-deep:#16203A; --navy-line:#2A3554;
+  --red:#A63A2B; --red-deep:#8C2F23;
+  --green:#2E7D4F; --green-deep:#256B42;
+  --cred:#B4552D; --cred-deep:#9A4522;
+  --sans:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
+  --serif:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif;
+  --mono:ui-monospace,'SF Mono',Menlo,Monaco,monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{background:var(--bg);scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink2);font-family:var(--sans);line-height:1.55;font-size:15px;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+.wrap{max-width:1020px;margin:0 auto;padding:0 28px 72px}
+h1,h2,h3{color:var(--ink)}
+::selection{background:var(--copper);color:#fff}
+
+/* ---------- reveal ---------- */
+.rv{opacity:0;transform:translateY(18px);transition:opacity .7s ease,transform .7s ease}
+.rv.in{opacity:1;transform:none}
+.rv.d1{transition-delay:.08s}.rv.d2{transition-delay:.16s}.rv.d3{transition-delay:.24s}
+
+/* ---------- nav ---------- */
+.nav{position:sticky;top:0;z-index:60;background:rgba(255,255,255,.88);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.navin{max-width:1160px;margin:0 auto;display:flex;align-items:center;gap:22px;padding:14px 28px}
+.logo{font-family:var(--serif);font-weight:700;font-size:1.05rem;color:var(--ink);text-decoration:none;letter-spacing:-.01em}
+.navlinks{margin:0 auto;display:flex;gap:26px}
+.navlinks a{font-size:.86rem;font-weight:600;color:var(--ink2);text-decoration:none;transition:color .2s}
+.navlinks a:hover{color:var(--copper-deep)}
+.navbtn{background:var(--cred);color:#fff;text-decoration:none;font-weight:700;font-size:.76rem;padding:9px 18px;border-radius:99px;white-space:nowrap;text-transform:uppercase;letter-spacing:.08em;transition:background .2s,transform .2s}
+.navbtn:hover{background:var(--cred-deep);transform:translateY(-1px)}
+@media(max-width:760px){.navlinks{display:none}.navin{justify-content:space-between}}
+@media(max-width:520px){.navin{padding:12px 14px;gap:10px}.logo{font-size:.9rem}.navbtn{font-size:.64rem;padding:8px 12px;letter-spacing:.05em}}
+
+/* ---------- editorial hero ---------- */
+.ed-hero{text-align:center;padding:72px 20px 0;max-width:1160px;margin:0 auto}
+.ed-hero .label{font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:20px}
+.ed-hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(2.9rem,9.5vw,7rem);line-height:.98;letter-spacing:-.025em}
+.ed-hero h1 .w{display:inline-block;opacity:0;transform:translateY(.5em);animation:wordUp .8s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes wordUp{to{opacity:1;transform:none}}
+.ed-hero .deck{font-family:var(--serif);font-size:clamp(1.05rem,2vw,1.3rem);color:var(--muted);margin:22px auto 0;line-height:1.5;max-width:38em}
+.ed-ctas{margin-top:28px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-block;background:var(--cred);color:#fff;text-decoration:none;font-weight:700;font-size:.88rem;padding:14px 28px;border-radius:6px;text-transform:uppercase;letter-spacing:.08em;transition:transform .25s ease,box-shadow .25s ease,background .25s ease}
+.btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(154,69,34,.55);background:var(--cred-deep)}
+.btn:focus-visible{outline:3px solid var(--cred-deep);outline-offset:2px}
+.btn.dark{background:var(--navy)}
+.btn.dark:hover{background:var(--navy-deep);box-shadow:0 10px 24px -10px rgba(22,32,58,.5)}
+.micro{margin-top:14px;font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;color:var(--faint);text-align:center}
+
+/* ---------- niche toggle ---------- */
+.niche{display:inline-flex;border:1px solid var(--line-strong);border-radius:99px;padding:4px;gap:4px;background:var(--panel);margin-bottom:22px}
+.niche button{border:0;background:transparent;font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);padding:8px 16px;border-radius:99px;cursor:pointer;transition:background .25s,color .25s}
+.niche button.on{background:var(--navy);color:#fff}
+.niche button:focus-visible{outline:2px solid var(--cred);outline-offset:1px}
+
+/* ---------- showcase: laptop over navy block ---------- */
+.showcase{position:relative;max-width:1160px;margin:56px auto 0;padding:0 20px}
+.blockbg{position:absolute;left:20px;right:20px;top:120px;bottom:-40px;background:var(--navy);border-radius:28px}
+.laptop{position:relative;max-width:820px;margin:0 auto;background:#0F1830;border:10px solid #0F1830;border-radius:18px;box-shadow:0 50px 100px -40px rgba(22,32,58,.6);overflow:hidden}
+.feedbar{display:flex;align-items:center;gap:8px;padding:13px 18px;border-bottom:1px solid var(--navy-line);background:linear-gradient(160deg,var(--navy),var(--navy-deep))}
+.feedbar i{width:10px;height:10px;border-radius:50%;background:#3A4666;display:block}
+.feedbar i:first-child{background:var(--copper)}
+.feedbar span{margin-left:auto;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;color:#8D97B3;text-transform:uppercase}
+.feed{padding:22px 22px 24px;min-height:270px;display:flex;flex-direction:column;gap:11px;background:linear-gradient(160deg,var(--navy),var(--navy-deep))}
+.fr{display:flex;gap:10px;align-items:flex-start;font-family:var(--mono);font-size:.8rem;line-height:1.5;color:#C6CCDD;opacity:0;transform:translateY(8px);transition:opacity .5s ease,transform .5s ease}
+.fr.show{opacity:1;transform:none}
+.fr .t{color:#8D97B3;flex:0 0 auto}
+.fr .tag2{flex:0 0 auto;font-size:.6rem;font-weight:700;letter-spacing:.1em;padding:2px 7px;border-radius:3px;background:var(--navy-line);color:var(--copper);text-transform:uppercase}
+.fr .tag2.miss{background:var(--red);color:#fff}
+.fr.win .tag2{background:var(--green);color:#fff}
+.fr.win{color:#fff}
+.feedfoot{padding:0 22px 18px;font-family:var(--mono);font-size:.68rem;color:#8D97B3;background:linear-gradient(160deg,var(--navy),var(--navy-deep))}
+.feedfoot b{color:var(--copper)}
+.showcase .cap{position:relative;text-align:center;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#8D97B3;padding:22px 0 26px}
+
+/* ---------- scroll story (the golf shot) ---------- */
+.story{position:relative;height:420vh;margin-top:0}
+.story .pin{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:var(--panel2)}
+.story .pin .shead2{text-align:center;padding:0 20px}
+.story .pin .shead2 .mono{font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-deep)}
+.story .pin .shead2 h2{font-family:var(--serif);font-size:clamp(1.5rem,3.6vw,2.3rem);margin-top:8px;letter-spacing:-.01em}
+.scene{width:min(960px,94vw);margin-top:10px}
+.scene svg{width:100%;height:auto;display:block}
+.caps{position:relative;height:76px;width:min(700px,92vw);margin-top:-6px}
+.cap2{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
+.cap2.on{opacity:1;transform:none}
+.cap2 .cl{font-family:var(--mono);font-size:.64rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.cap2 .ct{font-family:var(--serif);font-size:clamp(1rem,2.4vw,1.35rem);color:var(--ink);margin-top:5px;line-height:1.3}
+.cap2.s0 .cl{color:var(--red-deep)}
+.cap2.s1 .cl,.cap2.s2 .cl{color:var(--navy)}
+.cap2.s3 .cl{color:var(--copper-deep)}
+.sprog{display:flex;gap:8px;margin-top:14px}
+.sprog i{width:34px;height:4px;border-radius:99px;background:var(--line);overflow:hidden;position:relative;display:block}
+.sprog i em{position:absolute;inset:0;background:var(--copper);transform:scaleX(0);transform-origin:left}
+.scrollhint{margin-top:16px;font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);animation:hintbob 1.8s ease-in-out infinite}
+@keyframes hintbob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+
+/* ---------- stats ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);margin:30px 0 6px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg)}
+.stat{padding:18px 18px;border-right:1px solid var(--line)}
+.stat:last-child{border-right:none}
+.stat .v{font-family:var(--serif);font-weight:700;font-size:clamp(1.7rem,7.4vw,2.9rem);color:var(--ink);line-height:1.02;font-variant-numeric:tabular-nums}
+.stat .v.copper{color:var(--copper-deep)}
+.stat .v.red{color:var(--red-deep)}
+.stat .v.green{color:var(--green)}
+.stat .l{font-size:.66rem;text-transform:uppercase;letter-spacing:.12em;color:var(--faint);margin-top:8px;font-weight:600;line-height:1.35}
+
+.trust{margin-top:56px;padding:15px 18px;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--copper);font-size:.94rem;border-radius:0 6px 6px 0}
+.trust b{color:var(--ink)}
+
+/* ---------- sections ---------- */
+.sec{margin-top:64px}
+.shead{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line-strong);padding-bottom:10px;margin-bottom:18px}
+.shead .no{font-family:var(--mono);font-weight:700;font-size:.8rem;color:var(--copper-deep);letter-spacing:.1em;min-width:34px}
+.shead h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.015em;line-height:1.1}
+.subh{font-family:var(--serif);font-size:1.7rem;line-height:1.3;color:var(--muted);margin:-4px 0 20px}
+
+.prob{display:flex;gap:18px;padding:16px 0;border-bottom:1px solid var(--line)}
+.prob .n{font-family:var(--serif);font-weight:700;font-size:clamp(2rem,7.6vw,3rem);color:var(--red-deep);min-width:190px;line-height:1.05;font-variant-numeric:tabular-nums}
+.prob b{color:var(--ink)}
+.prob .src{display:block;font-size:.72rem;color:var(--faint);margin-top:4px;font-family:var(--mono)}
+
+/* ---------- steal-this (90/10 value) ---------- */
+.stealgrid{display:grid;grid-template-columns:1.1fr .9fr;gap:18px}
+.stealcard{background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--green);border-radius:10px;padding:22px}
+.stealcard .pn{font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.16em;color:var(--green);text-transform:uppercase}
+.script{margin-top:12px;font-family:var(--mono);font-size:.88rem;line-height:1.7;background:var(--bg);border:1px dashed var(--line-strong);border-radius:8px;padding:16px 18px;color:var(--ink)}
+.stealcard p{font-size:.9rem;margin-top:12px}
+.scriptbtns{display:flex;gap:12px;align-items:center;margin-top:12px;flex-wrap:wrap}
+.copybtn{border:0;background:var(--green);color:#fff;font-family:var(--sans);font-weight:700;font-size:.76rem;text-transform:uppercase;letter-spacing:.08em;padding:10px 18px;border-radius:6px;cursor:pointer;transition:background .2s,transform .2s}
+.copybtn:hover{background:var(--green-deep);transform:translateY(-1px)}
+.copybtn.ok{background:var(--navy)}
+.smslink{font-size:.82rem;font-weight:700;color:var(--copper-deep);text-decoration:underline;text-underline-offset:3px}
+.stealcard p b{color:var(--ink)}
+.stealside{display:flex;flex-direction:column;gap:14px}
+.whybox{display:flex;gap:16px;align-items:flex-start;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:18px;font-size:.9rem}
+.whybox .wn{font-family:var(--serif);font-weight:700;font-size:2.6rem;line-height:1;color:var(--green)}
+.whybox .src{display:block;font-size:.7rem;color:var(--faint);margin-top:4px;font-family:var(--mono)}
+.cadence{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:14px 18px}
+.cstep{display:flex;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.88rem;align-items:baseline}
+.cstep:last-child{border-bottom:none}
+.cstep .cn{font-family:var(--serif);font-weight:700;color:var(--copper-deep);flex:0 0 auto}
+.cstep b{color:var(--ink)}
+@media(max-width:880px){.stealgrid{grid-template-columns:1fr}}
+
+.loopwrap{display:grid;grid-template-columns:300px 1fr;gap:36px;align-items:center;margin:26px 0 34px;padding:26px;background:var(--panel2);border:1px solid var(--line);border-radius:10px}
+.loopsvg{width:100%;height:auto;display:block}
+.ringspin{transform-origin:150px 150px;animation:spin 26s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.looptext h3{font-family:var(--serif);font-size:1.2rem}
+.looptext p{margin-top:8px;font-size:.94rem}
+.looptext .mono{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--copper-deep);font-weight:700}
+
+.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tier{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px 20px;display:flex;flex-direction:column;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}
+.tier:hover{transform:translateY(-6px);box-shadow:0 24px 48px -24px rgba(26,26,26,.25);border-color:var(--line-strong)}
+.tier.flag{background:var(--panel2);border-color:var(--copper)}
+.tier.flag::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0;background:linear-gradient(90deg,var(--copper),#E8CBA2,var(--copper));background-size:200% 100%;animation:shimmer 3.5s linear infinite}
+@keyframes shimmer{to{background-position:200% 0}}
+.tier .tag{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:10px}
+.tier h3{font-family:var(--serif);font-size:1.16rem;line-height:1.2}
+.tier .price{font-family:var(--serif);font-weight:700;font-size:1.4rem;color:var(--ink);margin-top:10px}
+.tier .price small{font-family:var(--sans);font-weight:600;font-size:.72rem;color:var(--muted)}
+.tier .found{font-size:.78rem;color:var(--copper-deep);font-weight:700;margin-top:5px}
+.tier ul{list-style:none;margin-top:16px;flex:1}
+.tier li{padding:9px 0;border-top:1px solid var(--line);font-size:.88rem;color:var(--ink2);display:flex;gap:10px}
+.tier li .chk{flex:0 0 auto;width:17px;height:17px;border-radius:50%;background:var(--copper);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;margin-top:2px;font-weight:700}
+.tier li b{color:var(--ink);display:block}
+.tier li span.d{display:block;font-size:.76rem;color:var(--muted);margin-top:1px}
+.tier .for{margin-top:14px;font-family:var(--mono);font-size:.62rem;color:var(--faint);text-transform:uppercase;letter-spacing:.12em;font-weight:700}
+.gchip{margin-top:10px;font-size:.72rem;font-weight:700;color:var(--navy);background:#EDF0F6;border:1px solid #D5DBE8;border-radius:5px;padding:7px 10px;line-height:1.4}
+.retain{margin-top:18px;padding:15px 18px;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--copper);font-size:.94rem;border-radius:0 6px 6px 0}
+.retain b{color:var(--ink)}
+
+.steps{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.steps::before{content:"";position:absolute;top:44px;left:8%;right:8%;height:2px;background:var(--line)}
+.steps::after{content:"";position:absolute;top:44px;left:8%;width:0;height:2px;background:var(--copper);transition:width 1.4s cubic-bezier(.2,.7,.2,1)}
+.steps.in::after{width:84%}
+.step{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:20px 18px;transition:transform .3s ease,box-shadow .3s ease}
+.step:hover{transform:translateY(-4px);box-shadow:0 18px 36px -20px rgba(26,26,26,.22)}
+.step .n{width:48px;height:48px;border-radius:50%;background:var(--panel2);border:2px solid var(--copper);color:var(--copper-deep);font-family:var(--serif);font-weight:700;font-size:1.3rem;display:flex;align-items:center;justify-content:center}
+.step h3{font-family:var(--serif);font-size:1.05rem;margin-top:12px}
+.step p{font-size:.87rem;color:var(--ink2);margin-top:6px}
+.step p b{color:var(--ink)}
+
+.proofgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.pcard{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:20px 20px;transition:transform .3s ease,box-shadow .3s ease}
+.pcard:hover{transform:translateY(-4px);box-shadow:0 18px 36px -20px rgba(26,26,26,.2)}
+.pcard .pn{font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.16em;color:var(--copper-deep);text-transform:uppercase}
+.pcard h3{font-family:var(--serif);font-size:1.05rem;margin-top:8px}
+.pcard p{font-size:.88rem;margin-top:6px}
+.honest{margin-top:20px;padding:18px 22px;background:var(--panel);border:1px solid var(--line);border-radius:10px;font-size:.95rem;font-style:italic;color:var(--ink2);position:relative}
+.honest::before{content:"“";position:absolute;top:-18px;left:14px;font-family:var(--serif);font-size:4rem;color:var(--copper);line-height:1}
+.honest b{font-style:normal;color:var(--ink)}
+
+.guarantee{position:relative;background:linear-gradient(160deg,var(--navy),var(--navy-deep));color:#F4F1EC;border-radius:12px;padding:40px 30px;text-align:center;overflow:hidden}
+.guarantee::before{content:"";position:absolute;inset:-40%;background:radial-gradient(closest-side,rgba(201,151,91,.22),transparent 70%);animation:drift 9s ease-in-out infinite alternate}
+@keyframes drift{from{transform:translate(-12%,-8%)}to{transform:translate(12%,8%)}}
+.guarantee>*{position:relative}
+.guarantee .gl{font-family:var(--mono);font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:var(--copper);font-weight:700}
+.guarantee p{font-family:var(--serif);font-size:clamp(1.2rem,3vw,1.65rem);line-height:1.4;margin-top:14px}
+.guarantee small{display:block;font-size:.8rem;color:#A9B1C8;margin-top:12px}
+
+.founding{border:1px solid var(--copper);border-radius:12px;padding:26px 26px;background:var(--panel2);display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}
+.founding h3{font-family:var(--serif);font-size:1.2rem}
+.founding .strike{text-decoration:line-through;color:var(--faint)}
+.founding .big{font-family:var(--serif);font-weight:700;font-size:1.6rem;color:var(--copper-deep)}
+.founding p{font-size:.92rem;margin-top:8px}
+.founding b{color:var(--ink)}
+.spots{text-align:center;padding:14px 22px;background:var(--bg);border:1px solid var(--line);border-radius:10px}
+.spots .sn{font-family:var(--serif);font-weight:700;font-size:2.4rem;color:var(--copper-deep);line-height:1}
+.spots .sl{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);font-weight:700;margin-top:4px}
+.spotdots{display:flex;gap:6px;justify-content:center;margin-top:10px}
+.spotdots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--copper);display:block;animation:pulse 2s ease-in-out infinite}
+.spotdots i:nth-child(2){animation-delay:.3s}.spotdots i:nth-child(3){animation-delay:.6s}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,151,91,.45)}55%{box-shadow:0 0 0 7px rgba(201,151,91,0)}}
+
+.faq details{border-bottom:1px solid var(--line);padding:4px 0}
+.faq summary{cursor:pointer;list-style:none;display:flex;align-items:baseline;gap:12px;padding:13px 0;font-weight:700;color:var(--ink);font-size:.98rem;transition:color .2s ease}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::before{content:"+";font-family:var(--serif);font-size:1.25rem;color:var(--copper-deep);line-height:1;flex:0 0 auto;transition:transform .3s ease;transform-origin:center}
+.faq details[open] summary::before{transform:rotate(45deg)}
+.faq summary:hover{color:var(--copper-deep)}
+.faq details p{padding:0 0 16px 30px;font-size:.92rem;color:var(--ink2);max-width:46em}
+
+.cta{margin-top:64px;text-align:center;padding:44px 24px;background:var(--panel);border:1px solid var(--line);border-radius:12px}
+.cta .line{font-family:var(--serif);font-size:clamp(1.25rem,2.6vw,1.6rem);color:var(--ink);line-height:1.4}
+.cta .btn{margin-top:20px;font-size:1rem;padding:15px 36px}
+.cta .sub{font-size:.82rem;color:var(--muted);margin-top:12px}
+.cta .gsmall{font-size:.78rem;font-weight:700;color:var(--navy);margin-top:10px}
+.cta .url{font-family:var(--mono);font-size:.72rem;color:var(--faint);margin-top:8px;word-break:break-all}
+
+.foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.78rem;color:var(--muted)}
+
+.sticky{position:fixed;left:0;right:0;bottom:0;background:var(--navy);color:#F4F1EC;display:flex;align-items:center;justify-content:center;gap:16px;padding:11px 16px;transform:translateY(110%);transition:transform .45s cubic-bezier(.2,.7,.2,1);z-index:50;box-shadow:0 -8px 30px rgba(22,32,58,.35)}
+.sticky.show{transform:none}
+.sticky .st{font-size:.84rem}
+.sticky .st b{color:var(--copper)}
+.sticky a{background:var(--cred);color:#fff;text-decoration:none;font-weight:700;font-size:.76rem;padding:9px 18px;border-radius:6px;white-space:nowrap;text-transform:uppercase;letter-spacing:.08em}
+
+@media(max-width:880px){
+  .loopwrap{grid-template-columns:1fr;gap:22px}
+  .loopsvg{max-width:280px;margin:0 auto}
+  .proofgrid{grid-template-columns:1fr}
+  .founding{grid-template-columns:1fr}
+  .spots{justify-self:start}
+}
+@media(max-width:640px){
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(2){border-right:none}
+  .stat:nth-child(1),.stat:nth-child(2){border-bottom:1px solid var(--line)}
+  .tiers{grid-template-columns:1fr}
+  .steps{grid-template-columns:1fr}
+  .steps::before,.steps::after{display:none}
+  .prob{flex-direction:column;gap:4px}
+  .sec{margin-top:48px}
+  .blockbg{top:60px;border-radius:18px}
+  .story{height:380vh}
+}
+
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .rv,.ed-hero h1 .w{opacity:1!important;transform:none!important}
+  .fr{opacity:1;transform:none}
+  .steps.in::after{width:84%}
+  html{scroll-behavior:auto}
+  .story{height:auto}
+  .story .pin{position:static;height:auto;padding:60px 0}
+  .cap2{position:static;opacity:1;transform:none;margin-top:10px}
+  .caps{height:auto}
+  .scrollhint{display:none}
+}
+
+@media print{
+  body{font-size:12px}
+  .wrap{padding:0;max-width:none}
+  .nav,.sticky,.scrollhint{display:none}
+  .rv,.ed-hero h1 .w,.fr{opacity:1!important;transform:none!important;animation:none!important}
+  .story{height:auto}
+  .story .pin{position:static;height:auto;padding:20px 0}
+  .cap2{position:static;opacity:1;transform:none;margin-top:8px}
+  .caps{height:auto}
+  .tier,.step,.guarantee,.founding,.cta,.pcard,.loopwrap{break-inside:avoid}
+  .sec{margin-top:26px}
+  .laptop{box-shadow:none}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="navin">
+    <a class="logo" href="#top">frimpomaasync.com</a>
+    <div class="navlinks">
+      <a href="#leak">The Leak</a>
+      <a href="#steal">Free Fix</a>
+      <a href="#system">The System</a>
+      <a href="#how">How It Works</a>
+      <a href="#proof">Proof</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a class="navbtn" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Book my call</a>
+  </div>
+</nav>
+
+<!-- EDITORIAL HERO -->
+<header class="ed-hero" id="top">
+  <div class="label">The Client Catcher · Done-For-You AI Back Office</div>
+  <div class="niche" role="group" aria-label="Pick your business type">
+    <button type="button" id="nicheHS" class="on">Home Services</button>
+    <button type="button" id="nicheRE">Real Estate</button>
+  </div>
+  <h1 id="heroH1">Never lose a lead.</h1>
+  <div class="deck" id="deckTxt">Every call you can't answer is a job someone else books. I install a system that catches the call, follows up in your voice, and puts the appointment on your calendar — while your hands stay on the work. Live in 7 days.</div>
+  <div class="ed-ctas">
+    <a class="btn" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Book my 20-minute mapping call</a>
+    <a class="btn dark" href="#story">Watch a lead get caught</a>
+  </div>
+  <div class="micro">Free call · no credit card · no tech on your plate · covered by the 7-day guarantee</div>
+</header>
+
+<!-- SHOWCASE: laptop over navy block -->
+<div class="showcase">
+  <div class="blockbg"></div>
+  <div class="laptop" aria-label="Simulation of the system catching a missed call">
+    <div class="feedbar"><i></i><i></i><i></i><span>Client Catcher · live view</span></div>
+    <div class="feed" id="feed">
+      <div class="fr"><span class="t">2:14 PM</span><span class="tag2 miss">Missed call</span><span>(404) 555-0132 — no answer, you're on a job</span></div>
+      <div class="fr"><span class="t">2:14 PM</span><span class="tag2">Lead Triager</span><span>Scored <b style="color:#E8CBA2">HOT</b> — "AC out, 92° today, needs someone now"</span></div>
+      <div class="fr"><span class="t">2:15 PM</span><span class="tag2">Follow-up</span><span>Text sent: "Hi Marcus — sorry we missed you. Want today's 4:30?"</span></div>
+      <div class="fr"><span class="t">2:19 PM</span><span class="tag2">Reply</span><span>"Yes — 4:30 works."</span></div>
+      <div class="fr win"><span class="t">2:20 PM</span><span class="tag2">Booked ✓</span><span>4:30 PM on your calendar · logged to CRM · reminder set</span></div>
+    </div>
+    <div class="feedfoot">Simulation of your Starter system at work — <b id="footTxt">you were under a sink the whole time.</b></div>
+  </div>
+  <div class="cap">↓ Scroll — watch the whole catch happen ↓</div>
+</div>
+
+<!-- SCROLL STORY: the lead is the ball, the calendar is the hole -->
+<section class="story" id="story">
+  <div class="pin">
+    <div class="shead2">
+      <div class="mono">The 6-minute save · a simulation</div>
+      <h2>One missed call, start to finish.</h2>
+    </div>
+    <div class="scene">
+      <svg viewBox="0 0 1000 460" role="img" aria-label="Animated story: a missed call travels from a ringing phone, through triage and follow-up, and lands as a booked appointment on the calendar">
+        <!-- ground line -->
+        <line x1="60" y1="400" x2="940" y2="400" stroke="#E3E0DA" stroke-width="2"/>
+        <!-- PHONE (left) -->
+        <g id="phoneG">
+          <rect x="95" y="215" width="118" height="185" rx="16" fill="#1E2A45"/>
+          <rect x="106" y="238" width="96" height="139" rx="6" fill="#16203A"/>
+          <circle cx="154" cy="390" r="5" fill="#3A4666"/>
+          <g id="ringWaves" stroke="#A63A2B" stroke-width="2.5" fill="none">
+            <path d="M225 240 q14 15 0 30"/>
+            <path d="M240 228 q24 27 0 54"/>
+          </g>
+          <g id="missBadge">
+            <rect x="112" y="288" width="84" height="24" rx="4" fill="#A63A2B"/>
+            <text x="154" y="304" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10.5" font-weight="700" fill="#FFFFFF">MISSED</text>
+          </g>
+          <text x="154" y="435" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#6E6A62">YOUR PHONE</text>
+        </g>
+        <!-- flight path -->
+        <path id="flight" d="M 214 250 C 380 60, 640 60, 826 220" fill="none" stroke="#CFC9BF" stroke-width="2" stroke-dasharray="3 7"/>
+        <!-- TRIAGE chip (mid-left of arc) -->
+        <g id="chipTriage" opacity="0">
+          <rect x="290" y="52" width="150" height="46" rx="8" fill="#FFFFFF" stroke="#D5DBE8"/>
+          <circle cx="312" cy="75" r="7" fill="#1E2A45"/>
+          <text x="328" y="71" font-family="ui-monospace,Menlo,monospace" font-size="10.5" font-weight="700" fill="#1E2A45">LEAD TRIAGER</text>
+          <text x="328" y="86" font-family="-apple-system,Arial,sans-serif" font-size="10.5" fill="#6E6A62">scored HOT · routed</text>
+        </g>
+        <!-- FOLLOW-UP bubble (mid-right of arc) -->
+        <g id="chipFollow" opacity="0">
+          <rect x="545" y="52" width="182" height="54" rx="10" fill="#1E2A45"/>
+          <path d="M575 106 l10 12 4-12 z" fill="#1E2A45"/>
+          <text x="560" y="74" font-family="-apple-system,Arial,sans-serif" font-size="10.5" fill="#FFFFFF">"Sorry we missed you —</text>
+          <text x="560" y="90" font-family="-apple-system,Arial,sans-serif" font-size="10.5" fill="#FFFFFF">want today's 4:30?"</text>
+        </g>
+        <!-- CALENDAR (right) = the hole -->
+        <g id="calG">
+          <rect x="756" y="228" width="182" height="172" rx="12" fill="#FFFFFF" stroke="#CFC9BF" stroke-width="2"/>
+          <rect x="756" y="228" width="182" height="34" rx="12" fill="#1E2A45"/>
+          <rect x="756" y="248" width="182" height="14" fill="#1E2A45"/>
+          <text x="847" y="251" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#FFFFFF">TODAY</text>
+          <g fill="#F6F5F3">
+            <rect x="770" y="276" width="154" height="24" rx="4"/>
+            <rect x="770" y="308" width="154" height="24" rx="4"/>
+            <rect x="770" y="372" width="154" height="18" rx="4"/>
+          </g>
+          <!-- the open slot = the hole -->
+          <rect id="slot" x="770" y="340" width="154" height="24" rx="4" fill="#FAFAF8" stroke="#C9975B" stroke-width="2" stroke-dasharray="4 4"/>
+          <text id="slotLabel" x="847" y="356" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="700" fill="#A97B3F">4:30 — OPEN</text>
+          <!-- booked overlay -->
+          <g id="bookedG" opacity="0">
+            <rect x="770" y="340" width="154" height="24" rx="4" fill="#2E7D4F"/>
+            <text x="847" y="356" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="700" fill="#FFFFFF">4:30 — BOOKED ✓</text>
+          </g>
+          <text x="847" y="435" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#6E6A62">YOUR CALENDAR</text>
+          <!-- win flag pops when booked -->
+          <g id="flagG" opacity="0">
+            <line x1="906" y1="228" x2="906" y2="180" stroke="#256B42" stroke-width="3"/>
+            <path d="M906 180 l34 10 -34 10 z" fill="#2E7D4F"/>
+          </g>
+        </g>
+        <!-- THE LEAD (a $6K job ticket flying to your calendar) -->
+        <g id="ticketTrailG" opacity="0.35"><rect x="-34" y="-13" width="68" height="26" rx="13" fill="#C9975B"/></g>
+        <g id="ticketG">
+          <rect id="ticketRect" x="-38" y="-15" width="76" height="30" rx="15" fill="#C9975B" stroke="#A97B3F" stroke-width="2"/>
+          <text id="ticketTxt" x="0" y="4.5" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="12" font-weight="700" fill="#FFFFFF">$6K JOB</text>
+        </g>
+      </svg>
+    </div>
+    <div class="caps">
+      <div class="cap2 s0 on"><span class="cl">2:14 PM · The miss</span><span class="ct" id="c0">A $6,000 job calls. You're under a sink. It rings out.</span></div>
+      <div class="cap2 s1"><span class="cl">2:14 PM · The catch</span><span class="ct" id="c1">The Lead Triager grabs it before it cools — scored HOT, routed.</span></div>
+      <div class="cap2 s2"><span class="cl">2:15 PM · The follow-up</span><span class="ct" id="c2">A text goes out in your voice. You're still under the sink.</span></div>
+      <div class="cap2 s3"><span class="cl">2:20 PM · The save</span><span class="ct" id="c3">Booked. 4:30 PM. Logged to CRM. You never touched your phone.</span></div>
+    </div>
+    <div class="sprog"><i><em id="p0"></em></i><i><em id="p1"></em></i><i><em id="p2"></em></i><i><em id="p3"></em></i></div>
+    <div class="scrollhint">Keep scrolling ↓</div>
+  </div>
+</section>
+
+<div class="wrap">
+
+  <div class="stats rv" style="margin-top:56px">
+    <div class="stat"><div class="v red" data-count="40" data-prefix="30–" data-suffix="%">30–40%</div><div class="l">Calls missed in peak season</div></div>
+    <div class="stat"><div class="v red" data-count="10" data-prefix="$3k–$" data-suffix="k">$3k–$10k</div><div class="l">Value of one missed job</div></div>
+    <div class="stat"><div class="v" data-count="78" data-suffix="%">78%</div><div class="l">Buy from first responder</div></div>
+    <div class="stat"><div class="v green" data-count="7" data-suffix=" days">7 days</div><div class="l">To live, hands-off</div></div>
+  </div>
+
+  <!-- 01 PROBLEM -->
+  <div class="sec" id="leak">
+    <div class="shead rv"><span class="no">/01</span><h2>The leak in your business</h2></div>
+    <div class="subh rv">You're not losing to a better competitor. You're losing to a faster one.</div>
+    <div class="prob rv"><div class="n">30–40%</div><div>of inbound calls to home-services businesses go unanswered in peak season — you're on a roof, under a sink, or with a client.<span class="src">source: industry call-tracking studies, home-services inbound calls</span></div></div>
+    <div class="prob rv d1"><div class="n">$3k–$10k</div><div>is what a single missed call can cost in HVAC or plumbing — a replacement system, a repipe, a listing. <b>Miss two calls a week and that's a six-figure leak per year.</b><span class="src">source: average ticket ranges, HVAC/plumbing trade publications</span></div></div>
+    <div class="prob rv d2"><div class="n">78%</div><div>of customers buy from the business that responds <b>first</b>. Not the best one. Not the cheapest one. The first one.<span class="src">source: Lead Connect follow-up study, widely cited in sales-response research</span></div></div>
+  </div>
+
+  <!-- 02 FREE VALUE: steal this -->
+  <div class="sec" id="steal">
+    <div class="shead rv"><span class="no">/02</span><h2>Steal this fix — free, no call needed</h2></div>
+    <div class="subh rv">Do this by hand starting today and you'll save real jobs — whether or not we ever talk.</div>
+    <div class="stealgrid">
+      <div class="stealcard rv">
+        <div class="pn">The 5-minute text-back script · copy it</div>
+        <div class="script" id="scriptTxt">"Hi — this is [your name] from [your business]. Sorry I missed you, I was on a job. Are you calling about [your main service]? I have [today 4:30] or [tomorrow 9 AM] — which works better?"</div>
+        <div class="scriptbtns">
+          <button type="button" class="copybtn" id="copyBtn">Copy the script</button>
+          <a class="smslink" id="smsLink" href="#">Text it to yourself</a>
+        </div>
+        <p>Send it within 5 minutes of any missed call. Two time options, one question. That's the whole trick — you answer first <b>and</b> make booking a one-word reply.</p>
+      </div>
+      <div class="stealside rv d1">
+        <div class="whybox"><div class="wn">21×</div><div>more likely to qualify a lead when you respond within 5 minutes instead of 30.<span class="src">source: InsideSales response-time study, cited in Harvard Business Review</span></div></div>
+        <div class="cadence">
+          <div class="cstep"><span class="cn">1</span><div><b>Within 5 min:</b> the text above</div></div>
+          <div class="cstep"><span class="cn">2</span><div><b>Within 1 hour:</b> one call — voicemail is fine, mention the text</div></div>
+          <div class="cstep"><span class="cn">3</span><div><b>Next morning:</b> "Still need help with [service]? Today I have [two slots]."</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="retain rv"><b>The honest catch:</b> this works — when you remember, every time, on a roof, at dinner, on a Saturday. The system below is just this playbook running automatically, so no lead ever waits on your memory.</div>
+  </div>
+
+  <!-- 03 SYSTEM -->
+  <div class="sec" id="system">
+    <div class="shead rv"><span class="no">/03</span><h2>The system — pick your tier</h2></div>
+    <div class="subh rv">Every skill below is from Anthropic's Claude for Small Business library — I set them up, connect them to your tools, and hand you a working machine.</div>
+
+    <div class="loopwrap rv">
+      <svg class="loopsvg" viewBox="0 0 300 300" role="img" aria-label="The one loop: capture, triage, follow up, book, remind, review">
+        <circle cx="150" cy="150" r="104" fill="none" stroke="#E3E0DA" stroke-width="2"/>
+        <g class="ringspin"><circle cx="150" cy="150" r="104" fill="none" stroke="#C9975B" stroke-width="2.5" stroke-dasharray="40 613" stroke-linecap="round"/></g>
+        <g font-family="ui-monospace,Menlo,monospace" font-size="10.5" font-weight="700" fill="#6E6A62" text-anchor="middle">
+          <!-- CAPTURE: ringing phone -->
+          <g><circle cx="150" cy="34" r="11" fill="#C9975B"/><rect x="146" y="28" width="8" height="13" rx="2" fill="#FFFFFF"/><text x="150" y="14">CAPTURE</text></g>
+          <!-- TRIAGE: navy list/score card -->
+          <g><circle cx="251" cy="92" r="11" fill="#1E2A45"/><rect x="245" y="87" width="12" height="2.5" rx="1" fill="#FFFFFF"/><rect x="245" y="92" width="9" height="2.5" rx="1" fill="#C9975B"/><rect x="245" y="97" width="6" height="2.5" rx="1" fill="#FFFFFF"/><text x="268" y="78">TRIAGE</text></g>
+          <!-- FOLLOW-UP: copper chat bubble -->
+          <g><circle cx="251" cy="208" r="11" fill="#C9975B"/><rect x="244.5" y="202.5" width="13" height="8.5" rx="3" fill="#FFFFFF"/><path d="M248 211 l-1.5 3.5 4-2.5 z" fill="#FFFFFF"/><text x="260" y="232">FOLLOW-UP</text></g>
+          <!-- BOOK: green check -->
+          <g><circle cx="150" cy="266" r="11" fill="#2E7D4F"/><path d="M144.5 266.5 l4 4 7-8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text x="150" y="292">BOOK</text></g>
+          <!-- REMIND: bell + red notification badge -->
+          <g><circle cx="49" cy="208" r="11" fill="#33302B"/><path d="M49 201.5 c-3.4 0 -5 2.6 -5 5.6 l-1.6 3.4 h13.2 l-1.6 -3.4 c0 -3 -1.6 -5.6 -5 -5.6 z" fill="#FFFFFF"/><circle cx="49" cy="213" r="1.6" fill="#FFFFFF"/><g><circle cx="57" cy="200" r="5.5" fill="#A63A2B"><animate attributeName="r" values="5.5;6.5;5.5" dur="1.6s" repeatCount="indefinite"/></circle><text x="57" y="203.4" font-size="7.5" fill="#FFFFFF">1</text></g><text x="42" y="232">REMIND</text></g>
+          <!-- REVIEW: gold star -->
+          <g><circle cx="49" cy="92" r="11" fill="#A97B3F"/><path d="M49 85.5 l1.9 3.9 4.3 .6 -3.1 3 .7 4.3 -3.8 -2 -3.8 2 .7 -4.3 -3.1 -3 4.3 -.6 z" fill="#FFFFFF"/><text x="38" y="76">REVIEW</text></g>
+        </g>
+        <text x="150" y="144" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#1A1A1A">One loop.</text>
+        <text x="150" y="166" text-anchor="middle" font-family="-apple-system,Arial,sans-serif" font-size="10.5" fill="#6E6A62">Running while you work.</text>
+      </svg>
+      <div class="looptext">
+        <div class="mono">How the machine thinks</div>
+        <h3>Missed leads, no-shows, and silent phones are one problem — a broken loop.</h3>
+        <p>Every tier below strengthens the same loop: a lead comes in, gets triaged, gets followed up, gets booked, gets reminded, leaves a review that brings the next lead. Start with the piece that's leaking worst. Add the rest when you're ready.</p>
+      </div>
+    </div>
+
+    <div class="tiers">
+      <div class="tier flag rv">
+        <div class="tag">Start here</div>
+        <h3>Starter — “Client Catcher”</h3>
+        <div class="price">$1,500 <small>setup</small> <span style="white-space:nowrap">+ $99 <small>/mo care</small></span></div>
+        <div class="found">Founding rate: $750 — first 3 clients only</div>
+        <ul>
+          <li><span class="chk">✓</span><div><b>Lead Triager</b><span class="d">Every inquiry sorted, scored, and routed the minute it lands.</span></div></li>
+          <li><span class="chk">✓</span><div><b>Follow-Up Sequences</b><span class="d">Polite, persistent follow-up until they book or say no.</span></div></li>
+          <li><span class="chk">✓</span><div><b>CRM Auto-Entry</b><span class="d">Every lead logged automatically. No more sticky notes.</span></div></li>
+        </ul>
+        <div class="for">The wedge · never lose a lead</div>
+        <div class="gchip">✓ Covered: live in 7 days, booking in 30 — or you don't pay</div>
+      </div>
+      <div class="tier rv d1">
+        <div class="tag">Add when ready</div>
+        <h3>Growth</h3>
+        <div class="price">from $300<small>/mo</small></div>
+        <div class="found">&nbsp;</div>
+        <ul>
+          <li><span class="chk">✓</span><div><b>Proposal / Quote Generator</b><span class="d">Quotes out same-day, in your voice, at your prices.</span></div></li>
+          <li><span class="chk">✓</span><div><b>Appointment Scheduling</b><span class="d">Booked straight onto your calendar — no phone tag.</span></div></li>
+          <li><span class="chk">✓</span><div><b>Recurring Report Summaries</b><span class="d">Your week's numbers in plain English, every Monday.</span></div></li>
+        </ul>
+        <div class="for">Close faster · book tighter</div>
+      </div>
+      <div class="tier rv d2">
+        <div class="tag">The full machine</div>
+        <h3>Full Back Office</h3>
+        <div class="price">from $600<small>/mo</small></div>
+        <div class="found">&nbsp;</div>
+        <ul>
+          <li><span class="chk">✓</span><div><b>Invoice Chaser</b><span class="d">Politely hunts every unpaid invoice until it's paid.</span></div></li>
+          <li><span class="chk">✓</span><div><b>Cash-Flow Summary</b><span class="d">Know what's coming in and going out — weekly.</span></div></li>
+          <li><span class="chk">✓</span><div><b>Expense Reconcile</b><span class="d">Receipts matched and categorized without you.</span></div></li>
+          <li><span class="chk">✓</span><div><b>Vendor / Contract Tracking</b><span class="d">Renewals and rate hikes flagged before they bite.</span></div></li>
+        </ul>
+        <div class="for">Run the whole office</div>
+      </div>
+    </div>
+    <div class="retain rv"><b>Why clients stay:</b> each skill you add embeds one layer deeper into how your business actually runs — your leads, your calendar, your invoices, your vendors. The system gets more valuable every month it works for you. That's the whole model: I grow when you keep winning, not when you sign.</div>
+  </div>
+
+  <!-- 04 HOW -->
+  <div class="sec" id="how">
+    <div class="shead rv"><span class="no">/04</span><h2>How it works — 3 steps, hands-off</h2></div>
+    <div class="steps rv" id="steps">
+      <div class="step"><div class="n">1</div><h3>Map</h3><p>One call. We walk through where leads, bookings, and callbacks slip through your cracks today.</p></div>
+      <div class="step"><div class="n">2</div><h3>Build — on my key</h3><p>I build your system on <b>my</b> Claude account. You don't buy software, manage a subscription, or learn a tool. Zero tech on your plate.</p></div>
+      <div class="step"><div class="n">3</div><h3>Live in 7 days</h3><p>Your system is catching leads and chasing follow-ups within a week. I monitor and tune it — that's the care plan.</p></div>
+    </div>
+  </div>
+
+  <!-- 05 PROOF -->
+  <div class="sec" id="proof">
+    <div class="shead rv"><span class="no">/05</span><h2>Proof — the honest kind</h2></div>
+    <div class="subh rv">No testimonials on this page. Here's why, and what you get instead.</div>
+    <div class="proofgrid">
+      <div class="pcard rv"><div class="pn">Proof 1 · See it first</div><h3>A live demo on your own leads.</h3><p>Before you pay a dollar, I'll show you the system triaging and drafting follow-ups for real inquiries from your business — on a screen-share, in front of you.</p></div>
+      <div class="pcard rv d1"><div class="pn">Proof 2 · The engine</div><h3>Anthropic built the engine.</h3><p>These aren't my homemade scripts — they're Claude for Small Business skills built by Anthropic. My job is configuring them for your trade and keeping them running.</p></div>
+      <div class="pcard rv d2"><div class="pn">Proof 3 · Client zero</div><h3>I run this exact system on my own business.</h3><p>frimpomaasync.com runs on the same skills I'll install for you — lead handling, follow-up, and reporting included. I'm client zero.</p></div>
+      <div class="pcard rv d3"><div class="pn">Proof 4 · Risk reversal</div><h3>The guarantee carries the risk — not you.</h3><p>If it doesn't perform, you don't pay. That's stronger than any borrowed review.</p></div>
+    </div>
+    <div class="honest rv">I'm early — you'd be one of my first three clients, and I won't pretend otherwise. What I won't do is rent fake reviews to look bigger than I am. What I will do is prove it works on your leads before you commit, and put my fee on the line after. <b>— NaNa Frimpomaa</b></div>
+  </div>
+
+  <!-- 05 GUARANTEE -->
+  <div class="sec">
+    <div class="shead rv"><span class="no">/06</span><h2>The guarantee</h2></div>
+    <div class="guarantee rv">
+      <div class="gl">In writing, in your agreement</div>
+      <p>“Live and working in 7 days, booking appointments within 30 — or you don't pay.”</p>
+      <small>No fine print gymnastics. If the system isn't doing its job, the risk is mine.</small>
+    </div>
+  </div>
+
+  <!-- 06 FOUNDING -->
+  <div class="sec">
+    <div class="shead rv"><span class="no">/07</span><h2>The founding-3 offer</h2></div>
+    <div class="founding rv">
+      <div>
+        <h3>First 3 clients: <span class="strike">$1,500</span> <span class="big">$750</span> setup + $99/mo</h3>
+        <p>Half off the Starter build, in exchange for one thing: <b>a named testimonial once your system is live and booking.</b> You get the founding rate forever; I get the proof this page honestly doesn't have yet. After three, the price goes to $1,500 and stays there.</p>
+        <p><b>Best fit:</b> real estate agents and home-services owners (HVAC, plumbing) who answer their own phone and know they're missing calls.</p>
+      </div>
+      <div class="spots">
+        <div class="sn">3</div>
+        <div class="sl">Spots open</div>
+        <div class="spotdots"><i></i><i></i><i></i></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 07 FAQ -->
+  <div class="sec" id="faq">
+    <div class="shead rv"><span class="no">/08</span><h2>Questions owners actually ask</h2></div>
+    <div class="faq rv">
+      <details><summary>Do I need a Claude subscription or any software account?</summary><p>No. The whole system runs on my account — you don't sign up for anything, install anything, or pay any AI bill. Your only tools stay the ones you already use: your phone, your calendar, your inbox.</p></details>
+      <details><summary>How much of my time does this take?</summary><p>One 20-minute mapping call, then about 30 minutes reviewing the finished system before it goes live. That's the whole ask. It's a done-for-you build — that's the point.</p></details>
+      <details><summary>Will it work with what I already use?</summary><p>It's built around your current setup — your existing phone number, Google or Outlook calendar, and whatever you use to track customers today (even if that's a notebook — the CRM Auto-Entry skill becomes your first real one).</p></details>
+      <details><summary>What happens if it doesn't get me bookings?</summary><p>Then you don't pay. The guarantee is in the agreement: live and working in 7 days, booking appointments within 30 — or you don't pay. The risk sits with me, where it belongs.</p></details>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta rv" id="cta">
+    <div class="line">If you like what you see, let me build this for you.</div>
+    <a class="btn" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Book my 20-minute mapping call</a>
+    <div class="sub">Free. No credit card. No pitch-slapping — we map your leaks, and you leave with the map either way.</div>
+    <div class="gsmall">Covered by the guarantee: live in 7 days, booking in 30 — or you don't pay.</div>
+  </div>
+
+  <div class="foot"><span>NaNa Frimpomaa · frimpomaasync.com · I build small systems for solo owners.</span></div>
+</div>
+
+<!-- sticky founding bar -->
+<div class="sticky" id="sticky">
+  <span class="st"><b>Founding rate $750</b> · 3 spots · live in 7 days</span>
+  <a href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Book my call</a>
+</div>
+
+<script>
+(function(){
+"use strict";
+var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* hero words rise */
+var h1=document.getElementById("heroH1");
+if(h1&&!reduce){
+  h1.innerHTML=h1.innerHTML.split(/\s+/).map(function(w,i){
+    return '<span class="w" style="animation-delay:'+(0.1*i)+'s">'+w+'</span>';
+  }).join(' ');
+}
+
+/* reveal on scroll */
+var io=new IntersectionObserver(function(es){
+  es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});
+},{threshold:.15});
+document.querySelectorAll(".rv,#steps").forEach(function(el){io.observe(el);});
+if(reduce){document.querySelectorAll(".rv,#steps").forEach(function(el){el.classList.add("in");});}
+
+/* stat count-up */
+function animateStat(el){
+  var end=parseInt(el.getAttribute("data-count"),10);
+  var pre=el.getAttribute("data-prefix")||"", suf=el.getAttribute("data-suffix")||"";
+  var t0=null, dur=1100;
+  function frame(t){
+    if(!t0)t0=t;
+    var p=Math.min((t-t0)/dur,1);
+    p=1-Math.pow(1-p,3);
+    el.textContent=pre+Math.round(end*p)+suf;
+    if(p<1)requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+}
+var sio=new IntersectionObserver(function(es){
+  es.forEach(function(e){
+    if(e.isIntersecting){
+      if(!reduce)e.target.querySelectorAll(".v[data-count]").forEach(animateStat);
+      sio.unobserve(e.target);
+    }
+  });
+},{threshold:.4});
+var statsEl=document.querySelector(".stats");
+if(statsEl)sio.observe(statsEl);
+
+/* live feed loop */
+var rows=Array.prototype.slice.call(document.querySelectorAll("#feed .fr"));
+function playFeed(){
+  rows.forEach(function(r){r.classList.remove("show");});
+  rows.forEach(function(r,i){
+    setTimeout(function(){r.classList.add("show");},600+i*1400);
+  });
+  setTimeout(playFeed,600+rows.length*1400+4500);
+}
+if(reduce){rows.forEach(function(r){r.classList.add("show");});}
+else{playFeed();}
+
+/* ---------- SCROLL STORY (the golf shot) ---------- */
+var story=document.getElementById("story");
+var flight=document.getElementById("flight");
+var ticket=document.getElementById("ticketG");
+var ticketRect=document.getElementById("ticketRect");
+var trail=document.getElementById("ticketTrailG");
+var chipT=document.getElementById("chipTriage");
+var chipF=document.getElementById("chipFollow");
+var booked=document.getElementById("bookedG");
+var flag=document.getElementById("flagG");
+var slot=document.getElementById("slot");
+var slotLabel=document.getElementById("slotLabel");
+var ringW=document.getElementById("ringWaves");
+var missB=document.getElementById("missBadge");
+var caps=Array.prototype.slice.call(document.querySelectorAll(".cap2"));
+var progs=[0,1,2,3].map(function(i){return document.getElementById("p"+i);});
+var L=flight.getTotalLength();
+
+function setBall(p){
+  /* the $6K JOB ticket flies along the arc for p 0..0.86, then settles into the slot */
+  if(p<=0.86){
+    var f=p/0.86;
+    var pt=flight.getPointAtLength(L*f);
+    var ahead=flight.getPointAtLength(Math.min(L,L*f+1));
+    var ang=Math.atan2(ahead.y-pt.y,ahead.x-pt.x)*180/Math.PI;
+    ticket.setAttribute("transform","translate("+pt.x+","+pt.y+") rotate("+(ang*0.5)+")");
+    var pt2=flight.getPointAtLength(L*Math.max(0,f-0.05));
+    trail.setAttribute("transform","translate("+pt2.x+","+pt2.y+")");
+    ticket.setAttribute("opacity",1);trail.setAttribute("opacity",0.35);
+    ticketRect.setAttribute("fill","#C9975B");ticketRect.setAttribute("stroke","#A97B3F");
+  }else{
+    var d=(p-0.86)/0.14;                 /* settle-into-slot phase */
+    var end=flight.getPointAtLength(L);
+    var tx=847, ty=352;                   /* slot center */
+    var x=end.x+(tx-end.x)*d, y=end.y+(ty-end.y)*d;
+    var sc=1-0.35*d;                      /* shrinks as it slots in */
+    ticketRect.setAttribute("fill","#2E7D4F");ticketRect.setAttribute("stroke","#256B42"); /* turns green as it lands */
+    ticket.setAttribute("transform","translate("+x+","+y+") scale("+sc+")");
+    trail.setAttribute("transform","translate("+x+","+y+") scale("+sc+")");
+    var fade=d>0.85?1-(d-0.85)/0.15:1;
+    ticket.setAttribute("opacity",fade);trail.setAttribute("opacity",fade*0.25);
+  }
+}
+function setStage(p){
+  var s=p<0.22?0:p<0.5?1:p<0.8?2:3;
+  caps.forEach(function(c,i){c.classList.toggle("on",i===s);});
+  var bounds=[[0,0.22],[0.22,0.5],[0.5,0.8],[0.8,1]];
+  progs.forEach(function(em,i){
+    var b=bounds[i], f=Math.min(1,Math.max(0,(p-b[0])/(b[1]-b[0])));
+    em.style.transform="scaleX("+f+")";
+  });
+  ringW.setAttribute("opacity",p<0.18?1:0);
+  missB.setAttribute("opacity",p<0.4?1:0.35);
+  chipT.setAttribute("opacity",s>=1?1:0);
+  chipF.setAttribute("opacity",s>=2?1:0);
+  var done=p>0.97;
+  booked.setAttribute("opacity",done?1:0);
+  flag.setAttribute("opacity",done?1:0);
+  slot.setAttribute("opacity",done?0:1);
+  slotLabel.setAttribute("opacity",done?0:1);
+}
+var ticking=false;
+function storyScroll(){
+  if(reduce)return;
+  if(ticking)return;
+  ticking=true;
+  requestAnimationFrame(function(){
+    ticking=false;
+    var r=story.getBoundingClientRect();
+    var total=r.height-window.innerHeight;
+    var p=Math.min(1,Math.max(0,-r.top/total));
+    setBall(p);setStage(p);
+  });
+}
+if(reduce){setBall(1);setStage(1);}
+else{
+  setBall(0);setStage(0);
+  window.addEventListener("scroll",storyScroll,{passive:true});
+  storyScroll();
+}
+
+/* sticky bar */
+var sticky=document.getElementById("sticky"),cta=document.getElementById("cta");
+function onScroll(){
+  var y=window.scrollY||window.pageYOffset;
+  var nearCta=cta&&cta.getBoundingClientRect().top<window.innerHeight;
+  var inStory=false;
+  if(story){var sr=story.getBoundingClientRect();inStory=sr.top<0&&sr.bottom>window.innerHeight;}
+  if(y>900&&!nearCta&&!inStory){sticky.classList.add("show");}else{sticky.classList.remove("show");}
+}
+window.addEventListener("scroll",onScroll,{passive:true});
+onScroll();
+
+/* ---------- niche toggle ---------- */
+var NICHE={
+  hs:{
+    deck:"Every call you can't answer is a job someone else books. I install a system that catches the call, follows up in your voice, and puts the appointment on your calendar — while your hands stay on the work. Live in 7 days.",
+    foot:"you were under a sink the whole time.",
+    ticket:"$6K JOB",
+    caps:["A $6,000 job calls. You're under a sink. It rings out.",
+          "The Lead Triager grabs it before it cools — scored HOT, routed.",
+          "A text goes out in your voice. You're still under the sink.",
+          "Booked. 4:30 PM. Logged to CRM. You never touched your phone."],
+    feed:[
+      {t:"2:14 PM",tag:"Missed call",cls:"miss",txt:"(404) 555-0132 — no answer, you're on a job"},
+      {t:"2:14 PM",tag:"Lead Triager",txt:"Scored <b style=\"color:#E8CBA2\">HOT</b> — \"AC out, 92° today, needs someone now\""},
+      {t:"2:15 PM",tag:"Follow-up",txt:"Text sent: \"Hi Marcus — sorry we missed you. Want today's 4:30?\""},
+      {t:"2:19 PM",tag:"Reply",txt:"\"Yes — 4:30 works.\""},
+      {t:"2:20 PM",tag:"Booked ✓",win:true,txt:"4:30 PM on your calendar · logged to CRM · reminder set"}
+    ]
+  },
+  re:{
+    deck:"Every buyer call you miss tours with another agent by the weekend. I install a system that catches the inquiry, follows up in your voice, and puts the showing on your calendar — while you're mid-showing with someone else. Live in 7 days.",
+    foot:"you were mid-showing the whole time.",
+    ticket:"$12K LEAD",
+    caps:["A buyer calls about your listing. You're mid-showing. It rings out.",
+          "The Lead Triager grabs it before it cools — pre-qualified, scored HOT.",
+          "A text goes out in your voice. You're still with your client.",
+          "Showing booked. 4:30 PM. Logged to CRM. You never touched your phone."],
+    feed:[
+      {t:"2:14 PM",tag:"Missed call",cls:"miss",txt:"(404) 555-0132 — no answer, you're mid-showing"},
+      {t:"2:14 PM",tag:"Lead Triager",txt:"Scored <b style=\"color:#E8CBA2\">HOT</b> — \"Is the Maple St listing still available?\""},
+      {t:"2:15 PM",tag:"Follow-up",txt:"Text sent: \"Hi Dana — sorry we missed you. Want a 4:30 showing today?\""},
+      {t:"2:19 PM",tag:"Reply",txt:"\"Yes — 4:30 works.\""},
+      {t:"2:20 PM",tag:"Booked ✓",win:true,txt:"4:30 PM showing on your calendar · logged to CRM · reminder set"}
+    ]
+  }
+};
+var btnHS=document.getElementById("nicheHS"),btnRE=document.getElementById("nicheRE");
+function applyNiche(key){
+  var N=NICHE[key];
+  btnHS.classList.toggle("on",key==="hs");
+  btnRE.classList.toggle("on",key==="re");
+  document.getElementById("deckTxt").textContent=N.deck;
+  document.getElementById("footTxt").textContent=N.foot;
+  var tt=document.getElementById("ticketTxt");if(tt)tt.textContent=N.ticket;
+  N.caps.forEach(function(c,i){var el=document.getElementById("c"+i);if(el)el.textContent=c;});
+  rows.forEach(function(r,i){
+    var d=N.feed[i];if(!d)return;
+    r.className="fr"+(d.win?" win":"")+(r.classList.contains("show")?" show":"");
+    r.innerHTML='<span class="t">'+d.t+'</span><span class="tag2'+(d.cls?" "+d.cls:"")+'">'+d.tag+'</span><span>'+d.txt+'</span>';
+  });
+  try{localStorage.setItem("cc.niche",key)}catch(e){}
+}
+if(btnHS&&btnRE){
+  btnHS.addEventListener("click",function(){applyNiche("hs")});
+  btnRE.addEventListener("click",function(){applyNiche("re")});
+  var saved=null;try{saved=localStorage.getItem("cc.niche")}catch(e){}
+  if(saved==="re")applyNiche("re");
+}
+
+/* ---------- copy script + text-to-self ---------- */
+var copyBtn=document.getElementById("copyBtn"),smsLink=document.getElementById("smsLink");
+function scriptText(){return document.getElementById("scriptTxt").textContent.trim();}
+if(copyBtn){
+  copyBtn.addEventListener("click",function(){
+    var txt=scriptText(),done=function(){copyBtn.classList.add("ok");copyBtn.textContent="Copied ✓";
+      setTimeout(function(){copyBtn.classList.remove("ok");copyBtn.textContent="Copy the script";},2200);};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done,function(){fallback(txt);done();});}
+    else{fallback(txt);done();}
+    function fallback(t){var ta=document.createElement("textarea");ta.value=t;ta.style.position="fixed";ta.style.opacity="0";
+      document.body.appendChild(ta);ta.select();try{document.execCommand("copy")}catch(e){}document.body.removeChild(ta);}
+  });
+}
+if(smsLink){smsLink.href="sms:?&body="+encodeURIComponent(scriptText());}
+
+/* open all FAQ answers when printing */
+window.addEventListener("beforeprint",function(){
+  document.querySelectorAll(".faq details").forEach(function(d){d.setAttribute("open","");});
+});
+})();
+</script>
+</body>
+</html>
