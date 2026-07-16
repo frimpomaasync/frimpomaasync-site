@@ -115,8 +115,8 @@ h1,h2,h3{color:var(--ink)}
 .scene{width:min(960px,96vw);margin-top:6px}
 .scene svg{width:100%;height:auto;display:block}
 .caps{position:relative;height:130px;width:min(820px,94vw);margin-top:0}
-.cap2{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
-.cap2.on{opacity:1;transform:none}
+.cap2{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;opacity:0;visibility:hidden;transform:translateY(10px);transition:none}
+.cap2.on{opacity:1;visibility:visible;transform:none;transition:opacity .4s ease,transform .4s ease}
 .cap2 .cl{font-family:var(--mono);font-size:1.1rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
 .cap2 .ct{font-family:var(--serif);font-size:clamp(1.5rem,4.4vw,2.4rem);color:var(--ink);margin-top:6px;line-height:1.25}
 .cap2.s0 .cl{color:var(--red-deep)}
@@ -291,8 +291,8 @@ h1,h2,h3{color:var(--ink)}
   .sec{margin-top:48px}
   .blockbg{top:60px;border-radius:18px}
   .story{height:230vh}
-  .scene svg{max-height:52vh;max-height:52svh;width:auto;max-width:96vw;margin:0 auto}
-  .caps{height:104px}
+  .scene svg{max-height:50vh;max-height:50svh;width:auto;max-width:96vw;margin:0 auto}
+  .caps{height:122px}
   .cap2 .ct{font-size:clamp(1.15rem,5vw,1.6rem)}
   .story .pin .shead2 h2{font-size:clamp(1.6rem,6.4vw,2.2rem)}
   .clockrow{margin-top:8px}
@@ -333,7 +333,7 @@ h1,h2,h3{color:var(--ink)}
 <!-- NAV -->
 <nav class="nav">
   <div class="navin">
-    <a class="logo" href="#top">frimpomaasync.com</a>
+    <a class="logo" href="/">frimpomaasync.com</a>
     <div class="navlinks">
       <a href="#leak">The Leak</a>
       <a href="#steal">Free Fix</a>
@@ -657,7 +657,7 @@ h1,h2,h3{color:var(--ink)}
     <div class="gsmall">Covered by the guarantee: live in 7 days, booking in 30 — or you don't pay.</div>
   </div>
 
-  <div class="foot"><span>NaNa Frimpomaa · frimpomaasync.com · I build small systems for solo owners.</span></div>
+  <div class="foot"><span>NaNa Frimpomaa · <a href="/" style="color:var(--copper-deep);text-decoration:none;font-weight:700">frimpomaasync.com</a> · I build small systems for solo owners.</span></div>
 </div>
 
 <!-- sticky founding bar -->
