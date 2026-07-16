@@ -103,26 +103,32 @@ h1,h2,h3{color:var(--ink)}
 .showcase .cap{position:relative;text-align:center;font-family:var(--mono);font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:#8D97B3;padding:22px 0 26px}
 
 /* ---------- scroll story (the golf shot) ---------- */
-.story{position:relative;height:420vh;margin-top:0}
-.story .pin{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:var(--panel2)}
+.story{position:relative;height:260vh;margin-top:0}
+.story .pin{position:sticky;top:0;height:100vh;height:100svh;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;background:var(--panel2);padding-top:58px}
 .story .pin .shead2{text-align:center;padding:0 20px}
-.story .pin .shead2 .mono{font-family:var(--mono);font-size:.66rem;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-deep)}
-.story .pin .shead2 h2{font-family:var(--serif);font-size:clamp(1.5rem,3.6vw,2.3rem);margin-top:8px;letter-spacing:-.01em}
-.scene{width:min(960px,94vw);margin-top:10px}
+.story .pin .shead2 .mono{font-family:var(--mono);font-size:1.15rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--copper-deep)}
+.story .pin .shead2 h2{font-family:var(--serif);font-size:clamp(2.1rem,5.6vw,3.6rem);margin-top:8px;letter-spacing:-.015em;line-height:1.05}
+.clockrow{display:flex;gap:16px;align-items:center;justify-content:center;margin-top:14px;flex-wrap:wrap}
+.clock{font-family:var(--mono);font-weight:700;font-size:clamp(1.4rem,3.6vw,2rem);color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:.04em}
+.risk{font-family:var(--mono);font-weight:700;font-size:clamp(.85rem,2.4vw,1.1rem);letter-spacing:.1em;text-transform:uppercase;padding:8px 16px;border-radius:99px;background:var(--red);color:#fff;transition:background .4s ease}
+.risk.saved{background:var(--green)}
+.scene{width:min(960px,96vw);margin-top:6px}
 .scene svg{width:100%;height:auto;display:block}
-.caps{position:relative;height:76px;width:min(700px,92vw);margin-top:-6px}
+.caps{position:relative;height:130px;width:min(820px,94vw);margin-top:0}
 .cap2{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;opacity:0;transform:translateY(10px);transition:opacity .45s ease,transform .45s ease}
 .cap2.on{opacity:1;transform:none}
-.cap2 .cl{font-family:var(--mono);font-size:.64rem;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
-.cap2 .ct{font-family:var(--serif);font-size:clamp(1rem,2.4vw,1.35rem);color:var(--ink);margin-top:5px;line-height:1.3}
+.cap2 .cl{font-family:var(--mono);font-size:1.1rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+.cap2 .ct{font-family:var(--serif);font-size:clamp(1.5rem,4.4vw,2.4rem);color:var(--ink);margin-top:6px;line-height:1.25}
 .cap2.s0 .cl{color:var(--red-deep)}
 .cap2.s1 .cl,.cap2.s2 .cl{color:var(--navy)}
 .cap2.s3 .cl{color:var(--copper-deep)}
-.sprog{display:flex;gap:8px;margin-top:14px}
-.sprog i{width:34px;height:4px;border-radius:99px;background:var(--line);overflow:hidden;position:relative;display:block}
+.sprog{display:flex;gap:10px;margin-top:10px}
+.sprog i{width:58px;height:7px;border-radius:99px;background:var(--line);overflow:hidden;position:relative;display:block}
 .sprog i em{position:absolute;inset:0;background:var(--copper);transform:scaleX(0);transform-origin:left}
-.scrollhint{margin-top:16px;font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);animation:hintbob 1.8s ease-in-out infinite}
+.scrollhint{margin-top:14px;font-family:var(--mono);font-size:1rem;letter-spacing:.14em;text-transform:uppercase;color:var(--faint);animation:hintbob 1.8s ease-in-out infinite}
+.skipstory{margin-top:8px;font-family:var(--mono);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase;color:var(--copper-deep);text-decoration:underline;text-underline-offset:3px}
 @keyframes hintbob{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+@media(max-height:740px){.story .pin .shead2 h2{font-size:clamp(1.7rem,4.6vw,2.6rem)}.caps{height:110px}.cap2 .ct{font-size:clamp(1.25rem,3.8vw,2rem)}}
 
 /* ---------- stats ---------- */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);margin:30px 0 6px;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg)}
@@ -284,7 +290,13 @@ h1,h2,h3{color:var(--ink)}
   .prob{flex-direction:column;gap:4px}
   .sec{margin-top:48px}
   .blockbg{top:60px;border-radius:18px}
-  .story{height:380vh}
+  .story{height:230vh}
+  .scene svg{max-height:52vh;max-height:52svh;width:auto;max-width:96vw;margin:0 auto}
+  .caps{height:104px}
+  .cap2 .ct{font-size:clamp(1.15rem,5vw,1.6rem)}
+  .story .pin .shead2 h2{font-size:clamp(1.6rem,6.4vw,2.2rem)}
+  .clockrow{margin-top:8px}
+  .sprog i{width:44px}
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -373,73 +385,74 @@ h1,h2,h3{color:var(--ink)}
     <div class="shead2">
       <div class="mono">The 6-minute save · a simulation</div>
       <h2>One missed call, start to finish.</h2>
+      <div class="clockrow"><span class="clock" id="clockTxt">2:14 PM</span><span class="risk" id="riskBadge">$6,000 at risk</span></div>
     </div>
     <div class="scene">
-      <svg viewBox="0 0 1000 460" role="img" aria-label="Animated story: a missed call travels from a ringing phone, through triage and follow-up, and lands as a booked appointment on the calendar">
+      <svg viewBox="0 0 1000 560" role="img" aria-label="Animated story: a missed call travels from a ringing phone, through triage and follow-up, and lands as a booked appointment on the calendar">
         <!-- ground line -->
-        <line x1="60" y1="400" x2="940" y2="400" stroke="#E3E0DA" stroke-width="2"/>
+        <line x1="40" y1="505" x2="960" y2="505" stroke="#E3E0DA" stroke-width="2"/>
         <!-- PHONE (left) -->
         <g id="phoneG">
-          <rect x="95" y="215" width="118" height="185" rx="16" fill="#1E2A45"/>
-          <rect x="106" y="238" width="96" height="139" rx="6" fill="#16203A"/>
-          <circle cx="154" cy="390" r="5" fill="#3A4666"/>
-          <g id="ringWaves" stroke="#A63A2B" stroke-width="2.5" fill="none">
-            <path d="M225 240 q14 15 0 30"/>
-            <path d="M240 228 q24 27 0 54"/>
+          <rect x="55" y="240" width="175" height="265" rx="24" fill="#1E2A45"/>
+          <rect x="72" y="272" width="141" height="200" rx="9" fill="#16203A"/>
+          <circle cx="142" cy="489" r="7" fill="#3A4666"/>
+          <g id="ringWaves" stroke="#A63A2B" stroke-width="4" fill="none">
+            <path d="M248 276 q20 22 0 44"/>
+            <path d="M271 258 q34 40 0 80"/>
           </g>
           <g id="missBadge">
-            <rect x="112" y="288" width="84" height="24" rx="4" fill="#A63A2B"/>
-            <text x="154" y="304" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10.5" font-weight="700" fill="#FFFFFF">MISSED</text>
+            <rect x="82" y="345" width="121" height="38" rx="7" fill="#A63A2B"/>
+            <text x="142" y="370" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="17" font-weight="700" fill="#FFFFFF">MISSED</text>
           </g>
-          <text x="154" y="435" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#6E6A62">YOUR PHONE</text>
+          <text x="142" y="548" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="19" font-weight="700" fill="#6E6A62">YOUR PHONE</text>
         </g>
         <!-- flight path -->
-        <path id="flight" d="M 214 250 C 380 60, 640 60, 826 220" fill="none" stroke="#CFC9BF" stroke-width="2" stroke-dasharray="3 7"/>
+        <path id="flight" d="M 232 300 C 400 70, 640 70, 838 280" fill="none" stroke="#CFC9BF" stroke-width="2.5" stroke-dasharray="4 9"/>
         <!-- TRIAGE chip (mid-left of arc) -->
         <g id="chipTriage" opacity="0">
-          <rect x="290" y="52" width="150" height="46" rx="8" fill="#FFFFFF" stroke="#D5DBE8"/>
-          <circle cx="312" cy="75" r="7" fill="#1E2A45"/>
-          <text x="328" y="71" font-family="ui-monospace,Menlo,monospace" font-size="10.5" font-weight="700" fill="#1E2A45">LEAD TRIAGER</text>
-          <text x="328" y="86" font-family="-apple-system,Arial,sans-serif" font-size="10.5" fill="#6E6A62">scored HOT · routed</text>
+          <rect x="248" y="42" width="212" height="66" rx="11" fill="#FFFFFF" stroke="#D5DBE8" stroke-width="1.5"/>
+          <circle cx="279" cy="75" r="10" fill="#1E2A45"/>
+          <text x="298" y="70" font-family="ui-monospace,Menlo,monospace" font-size="15.5" font-weight="700" fill="#1E2A45">LEAD TRIAGER</text>
+          <text x="298" y="92" font-family="-apple-system,Arial,sans-serif" font-size="15" fill="#6E6A62">scored HOT · routed</text>
         </g>
         <!-- FOLLOW-UP bubble (mid-right of arc) -->
         <g id="chipFollow" opacity="0">
-          <rect x="545" y="52" width="182" height="54" rx="10" fill="#1E2A45"/>
-          <path d="M575 106 l10 12 4-12 z" fill="#1E2A45"/>
-          <text x="560" y="74" font-family="-apple-system,Arial,sans-serif" font-size="10.5" fill="#FFFFFF">"Sorry we missed you —</text>
-          <text x="560" y="90" font-family="-apple-system,Arial,sans-serif" font-size="10.5" fill="#FFFFFF">want today's 4:30?"</text>
+          <rect x="535" y="14" width="258" height="78" rx="14" fill="#1E2A45"/>
+          <path d="M577 92 l14 17 6-17 z" fill="#1E2A45"/>
+          <text x="556" y="46" font-family="-apple-system,Arial,sans-serif" font-size="15.5" fill="#FFFFFF">"Sorry we missed you —</text>
+          <text x="556" y="70" font-family="-apple-system,Arial,sans-serif" font-size="15.5" fill="#FFFFFF">want today's 4:30?"</text>
         </g>
         <!-- CALENDAR (right) = the hole -->
         <g id="calG">
-          <rect x="756" y="228" width="182" height="172" rx="12" fill="#FFFFFF" stroke="#CFC9BF" stroke-width="2"/>
-          <rect x="756" y="228" width="182" height="34" rx="12" fill="#1E2A45"/>
-          <rect x="756" y="248" width="182" height="14" fill="#1E2A45"/>
-          <text x="847" y="251" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#FFFFFF">TODAY</text>
+          <rect x="712" y="252" width="258" height="253" rx="16" fill="#FFFFFF" stroke="#CFC9BF" stroke-width="2.5"/>
+          <rect x="712" y="252" width="258" height="48" rx="16" fill="#1E2A45"/>
+          <rect x="712" y="280" width="258" height="20" fill="#1E2A45"/>
+          <text x="841" y="284" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="19" font-weight="700" fill="#FFFFFF">TODAY</text>
           <g fill="#F6F5F3">
-            <rect x="770" y="276" width="154" height="24" rx="4"/>
-            <rect x="770" y="308" width="154" height="24" rx="4"/>
-            <rect x="770" y="372" width="154" height="18" rx="4"/>
+            <rect x="730" y="318" width="222" height="32" rx="6"/>
+            <rect x="730" y="358" width="222" height="32" rx="6"/>
+            <rect x="730" y="462" width="222" height="26" rx="6"/>
           </g>
           <!-- the open slot = the hole -->
-          <rect id="slot" x="770" y="340" width="154" height="24" rx="4" fill="#FAFAF8" stroke="#C9975B" stroke-width="2" stroke-dasharray="4 4"/>
-          <text id="slotLabel" x="847" y="356" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="700" fill="#A97B3F">4:30 — OPEN</text>
+          <rect id="slot" x="730" y="398" width="222" height="40" rx="6" fill="#FAFAF8" stroke="#C9975B" stroke-width="2.5" stroke-dasharray="6 6"/>
+          <text id="slotLabel" x="841" y="424" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="16" font-weight="700" fill="#A97B3F">4:30 — OPEN</text>
           <!-- booked overlay -->
           <g id="bookedG" opacity="0">
-            <rect x="770" y="340" width="154" height="24" rx="4" fill="#2E7D4F"/>
-            <text x="847" y="356" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="10" font-weight="700" fill="#FFFFFF">4:30 — BOOKED ✓</text>
+            <rect x="730" y="398" width="222" height="40" rx="6" fill="#2E7D4F"/>
+            <text x="841" y="424" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="16" font-weight="700" fill="#FFFFFF">4:30 — BOOKED ✓</text>
           </g>
-          <text x="847" y="435" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="11" font-weight="700" fill="#6E6A62">YOUR CALENDAR</text>
+          <text x="841" y="548" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="19" font-weight="700" fill="#6E6A62">YOUR CALENDAR</text>
           <!-- win flag pops when booked -->
           <g id="flagG" opacity="0">
-            <line x1="906" y1="228" x2="906" y2="180" stroke="#256B42" stroke-width="3"/>
-            <path d="M906 180 l34 10 -34 10 z" fill="#2E7D4F"/>
+            <line x1="948" y1="252" x2="948" y2="176" stroke="#256B42" stroke-width="5"/>
+            <path d="M948 176 l50 15 -50 15 z" fill="#2E7D4F"/>
           </g>
         </g>
         <!-- THE LEAD (a $6K job ticket flying to your calendar) -->
-        <g id="ticketTrailG" opacity="0.35"><rect x="-34" y="-13" width="68" height="26" rx="13" fill="#C9975B"/></g>
+        <g id="ticketTrailG" opacity="0.35"><rect x="-48" y="-18" width="96" height="36" rx="18" fill="#C9975B"/></g>
         <g id="ticketG">
-          <rect id="ticketRect" x="-38" y="-15" width="76" height="30" rx="15" fill="#C9975B" stroke="#A97B3F" stroke-width="2"/>
-          <text id="ticketTxt" x="0" y="4.5" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="12" font-weight="700" fill="#FFFFFF">$6K JOB</text>
+          <rect id="ticketRect" x="-54" y="-21" width="108" height="42" rx="21" fill="#C9975B" stroke="#A97B3F" stroke-width="2.5"/>
+          <text id="ticketTxt" x="0" y="6" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="17" font-weight="700" fill="#FFFFFF">$6K JOB</text>
         </g>
       </svg>
     </div>
@@ -451,10 +464,11 @@ h1,h2,h3{color:var(--ink)}
     </div>
     <div class="sprog"><i><em id="p0"></em></i><i><em id="p1"></em></i><i><em id="p2"></em></i><i><em id="p3"></em></i></div>
     <div class="scrollhint">Keep scrolling ↓</div>
+    <a class="skipstory" href="#after-story">Skip the story ↓</a>
   </div>
 </section>
 
-<div class="wrap">
+<div class="wrap" id="after-story">
 
   <div class="stats rv" style="margin-top:56px">
     <div class="stat"><div class="v red" data-count="40" data-prefix="30–" data-suffix="%">30–40%</div><div class="l">Calls missed in peak season</div></div>
@@ -725,7 +739,39 @@ var ringW=document.getElementById("ringWaves");
 var missB=document.getElementById("missBadge");
 var caps=Array.prototype.slice.call(document.querySelectorAll(".cap2"));
 var progs=[0,1,2,3].map(function(i){return document.getElementById("p"+i);});
-var L=flight.getTotalLength();
+
+/* two scene layouts: wide (side-by-side) and mobile (stacked vertical, everything bigger) */
+var sceneSvg=document.querySelector(".scene svg");
+var phoneG=document.getElementById("phoneG"),calG=document.getElementById("calG");
+var chipTr=document.getElementById("chipTriage"),chipFo=document.getElementById("chipFollow");
+var D_DESK="M 232 300 C 400 70, 640 70, 838 280";
+var D_MOB="M 265 240 C 420 110, 520 340, 400 580";
+var slotC={x:841,y:418};
+var mobScale=1;
+var L=0;
+function layoutScene(){
+  var mob=window.matchMedia("(max-width:640px)").matches;
+  if(mob){
+    sceneSvg.setAttribute("viewBox","0 0 545 950");
+    phoneG.setAttribute("transform","translate(-65,-308) scale(1.45)");
+    calG.setAttribute("transform","translate(-613,305) scale(1.15)");
+    chipTr.setAttribute("transform","translate(-258,334) scale(1.1)");
+    chipFo.setAttribute("transform","translate(-349,398) scale(1.1)");
+    flight.setAttribute("d",D_MOB);
+    slotC={x:354,y:786};mobScale=1.3;
+  }else{
+    sceneSvg.setAttribute("viewBox","0 0 1000 560");
+    phoneG.removeAttribute("transform");
+    calG.removeAttribute("transform");
+    chipTr.removeAttribute("transform");
+    chipFo.removeAttribute("transform");
+    flight.setAttribute("d",D_DESK);
+    slotC={x:841,y:418};mobScale=1;
+  }
+  L=flight.getTotalLength();
+}
+layoutScene();
+window.addEventListener("resize",function(){layoutScene();storyScroll&&storyScroll();});
 
 function setBall(p){
   /* the $6K JOB ticket flies along the arc for p 0..0.86, then settles into the slot */
@@ -734,17 +780,17 @@ function setBall(p){
     var pt=flight.getPointAtLength(L*f);
     var ahead=flight.getPointAtLength(Math.min(L,L*f+1));
     var ang=Math.atan2(ahead.y-pt.y,ahead.x-pt.x)*180/Math.PI;
-    ticket.setAttribute("transform","translate("+pt.x+","+pt.y+") rotate("+(ang*0.5)+")");
+    ticket.setAttribute("transform","translate("+pt.x+","+pt.y+") rotate("+(ang*0.5)+") scale("+mobScale+")");
     var pt2=flight.getPointAtLength(L*Math.max(0,f-0.05));
-    trail.setAttribute("transform","translate("+pt2.x+","+pt2.y+")");
+    trail.setAttribute("transform","translate("+pt2.x+","+pt2.y+") scale("+mobScale+")");
     ticket.setAttribute("opacity",1);trail.setAttribute("opacity",0.35);
     ticketRect.setAttribute("fill","#C9975B");ticketRect.setAttribute("stroke","#A97B3F");
   }else{
     var d=(p-0.86)/0.14;                 /* settle-into-slot phase */
     var end=flight.getPointAtLength(L);
-    var tx=847, ty=352;                   /* slot center */
+    var tx=slotC.x, ty=slotC.y;           /* slot center (layout-dependent) */
     var x=end.x+(tx-end.x)*d, y=end.y+(ty-end.y)*d;
-    var sc=1-0.35*d;                      /* shrinks as it slots in */
+    var sc=(1-0.35*d)*mobScale;           /* shrinks as it slots in */
     ticketRect.setAttribute("fill","#2E7D4F");ticketRect.setAttribute("stroke","#256B42"); /* turns green as it lands */
     ticket.setAttribute("transform","translate("+x+","+y+") scale("+sc+")");
     trail.setAttribute("transform","translate("+x+","+y+") scale("+sc+")");
@@ -752,9 +798,20 @@ function setBall(p){
     ticket.setAttribute("opacity",fade);trail.setAttribute("opacity",fade*0.25);
   }
 }
+var clockEl=document.getElementById("clockTxt"),riskEl=document.getElementById("riskBadge");
 function setStage(p){
   var s=p<0.22?0:p<0.5?1:p<0.8?2:3;
   caps.forEach(function(c,i){c.classList.toggle("on",i===s);});
+  /* live clock 2:14 → 2:20 + at-risk badge flips to saved */
+  if(clockEl){
+    var mins=14+p*6, m=Math.floor(mins), sec=Math.floor((mins-m)*60);
+    clockEl.textContent="2:"+(m<10?"0":"")+m+":"+(sec<10?"0":"")+sec+" PM";
+  }
+  if(riskEl){
+    var done0=p>0.97;
+    riskEl.textContent=done0?(window.__riskAmt||"$6,000")+" saved ✓":(window.__riskAmt||"$6,000")+" at risk";
+    riskEl.classList.toggle("saved",done0);
+  }
   var bounds=[[0,0.22],[0.22,0.5],[0.5,0.8],[0.8,1]];
   progs.forEach(function(em,i){
     var b=bounds[i], f=Math.min(1,Math.max(0,(p-b[0])/(b[1]-b[0])));
@@ -844,6 +901,9 @@ function applyNiche(key){
   btnRE.classList.toggle("on",key==="re");
   document.getElementById("deckTxt").textContent=N.deck;
   document.getElementById("footTxt").textContent=N.foot;
+  window.__riskAmt=(key==="re")?"$12,000":"$6,000";
+  var rk=document.getElementById("riskBadge");
+  if(rk&&!rk.classList.contains("saved"))rk.textContent=window.__riskAmt+" at risk";
   var tt=document.getElementById("ticketTxt");if(tt)tt.textContent=N.ticket;
   N.caps.forEach(function(c,i){var el=document.getElementById("c"+i);if(el)el.textContent=c;});
   rows.forEach(function(r,i){
