@@ -98,7 +98,7 @@ a{color:inherit}
 .proof{padding:90px 0;border-top:1px solid var(--line);text-align:center}
 .proof h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.02em;color:var(--ink)}
 .proof .sub{max-width:520px;margin:14px auto 0;font-size:16px;color:var(--muted)}
-.reel{max-width:860px;margin:40px auto 0;border-radius:22px;overflow:hidden;background:#0C1322;box-shadow:0 30px 70px rgba(12,19,34,.25)}
+.reel{width:100%;max-width:380px;margin:40px auto 0;border-radius:26px;overflow:hidden;background:#0C1322;box-shadow:0 30px 70px rgba(12,19,34,.25)}
 .reel video{display:block;width:100%;height:auto}
 .proof .more{margin-top:26px}
 .proof .more a{font-weight:600;color:var(--copper-deep);text-decoration:none;font-size:15.5px}
@@ -174,7 +174,7 @@ a{color:inherit}
 
 /* drifting task chips (get "caught" one by one) */
 .hero{position:relative}
-.drift{position:absolute;inset:0;pointer-events:none;z-index:-1}
+.drift{display:none}
 .dchip{position:absolute;font-family:var(--mono);font-size:11.5px;font-weight:600;letter-spacing:.06em;color:var(--muted);background:var(--panel);border:1px solid var(--line-2);border-radius:999px;padding:7px 14px;white-space:nowrap;animation:dfloat 7s ease-in-out infinite alternate;transition:background .5s,color .5s,border-color .5s,transform .5s}
 .dchip::before{content:attr(data-t)}
 .dchip.caught{background:#2E7D4F;border-color:#256B42;color:#fff}
@@ -391,7 +391,7 @@ io.observe(document.getElementById("ccbFeed"));
     <div class="kicker">Proof, not promises</div>
     <h2>Watch the tools work<span class="period">.</span></h2>
     <p class="sub">Real systems I've built and shipped — 59 seconds, no talking heads, just the screen.</p>
-    <div class="reel"><video src="videos/00-sizzle-reel.mp4" controls preload="metadata" playsinline></video></div>
+    <div class="reel"><video src="videos/00-sizzle-reel.mp4#t=2.5" controls preload="metadata" playsinline></video></div>
     <div class="more"><a href="portfolio.html">see the full portfolio →</a></div>
   </div>
 </section>
