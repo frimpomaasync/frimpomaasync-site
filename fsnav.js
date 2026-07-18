@@ -46,8 +46,8 @@ var css=""
 +"#fsfoot .fs-col a:hover{color:#A8763B}"
 +"#fsfoot .fs-base{max-width:1060px;margin:40px auto 0;padding:18px 24px 0;border-top:1px solid #E8E5E0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:#9A948A}";
 
-var here=(location.pathname.split("/").pop()||"index.html");
-function mark(href){return href===here?' class="fs-here"':"";}
+var here=(location.pathname.split("/").pop()||"index.html").replace(/\.html$/,"")||"index";
+function mark(href){return href.replace(/\.html$/,"")===here?' class="fs-here"':"";}
 
 var navLinks=LINKS.map(function(l){return '<a href="'+l[0]+'"'+mark(l[0])+'>'+l[1]+'</a>';}).join("");
 var menuLinks=[["index.html","home"]].concat(LINKS,[["planner.html","the free blueprint"]]).map(function(l){
