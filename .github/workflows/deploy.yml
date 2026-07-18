@@ -1,0 +1,29 @@
+name: Deploy frimpomaasync.com to Hostinger
+# Every push to main uploads the site to public_html on Hostinger.
+# Needs repo secrets: FTP_SERVER / FTP_USERNAME / FTP_PASSWORD
+# The FTP root already IS public_html, so server-dir stays ./
+# This only uploads/updates files - it never deletes anything on the
+# server, so the NanaOS folder (os-fad13324c3/) is untouched.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Upload via FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          server-dir: ./
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/*.bak
