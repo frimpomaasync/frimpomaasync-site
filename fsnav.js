@@ -116,7 +116,7 @@ if(!document.body.hasAttribute("data-no-fscta")){
     +'<p>One free 15-minute call. We find the leak costing you the most — and you leave with the map either way.</p>'
     +'<a class="fs-book" href="'+BOOK+'" target="_blank" rel="noopener">book a free 15-min call →</a>'
     +'<div class="fs-guar">✓ Live and working in 7 days, booking appointments within 30 — or you don\u2019t pay.</div>'
-    +'<div class="fs-trust">Engine: Claude for Small Business, built by Anthropic · wired to your business by NaNa Frimpomaa</div>';
+    +'<div class="fs-trust">Built, wired, and cared for by NaNa Frimpomaa · frimpomaasync.com</div>';
   document.body.appendChild(band);
 }
 
