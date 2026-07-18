@@ -21,7 +21,7 @@
 <!-- Self-contained. No external resources. System fonts only. -->
 <style>
   :root{
-    --cream:#FFFFFF; --cream-hi:#FAFAF8; --ink:#16140F;
+    --bg:#FFFFFF; --panel-2:#FAFAF8; --ink:#1A1A1A;
     --copper:#C9975B; --copper-soft:#E4C79A; --copper-deep:#A8763B;
     --card:#FFFFFF; --muted:#6B6458; --hairline:#E4DDD0; --line:#B8AE9C;
   }
@@ -40,7 +40,7 @@
 
   .stage{ position:relative; z-index:1; max-width:680px; margin:0 auto; padding:30px 20px 90px; }
 
-  .back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:9px 15px; border:1px solid var(--hairline); border-radius:999px; background:var(--cream-hi); transition:border-color .2s, color .2s; margin-bottom:26px; }
+  .back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:9px 15px; border:1px solid var(--hairline); border-radius:999px; background:var(--panel-2); transition:border-color .2s, color .2s; margin-bottom:26px; }
   .back:hover{ border-color:var(--copper-soft); color:var(--ink); }
   .back:focus-visible{ outline:2px solid var(--copper); outline-offset:3px; }
 
@@ -51,7 +51,7 @@
 
   .hero{ padding:4px 2px 2px; }
   .eyebrow{ font-size:12px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--copper); margin-bottom:14px; }
-  .title{ font-size:clamp(46px,14vw,86px); font-weight:800; letter-spacing:-0.045em; line-height:0.84; }
+  .title{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-size:clamp(2.9rem,9.5vw,7rem); font-weight:700; letter-spacing:-0.025em; line-height:0.98; }
   .title .period{ color:var(--copper); }
   .lede{ margin-top:20px; font-size:16px; color:var(--muted); line-height:1.5; max-width:470px; }
   .lede .accent{ font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:500; font-size:20px; color:var(--ink); }
@@ -78,7 +78,7 @@
   .post-date{ font-size:11px; letter-spacing:0.06em; color:var(--muted); }
   .post-tag{ font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:4px 10px; border-radius:999px; background:rgba(201,151,91,0.14); color:var(--copper-deep); border:1px solid var(--copper-soft); }
 
-  .post-title{ font-size:clamp(25px,6.6vw,38px); font-weight:800; letter-spacing:-0.035em; line-height:1.02; margin-bottom:13px; }
+  .post-title{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-size:clamp(24px,6vw,36px); font-weight:700; letter-spacing:-0.02em; line-height:1.1; margin-bottom:13px; }
   .post-title .period{ color:var(--copper); }
   .post-excerpt{ font-size:15px; color:var(--muted); line-height:1.5; max-width:96%; }
 
@@ -110,13 +110,13 @@
   .pcta{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; padding:13px 24px; border-radius:12px; font-size:12px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
   .pcta.primary{ background:var(--copper); color:#fff; box-shadow:0 12px 28px rgba(201,151,91,0.26); }
   .pcta.primary:hover{ transform:translateY(-2px); box-shadow:0 16px 36px rgba(201,151,91,0.36); }
-  .pcta.ghost{ background:var(--cream-hi); color:var(--ink); border:1.5px solid var(--hairline); }
+  .pcta.ghost{ background:var(--panel-2); color:var(--ink); border:1.5px solid var(--hairline); }
   .pcta.ghost:hover{ transform:translateY(-2px); border-color:var(--copper); }
   .pcta:focus-visible{ outline:2px solid var(--copper); outline-offset:3px; }
   .pcta .arr{ transition:transform .2s ease; } .pcta:hover .arr{ transform:translateX(4px); }
 
   /* coming-soon row */
-  .more{ margin-top:30px; background:var(--cream-hi); border:1px dashed var(--copper-soft); border-radius:20px; padding:26px 28px; text-align:center; }
+  .more{ margin-top:30px; background:var(--panel-2); border:1px dashed var(--copper-soft); border-radius:20px; padding:26px 28px; text-align:center; }
   .more .k{ font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--copper); margin-bottom:8px; }
   .more p{ font-size:14.5px; color:var(--muted); line-height:1.5; max-width:420px; margin:0 auto; }
   .more p a{ color:var(--copper); text-decoration:none; border-bottom:1.5px solid var(--copper-soft); }
@@ -139,8 +139,6 @@
 </head>
 <body>
   <div class="stage">
-
-    <a class="back mono" href="/">← back to the hub</a>
 
     <div class="chrome">
       <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
@@ -230,11 +228,6 @@
       <p>New notes drop as I build. Want them in your inbox? <a href="/">Join the list on the hub →</a></p>
     </div>
 
-    <footer class="foot">
-      <div class="brand">NaNa Frimpomaa</div>
-      Custom AI tools, dashboards &amp; automations<br>
-      <a href="/">← back to the hub</a> · © 2026 · Built in public
-    </footer>
 
   </div>
 
@@ -258,6 +251,6 @@
   });
 })();
 </script>
-  <script src="synkasa-widget.js" defer></script>
+<script src="fsnav.js" defer></script>
 </body>
 </html>

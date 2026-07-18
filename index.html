@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ diffed vs Brand Facts + Retired/Excluded: WHITE bg (her palette amendment 2026-07-14) + copper #C9975B · system fonts only (no CDN) · one offer (Solo Business System $1,500 + $99/mo care, founding $750) · no missed-call stats · no product centering · widget on -->
+<!-- ✅ diffed vs Brand Facts + Retired/Excluded: WHITE bg (her palette amendment 2026-07-14) + copper #C9975B · system fonts only (no CDN) · one offer (the Client Catcher $1,500 + $99/mo care, founding $750) · no missed-call stats · no product centering · widget on -->
 <html lang="en">
 <head>
   <meta name="p:domain_verify" content="412c9b9348caa29530d297c82eca992a"/>
@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>NaNa Frimpomaa — Stop being the system</title>
-<meta name="description" content="I build the one connected system that runs your booking, leads, and follow-up — done for you, live in 7 days, yours forever. The Solo Business System.">
+<meta name="description" content="I build the one connected system that runs your booking, leads, and follow-up — done for you, live in 7 days, yours forever. The Client Catcher.">
 <link rel="canonical" href="https://frimpomaasync.com/">
 <meta name="theme-color" content="#FFFFFF">
 <meta property="og:type" content="website">
@@ -21,7 +21,7 @@
 <meta name="twitter:description" content="One connected system runs your booking, leads, and follow-up. Live in 7 days.">
 <meta name="twitter:image" content="https://frimpomaasync.com/og-cover.png">
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"ProfessionalService","name":"NaNa Frimpomaa — frimpomaasync.com","url":"https://frimpomaasync.com","description":"The Solo Business System: booking, leads, and follow-up automated into one connected system for solo business owners. Done for you, live in 7 days.","founder":{"@type":"Person","name":"NaNa Frimpomaa"},"priceRange":"$33-$1,500"}
+{"@context":"https://schema.org","@type":"ProfessionalService","name":"NaNa Frimpomaa — frimpomaasync.com","url":"https://frimpomaasync.com","description":"The Client Catcher: booking, leads, and follow-up automated into one connected system for solo business owners. Done for you, live in 7 days.","founder":{"@type":"Person","name":"NaNa Frimpomaa"},"priceRange":"$750-$1,500"}
 </script>
 <!-- Self-contained. No external resources. System fonts only. -->
 <style>
@@ -29,8 +29,9 @@
   --bg:#FFFFFF; --panel:#F6F5F3; --panel-2:#FAFAF8; --ink:#1A1A1A; --ink-2:#33302B;
   --muted:#6E6A62; --faint:#9A948A; --line:#E8E5E0; --line-2:#D9D5CE;
   --copper:#C9975B; --copper-deep:#A8763B;
+  --navy:#1E2A45; --navy-deep:#16203A; --cred:#B4552D; --cred-deep:#9A4522; --green:#2E7D4F;
   --sans:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-  --serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;
+  --serif:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif;
   --mono:ui-monospace,'SF Mono',Menlo,Monaco,Consolas,monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box}
@@ -40,29 +41,19 @@ body{background:var(--bg);color:var(--ink-2);font-family:var(--sans);line-height
 .wrap{max-width:1060px;margin:0 auto;padding:0 24px}
 a{color:inherit}
 
-/* nav */
-.nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.86);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
-.nav-in{max-width:1060px;margin:0 auto;padding:16px 24px;display:flex;align-items:center;justify-content:space-between;gap:16px}
-.logo{font-weight:700;font-size:16px;letter-spacing:-.01em;text-decoration:none;white-space:nowrap}
-.logo .dot{color:var(--copper)}
-.nav-links{display:flex;align-items:center;gap:22px;font-size:13.5px}
-.nav-links a{text-decoration:none;color:var(--muted)}
-.nav-links a:hover{color:var(--ink)}
-.nav-cta{padding:9px 18px;border-radius:999px;background:var(--ink);color:#fff !important;font-weight:600;font-size:13px;text-decoration:none;white-space:nowrap}
-.nav-cta:hover{background:#000}
-@media(max-width:640px){.nav-links a:not(.nav-cta){display:none}}
+/* nav + footer come from fsnav.js — the one shared spine for every page */
 
 /* hero */
 .hero{padding:clamp(70px,14vh,130px) 0 70px;text-align:center}
 .eyebrow{font-family:var(--mono);font-size:11.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:26px}
-.hero h1{font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif;font-weight:700;font-size:clamp(46px,9.5vw,104px);line-height:.98;letter-spacing:-.025em;color:var(--ink)}
-.hero h1 em{font-style:italic;color:var(--copper-deep)}
+.hero h1{font-family:var(--serif);font-weight:700;font-size:clamp(2.9rem,9.5vw,7rem);line-height:.98;letter-spacing:-.025em;color:var(--ink)}
+.period{color:var(--copper)}
 .hero .sub{max-width:600px;margin:30px auto 0;font-size:clamp(16px,2.2vw,19px);color:var(--muted);line-height:1.6}
 .hero .sub b{color:var(--ink);font-weight:600}
 .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:38px}
-.btn{display:inline-flex;align-items:center;gap:9px;padding:16px 30px;border-radius:999px;font-weight:600;font-size:15px;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease}
-.btn.primary{background:var(--ink);color:#fff}
-.btn.primary:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(26,26,26,.18)}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:15px 28px;border-radius:6px;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,background .2s ease}
+.btn.primary{background:var(--cred);color:#fff}
+.btn.primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(154,69,34,.55);background:var(--cred-deep)}
 .btn.quiet{color:var(--ink);border:1px solid var(--line-2);background:#fff}
 .btn.quiet:hover{border-color:var(--copper)}
 .hero .under{margin-top:22px;font-family:var(--mono);font-size:12px;color:var(--faint)}
@@ -71,8 +62,7 @@ a{color:inherit}
 /* feeling */
 .feel{padding:90px 0;border-top:1px solid var(--line)}
 .kicker{font-family:var(--mono);font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:18px;text-align:center}
-.feel h2{font-family:var(--serif);font-size:clamp(28px,5vw,46px);font-weight:700;line-height:1.15;letter-spacing:-.02em;color:var(--ink);text-align:center;max-width:760px;margin:0 auto}
-.feel h2 em{font-style:italic;color:var(--copper-deep)}
+.feel h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;line-height:1.15;letter-spacing:-.02em;color:var(--ink);text-align:center;max-width:760px;margin:0 auto}
 .feel-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:46px auto 0}
 .feel-card{background:var(--panel);border-radius:18px;padding:26px 24px}
 .feel-card .n{font-family:var(--serif);font-size:22px;color:var(--copper-deep);margin-bottom:10px}
@@ -84,7 +74,7 @@ a{color:inherit}
 
 /* the system */
 .system{padding:90px 0;border-top:1px solid var(--line)}
-.sys-card{background:linear-gradient(160deg,#16233B 0%,#131D31 48%,#0C1322 100%);border-radius:26px;padding:clamp(34px,6vw,60px);color:#F5F0E8;position:relative;overflow:hidden}
+.sys-card{background:linear-gradient(160deg,#1E2A45,#16203A);border-radius:26px;padding:clamp(34px,6vw,60px);color:#F5F0E8;position:relative;overflow:hidden}
 .sys-card::before{content:"";position:absolute;inset:0;background:radial-gradient(42% 60% at 88% 2%,rgba(201,151,91,.22),transparent 58%);pointer-events:none}
 .sys-card .kicker{text-align:left;color:#E4C79A;margin-bottom:14px}
 .sys-card h2{font-family:var(--serif);font-size:clamp(32px,5.6vw,54px);font-weight:700;letter-spacing:-.02em;line-height:1.04;color:#fff}
@@ -97,8 +87,8 @@ a{color:inherit}
 .sys-bar{display:flex;align-items:center;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-top:36px;position:relative;z-index:1}
 .sys-price{font-family:var(--mono);font-size:14px;color:#E4C79A;line-height:1.7}
 .sys-price b{color:#fff;font-size:19px}
-.sys-cta{padding:16px 30px;border-radius:999px;background:var(--copper);color:#1a1200;font-weight:700;font-size:15px;text-decoration:none;white-space:nowrap;transition:transform .18s ease}
-.sys-cta:hover{transform:translateY(-2px);background:#D8A868}
+.sys-cta{padding:15px 28px;border-radius:6px;background:var(--cred);color:#fff;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;white-space:nowrap;transition:transform .18s ease,background .2s ease}
+.sys-cta:hover{transform:translateY(-2px);background:var(--cred-deep)}
 .sys-guar{margin-top:22px;font-family:var(--mono);font-size:12.5px;color:#9dbb8a;position:relative;z-index:1}
 .founding{margin-top:16px;display:inline-block;background:rgba(201,151,91,.16);border:1px solid rgba(228,199,154,.4);border-radius:999px;padding:8px 16px;font-family:var(--mono);font-size:12px;color:#E4C79A;position:relative;z-index:1}
 .founding b{color:#fff}
@@ -106,7 +96,7 @@ a{color:inherit}
 
 /* proof */
 .proof{padding:90px 0;border-top:1px solid var(--line);text-align:center}
-.proof h2{font-family:var(--serif);font-size:clamp(28px,5vw,46px);font-weight:700;letter-spacing:-.02em;color:var(--ink)}
+.proof h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.02em;color:var(--ink)}
 .proof .sub{max-width:520px;margin:14px auto 0;font-size:16px;color:var(--muted)}
 .reel{max-width:860px;margin:40px auto 0;border-radius:22px;overflow:hidden;background:#0C1322;box-shadow:0 30px 70px rgba(12,19,34,.25)}
 .reel video{display:block;width:100%;height:auto}
@@ -116,7 +106,7 @@ a{color:inherit}
 
 /* steal these — free value */
 .steal{padding:90px 0;border-top:1px solid var(--line)}
-.steal h2{font-family:var(--serif);font-size:clamp(28px,5vw,46px);font-weight:700;letter-spacing:-.02em;color:var(--ink);text-align:center}
+.steal h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.02em;color:var(--ink);text-align:center}
 .steal .sub{text-align:center;color:var(--muted);margin-top:12px;font-size:15.5px;max-width:520px;margin-left:auto;margin-right:auto}
 .steal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:980px;margin:40px auto 0}
 .steal-card{background:var(--panel);border-radius:18px;padding:26px 24px}
@@ -131,9 +121,13 @@ a{color:inherit}
 
 /* tools ladder */
 .tools{padding:90px 0;border-top:1px solid var(--line)}
-.tools h2{font-family:var(--serif);font-size:clamp(26px,4.4vw,40px);font-weight:700;letter-spacing:-.02em;color:var(--ink);text-align:center}
+.tools h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.02em;color:var(--ink);text-align:center}
 .tools .sub{text-align:center;color:var(--muted);margin-top:12px;font-size:15.5px}
-.tool-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:760px;margin:40px auto 0}
+.tool-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:980px;margin:40px auto 0}
+.tool.dark{background:linear-gradient(160deg,var(--navy),var(--navy-deep))}
+.tool.dark .t{color:#fff}
+.tool.dark p{color:#C9BEA8}
+.tool.dark .k,.tool.dark .p{color:#E4C79A}
 .tool{background:var(--panel);border-radius:18px;padding:28px;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease;display:block}
 .tool:hover{transform:translateY(-3px);box-shadow:0 16px 38px rgba(26,26,26,.08)}
 .tool .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--copper-deep)}
@@ -145,28 +139,27 @@ a{color:inherit}
 /* identity + list */
 .list-band{padding:100px 0;border-top:1px solid var(--line);background:var(--panel-2)}
 .list-in{max-width:620px;margin:0 auto;text-align:center;padding:0 24px}
-.list-band h2{font-family:var(--serif);font-size:clamp(30px,5.4vw,50px);font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1.06}
-.list-band h2 em{font-style:italic;color:var(--copper-deep)}
+.list-band h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.02em;color:var(--ink);line-height:1.06}
 .list-band .sub{margin-top:16px;font-size:16px;color:var(--muted)}
 .list-band form{display:flex;gap:10px;margin-top:30px}
 .list-band input[type=email]{flex:1;padding:15px 18px;font-size:15px;border:1px solid var(--line-2);border-radius:999px;background:#fff;color:var(--ink);font-family:inherit;min-width:0}
 .list-band input[type=email]:focus{outline:2px solid var(--copper);border-color:var(--copper)}
-.list-band button{padding:15px 26px;border:none;border-radius:999px;background:var(--ink);color:#fff;font-weight:600;font-size:14px;font-family:inherit;cursor:pointer;white-space:nowrap}
-.list-band button:hover{background:#000}
+.list-band button{padding:15px 26px;border:none;border-radius:6px;background:var(--cred);color:#fff;font-weight:700;font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;font-family:inherit;cursor:pointer;white-space:nowrap}
+.list-band button:hover{background:var(--cred-deep)}
 .list-band .tiny{margin-top:12px;font-size:12px;color:var(--faint)}
 @media(max-width:520px){.list-band form{flex-direction:column}}
 
-/* footer */
-footer{border-top:1px solid var(--line);padding:56px 0 70px}
-.foot-in{max-width:1060px;margin:0 auto;padding:0 24px;display:flex;justify-content:space-between;gap:30px;flex-wrap:wrap}
-.foot-brand{font-weight:700;font-size:16px}
-.foot-brand .dot{color:var(--copper)}
-.foot-brand p{font-weight:400;font-size:13px;color:var(--muted);margin-top:8px;max-width:260px}
-.foot-col{font-size:13.5px}
-.foot-col .h{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:12px}
-.foot-col a{display:block;color:var(--muted);text-decoration:none;padding:4px 0}
-.foot-col a:hover{color:var(--copper-deep)}
-.foot-base{max-width:1060px;margin:40px auto 0;padding:18px 24px 0;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--faint)}
+/* how it works */
+.how{padding:90px 0;border-top:1px solid var(--line)}
+.how h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.02em;color:var(--ink);text-align:center}
+.how-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:920px;margin:40px auto 0}
+.how-step{background:var(--panel);border-radius:18px;padding:24px 22px}
+.how-step .n{width:36px;height:36px;border-radius:50%;background:var(--panel-2);border:2px solid var(--copper);color:var(--copper-deep);display:flex;align-items:center;justify-content:center;font-weight:700;font-family:var(--serif);font-size:17px;margin-bottom:12px}
+.how-step b{display:block;font-family:var(--serif);font-size:19px;color:var(--ink)}
+.how-step p{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.55}
+.how-cta{text-align:center;margin-top:34px}
+.how-trust{margin-top:16px;font-family:var(--mono);font-size:11.5px;color:var(--faint);letter-spacing:.04em}
+@media(max-width:700px){.how-row{grid-template-columns:1fr}}
 
 /* scroll progress */
 .sprog{position:fixed;top:0;left:0;height:3px;background:var(--copper);width:0;z-index:99;transition:width .1s linear}
@@ -178,9 +171,6 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
 .h-anim .w:nth-child(3){animation-delay:.25s}
 .h-anim .w:nth-child(4){animation-delay:.35s}
 @keyframes hwUp{to{opacity:1;transform:none}}
-.h-anim em{position:relative}
-.h-anim em::after{content:"";position:absolute;left:0;right:0;bottom:.02em;height:.06em;background:var(--copper);transform:scaleX(0);transform-origin:left;animation:hUnder .7s 1s cubic-bezier(.2,.7,.2,1) forwards}
-@keyframes hUnder{to{transform:scaleX(1)}}
 
 /* drifting task chips (get "caught" one by one) */
 .hero{position:relative}
@@ -217,12 +207,11 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
 /* client catcher band */
 .ccb{padding:90px 0;border-top:1px solid var(--line)}
 .ccb-grid{display:grid;grid-template-columns:1fr;gap:32px;max-width:720px;margin:0 auto;text-align:center;justify-items:center}
-.ccb h2{font-family:var(--serif);font-size:clamp(28px,5vw,46px);font-weight:700;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
-.ccb h2 em{font-style:italic;color:var(--copper-deep)}
+.ccb h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.02em;line-height:1.1;color:var(--ink)}
 .ccb .lede{margin-top:16px;font-size:16px;color:var(--muted);line-height:1.65;max-width:560px;margin-left:auto;margin-right:auto}
 .ccb .lede b{color:var(--ink)}
-.ccb-cta{display:inline-flex;margin-top:24px;padding:15px 28px;border-radius:999px;background:var(--ink);color:#fff;font-weight:600;font-size:15px;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease}
-.ccb-cta:hover{transform:translateY(-2px);box-shadow:0 14px 34px rgba(26,26,26,.18)}
+.ccb-cta{display:inline-flex;margin-top:24px;padding:15px 28px;border-radius:6px;background:var(--cred);color:#fff;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;transition:transform .18s ease,box-shadow .18s ease,background .2s ease}
+.ccb-cta:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(154,69,34,.55);background:var(--cred-deep)}
 .ccb-loop{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:22px;font-family:var(--mono);font-size:12px;color:var(--faint);text-align:left;max-width:420px;margin-left:auto;margin-right:auto}
 .ccb-loop svg{width:52px;height:52px;flex:0 0 auto}
 .ccb-ring{transform-origin:26px 26px;animation:ccbspin 22s linear infinite}
@@ -239,7 +228,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
 .ccb-row .tg{flex:0 0 auto;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:3px 8px;border-radius:4px;margin-top:1px}
 .ccb-row .tg.g{background:#2E7D4F;color:#fff}
 .ccb-row .tg.c{background:var(--copper);color:#fff}
-.ccb-row .tg.n{background:#16233B;color:#E4C79A}
+.ccb-row .tg.n{background:var(--navy);color:#E4C79A}
 .ccb-count{margin-top:12px;padding-top:12px;border-top:1px solid var(--line-2);font-family:var(--mono);font-size:12.5px;color:var(--muted);text-align:center}
 .ccb-count b{color:var(--copper-deep)}
 
@@ -247,19 +236,6 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
 </style>
 </head>
 <body>
-
-<nav class="nav"><div class="nav-in">
-  <a class="logo" href="/">frimpomaasync<span class="dot">.com</span></a>
-  <div class="nav-links">
-    <a href="#steal">free tools</a>
-    <a href="#system">the system</a>
-    <a href="client-catcher.html">client catcher</a>
-    <a href="portfolio.html">portfolio</a>
-    <a href="products.html">tools</a>
-    <a href="blog.html">notes</a>
-    <a class="nav-cta" href="https://calendar.app.google/p9Te84R34vPm2U3z9" target="_blank" rel="noopener">book a free call</a>
-  </div>
-</div></nav>
 
 <div class="sprog" id="sprogBar" aria-hidden="true"></div>
 
@@ -274,10 +250,10 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
     <span class="dchip" data-t="2 AM inquiry"></span>
   </div>
   <div class="eyebrow">NaNa Frimpomaa · I build small systems for solo owners</div>
-  <h1 class="h-anim"><span class="w">Stop</span> <span class="w">being</span><br><span class="w">the</span> <span class="w"><em>system</em>.</span></h1>
+  <h1 class="h-anim"><span class="w">Stop</span> <span class="w">being</span><br><span class="w">the</span> <span class="w">system<span class="period">.</span></span></h1>
   <p class="sub">You are the booking desk, the follow-up team, and the after-hours inbox — all at once. <b>I build the one connected system that takes all three off your hands.</b> Done for you. Live in 7 days. Yours forever.</p>
   <div class="cta-row">
-    <a class="btn primary" href="https://calendar.app.google/p9Te84R34vPm2U3z9" target="_blank" rel="noopener">book a free 15-min call →</a>
+    <a class="btn primary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">book a free 15-min call →</a>
     <a class="btn quiet" href="#proof">watch real builds</a>
   </div>
   <div class="under mono">built in public · <b>you own everything I build</b> · no subscriptions to me unless you want one</div>
@@ -295,7 +271,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
 <section class="feel">
   <div class="wrap">
     <div class="kicker">Real talk</div>
-    <h2>It's not that you're behind.<br>It's that <em>you're the only system</em> your business has.</h2>
+    <h2>It's not that you're behind.<br>It's that you're the only system your business has<span class="period">.</span></h2>
     <div class="feel-grid">
       <div class="feel-card"><div class="n">01</div><p><b>Leads go cold</b> while your hands are busy with the client in front of you.</p></div>
       <div class="feel-card"><div class="n">02</div><p><b>Evenings vanish</b> into follow-ups, reminders, and "just checking in" texts.</p></div>
@@ -310,7 +286,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
   <div class="wrap">
     <div class="sys-card">
       <div class="kicker">The one offer · Done-for-you</div>
-      <h2>The Solo Business System<span class="dot">.</span></h2>
+      <h2>The Client Catcher<span class="dot">.</span></h2>
       <p class="lede">Your booking, your leads, and your follow-up — wired into one connected system, built around how you already work. No templates. No tech headache on your end. You own it, I keep it sharp.</p>
       <div class="pillars">
         <div class="pillar"><div class="t">Booking</div><p>Clients book themselves — day or night — straight into your calendar.</p></div>
@@ -319,10 +295,27 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
       </div>
       <div class="sys-bar">
         <div class="sys-price"><b>$1,500</b> one-time build · optional $99/mo care plan</div>
-        <a class="sys-cta" href="https://calendar.app.google/p9Te84R34vPm2U3z9" target="_blank" rel="noopener">book a free call →</a>
+        <a class="sys-cta" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">book a free call →</a>
       </div>
       <div class="founding">Founding rate: <b>$750</b> for the first 3 clients — in exchange for a named testimonial</div>
-      <div class="sys-guar">✓ Live in 7 days or you don't pay the build fee.</div>
+      <div class="sys-guar">✓ Live and working in 7 days, booking appointments within 30 — or you don't pay.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="how" id="how">
+  <div class="wrap">
+    <div class="kicker">How it works · Done for you</div>
+    <h2>Three steps<span class="period">.</span> Seven days<span class="period">.</span></h2>
+    <div class="how-row">
+      <div class="how-step"><div class="n">1</div><b>Map</b><p>A free 15-minute call. We find the one leak costing you the most — you leave with the map either way.</p></div>
+      <div class="how-step"><div class="n">2</div><b>Build &amp; wire</b><p>I build the system around how you already work — your phone, your calendar, your inbox. You touch nothing technical.</p></div>
+      <div class="how-step"><div class="n">3</div><b>Live in 7 days</b><p>Walkthrough, handoff, yours forever. Optional $99/mo care plan keeps it sharp.</p></div>
+    </div>
+    <div class="how-cta">
+      <a class="btn primary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">book a free 15-min call →</a>
+      <div class="how-trust">Engine: Claude for Small Business, built by Anthropic · wired to your business by NaNa Frimpomaa</div>
     </div>
   </div>
 </section>
@@ -333,8 +326,8 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
     <div class="ccb-grid">
       <div>
         <div class="kicker">New · For real estate &amp; home services</div>
-        <h2>Watch a missed call become a <em>booked job</em>.</h2>
-        <p class="lede">The Client Catcher is the System tuned for agents and the trades: every missed call caught, followed up in your voice, and booked onto your calendar — <b>while your hands stay on the work.</b></p>
+        <h2>Watch a missed call become a booked job<span class="period">.</span></h2>
+        <p class="lede">Every missed call caught, followed up in your voice, and booked onto your calendar — <b>while your hands stay on the work.</b> Built for agents, the trades, and every owner who answers their own phone.</p>
         <a class="ccb-cta" href="client-catcher.html">see the Client Catcher →</a>
         <div class="ccb-loop">
           <svg viewBox="0 0 52 52" aria-hidden="true">
@@ -358,7 +351,7 @@ footer{border-top:1px solid var(--line);padding:56px 0 70px}
           <div class="ccb-row"><span class="t">9:12 PM</span><span class="tg g">Booked</span><span>After-hours inquiry answered — booked for 9 AM</span></div>
         </div>
         <div class="ccb-count" id="ccbCount"><b>0</b> handled · <b>0</b> interruptions · you: with clients</div>
-        <div class="cap">Simulation · one ordinary day on the Solo Business System</div>
+        <div class="cap">Simulation · one ordinary day on the Client Catcher</div>
       </div>
     </div>
   </div>
@@ -396,7 +389,7 @@ io.observe(document.getElementById("ccbFeed"));
 <section class="proof" id="proof">
   <div class="wrap">
     <div class="kicker">Proof, not promises</div>
-    <h2>Watch the tools work.</h2>
+    <h2>Watch the tools work<span class="period">.</span></h2>
     <p class="sub">Real systems I've built and shipped — 59 seconds, no talking heads, just the screen.</p>
     <div class="reel"><video src="videos/00-sizzle-reel.mp4" controls preload="metadata" playsinline></video></div>
     <div class="more"><a href="portfolio.html">see the full portfolio →</a></div>
@@ -407,7 +400,7 @@ io.observe(document.getElementById("ccbFeed"));
 <section class="steal" id="steal">
   <div class="wrap">
     <div class="kicker">Free · No email needed</div>
-    <h2>Steal these three.</h2>
+    <h2>Steal these three<span class="period">.</span></h2>
     <p class="sub">Real pieces of the System you can install yourself, today. If you never book a call, install these anyway.</p>
     <div class="steal-grid">
       <div class="steal-card">
@@ -433,45 +426,51 @@ io.observe(document.getElementById("ccbFeed"));
 <!-- ===== TOOLS LADDER ===== -->
 <section class="tools">
   <div class="wrap">
-    <div class="kicker">Start smaller</div>
-    <h2>Feel the quality first.</h2>
-    <p class="sub">Two real tools you can use today — before you ever book a call.</p>
+    <div class="kicker">The path</div>
+    <h2>Start free<span class="period">.</span> Scale when ready<span class="period">.</span></h2>
+    <p class="sub">Feel the quality on my free tools today. When you want the whole machine, I build it for you.</p>
     <div class="tool-row">
-      <a class="tool" href="soma.html"><span class="k">Free · Live demo</span><div class="t">soma.</div><p>Watch one customer entry flow into four connected tools, in real time. This is what "a system" means.</p><div class="p">free — try it now →</div></a>
-      <a class="tool" href="som.html"><span class="k">$33 · Yours forever</span><div class="t">som.</div><p>The capture tool that catches ideas, links, and follow-ups before they slip away. Type it once, it's held.</p><div class="p">$33 one-time →</div></a>
+      <a class="tool" href="som.html"><span class="k">Step 1 · Free download</span><div class="t">som<span class="period">.</span></div><p>The capture tool that catches ideas, leads, and follow-ups before they slip away. Yours forever.</p><div class="p">free — get som →</div></a>
+      <a class="tool" href="soma.html"><span class="k">Step 2 · Free live demo</span><div class="t">soma<span class="period">.</span></div><p>Watch one customer entry flow into four connected tools, in real time. This is what "a system" means.</p><div class="p">free — try it now →</div></a>
+      <a class="tool dark" href="client-catcher.html"><span class="k">Step 3 · Done for you</span><div class="t">the client catcher<span class="period">.</span></div><p>Booking, leads, and follow-up — wired into one connected system. Live in 7 days, yours forever.</p><div class="p">$1,500 · founding $750 →</div></a>
     </div>
   </div>
 </section>
 
 <!-- ===== IDENTITY + LIST ===== -->
-<section class="list-band">
+<section class="list-band" id="join">
   <div class="list-in">
     <div class="kicker">The quiet build</div>
-    <h2>For the owners<br>who <em>build</em>.</h2>
+    <h2>For the owners<br>who build<span class="period">.</span></h2>
     <p class="sub">Build notes, new tools, and the honest middle of running a small business — in your inbox. No spam, ever.</p>
-    <form action="https://formspree.io/f/mnjkqydb" method="POST" target="_blank">
-      <input type="email" name="email" placeholder="you@yourbusiness.com" aria-label="Email address" required>
-      <input type="hidden" name="_subject" value="New list signup — frimpomaasync.com">
-      <button type="submit">join the list</button>
+    <form id="joinForm" novalidate>
+      <input type="email" id="joinEmail" name="email" placeholder="you@yourbusiness.com" aria-label="Email address" required>
+      <button type="submit" id="joinBtn">join the list</button>
     </form>
+    <p class="tiny" id="joinErr" style="display:none;color:#8a2c2c">That didn't go through — check the email and try again.</p>
     <p class="tiny">Start with the free Automated Small Business Blueprint → <a href="planner.html" style="color:var(--copper-deep)">get it here</a></p>
   </div>
 </section>
-
-<footer>
-  <div class="foot-in">
-    <div class="foot-brand">NaNa Frimpomaa<span class="dot">.</span><p>I build small systems for solo owners — done for you, owned by you.</p></div>
-    <div class="foot-col"><div class="h">Work with me</div><a href="services.html">the Solo Business System</a><a href="client-catcher.html">the Client Catcher</a><a href="portfolio.html">portfolio</a><a href="ugc.html">UGC for brands</a><a href="intake.html">build brief</a></div>
-    <div class="foot-col"><div class="h">Tools</div><a href="som.html">Som — $33</a><a href="soma.html">Soma — free</a><a href="products.html">all tools</a><a href="https://synkasa.com" target="_blank" rel="noopener">SynKasa</a></div>
-    <div class="foot-col"><div class="h">Elsewhere</div><a href="https://www.instagram.com/frimpomaasync" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/share/18qcDjQme8/?mibextid=wwXIfr" target="_blank" rel="noopener">Facebook</a><a href="https://youtube.com/@frimpomaasync?si=KKimG0QwsgOsB1Xl" target="_blank" rel="noopener">YouTube</a><a href="https://www.tiktok.com/@frimpomaasync?_r=1&amp;_t=ZT-97e6dr2nWms" target="_blank" rel="noopener">TikTok</a><a href="blog.html">notes</a></div>
-  </div>
-  <div class="foot-base"><span>© 2026 NaNa Frimpomaa · frimpomaasync.com</span><span>Built in public.</span></div>
-</footer>
 
 <script>
 (function(){
 "use strict";
 var reduce=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+/* list signup → Formspree, then the thank-you page (no raw Formspree tab) */
+var jf=document.getElementById("joinForm");
+if(jf){
+  jf.addEventListener("submit",function(ev){
+    ev.preventDefault();
+    var em=document.getElementById("joinEmail").value.trim();
+    var err=document.getElementById("joinErr"),btn=document.getElementById("joinBtn");
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){err.style.display="block";return;}
+    err.style.display="none";btn.disabled=true;btn.textContent="joining…";
+    fetch("https://formspree.io/f/mnjkqydb",{method:"POST",headers:{"Accept":"application/json","Content-Type":"application/json"},body:JSON.stringify({email:em,source:"homepage-list"})})
+    .then(function(r){if(r.ok){window.location.href="planner-thanks.html";}else{throw 0;}})
+    .catch(function(){btn.disabled=false;btn.textContent="join the list";err.style.display="block";});
+  });
+}
 
 /* copper scroll-progress bar */
 var bar=document.getElementById("sprogBar");
@@ -504,6 +503,6 @@ if(chips.length&&!reduce){
 }
 })();
 </script>
-<script src="synkasa-widget.js" defer></script>
+<script src="fsnav.js" defer></script>
 </body>
 </html>

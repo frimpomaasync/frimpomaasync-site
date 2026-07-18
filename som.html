@@ -3,26 +3,26 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Som — catch the thought before it's gone</title>
+<title>Som — the free tool that catches the thought before it's gone</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="Som — a simple $33 tool to catch the thought before it's gone. Yours forever, on your device, no subscription, nothing to log into.">
+<meta name="description" content="Som — a free tool that catches the thought before it's gone. One field, no login, works offline. Yours forever — a free download by NaNa Frimpomaa.">
 <link rel="canonical" href="https://frimpomaasync.com/som.html">
 <meta name="theme-color" content="#FFFFFF">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NaNa Frimpomaa">
 <meta property="og:title" content="Som — catch the thought before it's gone">
-<meta property="og:description" content="A simple $33 tool to catch the thought before it's gone. Yours forever, no subscription.">
+<meta property="og:description" content="A free tool that catches the thought before it's gone. One field, no login, works offline. Yours forever.">
 <meta property="og:url" content="https://frimpomaasync.com/som.html">
 <meta property="og:image" content="https://frimpomaasync.com/og-cover.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Som — catch the thought before it's gone">
-<meta name="twitter:description" content="A simple $33 tool to catch the thought before it's gone. Yours forever.">
+<meta name="twitter:description" content="A free tool that catches the thought before it's gone. Yours forever.">
 <meta name="twitter:image" content="https://frimpomaasync.com/og-cover.png">
 <!-- Self-contained. No external resources. System fonts only. Vanilla JS, saves to your device. -->
 <style>
   :root{
-    --cream:#FFFFFF; --cream-hi:#FAFAF8; --ink:#1A1916;
-    --accent:#B07D3F; --accent-soft:#E4C79A; --accent-deep:#8A5F2C;
+    --bg:#FFFFFF; --panel-2:#FAFAF8; --ink:#1A1A1A;
+    --accent:#C9975B; --accent-soft:#E4C79A; --accent-deep:#A8763B;
     --card:#FFFFFF; --muted:#6B6458; --hairline:#E2DCD0; --line:#B8AE9C;
     --thought:#5E7A5C; --task:#3F6FA8; --reminder:#B0563F;
   }
@@ -31,7 +31,7 @@
   html,body{height:100%;}
   body{
     background-color:#FFFFFF;
-    background-image:radial-gradient(120% 80% at 50% 0%, #F8F5EF 0%, #F2EEE6 55%, #EEEAE1 100%);
+    background-image:radial-gradient(120% 80% at 50% 0%, #FAFAF8 0%, #F6F5F3 100%);
     color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
     -webkit-font-smoothing:antialiased; min-height:100vh; min-height:100dvh; overflow-x:hidden;
@@ -40,20 +40,46 @@
 
   .wrap{ width:100%; max-width:600px; margin:0 auto; padding:clamp(30px,7vw,56px) clamp(16px,5vw,26px) 96px; }
 
-  .back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:9px 15px; border:1px solid var(--hairline); border-radius:999px; background:var(--cream-hi); transition:border-color .2s, color .2s; margin-bottom:26px; }
+  /* hero — the outcome first, then the tool */
+  .som-hero{ margin-bottom:34px; }
+  .som-k{ font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--accent-deep); margin-bottom:14px; }
+  .som-hero h1{ font-family:Georgia,'Palatino Linotype','Iowan Old Style',serif; font-weight:700; font-size:clamp(2.9rem,9.5vw,7rem); line-height:0.98; letter-spacing:-0.025em; color:var(--ink); }
+  .period{ color:var(--accent); }
+  .som-lede{ margin-top:16px; font-size:16px; color:var(--muted); line-height:1.6; }
+  .som-lede b{ color:var(--ink); }
+  .som-who{ margin-top:14px; padding:12px 16px; border-left:3px solid var(--accent); background:rgba(255,255,255,0.7); border-radius:0 10px 10px 0; font-size:14px; color:var(--ink); }
+  .som-try{ margin-top:22px; text-align:center; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent-deep); font-weight:700; font-family:ui-monospace,'SF Mono',Menlo,monospace; }
+
+  /* free download gate */
+  .som-get{ margin-top:44px; background:linear-gradient(160deg,#1E2A45,#16203A); color:#F4F1EC; border-radius:12px; padding:30px 26px; }
+  .som-get h2{ font-family:Georgia,'Palatino Linotype',serif; font-size:clamp(24px,6vw,32px); font-weight:700; letter-spacing:-0.02em; line-height:1.1; }
+  .som-get h2 .dot{ color:var(--accent); }
+  .som-get p{ margin-top:12px; font-size:14.5px; color:rgba(245,240,232,0.78); line-height:1.55; }
+  .som-get p b{ color:#fff; }
+  .som-get form{ display:flex; gap:10px; margin-top:20px; flex-wrap:wrap; }
+  .som-get input[type=email]{ flex:1; min-width:200px; padding:14px 16px; font-size:15px; border:1.5px solid rgba(255,255,255,0.2); border-radius:12px; background:rgba(255,255,255,0.07); color:#fff; font-family:inherit; outline:none; }
+  .som-get input[type=email]:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(201,151,91,0.25); }
+  .som-get input[type=email]::placeholder{ color:rgba(245,240,232,0.45); }
+  .som-get button{ padding:14px 24px; border:none; border-radius:6px; background:#B4552D; color:#fff; font-family:inherit; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:transform .15s ease, background .2s ease; }
+  .som-get button:hover:not(:disabled){ transform:translateY(-1px); background:#9A4522; }
+  .som-get button:disabled{ opacity:0.5; cursor:wait; }
+  .som-err{ display:none; margin-top:10px; font-size:13px; color:#F0B9A8; }
+  .som-fine{ margin-top:12px; font-size:12px; color:rgba(245,240,232,0.55); }
+
+  .back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:9px 15px; border:1px solid var(--hairline); border-radius:999px; background:var(--panel-2); transition:border-color .2s, color .2s; margin-bottom:26px; }
   .back:hover{ border-color:var(--accent-soft); color:var(--ink); }
   .back:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
 
   /* masthead */
   .masthead{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:26px; }
   .mast-left{ display:flex; align-items:flex-start; gap:15px; }
-  .bigday{ font-weight:800; font-size:clamp(54px,15vw,72px); line-height:0.8; letter-spacing:-0.045em; }
+  .bigday{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-weight:700; font-size:clamp(54px,15vw,72px); line-height:0.8; letter-spacing:-0.03em; }
   .datecol{ padding-top:5px; }
   .datecol .mname{ font-size:13px; font-weight:700; letter-spacing:0.02em; text-transform:uppercase; }
   .datecol .yr{ font-size:13px; color:var(--muted); }
   .datecol .wd{ font-size:12px; color:var(--muted); margin-top:2px; }
   .brandcol{ text-align:right; }
-  .brandname{ font-weight:800; font-size:23px; letter-spacing:-0.02em; }
+  .brandname{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-weight:700; font-size:23px; letter-spacing:-0.01em; }
   .brandname .dot{ color:var(--accent); }
   .tagline{ font-size:12.5px; color:var(--muted); line-height:1.35; margin-top:4px; max-width:170px; }
 
@@ -73,19 +99,19 @@
   .capture textarea::placeholder{ color:#A8A398; }
   .capture-bottom{ display:flex; align-items:center; justify-content:space-between; padding:4px 12px 10px; }
   .hint{ font-size:11.5px; color:var(--muted); }
-  .hint kbd{ font-family:inherit; background:var(--cream); border:1px solid var(--hairline); border-radius:5px; padding:1px 6px; font-size:10.5px; }
-  .save{ border:none; border-radius:11px; background:var(--accent); color:#fff; font-family:inherit; font-size:13px; font-weight:600; letter-spacing:0.03em; padding:10px 22px; cursor:pointer; transition:transform .15s ease, opacity .2s ease; }
-  .save:hover:not(:disabled){ transform:translateY(-1px); }
+  .hint kbd{ font-family:inherit; background:var(--bg); border:1px solid var(--hairline); border-radius:5px; padding:1px 6px; font-size:10.5px; }
+  .save{ border:none; border-radius:6px; background:#B4552D; color:#fff; font-family:inherit; font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:10px 22px; cursor:pointer; transition:transform .15s ease, opacity .2s ease, background .2s ease; }
+  .save:hover:not(:disabled){ transform:translateY(-1px); background:#9A4522; }
   .save:disabled{ opacity:0.4; cursor:default; }
 
   /* search */
   .toolbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:18px 2px 12px; }
   .tabs{ display:flex; gap:7px; }
-  .tab{ border:1.5px solid var(--hairline); background:var(--cream-hi); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .15s ease; }
+  .tab{ border:1.5px solid var(--hairline); background:var(--panel-2); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .15s ease; }
   .tab:hover{ filter:brightness(0.97); }
   .tab.active{ background:var(--ink); border-color:var(--ink); color:#fff; }
   .tab .ct{ opacity:0.7; font-weight:500; }
-  .searchbtn{ width:38px; height:38px; border-radius:50%; border:1.5px solid var(--hairline); background:var(--cream-hi); cursor:pointer; color:var(--muted); font-size:15px; display:flex; align-items:center; justify-content:center; transition:all .15s ease; flex-shrink:0; }
+  .searchbtn{ width:38px; height:38px; border-radius:50%; border:1.5px solid var(--hairline); background:var(--panel-2); cursor:pointer; color:var(--muted); font-size:15px; display:flex; align-items:center; justify-content:center; transition:all .15s ease; flex-shrink:0; }
   .searchbtn:hover{ border-color:var(--accent-soft); color:var(--ink); }
   .searchbtn.on{ background:var(--accent); border-color:var(--accent); color:#fff; }
   .searchbox{ overflow:hidden; max-height:0; opacity:0; transition:max-height .25s ease, opacity .2s ease, margin .25s ease; margin:0 2px; }
@@ -147,7 +173,13 @@
 <body>
   <div class="wrap">
 
-    <a class="back mono" href="/">← back to the hub</a>
+    <header class="som-hero">
+      <div class="som-k mono">Som · free capture tool · Twi for “take it”</div>
+      <h1>Never lose another thought<span class="period">.</span></h1>
+      <p class="som-lede">A thought hits — a task, an idea, something a kid needs — and it’s gone by the time your hands are free. <b>Som catches it in one field before it slips.</b> No categories, no login, no friction. It figures out if it’s an idea, a to-do, or a reminder, and holds it.</p>
+      <div class="som-who"><b>Built for:</b> solo owners and busy parents running a business — and a household — from their head.</div>
+      <div class="som-try">↓ This is the real tool — try it right here ↓</div>
+    </header>
 
     <div class="masthead">
       <div class="mast-left">
@@ -195,10 +227,20 @@
 
     <div class="list" id="list"></div>
 
+    <section class="som-get" id="get">
+      <h2>Take Som with you<span class="dot">.</span> Free<span class="dot">.</span></h2>
+      <p><b>What you get:</b> the full tool as one small file — install nothing, works offline on your phone or laptop, saves only to your device, yours forever. No account, no subscription. I’ll email it over, plus my build notes now and then (unsubscribe anytime).</p>
+      <form id="somForm" novalidate>
+        <input type="email" id="somEmail" name="email" placeholder="you@yourbusiness.com" aria-label="Email address" required autocomplete="email" inputmode="email">
+        <button type="submit" id="somBtn">get som free</button>
+      </form>
+      <p class="som-err" id="somErr">That didn’t go through — check the email and try again.</p>
+      <p class="som-fine">Instant download on the next page, plus a copy to your inbox.</p>
+    </section>
+
     <div class="footer">
       <div class="brand">Som · by NaNa Frimpomaa</div>
-      Saves to this device · works offline · yours to keep<br>
-      <a href="/">home</a> · <a href="products.html">tools</a> · <a href="services.html">services</a> · <a href="blog.html">blog</a>
+      Saves to this device · works offline · yours to keep
     </div>
 
   </div>
@@ -243,14 +285,8 @@
     try{ var raw=localStorage.getItem(KEY); if(raw){ var p=JSON.parse(raw); if(Array.isArray(p)) return p; } }catch(e){}
     // migrate v1
     try{ var r1=localStorage.getItem(OLD_KEY); if(r1){ var p1=JSON.parse(r1); if(Array.isArray(p1)) return p1.map(function(it){ return Object.assign({},it,{type:classifyText(it.text),archived:false}); }); } }catch(e){}
-    var now=Date.now();
-    return [
-      {id:'s1', text:'Idea: a calmer onboarding — one screen, one action.', type:'thought', done:false, archived:false, createdAt:now-12*60*1000},
-      {id:'s2', text:'Email Dana about the Q3 handoff by Thursday.', type:'reminder', done:false, archived:false, createdAt:now-2*60*60*1000},
-      {id:'s3', text:'Pick up the dry cleaning.', type:'task', done:true, archived:false, createdAt:now-26*60*60*1000},
-      {id:'s4', text:'The way light hits the kitchen counter at 4pm — there’s a painting in that.', type:'thought', done:false, archived:false, createdAt:now-28*60*60*1000},
-      {id:'s5', text:'Call the dentist tomorrow morning.', type:'reminder', done:false, archived:false, createdAt:now-30*60*60*1000}
-    ];
+    // First visit: an empty list, so the real empty state can explain the tool.
+    return [];
   }
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(items)); }catch(e){} }
 
@@ -302,7 +338,9 @@
   function emptyState(){
     var d=document.createElement('div'); d.className='empty';
     var t='Nothing here yet.', s='Type a thought above and press Enter. Som figures out if it’s an idea, a to-do, or a reminder.';
+    var total=items.filter(function(it){ return !it.archived; }).length;
     if(query.trim()){ t='No matches.'; s='Nothing matches “'+query.trim()+'”. Try another word.'; }
+    else if(total===0){ /* first visit: keep the explainer */ }
     else if(filter==='done'){ t='Nothing done yet.'; s='Items you check off will gather here.'; }
     else if(filter==='open'){ t='All clear.'; s='No open items. Your mind can rest.'; }
     d.innerHTML='<div class="etitle">'+t+'</div><div class="esub">'+s+'</div>';
@@ -379,6 +417,20 @@
   // refresh relative times every minute
   setInterval(render, 60000);
 
+  // ---------- free download gate ----------
+  var somForm=el('somForm');
+  if(somForm){
+    somForm.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      var em=el('somEmail').value.trim(), err=el('somErr'), btn=el('somBtn');
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ err.style.display='block'; return; }
+      err.style.display='none'; btn.disabled=true; btn.textContent='sending…';
+      fetch('https://formspree.io/f/mnjkqydb',{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({email:em,source:'som-free-download'})})
+      .then(function(r){ if(r.ok){ window.location.href='thank-you.html'; } else { throw 0; } })
+      .catch(function(){ btn.disabled=false; btn.textContent='get som free'; err.style.display='block'; });
+    });
+  }
+
   // init
   paintDate();
   setupNudge();
@@ -386,6 +438,6 @@
   render();
 })();
 </script>
-  <script src="synkasa-widget.js" defer></script>
+<script src="fsnav.js" defer></script>
 </body>
 </html>

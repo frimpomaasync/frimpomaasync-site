@@ -12,7 +12,7 @@
      SETUP: see the SETUP NOTE near the </form> tag to connect this form to your email/inbox. -->
 <style>
   :root{
-    --cream:#FFFFFF; --cream-hi:#FAFAF8; --ink:#16140F;
+    --bg:#FFFFFF; --panel-2:#FAFAF8; --ink:#1A1A1A;
     --copper:#C9975B; --copper-soft:#E4C79A; --copper-deep:#A8763B;
     --card:#FFFFFF; --muted:#6B6458; --hairline:#E4DDD0; --line:#B8AE9C;
   }
@@ -79,7 +79,7 @@
   .chip label{
     display:inline-block; margin:0; padding:11px 18px; border:1.5px solid var(--hairline);
     border-radius:999px; font-size:14px; font-weight:500; color:var(--muted); cursor:pointer;
-    background:var(--cream-hi); transition:all .16s ease; user-select:none;
+    background:var(--panel-2); transition:all .16s ease; user-select:none;
   }
   .chip input:checked + label{ background:var(--copper); border-color:var(--copper); color:#fff; }
   .chip input:focus-visible + label{ box-shadow:0 0 0 3px rgba(201,151,91,0.3); }
@@ -96,7 +96,7 @@
   /* success state */
   .done{ display:none; text-align:center; padding:50px 24px; }
   .done.show{ display:block; }
-  .done .ring{ width:64px;height:64px;border-radius:50%; border:3px solid var(--copper); display:flex; align-items:center; justify-content:center; color:var(--copper); font-size:30px; margin:0 auto 22px; background:var(--cream-hi); }
+  .done .ring{ width:64px;height:64px;border-radius:50%; border:3px solid var(--copper); display:flex; align-items:center; justify-content:center; color:var(--copper); font-size:30px; margin:0 auto 22px; background:var(--panel-2); }
   .done h2{ font-size:clamp(28px,8vw,44px); font-weight:800; letter-spacing:-0.035em; line-height:0.92; margin-bottom:12px; }
   .done h2 .period{ color:var(--copper); }
   .done p{ font-size:15px; color:var(--muted); line-height:1.55; max-width:400px; margin:0 auto 24px; }
@@ -163,7 +163,7 @@
         <label>Which build is this? <span class="req">*</span></label>
         <div class="chips">
           <span class="chip"><input type="radio" name="tier" id="t-founding" value="Founding Client — $750" required><label for="t-founding">Founding Client · $750</label></span>
-          <span class="chip"><input type="radio" name="tier" id="t-system" value="Solo Business System — $1,500"><label for="t-system">Solo Business System · $1,500</label></span>
+          <span class="chip"><input type="radio" name="tier" id="t-system" value="The Client Catcher — $1,500"><label for="t-system">The Client Catcher · $1,500</label></span>
           <span class="chip"><input type="radio" name="tier" id="t-custom" value="Custom / not sure"><label for="t-custom">Custom / not sure</label></span>
         </div>
       </div>
@@ -318,6 +318,5 @@
     return false;
   }
 </script>
-<script src="synkasa-widget.js" defer></script>
 </body>
 </html>

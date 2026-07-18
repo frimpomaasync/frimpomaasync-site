@@ -5,23 +5,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>Tools — NaNa Frimpomaa</title>
-<meta name="description" content="The tools — Som ($33, catch every thought) and Soma (a free live automation demo) — plus SynKasa, a done-for-you AI receptionist.">
+<meta name="description" content="The tools — Som (free, catch every thought before it's gone) and Soma (a free live automation demo) — small tools you own, by NaNa Frimpomaa.">
 <link rel="canonical" href="https://frimpomaasync.com/products.html">
 <meta name="theme-color" content="#FFFFFF">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NaNa Frimpomaa">
 <meta property="og:title" content="Tools — NaNa Frimpomaa">
-<meta property="og:description" content="Som ($33, catch every thought), Soma (free live automation demo), and SynKasa, a done-for-you AI receptionist.">
+<meta property="og:description" content="Som (free, catch every thought) and Soma (free live automation demo) — small tools you own.">
 <meta property="og:url" content="https://frimpomaasync.com/products.html">
 <meta property="og:image" content="https://frimpomaasync.com/og-cover.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Tools — NaNa Frimpomaa">
-<meta name="twitter:description" content="Som, Soma, and SynKasa — tools you own.">
+<meta name="twitter:description" content="Som and Soma — free tools you own.">
 <meta name="twitter:image" content="https://frimpomaasync.com/og-cover.png">
 <!-- Self-contained. No external resources. System fonts only. -->
 <style>
   :root{
-    --cream:#FFFFFF; --cream-hi:#FAFAF8; --ink:#16140F;
+    --bg:#FFFFFF; --panel-2:#FAFAF8; --ink:#1A1A1A;
     --copper:#C9975B; --copper-soft:#E4C79A; --copper-deep:#A8763B;
     --card:#FFFFFF; --muted:#6B6458; --hairline:#E4DDD0; --line:#B8AE9C;
   }
@@ -40,7 +40,7 @@
 
   .stage{ position:relative; z-index:1; max-width:680px; margin:0 auto; padding:30px 20px 90px; }
 
-  .back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:9px 15px; border:1px solid var(--hairline); border-radius:999px; background:var(--cream-hi); transition:border-color .2s, color .2s; margin-bottom:26px; }
+  .back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:9px 15px; border:1px solid var(--hairline); border-radius:999px; background:var(--panel-2); transition:border-color .2s, color .2s; margin-bottom:26px; }
   .back:hover{ border-color:var(--copper-soft); color:var(--ink); }
 
   .chrome{ display:flex; align-items:center; gap:8px; padding:0 2px 16px; }
@@ -50,7 +50,7 @@
 
   .hero{ padding:4px 2px 2px; }
   .eyebrow{ font-size:12px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--copper); margin-bottom:14px; }
-  .title{ font-size:clamp(46px,14vw,86px); font-weight:800; letter-spacing:-0.045em; line-height:0.84; }
+  .title{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-size:clamp(2.9rem,9.5vw,7rem); font-weight:700; letter-spacing:-0.025em; line-height:0.98; }
   .title .period{ color:var(--copper); }
   .lede{ margin-top:20px; font-size:16px; color:var(--muted); line-height:1.5; max-width:470px; }
   .lede .accent{ font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:500; font-size:20px; color:var(--ink); }
@@ -69,24 +69,24 @@
   .badge{ font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:5px 11px; border-radius:999px; flex-shrink:0; }
   .badge.live{ background:rgba(185,199,166,0.3); color:#5a6b48; border:1px solid #B9C7A6; }
   .badge.buy{ background:rgba(201,151,91,0.16); color:var(--copper-deep); border:1px solid var(--copper-soft); }
-  .badge.soon{ background:var(--cream); color:var(--muted); border:1px solid var(--hairline); }
+  .badge.soon{ background:var(--bg); color:var(--muted); border:1px solid var(--hairline); }
 
-  .tool-name{ font-size:clamp(30px,8vw,48px); font-weight:800; letter-spacing:-0.04em; line-height:0.9; margin-bottom:12px; }
+  .tool-name{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-size:clamp(28px,7vw,44px); font-weight:700; letter-spacing:-0.02em; line-height:1.0; margin-bottom:12px; }
   .tool-name .period{ color:var(--copper); }
   .tool-desc{ font-size:15px; color:var(--muted); line-height:1.5; margin-bottom:18px; max-width:94%; }
   .tool-desc b{ color:var(--ink); font-weight:600; }
 
   .tool-bottom{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
   .tool-price{ font-size:13px; color:var(--muted); }
-  .tool-price .amt{ display:block; font-size:22px; font-weight:800; letter-spacing:-0.02em; color:var(--ink); }
+  .tool-price .amt{ display:block; font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-size:22px; font-weight:700; letter-spacing:-0.01em; color:var(--ink); }
   .tool-actions{ display:flex; gap:9px; flex-wrap:wrap; }
-  .tcta{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; padding:13px 24px; border-radius:12px; font-size:12.5px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-  .tcta.primary{ background:var(--copper); color:#fff; box-shadow:0 12px 28px rgba(201,151,91,0.26); }
-  .tcta.primary:hover{ transform:translateY(-2px); box-shadow:0 16px 36px rgba(201,151,91,0.36); }
-  .tcta.ghost{ background:var(--cream-hi); color:var(--ink); border:1.5px solid var(--hairline); }
+  .tcta{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; padding:13px 24px; border-radius:6px; font-size:12.5px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
+  .tcta.primary{ background:#B4552D; color:#fff; box-shadow:0 12px 28px -10px rgba(154,69,34,0.55); }
+  .tcta.primary:hover{ transform:translateY(-2px); background:#9A4522; box-shadow:0 16px 36px -10px rgba(154,69,34,0.55); }
+  .tcta.ghost{ background:var(--panel-2); color:var(--ink); border:1.5px solid var(--hairline); }
   .tcta.ghost:hover{ transform:translateY(-2px); border-color:var(--copper); }
   .tcta .arr{ transition:transform .2s ease; } .tcta:hover .arr{ transform:translateX(4px); }
-  .tcta.disabled{ background:var(--cream); color:var(--muted); border:1.5px solid var(--hairline); cursor:default; }
+  .tcta.disabled{ background:var(--bg); color:var(--muted); border:1.5px solid var(--hairline); cursor:default; }
   .tcta.disabled:hover{ transform:none; }
 
   .tool.soon{ opacity:0.92; }
@@ -95,30 +95,22 @@
   /* coming-soon mini grid for the two not-yet-built */
   .soon-note{ margin-top:6px; font-size:13px; color:var(--muted); }
 
-  .close-cta{ margin-top:48px; text-align:center; background:var(--ink); color:#fff; border-radius:28px; padding:46px 30px; }
-  .close-cta h3{ font-size:clamp(28px,8vw,44px); font-weight:800; letter-spacing:-0.035em; line-height:0.92; margin-bottom:12px; }
+  .close-cta{ margin-top:48px; text-align:center; background:linear-gradient(160deg,#1E2A45,#16203A); color:#F4F1EC; border-radius:12px; padding:46px 30px; }
+  .close-cta h3{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-size:clamp(26px,7vw,42px); font-weight:700; letter-spacing:-0.02em; line-height:1.02; margin-bottom:12px; }
   .close-cta h3 .period{ color:var(--copper); }
   .close-cta p{ font-size:15px; color:rgba(245,240,232,0.7); line-height:1.5; margin-bottom:24px; max-width:420px; margin-left:auto; margin-right:auto; }
-  .close-cta .cta{ display:inline-flex; align-items:center; gap:9px; text-decoration:none; padding:16px 32px; border-radius:14px; background:var(--copper); color:#fff; font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; box-shadow:0 14px 36px rgba(201,151,91,0.3); transition:transform .2s ease, box-shadow .2s ease; }
-  .close-cta .cta:hover{ transform:translateY(-3px); box-shadow:0 20px 46px rgba(201,151,91,0.42); }
+  .close-cta .cta{ display:inline-flex; align-items:center; gap:9px; text-decoration:none; padding:16px 32px; border-radius:6px; background:#B4552D; color:#fff; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; box-shadow:0 14px 36px -10px rgba(154,69,34,0.55); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
+  .close-cta .cta:hover{ transform:translateY(-3px); background:#9A4522; box-shadow:0 20px 46px -10px rgba(154,69,34,0.55); }
 
   .foot{ margin-top:34px; text-align:center; font-size:12px; color:var(--muted); line-height:1.8; }
   .foot .brand{ font-weight:600; color:var(--ink); }
   .foot a{ color:var(--copper); text-decoration:none; }
 
   /* ===== high-ticket components (ht-*) ===== */
-  .ht-proofbar{position:relative;overflow:hidden;margin:36px 0 0;display:grid;grid-template-columns:repeat(3,1fr);gap:0;padding:34px 32px;border-radius:26px;background:linear-gradient(165deg,#16233B 0%,#131D31 46%,#0C1322 100%);border:1px solid rgba(201,151,91,0.4);box-shadow:0 26px 60px rgba(8,6,4,0.4)}
-  .ht-proofbar::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(40% 60% at 92% 0%,rgba(201,151,91,0.2),transparent 60%)}
-  .ht-proofbar .pb{position:relative;padding:2px 28px;border-left:1px solid rgba(245,240,232,0.12)}
-  .ht-proofbar .pb:first-child{border-left:none;padding-left:2px}
-  .ht-proofbar .pb b{display:block;font-size:40px;font-weight:800;letter-spacing:-0.03em;color:#F5F0E8;line-height:1}
-  .ht-proofbar .pb span{display:block;margin-top:10px;font-size:13px;color:#CBC4B5;line-height:1.35}
-  .ht-proofbar .pb .src{display:block;margin-top:10px;font-size:9.5px;color:#9AA1AD;letter-spacing:0.02em}
-  @media(max-width:560px){.ht-proofbar .pb{border-left:none;border-top:1px solid rgba(245,240,232,0.12);padding:18px 2px 0}.ht-proofbar .pb:first-child{border-top:none;padding-top:0}}
-  .ht-flagship{position:relative;margin:26px 0 0;border-radius:26px;overflow:hidden;padding:38px 34px;color:#F5F0E8;background:linear-gradient(165deg,#16233B 0%,#131D31 46%,#0C1322 100%);border:1px solid rgba(201,151,91,0.4);box-shadow:0 26px 60px rgba(8,6,4,0.4)}
+  .ht-flagship{position:relative;margin:26px 0 0;border-radius:12px;overflow:hidden;padding:38px 34px;color:#F4F1EC;background:linear-gradient(160deg,#1E2A45,#16203A);border:1px solid rgba(201,151,91,0.4);box-shadow:0 26px 60px rgba(22,32,58,0.35)}
   .ht-flagship .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(40% 50% at 92% 0%,rgba(201,151,91,0.2),transparent 60%)}
   .ht-flagship .k{position:relative;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--copper);margin-bottom:12px}
-  .ht-flagship h3{position:relative;font-size:clamp(30px,7vw,46px);font-weight:800;letter-spacing:-0.04em;line-height:0.94;color:#F5F0E8}
+  .ht-flagship h3{position:relative;font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif;font-size:clamp(28px,6.5vw,44px);font-weight:700;letter-spacing:-0.02em;line-height:1.02;color:#FFFFFF}
   .ht-flagship h3 .period{color:var(--copper)}
   .ht-flagship .d{position:relative;margin-top:14px;font-size:15.5px;color:#CBC4B5;line-height:1.55;max-width:620px}
   .ht-phases{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
@@ -128,15 +120,15 @@
   .ht-phase span{font-size:12.5px;color:#9AA1AD;line-height:1.4}
   .ht-fbottom{position:relative;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:24px}
   .ht-price{font-size:13px;color:#9AA1AD}.ht-price b{display:block;font-size:21px;color:#F5F0E8;font-weight:800;letter-spacing:-0.01em}
-  .ht-cta{display:inline-flex;align-items:center;gap:9px;text-decoration:none;padding:15px 28px;border-radius:13px;background:var(--copper);color:#0C1322;font-size:13px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;transition:transform .2s,box-shadow .2s}
-  .ht-cta:hover{transform:translateY(-2px);box-shadow:0 16px 36px rgba(201,151,91,0.34)}
+  .ht-cta{display:inline-flex;align-items:center;gap:9px;text-decoration:none;padding:15px 28px;border-radius:6px;background:#B4552D;color:#fff;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;transition:transform .2s,box-shadow .2s,background .2s}
+  .ht-cta:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(154,69,34,0.55);background:#9A4522}
   .ht-guar{position:relative;margin-top:18px;font-size:13px;color:var(--copper-soft);display:flex;align-items:center;gap:8px}
-  .ht-gband{margin:24px 0 0;display:flex;align-items:center;gap:16px;padding:22px 26px;border-radius:18px;background:var(--cream-hi);border:1px solid var(--hairline)}
+  .ht-gband{margin:24px 0 0;display:flex;align-items:center;gap:16px;padding:22px 26px;border-radius:18px;background:var(--panel-2);border:1px solid var(--hairline)}
   .ht-gband .seal{width:46px;height:46px;border-radius:50%;flex:none;border:2px solid var(--copper);display:flex;align-items:center;justify-content:center;color:var(--copper);font-size:20px;font-weight:700}
   .ht-gband .gt{font-size:16px;font-weight:800;letter-spacing:-0.01em;color:var(--ink)}
   .ht-gband .gs{font-size:13.5px;color:var(--muted);line-height:1.45;margin-top:2px}
-  @media(max-width:560px){.ht-proofbar,.ht-phases{grid-template-columns:1fr}}
-  .ht-valueframe{margin:18px 0 0;padding:16px 20px;border-left:3px solid var(--copper);background:var(--cream-hi);border-radius:0 12px 12px 0;font-size:15px;color:var(--ink);line-height:1.5}
+  @media(max-width:560px){.ht-phases{grid-template-columns:1fr}}
+  .ht-valueframe{margin:18px 0 0;padding:16px 20px;border-left:3px solid var(--copper);background:var(--panel-2);border-radius:0 12px 12px 0;font-size:15px;color:var(--ink);line-height:1.5}
   .ht-valueframe b{color:var(--copper-deep)}
 
   @media (max-width:520px){
@@ -150,10 +142,8 @@
   }
 </style>
 </head>
-<body>
+<body data-no-fscta>
   <div class="stage">
-
-    <a class="back mono" href="/">← back to the hub</a>
 
     <div class="chrome">
       <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
@@ -168,15 +158,13 @@
       </p>
     </header>
 
-    <!-- ===== PROOF BAR ===== -->
-
     <main class="tools">
 
       <!-- ===== SOM (buy / downloadable) — formerly "Catch" ===== -->
       <section class="tool">
         <div class="tool-top">
-          <span class="tool-kicker mono">Capture · For your mind</span>
-          <span class="badge buy">Download</span>
+          <span class="tool-kicker mono">Step 1 · Free · Capture</span>
+          <span class="badge live">Free download</span>
         </div>
         <h2 class="tool-name">som<span class="period">.</span></h2>
         <p class="tool-desc">
@@ -184,32 +172,9 @@
           <b>one field</b> and it's caught before it's gone. No categories, no friction, just speed. Works offline, saves to your device.
         </p>
         <div class="tool-bottom">
-          <span class="tool-price mono"><span class="amt">$33</span>one-time · yours forever</span>
+          <span class="tool-price mono"><span class="amt">free</span>yours forever · email-gated download</span>
           <div class="tool-actions">
-            <a class="tcta primary mono" href="https://buy.stripe.com/aFa00kaJrd3D6R57NS7wA07" target="_blank" rel="noopener">get som <span class="arr">→</span></a>
-            <!-- EDIT: links to your hosted Som tool page -->
-            <a class="tcta ghost mono" href="som.html">try it <span class="arr">→</span></a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===== SYNKASA (the flagship product · external site) ===== -->
-      <section class="tool">
-        <div class="tool-top">
-          <span class="tool-kicker mono">AI receptionist · Done-for-you</span>
-          <span class="badge live">Live · synkasa.com</span>
-        </div>
-        <h2 class="tool-name">synkasa<span class="period">.</span></h2>
-        <p class="tool-desc">
-          Your front desk that never sleeps. <b>SynKasa</b> is a done-for-you AI receptionist — it answers every message,
-          books appointments, and captures every lead in your voice, 24/7. <b>Built for you in 48 hours</b>, no website needed.
-          The full platform, on its own site.
-        </p>
-        <div class="tool-bottom">
-          <span class="tool-price mono"><span class="amt">from $555</span>setup + monthly</span>
-          <div class="tool-actions">
-            <a class="tcta primary mono" href="https://synkasa.com" target="_blank" rel="noopener">visit synkasa <span class="arr">→</span></a>
-            <a class="tcta ghost mono" href="synkasa.html">try it live <span class="arr">→</span></a>
+            <a class="tcta primary mono" href="som.html">get som free <span class="arr">→</span></a>
           </div>
         </div>
       </section>
@@ -217,7 +182,7 @@
       <!-- ===== SOMA (live demo) — formerly "Relay" ===== -->
       <section class="tool">
         <div class="tool-top">
-          <span class="tool-kicker mono">Automation · See it run</span>
+          <span class="tool-kicker mono">Step 2 · Free · See it run</span>
           <span class="badge live">Live demo</span>
         </div>
         <h2 class="tool-name">soma<span class="period">.</span></h2>
@@ -226,7 +191,7 @@
           CRM, calendar, texts, spreadsheet — in real time. This is the proof of what I can wire up for your business.
         </p>
         <div class="tool-bottom">
-          <span class="tool-price mono"><span class="amt">free to try</span>done-for-you system from $750</span>
+          <span class="tool-price mono"><span class="amt">free</span>live demo · no signup</span>
           <div class="tool-actions">
             <a class="tcta primary mono" href="soma.html">try soma <span class="arr">→</span></a>
             <a class="tcta ghost mono" href="services.html">build mine <span class="arr">→</span></a>
@@ -248,7 +213,7 @@
         <div class="tool-bottom">
           <span class="tool-price mono"><span class="amt">in the works</span>building in public</span>
           <div class="tool-actions">
-            <a class="tcta ghost mono" href="/">get notified <span class="arr">→</span></a>
+            <a class="tcta ghost mono" href="/#join">get notified <span class="arr">→</span></a>
           </div>
         </div>
       </section>
@@ -267,7 +232,7 @@
         <div class="tool-bottom">
           <span class="tool-price mono"><span class="amt">in the works</span>building in public</span>
           <div class="tool-actions">
-            <a class="tcta ghost mono" href="/">get notified <span class="arr">→</span></a>
+            <a class="tcta ghost mono" href="/#join">get notified <span class="arr">→</span></a>
           </div>
         </div>
       </section>
@@ -286,7 +251,7 @@
         <div class="tool-bottom">
           <span class="tool-price mono"><span class="amt">in the works</span>building in public</span>
           <div class="tool-actions">
-            <a class="tcta ghost mono" href="/">get notified <span class="arr">→</span></a>
+            <a class="tcta ghost mono" href="/#join">get notified <span class="arr">→</span></a>
           </div>
         </div>
       </section>
@@ -296,8 +261,8 @@
     <!-- ===== FLAGSHIP ENGAGEMENT (upsell from the small tools) ===== -->
     <section class="ht-flagship">
       <span class="glow"></span>
-      <div class="k mono">Ready for the whole system? · Done-for-you · Live in 7 days</div>
-      <h3>The Solo Business System<span class="period">.</span></h3>
+      <div class="k mono">Step 3 · Done for you · Live in 7 days</div>
+      <h3>The Client Catcher<span class="period">.</span></h3>
       <div class="d">Love the small tools? This is all of them, wired together. Your booking, lead capture, and follow-up — automated into one connected system that runs without you. Built around how you already work. You own it.</div>
       <div class="ht-phases">
         <div class="ht-phase"><div class="n mono">Phase 1</div><b>Map</b><span>a free 15-min call — we find the one leak costing you the most.</span></div>
@@ -306,9 +271,9 @@
       </div>
       <div class="ht-fbottom">
         <div class="ht-price mono"><b>$1,500 build</b>+ optional $99/mo care · founding rate $750 for the first 3 clients</div>
-        <a class="ht-cta mono" href="https://calendar.app.google/p9Te84R34vPm2U3z9" target="_blank" rel="noopener">book a free call →</a>
+        <a class="ht-cta mono" href="client-catcher.html">see the client catcher →</a>
       </div>
-      <div class="ht-guar mono">✓ Live in 7 days or you don't pay the build fee.</div>
+      <div class="ht-guar mono">✓ Live and working in 7 days, booking appointments within 30 — or you don't pay.</div>
     </section>
 
     <!-- ===== VALUE FRAME ===== -->
@@ -317,7 +282,7 @@
     <!-- ===== GUARANTEE BAND ===== -->
     <div class="ht-gband">
       <span class="seal">✓</span>
-      <div><div class="gt">The 7-day guarantee.</div><div class="gs">The Solo Business System is live and working in 7 days, or you don't pay the build fee.</div></div>
+      <div><div class="gt">The guarantee.</div><div class="gs">The Client Catcher is live and working in 7 days, booking appointments within 30 — or you don't pay.</div></div>
     </div>
 
     <section class="close-cta">
@@ -326,13 +291,8 @@
       <a class="cta mono" href="services.html">see services →</a>
     </section>
 
-    <footer class="foot">
-      <div class="brand">NaNa Frimpomaa</div>
-      Custom AI tools, dashboards &amp; automations<br>
-      <a href="/">← back to the hub</a> · © 2026 · Built in public
-    </footer>
 
   </div>
-  <script src="synkasa-widget.js" defer></script>
+<script src="fsnav.js" defer></script>
 </body>
 </html>
