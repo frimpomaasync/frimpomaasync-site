@@ -21,6 +21,15 @@ var css=""
 +"#fsnav .fs-links a{text-decoration:none;color:#6E6A62}"
 +"#fsnav .fs-links a:hover{color:#1A1A1A}"
 +"#fsnav .fs-links a.fs-here{color:#1A1A1A;font-weight:600;border-bottom:2px solid #C9975B;padding-bottom:2px}"
++"#fsnav .fs-dd{position:relative;display:inline-flex;align-items:center;gap:5px}"
++"#fsnav .fs-dd .fs-car{font-size:9px;color:#9A948A;transition:transform .18s;pointer-events:none}"
++"#fsnav .fs-dd:hover .fs-car,#fsnav .fs-dd:focus-within .fs-car{transform:rotate(180deg)}"
++"#fsnav .fs-sub{display:none;position:absolute;top:100%;left:50%;transform:translateX(-50%);padding-top:12px;min-width:250px;z-index:90}"
++"#fsnav .fs-dd:hover .fs-sub,#fsnav .fs-dd:focus-within .fs-sub{display:block}"
++"#fsnav .fs-sub-in{display:block;background:#fff;border:1px solid #E8E5E0;border-radius:14px;box-shadow:0 18px 40px -18px rgba(26,26,26,.25);padding:8px}"
++"#fsnav .fs-sub a{display:block;padding:10px 14px;border-radius:9px;color:#33302B;font-size:13px;line-height:1.35}"
++"#fsnav .fs-sub a:hover{background:#F6F5F3;color:#1A1A1A}"
++"#fsnav .fs-sub .fs-sub-note{display:block;font-size:10.5px;color:#9A948A;margin-top:2px;font-weight:400}"
 +"#fsnav .fs-cta,#fsnav .fs-links a.fs-cta{padding:9px 18px;border-radius:999px;background:#B4552D;color:#fff;font-weight:700;font-size:11.5px;text-transform:uppercase;letter-spacing:.08em;text-decoration:none;white-space:nowrap}"
 +"#fsnav .fs-cta:hover,#fsnav .fs-links a.fs-cta:hover{background:#9A4522;color:#fff}"
 +"#fsnav .fs-burger{display:none;border:1px solid #D9D5CE;background:#fff;border-radius:10px;width:40px;height:36px;cursor:pointer;padding:0;flex-direction:column;align-items:center;justify-content:center;gap:4px}"
@@ -32,6 +41,7 @@ var css=""
 +"#fsnav .fs-menu.fs-open{display:block}"
 +"#fsnav .fs-menu a{display:block;padding:14px 24px;font-size:15px;color:#33302B;text-decoration:none;border-bottom:1px solid #F6F5F3}"
 +"#fsnav .fs-menu a.fs-here{color:#1A1A1A;font-weight:600;border-left:3px solid #C9975B;padding-left:21px}"
++"#fsnav .fs-menu a.fs-menu-sub{padding-left:44px;font-size:14px;color:#6E6A62;background:#FAFAF8}"
 +"#fsnav .fs-menu .fs-menu-cta{margin:14px 24px 18px;display:inline-block;padding:13px 26px;border-radius:999px;background:#B4552D;color:#fff;font-weight:700;font-size:12.5px;text-transform:uppercase;letter-spacing:.08em;border-bottom:none}"
 +"@media(max-width:760px){#fsnav .fs-links{display:none}#fsnav .fs-burger{display:flex}}"
 +"#fsfoot{border-top:1px solid #E8E5E0;padding:56px 0 64px;margin-top:70px;background:#FFFFFF;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;text-align:left;line-height:1.6;color:#33302B;font-size:14px}"
@@ -49,9 +59,27 @@ var css=""
 var here=(location.pathname.split("/").pop()||"index.html").replace(/\.html$/,"")||"index";
 function mark(href){return href.replace(/\.html$/,"")===here?' class="fs-here"':"";}
 
-var navLinks=LINKS.map(function(l){return '<a href="'+l[0]+'"'+mark(l[0])+'>'+l[1]+'</a>';}).join("");
+var SUB={"client-catcher.html":[
+  ["/client-catcher-demo/","▶ try the live demo","press play — watch a lead get booked"],
+  ["/client-catcher#demo-video","the 40-second run","screen recording of a full save"]
+]};
+
+var navLinks=LINKS.map(function(l){
+  var a='<a href="'+l[0]+'"'+mark(l[0])+'>'+l[1]+'</a>';
+  var sub=SUB[l[0]];
+  if(!sub) return a;
+  var items=sub.map(function(s){
+    return '<a href="'+s[0]+'">'+s[1]+'<span class="fs-sub-note">'+s[2]+'</span></a>';
+  }).join("");
+  return '<span class="fs-dd">'+a+'<span class="fs-car">▾</span><span class="fs-sub"><span class="fs-sub-in">'+items+'</span></span></span>';
+}).join("");
 var menuLinks=[["index.html","home"]].concat(LINKS,[["planner.html","the free blueprint"]]).map(function(l){
-  return '<a href="'+l[0]+'"'+mark(l[0])+'>'+l[1]+'</a>';
+  var out='<a href="'+l[0]+'"'+mark(l[0])+'>'+l[1]+'</a>';
+  var sub=SUB[l[0]];
+  if(sub){out+=sub.map(function(s){
+    return '<a class="fs-menu-sub" href="'+s[0]+'">↳ '+s[1].replace('▶ ','')+'</a>';
+  }).join("");}
+  return out;
 }).join("");
 
 var navHTML=''
