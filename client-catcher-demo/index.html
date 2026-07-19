@@ -640,6 +640,21 @@
   }
   seedThread();
 
+  function setBrand(biz, owner){
+    if(biz) BRAND.biz = biz;
+    if(owner){ BRAND.owner = owner; BRAND.ownerLine = owner + ' · solo owner'; }
+    document.querySelectorAll('.b-biz').forEach(function(el){ el.textContent = BRAND.biz; });
+    document.querySelectorAll('.b-owner').forEach(function(el){ el.textContent = BRAND.owner; });
+    document.querySelectorAll('.b-ownerline').forEach(function(el){ el.textContent = BRAND.ownerLine; });
+  }
+
+  /* rebrandable links: /client-catcher-demo/?biz=Lash+Lounge+by+Kim&owner=Kim */
+  var qs = new URLSearchParams(location.search);
+  if((qs.get('biz')||'').trim() || (qs.get('owner')||'').trim()){
+    setBrand((qs.get('biz')||'').trim(), (qs.get('owner')||'').trim());
+    seedThread();
+  }
+
   async function playBookingSheet(){
     var ovl = document.getElementById('bookSheet');
     var slot = document.getElementById('slot10');
@@ -760,14 +775,16 @@
     var biz = document.getElementById('rebBiz').value.trim();
     var owner = document.getElementById('rebOwner').value.trim();
     if(!biz && !owner){ closeRebrand(); return; }
-    if(biz) BRAND.biz = biz;
-    if(owner){ BRAND.owner = owner; BRAND.ownerLine = owner + ' · solo owner'; }
-    document.querySelectorAll('.b-biz').forEach(function(el){ el.textContent = BRAND.biz; });
-    document.querySelectorAll('.b-owner').forEach(function(el){ el.textContent = BRAND.owner; });
-    document.querySelectorAll('.b-ownerline').forEach(function(el){ el.textContent = BRAND.ownerLine; });
+    setBrand(biz, owner);
+    try{
+      var u = new URL(location.href);
+      if(biz) u.searchParams.set('biz', BRAND.biz);
+      if(owner) u.searchParams.set('owner', BRAND.owner);
+      history.replaceState(null, '', u);
+    }catch(e){}
     closeRebrand();
     resetDemo();
-    toast('Rebranded', 'This demo now belongs to <b>' + esc(BRAND.biz) + '</b>. Run the lead again — it’s ' + esc(BRAND.owner) + '’s voice now.');
+    toast('Rebranded', 'This demo now belongs to <b>' + esc(BRAND.biz) + '</b>. Copy the address-bar link to send the demo wearing this name.');
   }
 </script>
 </body>
