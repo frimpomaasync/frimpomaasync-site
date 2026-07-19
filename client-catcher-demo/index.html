@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Client Catcher — Demo</title>
+<style>
+  :root{
+    --paper:#FFFFFF;      /* page */
+    --panel:#F6F5F3;      /* soft panel */
+    --panel2:#FAFAF8;
+    --card:#FFFFFF;
+    --ink:#1A1A1A;
+    --ink-soft:#3D3A35;
+    --muted:#8A8479;
+    --hairline:#E8E4DD;
+    --copper:#C9975B;
+    --copper-deep:#A87938;
+    --copper-ink:#2B1D08;
+    --red:#D64425;
+    --radius:22px;
+    --serif:ui-serif,"New York","Iowan Old Style",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:var(--sans);color:var(--ink);background:var(--paper);
+    min-height:100dvh;line-height:1.45;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input{font-family:inherit}
+  :focus-visible{outline:2.5px solid var(--ink);outline-offset:3px;border-radius:8px}
+
+  /* ---------- shell ---------- */
+  .app{display:grid;grid-template-columns:236px 1fr;min-height:100dvh;max-width:1440px;margin:0 auto}
+
+  /* sidebar */
+  .side{
+    background:var(--ink);color:#F5F3EF;padding:26px 16px 20px;
+    display:flex;flex-direction:column;gap:6px;
+    border-radius:0 28px 28px 0;position:sticky;top:0;height:100dvh;
+  }
+  .logo{display:flex;align-items:center;gap:10px;padding:0 10px 22px}
+  .logo-mark{
+    width:34px;height:34px;border-radius:11px;background:var(--copper);color:var(--copper-ink);
+    display:grid;place-items:center;font-family:var(--serif);font-weight:700;font-size:17px;
+  }
+  .logo-name{font-family:var(--serif);font-size:17px;letter-spacing:.01em}
+  .logo-sub{font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:#9B968A;margin-top:1px}
+  .nav{display:flex;flex-direction:column;gap:4px}
+  .nav button{
+    display:flex;align-items:center;gap:11px;width:100%;text-align:left;
+    padding:11px 14px;border-radius:999px;font-size:13.5px;color:#B9B4A6;
+    transition:background .18s ease,color .18s ease;
+  }
+  .nav button:hover{color:#F5F3EF;background:rgba(255,255,255,.06)}
+  .nav button.on{background:#F5F3EF;color:var(--ink);font-weight:600}
+  .nav svg{width:16px;height:16px;flex:none}
+  .side-foot{margin-top:auto;padding:14px 10px 0;border-top:1px solid rgba(255,255,255,.1)}
+  .biz{font-size:12.5px;color:#D9D4C7;line-height:1.35}
+  .biz b{display:block;color:#F5F3EF;font-weight:600}
+  .demo-tag{
+    display:inline-block;margin-top:10px;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;
+    border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:4px 10px;color:#B9B4A6;
+  }
+  .made-by{margin-top:12px;font-size:10.5px;color:#9B968A;line-height:1.5}
+  .made-by b{color:var(--copper);font-weight:600}
+
+  /* main */
+  main{padding:30px 38px 56px;min-width:0}
+  .topbar{display:flex;align-items:baseline;justify-content:space-between;gap:14px;margin-bottom:26px}
+  .view-title{font-family:var(--serif);font-weight:600;font-size:clamp(28px,4vw,40px);letter-spacing:-.01em}
+  .view-kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-deep);display:block;margin-bottom:6px}
+  .live-dot{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;color:var(--ink-soft);white-space:nowrap}
+  .live-dot i{width:8px;height:8px;border-radius:50%;background:var(--red);animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+  section{display:none}
+  section.on{display:block;animation:rise .35s ease}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  /* ---------- today ---------- */
+  .hero{
+    background:var(--panel);border:1px solid var(--hairline);border-radius:var(--radius);
+    padding:34px 34px 30px;margin-bottom:18px;
+  }
+  .hero h2{font-family:var(--serif);font-weight:600;font-size:clamp(26px,3.4vw,38px);line-height:1.12;letter-spacing:-.015em;max-width:19ch}
+  .hero p{color:var(--ink-soft);margin:14px 0 24px;max-width:52ch;font-size:14.5px}
+  .run-btn{
+    display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:#F5F3EF;
+    border-radius:999px;padding:16px 26px;font-size:15px;font-weight:600;
+    transition:transform .18s ease,box-shadow .18s ease;
+  }
+  .run-btn .arr{transition:transform .18s ease}
+  .run-btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,26,26,.22)}
+  .run-btn:hover .arr{transform:translateX(4px)}
+  .run-btn:disabled{opacity:.55;cursor:default;transform:none;box-shadow:none}
+  .run-btn .dot{width:9px;height:9px;border-radius:50%;background:var(--copper)}
+  .reset-link{margin-left:16px;font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+  .reset-link:hover{color:var(--ink)}
+  .rebrand-link{
+    display:inline-flex;align-items:center;gap:7px;margin-top:18px;font-size:12.5px;color:var(--copper-deep);
+    text-decoration:underline;text-underline-offset:3px;
+  }
+  .rebrand-link:hover{color:var(--ink)}
+
+  .stepper{display:flex;gap:10px;margin:26px 0 0;flex-wrap:wrap}
+  .step{
+    display:flex;align-items:center;gap:9px;border:1px solid var(--hairline);background:var(--card);
+    border-radius:999px;padding:9px 16px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);
+    transition:all .3s ease;
+  }
+  .step i{width:7px;height:7px;border-radius:50%;background:var(--hairline);transition:background .3s}
+  .step.doing{border-color:var(--ink);color:var(--ink)}
+  .step.doing i{background:var(--red);animation:pulse 1.2s infinite}
+  .step.done{background:var(--copper);border-color:var(--copper);color:#fff}
+  .step.done i{background:#fff}
+
+  .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+  .tile{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);padding:22px 24px 20px}
+  .tile .k{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .tile .n{font-family:var(--serif);font-size:clamp(34px,4.6vw,52px);font-weight:600;line-height:1.05;margin:8px 0 4px;color:var(--ink)}
+  .tile .n em{font-style:normal;color:var(--copper-deep)}
+  .tile .s{font-size:12px;color:var(--muted)}
+  .bar{height:9px;border-radius:999px;margin-top:14px;background:var(--panel);overflow:hidden;border:1px solid var(--hairline)}
+  .bar i{
+    display:block;height:100%;width:0;border-radius:999px;
+    background:repeating-linear-gradient(-55deg,var(--copper),var(--copper) 4px,#b8823f 4px,#b8823f 8px);
+    transition:width 1.1s cubic-bezier(.2,.7,.2,1);
+  }
+  .bar.red i{background:repeating-linear-gradient(-55deg,var(--red),var(--red) 4px,#bd3418 4px,#bd3418 8px)}
+
+  .how{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
+  .how .card{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);padding:22px 24px}
+  .how .kk{font-family:var(--mono);font-size:11px;color:var(--copper-deep)}
+  .how h3{font-family:var(--serif);font-size:20px;font-weight:600;margin:10px 0 6px}
+  .how p{font-size:13px;color:var(--ink-soft)}
+
+  .wired{margin-top:26px}
+  .wired .wt{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-bottom:12px}
+  .wired-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .wire{
+    background:var(--panel2);border:1px dashed var(--copper);border-radius:var(--radius);padding:20px 24px;
+  }
+  .wire h4{font-family:var(--serif);font-size:17px;font-weight:600;display:flex;align-items:center;gap:9px}
+  .wire h4 .wchip{font-size:9px;letter-spacing:.16em;text-transform:uppercase;background:var(--copper);color:#fff;border-radius:999px;padding:3.5px 10px;font-family:var(--sans)}
+  .wire p{font-size:13px;color:var(--ink-soft);margin-top:7px}
+
+  /* ---------- inbox ---------- */
+  .lead{
+    display:flex;align-items:center;gap:16px;background:var(--card);border:1px solid var(--hairline);
+    border-radius:var(--radius);padding:18px 22px;margin-bottom:12px;
+  }
+  .lead.new{animation:slidein .5s cubic-bezier(.2,.8,.25,1)}
+  @keyframes slidein{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+  .ava{
+    width:46px;height:46px;border-radius:50%;background:var(--panel);border:1px solid var(--hairline);
+    display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:16px;flex:none;
+  }
+  .lead .who{min-width:0;flex:1}
+  .lead .nm{font-weight:600;font-size:15px;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+  .src{
+    font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;border-radius:999px;padding:3.5px 10px;
+    background:var(--panel);border:1px solid var(--hairline);color:var(--ink-soft);white-space:nowrap;
+  }
+  .src.call{background:#FAE8E3;border-color:#EFC4B6;color:#8C2313}
+  .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}
+  .chip{font-size:11.5px;background:var(--panel);border:1px solid var(--hairline);border-radius:999px;padding:3px 10px;color:var(--ink-soft)}
+  .score{text-align:right;flex:none}
+  .score .v{font-family:var(--serif);font-size:34px;font-weight:600;line-height:1}
+  .score .t{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+  .score.hot .v{color:var(--red)}
+  .stat-pill{font-size:11px;font-weight:600;border-radius:999px;padding:5px 12px;white-space:nowrap;flex:none}
+  .stat-pill.booked{background:var(--copper);color:#fff}
+  .stat-pill.replied{background:var(--panel);border:1px solid var(--hairline);color:var(--ink-soft)}
+  .inbox-note{font-size:12.5px;color:var(--muted);margin:18px 4px 0}
+
+  /* ---------- messages ---------- */
+  .thread{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);padding:26px;max-width:660px}
+  .thread-head{display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--hairline);padding-bottom:16px;margin-bottom:20px}
+  .thread-head .nm{font-family:var(--serif);font-size:20px;font-weight:600}
+  .thread-head .st{font-size:11.5px;color:var(--muted)}
+  .msgs{display:flex;flex-direction:column;gap:12px}
+  .msg{max-width:78%;padding:12px 16px;border-radius:18px;font-size:14px;line-height:1.5;animation:msgin .4s ease}
+  @keyframes msgin{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
+  .msg.owner{align-self:flex-end;background:var(--ink);color:#F5F3EF;border-bottom-right-radius:6px}
+  .msg.owner u{color:var(--copper);text-underline-offset:3px}
+  .msg.cust{align-self:flex-start;background:var(--panel);border:1px solid var(--hairline);border-bottom-left-radius:6px}
+  .msg .meta{display:block;font-size:10px;margin-top:7px;opacity:.75;letter-spacing:.06em}
+  .msg.owner .meta{color:#E3B77E;opacity:1}
+  .typing{align-self:flex-end;display:none;gap:5px;padding:14px 18px;background:var(--ink);border-radius:18px;border-bottom-right-radius:6px}
+  .typing.on{display:flex}
+  .typing i{width:6px;height:6px;border-radius:50%;background:#F5F3EF;opacity:.4;animation:ty 1.1s infinite}
+  .typing i:nth-child(2){animation-delay:.18s}.typing i:nth-child(3){animation-delay:.36s}
+  @keyframes ty{0%,100%{opacity:.25;transform:none}50%{opacity:1;transform:translateY(-3px)}}
+  .voice-note{
+    margin-top:22px;background:var(--panel2);border:1px dashed var(--copper);border-radius:16px;
+    padding:14px 18px;font-size:12.5px;color:var(--ink-soft);max-width:660px;
+  }
+  .voice-note b{font-weight:600}
+
+  /* ---------- calendar ---------- */
+  .cal-week{font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:18px}
+  .day{display:grid;grid-template-columns:118px 1fr;gap:22px;padding:22px 0;border-top:1px solid var(--hairline)}
+  .day:last-child{border-bottom:1px solid var(--hairline)}
+  .day .num{font-family:var(--serif);font-weight:600;font-size:clamp(52px,7vw,84px);line-height:.9;letter-spacing:-.02em}
+  .day .wd{font-size:10.5px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:8px}
+  .day.today .num,.day.today .wd{color:var(--red)}
+  .evts{display:flex;flex-direction:column;gap:10px;justify-content:center;min-width:0}
+  .evt{
+    background:var(--card);border:1px solid var(--hairline);border-left:4px solid var(--ink);
+    border-radius:14px;padding:13px 18px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  }
+  .evt.copper{border-left-color:var(--copper)}
+  .evt.red{border-left-color:var(--red)}
+  .evt.new{animation:slidein .5s cubic-bezier(.2,.8,.25,1)}
+  .evt .tm{font-family:var(--mono);font-size:12.5px;color:var(--ink-soft);white-space:nowrap}
+  .evt .tt{font-weight:600;font-size:14px;flex:1;min-width:140px}
+  .evt .tg{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .evt .tg.auto{background:var(--copper);color:#fff;border-radius:999px;padding:3.5px 10px}
+  .empty{font-size:13px;color:var(--muted);font-style:italic}
+
+  /* ---------- toasts, booking sheet, celebration, rebrand ---------- */
+  .toasts{position:fixed;top:20px;right:20px;z-index:80;display:flex;flex-direction:column;gap:10px;max-width:min(340px,calc(100vw - 40px))}
+  .toast{
+    background:var(--ink);color:#F5F3EF;border-radius:16px;padding:14px 18px;font-size:13px;line-height:1.45;
+    box-shadow:0 14px 34px rgba(26,26,26,.3);animation:toastin .45s cubic-bezier(.2,.8,.25,1);
+  }
+  .toast b{color:var(--copper)}
+  .toast.red b{color:#FF9C8A}
+  .toast .tk{display:block;font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;opacity:.6;margin-bottom:4px}
+  @keyframes toastin{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+  .toast.bye{opacity:0;transform:translateX(30px);transition:all .4s ease}
+
+  .ovl{
+    position:fixed;inset:0;z-index:70;display:none;place-items:center;
+    background:rgba(26,26,26,.45);backdrop-filter:blur(3px);padding:20px;
+  }
+  .ovl.on{display:grid}
+
+  .sheet{
+    background:var(--card);border-radius:26px;padding:28px;max-width:360px;width:100%;
+    animation:sheetup .5s cubic-bezier(.2,.85,.3,1.05);
+  }
+  @keyframes sheetup{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
+  .sheet .sk{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--copper-deep)}
+  .sheet h3{font-family:var(--serif);font-size:23px;font-weight:600;margin:6px 0 2px}
+  .sheet .sd{font-size:12.5px;color:var(--muted);margin-bottom:18px}
+  .slots{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+  .slot{
+    border:1px solid var(--hairline);border-radius:14px;padding:13px 10px;text-align:center;
+    font-family:var(--mono);font-size:13.5px;color:var(--ink);transition:all .25s ease;background:var(--card);
+  }
+  .slot.taken{color:var(--muted);text-decoration:line-through;background:var(--panel)}
+  .slot.sel{background:var(--copper);border-color:var(--copper);color:#fff;transform:scale(1.04);font-weight:700}
+  .sheet .confirm{
+    width:100%;background:var(--ink);color:#F5F3EF;border-radius:999px;padding:14px;font-size:14px;font-weight:600;
+    opacity:.45;transition:all .25s ease;
+  }
+  .sheet .confirm.ready{opacity:1}
+  .sheet .confirm.pressed{background:var(--copper);color:#fff;transform:scale(.98)}
+  .sheet .fine{display:block;text-align:center;margin-top:12px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  .cele-card{
+    background:var(--card);border-radius:28px;padding:44px 46px;text-align:center;max-width:400px;width:100%;
+    animation:pop .5s cubic-bezier(.2,.9,.3,1.3);
+  }
+  @keyframes pop{from{opacity:0;transform:scale(.82)}to{opacity:1;transform:scale(1)}}
+  .cele-card .check{
+    width:64px;height:64px;border-radius:50%;background:var(--copper);display:grid;place-items:center;margin:0 auto 18px;
+  }
+  .cele-card .check svg{width:30px;height:30px}
+  .cele-card h3{font-family:var(--serif);font-size:30px;font-weight:600;letter-spacing:-.01em}
+  .cele-card p{color:var(--ink-soft);font-size:14px;margin:10px 0 22px}
+  .cele-card p b{font-weight:600;color:var(--ink)}
+  .cele-card .go{background:var(--ink);color:#F5F3EF;border-radius:999px;padding:12px 26px;font-size:14px;font-weight:600}
+  .cele-card .fine{display:block;margin-top:16px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  .reb-card{
+    background:var(--card);border-radius:28px;padding:34px;max-width:400px;width:100%;
+    animation:pop .4s cubic-bezier(.2,.9,.3,1.2);
+  }
+  .reb-card h3{font-family:var(--serif);font-size:25px;font-weight:600}
+  .reb-card p{font-size:13px;color:var(--ink-soft);margin:8px 0 20px}
+  .reb-card label{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+  .reb-card input{
+    width:100%;border:1px solid var(--hairline);border-radius:14px;padding:13px 15px;font-size:14.5px;
+    margin-bottom:16px;background:var(--panel2);color:var(--ink);
+  }
+  .reb-card input:focus{outline:2px solid var(--copper);outline-offset:0;border-color:var(--copper)}
+  .reb-actions{display:flex;gap:10px;align-items:center}
+  .reb-apply{background:var(--copper);color:#fff;border-radius:999px;padding:12px 24px;font-size:14px;font-weight:600}
+  .reb-apply:hover{background:var(--copper-deep)}
+  .reb-cancel{font-size:13px;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+  /* mobile tab bar */
+  .tabbar{display:none}
+  .demo-tag-mobile{display:none}
+
+  @media (max-width:920px){
+    .app{grid-template-columns:1fr}
+    .side{
+      position:static;height:auto;border-radius:0;flex-direction:row;align-items:center;
+      padding:14px 18px;gap:12px;
+    }
+    .logo{padding:0}
+    .nav,.side-foot{display:none}
+    .demo-tag-mobile{display:inline-block;margin-left:auto;font-size:9px;letter-spacing:.18em;text-transform:uppercase;border:1px solid rgba(255,255,255,.35);border-radius:999px;padding:4px 10px;color:#B9B4A6}
+    main{padding:22px 18px 110px}
+    .hero{padding:24px 22px}
+    .tiles,.how,.wired-grid{grid-template-columns:1fr}
+    .day{grid-template-columns:76px 1fr;gap:14px}
+    .thread{padding:20px 16px}
+    .msg{max-width:88%}
+    .tabbar{
+      display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;
+      background:var(--ink);padding:10px 8px calc(10px + env(safe-area-inset-bottom));
+      justify-content:space-around;border-radius:22px 22px 0 0;
+    }
+    .tabbar button{
+      display:flex;flex-direction:column;align-items:center;gap:4px;color:#9B968A;font-size:10px;
+      padding:7px 14px;border-radius:14px;letter-spacing:.04em;
+    }
+    .tabbar button.on{color:var(--ink);background:#F5F3EF;font-weight:600}
+    .tabbar svg{width:18px;height:18px}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="side">
+    <div class="logo">
+      <div class="logo-mark">C</div>
+      <div>
+        <div class="logo-name">Client Catcher</div>
+        <div class="logo-sub">Front desk, handled</div>
+      </div>
+    </div>
+    <nav class="nav" aria-label="Main">
+      <button class="on" data-view="today" onclick="goView('today')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+        Today</button>
+      <button data-view="inbox" onclick="goView('inbox')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5a4 4 0 008 0h5"/></svg>
+        Lead inbox</button>
+      <button data-view="messages" onclick="goView('messages')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 01-8 8H4l1.5-3.5A8 8 0 1121 12z"/></svg>
+        Follow-ups</button>
+      <button data-view="calendar" onclick="goView('calendar')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+        Calendar</button>
+    </nav>
+    <div class="side-foot">
+      <div class="biz"><b class="b-biz">Suds &amp; Shine Mobile Detailing</b><span class="b-ownerline">Maya Reyes · solo owner</span></div>
+      <span class="demo-tag">White-label demo</span>
+      <div class="made-by">Built, wired, and cared for by <b>NaNa Frimpomaa</b></div>
+    </div>
+    <span class="demo-tag-mobile">Demo</span>
+  </aside>
+
+  <main>
+    <div class="topbar">
+      <div>
+        <span class="view-kicker b-biz" id="kicker">Suds &amp; Shine Mobile Detailing</span>
+        <h1 class="view-title" id="viewTitle">Today</h1>
+      </div>
+      <span class="live-dot"><i></i> Watching for new leads</span>
+    </div>
+
+    <!-- TODAY -->
+    <section id="view-today" class="on">
+      <div class="hero">
+        <h2>While <span class="b-owner">Maya</span> is with a client, nothing slips.</h2>
+        <p>Every missed call, form fill, and DM gets caught, answered in <span class="b-owner">Maya</span>'s own voice, and walked to a booked appointment — automatically. Press play and watch one lead go all the way through.</p>
+        <button class="run-btn" id="runBtn" onclick="runDemo()"><span class="dot"></span> Run a demo lead <span class="arr">→</span></button>
+        <button class="reset-link" id="resetBtn" onclick="resetDemo()" hidden>Reset demo</button>
+        <div class="stepper" aria-hidden="true">
+          <span class="step" id="step1"><i></i> 1 · Catch</span>
+          <span class="step" id="step2"><i></i> 2 · Follow up</span>
+          <span class="step" id="step3"><i></i> 3 · Book</span>
+        </div>
+        <br>
+        <button class="rebrand-link" id="rebrandBtn" onclick="openRebrand()">✎ Your logo here — put your business name on this demo</button>
+      </div>
+
+      <div class="tiles">
+        <div class="tile">
+          <div class="k">Leads caught</div>
+          <div class="n" id="statLeads">34</div>
+          <div class="s">this month · demo data</div>
+          <div class="bar"><i style="width:0" data-w="72%"></i></div>
+        </div>
+        <div class="tile">
+          <div class="k">First reply</div>
+          <div class="n"><em>28</em><span style="font-size:.45em"> sec</span></div>
+          <div class="s">median · industry avg is 5 hours</div>
+          <div class="bar red"><i style="width:0" data-w="94%"></i></div>
+        </div>
+        <div class="tile">
+          <div class="k">Booked</div>
+          <div class="n" id="statBooked">21</div>
+          <div class="s">appointments on the calendar</div>
+          <div class="bar"><i style="width:0" data-w="62%"></i></div>
+        </div>
+      </div>
+
+      <div class="how">
+        <div class="card"><div class="kk">01</div><h3>Catch</h3><p>A missed call, website form, or DM lands in one inbox — triaged and scored the second it arrives.</p></div>
+        <div class="card"><div class="kk">02</div><h3>Follow up</h3><p>A reply goes out in <span class="b-owner">Maya</span>'s voice within seconds — warm, human, never a robot script.</p></div>
+        <div class="card"><div class="kk">03</div><h3>Book</h3><p>The customer picks their own slot on a live booking page — confirmed, reminder included.</p></div>
+      </div>
+
+      <div class="wired">
+        <div class="wt">The custom wiring — what a done-for-you install includes</div>
+        <div class="wired-grid">
+          <div class="wire">
+            <h4>☎ The call bridge <span class="wchip">Custom glue</span></h4>
+            <p>Off-the-shelf AI packs can't hear your phone ring. The install wires missed calls into the catcher — every unanswered call becomes an instant, personal text-back before the caller dials your competitor.</p>
+          </div>
+          <div class="wire">
+            <h4>📅 Self-serve booking <span class="wchip">Custom glue</span></h4>
+            <p>No AI pack books the appointment for you. The install connects a live booking page to the conversation, so customers pick their own slot and it lands straight on the real calendar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INBOX -->
+    <section id="view-inbox">
+      <div id="leadList">
+        <div class="lead">
+          <div class="ava">RG</div>
+          <div class="who">
+            <div class="nm">Rita G. <span class="src call">Missed call</span></div>
+            <div class="chips"><span class="chip">Returning</span><span class="chip">Interior refresh</span></div>
+          </div>
+          <span class="stat-pill booked">Booked ✓</span>
+          <div class="score"><div class="v">88</div><div class="t">Score</div></div>
+        </div>
+        <div class="lead">
+          <div class="ava">ML</div>
+          <div class="who">
+            <div class="nm">Marcus L. <span class="src">Instagram DM</span></div>
+            <div class="chips"><span class="chip">New customer</span><span class="chip">Price question</span></div>
+          </div>
+          <span class="stat-pill replied">Replied ✓</span>
+          <div class="score"><div class="v">64</div><div class="t">Score</div></div>
+        </div>
+        <div class="lead">
+          <div class="ava">DP</div>
+          <div class="who">
+            <div class="nm">Dana P. <span class="src">Website form</span></div>
+            <div class="chips"><span class="chip">New customer</span><span class="chip">Fleet quote</span></div>
+          </div>
+          <span class="stat-pill replied">Replied ✓</span>
+          <div class="score"><div class="v">71</div><div class="t">Score</div></div>
+        </div>
+      </div>
+      <p class="inbox-note">Every lead is scored on intent, timing, and value — so the hottest ones never wait. Demo data only.</p>
+    </section>
+
+    <!-- MESSAGES -->
+    <section id="view-messages">
+      <div class="thread">
+        <div class="thread-head">
+          <div class="ava" id="threadAva">MR</div>
+          <div>
+            <div class="nm" id="threadName">Follow-ups</div>
+            <div class="st" id="threadStatus">Replies go out in Maya's voice, automatically</div>
+          </div>
+        </div>
+        <div class="msgs" id="msgs"></div>
+        <div class="typing" id="typing" aria-hidden="true"><i></i><i></i><i></i></div>
+      </div>
+      <div class="voice-note"><b>Owner's voice, on autopilot.</b> Replies are trained on how the owner actually talks — greetings, phrases, even the one emoji they'd really use. Customers never feel a robot.</div>
+    </section>
+
+    <!-- CALENDAR -->
+    <section id="view-calendar">
+      <div class="cal-week">JULY · WEEK 30 · DEMO CALENDAR</div>
+      <div class="day">
+        <div><div class="num">21</div><div class="wd">Tue</div></div>
+        <div class="evts">
+          <div class="evt"><span class="tm">9:00</span><span class="tt">Full detail — Rita G.</span><span class="tg auto">Auto-booked</span></div>
+          <div class="evt copper"><span class="tm">1:30</span><span class="tt">Exterior wash — Okafor twins</span><span class="tg">Repeat</span></div>
+        </div>
+      </div>
+      <div class="day">
+        <div><div class="num">22</div><div class="wd">Wed</div></div>
+        <div class="evts"><div class="evt"><span class="tm">10:00</span><span class="tt">Ceramic coat, day 1 — pickup truck</span><span class="tg">2 days</span></div></div>
+      </div>
+      <div class="day today">
+        <div><div class="num">23</div><div class="wd">Thu</div></div>
+        <div class="evts" id="thuEvts"><div class="empty" id="thuEmpty">Nothing booked yet — the day is open.</div></div>
+      </div>
+      <div class="day">
+        <div><div class="num">24</div><div class="wd">Fri</div></div>
+        <div class="evts"><div class="evt copper"><span class="tm">11:00</span><span class="tt">Interior refresh — Marcus L.</span><span class="tg auto">Auto-booked</span></div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- mobile tab bar -->
+<nav class="tabbar" aria-label="Main mobile">
+  <button class="on" data-view="today" onclick="goView('today')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>Today</button>
+  <button data-view="inbox" onclick="goView('inbox')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13l3-8h12l3 8v6H3z"/><path d="M3 13h5a4 4 0 008 0h5"/></svg>Inbox</button>
+  <button data-view="messages" onclick="goView('messages')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a8 8 0 01-8 8H4l1.5-3.5A8 8 0 1121 12z"/></svg>Follow-ups</button>
+  <button data-view="calendar" onclick="goView('calendar')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Calendar</button>
+</nav>
+
+<div class="toasts" id="toasts" aria-live="polite"></div>
+
+<!-- self-serve booking sheet (customer's phone view) -->
+<div class="ovl" id="bookSheet" role="dialog" aria-modal="true" aria-label="Customer booking page">
+  <div class="sheet">
+    <span class="sk">Jasmine's screen · live booking page</span>
+    <h3>Book with <span class="b-biz">Suds &amp; Shine Mobile Detailing</span></h3>
+    <div class="sd">Full service · Thursday, July 23</div>
+    <div class="slots">
+      <div class="slot taken">9:00 AM</div>
+      <div class="slot" id="slot10">10:00 AM</div>
+      <div class="slot">1:30 PM</div>
+      <div class="slot">3:00 PM</div>
+    </div>
+    <button class="confirm" id="bookConfirm">Confirm booking</button>
+    <span class="fine">Real installs sync to the owner's live calendar</span>
+  </div>
+</div>
+
+<div class="ovl" id="cele" role="dialog" aria-modal="true" aria-label="Appointment booked">
+  <div class="cele-card">
+    <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
+    <h3>Booked ✓</h3>
+    <p><b>Jasmine T.</b> · Full service<br>Thursday the 23rd · 10:00 AM<br>She picked the slot herself. Reminder text scheduled for Wednesday night.</p>
+    <button class="go" onclick="closeCele()">Beautiful</button>
+    <span class="fine">Caught → followed up → booked · 42 seconds · zero taps from <span class="b-owner">Maya</span></span>
+  </div>
+</div>
+
+<div class="ovl" id="rebrand" role="dialog" aria-modal="true" aria-label="Rebrand this demo">
+  <div class="reb-card">
+    <h3>Put your name on it</h3>
+    <p>Type a business and owner name — the whole demo rebrands instantly. That's exactly what a real install feels like.</p>
+    <label for="rebBiz">Business name</label>
+    <input id="rebBiz" placeholder="e.g. Lash Lounge by Kim">
+    <label for="rebOwner">Owner's first name</label>
+    <input id="rebOwner" placeholder="e.g. Kim">
+    <div class="reb-actions">
+      <button class="reb-apply" id="rebApply" onclick="applyRebrand()">Rebrand the demo</button>
+      <button class="reb-cancel" onclick="closeRebrand()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  var TITLES = {today:'Today', inbox:'Lead inbox', messages:'Follow-ups', calendar:'Calendar'};
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var running = false, demoDone = false;
+  var BRAND = {biz:'Suds & Shine Mobile Detailing', owner:'Maya', ownerLine:'Maya Reyes · solo owner'};
+
+  function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  function goView(name){
+    document.querySelectorAll('section').forEach(function(s){ s.classList.remove('on'); });
+    document.getElementById('view-' + name).classList.add('on');
+    document.querySelectorAll('.nav button, .tabbar button').forEach(function(b){
+      b.classList.toggle('on', b.getAttribute('data-view') === name);
+    });
+    document.getElementById('viewTitle').textContent = TITLES[name];
+    if(name === 'today') animateBars();
+  }
+
+  function animateBars(){
+    document.querySelectorAll('.bar i').forEach(function(el){
+      requestAnimationFrame(function(){ el.style.width = el.getAttribute('data-w'); });
+    });
+  }
+  animateBars();
+
+  function wait(ms){ return new Promise(function(r){ setTimeout(r, reduced ? 40 : ms); }); }
+
+  function toast(kicker, html, red){
+    var t = document.createElement('div');
+    t.className = 'toast' + (red ? ' red' : '');
+    t.innerHTML = '<span class="tk">' + kicker + '</span>' + html;
+    document.getElementById('toasts').appendChild(t);
+    setTimeout(function(){ t.classList.add('bye'); setTimeout(function(){ t.remove(); }, 450); }, reduced ? 1200 : 4600);
+  }
+
+  function countUp(el, from, to, ms){
+    var t0 = null;
+    function tick(ts){
+      if(!t0) t0 = ts;
+      var p = Math.min((ts - t0) / ms, 1);
+      el.textContent = Math.round(from + (to - from) * (1 - Math.pow(1 - p, 3)));
+      if(p < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  }
+
+  function setStep(n, state){
+    var el = document.getElementById('step' + n);
+    el.classList.remove('doing','done');
+    if(state) el.classList.add(state);
+  }
+
+  function addMsg(cls, text, meta){
+    var m = document.createElement('div');
+    m.className = 'msg ' + cls;
+    m.innerHTML = text + '<span class="meta">' + meta + '</span>';
+    document.getElementById('msgs').appendChild(m);
+    m.scrollIntoView({behavior: reduced ? 'auto' : 'smooth', block:'nearest'});
+  }
+
+  async function typingOn(ms){
+    var ty = document.getElementById('typing');
+    ty.classList.add('on');
+    await wait(ms);
+    ty.classList.remove('on');
+  }
+
+  function ownerMeta(){ return 'Sent automatically · in ' + esc(BRAND.owner) + '’s voice'; }
+
+  function seedThread(){
+    document.getElementById('threadAva').textContent = 'FU';
+    document.getElementById('threadName').textContent = 'Follow-ups';
+    document.getElementById('threadStatus').textContent = 'Replies go out in ' + BRAND.owner + '’s voice, automatically';
+    document.getElementById('msgs').innerHTML =
+      '<div class="msg cust">Hi! Do you do pet hair removal? My back seat is… a situation 😅<span class="meta">Dana P. · website form · 9:12 AM</span></div>' +
+      '<div class="msg owner">Ha! Pet hair is my nemesis and I win every time 🐾 Yes — it’s included in the full service. Want me to send you my openings this week?<span class="meta">' + ownerMeta() + ' · 9:12 AM</span></div>';
+  }
+  seedThread();
+
+  async function playBookingSheet(){
+    var ovl = document.getElementById('bookSheet');
+    var slot = document.getElementById('slot10');
+    var btn = document.getElementById('bookConfirm');
+    slot.classList.remove('sel'); btn.classList.remove('ready','pressed');
+    ovl.classList.add('on');
+    await wait(1800);
+    slot.classList.add('sel'); btn.classList.add('ready');
+    await wait(1300);
+    btn.classList.add('pressed');
+    await wait(700);
+    ovl.classList.remove('on');
+  }
+
+  async function runDemo(){
+    if(running || demoDone) return;
+    running = true;
+    document.getElementById('runBtn').disabled = true;
+
+    // ---- 1 · CATCH (the call bridge) ----
+    setStep(1,'doing');
+    toast('Call bridge', 'Missed call — <b>(555) 014-7789</b><br>' + esc(BRAND.owner) + ' is with a client. Instant text-back sent.', true);
+    await wait(2200);
+
+    var lead = document.createElement('div');
+    lead.className = 'lead new';
+    lead.id = 'demoLead';
+    lead.innerHTML =
+      '<div class="ava">JT</div>' +
+      '<div class="who"><div class="nm">Jasmine T. <span class="src call">Missed call</span></div>' +
+      '<div class="chips"><span class="chip">New customer</span><span class="chip">Full service</span><span class="chip">Wants this week</span></div></div>' +
+      '<span class="stat-pill replied" id="demoPill">Caught</span>' +
+      '<div class="score hot"><div class="v" id="demoScore">0</div><div class="t">Score</div></div>';
+    var list = document.getElementById('leadList');
+    list.insertBefore(lead, list.firstChild);
+    goView('inbox');
+    countUp(document.getElementById('demoScore'), 0, 92, 900);
+    countUp(document.getElementById('statLeads'), 34, 35, 900);
+    await wait(1400);
+    toast('Caught', '<b>Jasmine T.</b> triaged: new customer · full service · wants this week. Score <b>92 — hot</b>.');
+    setStep(1,'done');
+    await wait(2300);
+
+    // ---- 2 · FOLLOW UP ----
+    setStep(2,'doing');
+    document.getElementById('threadAva').textContent = 'JT';
+    document.getElementById('threadName').textContent = 'Jasmine T.';
+    document.getElementById('threadStatus').textContent = 'Missed call · replying in ' + BRAND.owner + '’s voice';
+    document.getElementById('msgs').innerHTML = '';
+    goView('messages');
+    await typingOn(1800);
+    addMsg('owner', 'Hey Jasmine! ' + esc(BRAND.owner) + ' here from ' + esc(BRAND.biz) + ' ✨ So sorry I missed your call — I was mid-appointment. I’d love to take care of you this week!', ownerMeta() + ' · just now');
+    document.getElementById('demoPill').textContent = 'Replied ✓';
+    await wait(2600);
+    addMsg('cust', 'yes please!! do you have anything thursday?', 'Jasmine T. · just now');
+    await typingOn(1500);
+    addMsg('owner', 'Thursday’s open! Here’s my live booking page — grab whichever time works for you 👉 <u>tap to book</u>', ownerMeta() + ' · just now');
+    setStep(2,'done');
+    await wait(1800);
+
+    // ---- 3 · BOOK (self-serve booking page) ----
+    setStep(3,'doing');
+    await playBookingSheet();
+    toast('Self-serve booking', '<b>Jasmine T.</b> picked her own slot — Thu 10:00 AM. Zero back-and-forth.');
+    await wait(1200);
+    addMsg('cust', 'booked!! see you thursday 🙌', 'Jasmine T. · just now');
+    await typingOn(1300);
+    addMsg('owner', 'You’re all set for Thursday at 10:00 AM ✨ I’ll text you a reminder Wednesday night. See you then!', ownerMeta() + ' · just now');
+    await wait(1800);
+    goView('calendar');
+    var empty = document.getElementById('thuEmpty');
+    if(empty) empty.remove();
+    var evt = document.createElement('div');
+    evt.className = 'evt red new';
+    evt.id = 'demoEvt';
+    evt.innerHTML = '<span class="tm">10:00</span><span class="tt">Full service — Jasmine T.</span><span class="tg auto">Self-booked</span>';
+    document.getElementById('thuEvts').appendChild(evt);
+    countUp(document.getElementById('statBooked'), 21, 22, 900);
+    await wait(1600);
+    setStep(3,'done');
+    document.getElementById('cele').classList.add('on');
+    running = false;
+    demoDone = true;
+    document.getElementById('resetBtn').hidden = false;
+  }
+
+  function closeCele(){
+    document.getElementById('cele').classList.remove('on');
+    goView('today');
+  }
+
+  function resetDemo(){
+    var l = document.getElementById('demoLead'); if(l) l.remove();
+    var e = document.getElementById('demoEvt'); if(e) e.remove();
+    if(!document.getElementById('thuEmpty')){
+      var em = document.createElement('div');
+      em.className = 'empty'; em.id = 'thuEmpty';
+      em.textContent = 'Nothing booked yet — the day is open.';
+      document.getElementById('thuEvts').appendChild(em);
+    }
+    seedThread();
+    document.getElementById('statLeads').textContent = '34';
+    document.getElementById('statBooked').textContent = '21';
+    [1,2,3].forEach(function(n){ setStep(n, null); });
+    demoDone = false; running = false;
+    document.getElementById('runBtn').disabled = false;
+    document.getElementById('resetBtn').hidden = true;
+    goView('today');
+  }
+
+  /* ---------- rebrand ---------- */
+  function openRebrand(){
+    document.getElementById('rebrand').classList.add('on');
+    document.getElementById('rebBiz').focus();
+  }
+  function closeRebrand(){ document.getElementById('rebrand').classList.remove('on'); }
+  function applyRebrand(){
+    var biz = document.getElementById('rebBiz').value.trim();
+    var owner = document.getElementById('rebOwner').value.trim();
+    if(!biz && !owner){ closeRebrand(); return; }
+    if(biz) BRAND.biz = biz;
+    if(owner){ BRAND.owner = owner; BRAND.ownerLine = owner + ' · solo owner'; }
+    document.querySelectorAll('.b-biz').forEach(function(el){ el.textContent = BRAND.biz; });
+    document.querySelectorAll('.b-owner').forEach(function(el){ el.textContent = BRAND.owner; });
+    document.querySelectorAll('.b-ownerline').forEach(function(el){ el.textContent = BRAND.ownerLine; });
+    closeRebrand();
+    resetDemo();
+    toast('Rebranded', 'This demo now belongs to <b>' + esc(BRAND.biz) + '</b>. Run the lead again — it’s ' + esc(BRAND.owner) + '’s voice now.');
+  }
+</script>
+</body>
+</html>
