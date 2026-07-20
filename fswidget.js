@@ -35,8 +35,15 @@ var css=''
 +'#sk-bubble img{width:100%;height:100%;border-radius:50%;display:block}'
 +'#sk-bubble:hover{transform:scale(1.07)}'
 +'#sk-bubble .badge{position:absolute;top:-3px;right:-3px;width:20px;height:20px;border-radius:50%;background:#B4552D;color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #fff;font-family:-apple-system,sans-serif}'
-+'#sk-panel{position:fixed;right:20px;bottom:96px;width:min(380px,calc(100vw - 32px));height:min(560px,calc(100vh - 130px));background:#fff;border-radius:18px;box-shadow:0 24px 60px -12px rgba(26,26,26,.35);display:none;flex-direction:column;overflow:hidden;z-index:9001;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif}'
++'#sk-panel{position:fixed;right:20px;bottom:96px;width:min(370px,calc(100vw - 40px));height:min(520px,calc(100vh - 140px));height:min(520px,calc(100dvh - 140px));background:#fff;border-radius:18px;box-shadow:0 24px 60px -12px rgba(26,26,26,.35);display:none;flex-direction:column;overflow:hidden;z-index:9001;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif}'
 +'#sk-panel.open{display:flex;animation:skpop .22s ease}'
++'@media(max-width:600px){'
++'#sk-bubble{width:56px;height:56px;right:16px;bottom:16px}'
++'#sk-panel{right:0;bottom:0;width:100vw;height:100vh;height:100dvh;border-radius:0;box-shadow:none}'
++'#sk-panel.open~#sk-bubble{display:none}'
++'.sk-input{padding-bottom:calc(12px + env(safe-area-inset-bottom))}'
++'.sk-head{padding-top:calc(16px + env(safe-area-inset-top))}'
++'}'
 +'@keyframes skpop{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}'
 +'.sk-head{background:linear-gradient(135deg,#1E2A45,#16203A);padding:16px 18px;color:#F5F0E8;display:flex;align-items:center;gap:12px}'
 +'.sk-head .av{width:38px;height:38px;flex-shrink:0}'
@@ -70,7 +77,6 @@ var css=''
 +'.sk-foot a{color:#A8763B;text-decoration:none;font-weight:600}';
 
 var html=''
-+'<button id="sk-bubble" aria-label="Chat with NaNa\'s assistant"><img src="favicon.svg" alt=""><span class="badge">1</span></button>'
 +'<div id="sk-panel" role="dialog" aria-label="Chat with NaNa\'s assistant">'
 +'<div class="sk-head"><div class="av"><img src="favicon.svg" alt=""></div>'
 +'<div class="who"><div class="n">'+P.name+'</div><div class="s">Online now</div></div>'
@@ -80,7 +86,8 @@ var html=''
 +'<div class="sk-input"><input id="sk-text" type="text" placeholder="Type a message&hellip;" autocomplete="off">'
 +'<button id="sk-send" aria-label="Send">&rarr;</button></div>'
 +'<div class="sk-foot">Powered by <a href="synkasa.html">SynKasa</a> &mdash; built, wired, and cared for by NaNa Frimpomaa</div>'
-+'</div>';
++'</div>'
++'<button id="sk-bubble" aria-label="Chat with NaNa\'s assistant"><img src="favicon.svg" alt=""><span class="badge">1</span></button>';
 
 var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
 var wrap=document.createElement('div');wrap.innerHTML=html;
