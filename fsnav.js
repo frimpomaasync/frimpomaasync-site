@@ -77,7 +77,7 @@ var menuLinks=[["index.html","home"]].concat(LINKS,[["planner.html","the free bl
   var out='<a href="'+l[0]+'"'+mark(l[0])+'>'+l[1]+'</a>';
   var sub=SUB[l[0]];
   if(sub){out+=sub.map(function(s){
-    return '<a class="fs-menu-sub" href="'+s[0]+'">↳ '+s[1].replace('▶ ','')+'</a>';
+    return '<a class="fs-menu-sub" href="'+s[0]+'">↳ '+s[1]+'</a>';
   }).join("");}
   return out;
 }).join("");
