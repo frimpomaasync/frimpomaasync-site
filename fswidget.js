@@ -5,7 +5,7 @@
 var BOOK="https://calendar.app.google/DkRJFRA3G6W6d8E48";
 
 var P={
-  name:"NaNa's Assistant", av:"N", email:"hello@frimpomaasync.com", booking:BOOK,
+  name:"NaNa's Assistant", email:"hello@frimpomaasync.com", booking:BOOK,
   greeting:"Hey — welcome! I'm NaNa's AI assistant. I can tell you about the Client Catcher, point you to the free tools, or get you booked for a free 15-min call. What are you here for?",
   services:[
     {name:"The Client Catcher — never lose a lead",price:"$1,500 · live in 7 days · optional $99/mo care"},
