@@ -60,7 +60,7 @@ var here=(location.pathname.split("/").pop()||"index.html").replace(/\.html$/,""
 function mark(href){return href.replace(/\.html$/,"")===here?' class="fs-here"':"";}
 
 var SUB={"client-catcher.html":[
-  ["/client-catcher-demo/","▶ try the live demo","press play — watch a lead get booked"],
+  ["/client-catcher-demo/","try the live demo","press play — watch a lead get booked"],
   ["/client-catcher#demo-video","the 40-second run","screen recording of a full save"]
 ]};
 
@@ -94,7 +94,7 @@ var navHTML=''
 
 var footHTML=''
 +'<div class="fs-in">'
-+'<div class="fs-brand">NaNa Frimpomaa<span class="fs-dot">.</span><p>I build small systems for solo owners — done for you, owned by you.</p></div>'
++'<div class="fs-brand">NaNa Frimpomaa<span class="fs-dot">.</span><p>I make one-person businesses feel fully staffed — done for you, owned by you.</p></div>'
 +'<div class="fs-col"><div class="fs-h">Work with me</div>'
 +'<a href="client-catcher.html">the Client Catcher — the flagship</a>'
 +'<a href="services.html">services &amp; pricing</a>'
