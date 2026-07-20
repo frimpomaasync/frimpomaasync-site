@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- ✅ diffed vs Brand Facts + Retired/Excluded: cream #FFFFFF + copper #C9975B · system fonts only (no CDN) · SynKasa = ONE product under NaNa Frimpomaa · live pricing only ($555/$999/$2,222 + $99/$222/$444; Som $33; Solo Business System $1,500 + $99/mo care, founding $750) · sign-off "one simple tool you own." · faceless/value-led -->
+<!-- diffed vs Brand Facts + Retired/Excluded: cream #FFFFFF + copper #C9975B · system fonts only (no CDN) · SynKasa = ONE product under NaNa Frimpomaa · live pricing only ($555/$999/$2,222 + $99/$222/$444; Som $33; Solo Business System $1,500 + $99/mo care, founding $750) · sign-off "one simple tool you own." · faceless/value-led -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -160,7 +160,7 @@
   <h1>Meet <em>SynKasa</em> — the receptionist<br>that never sleeps.</h1>
   <p class="sub">A done-for-you AI receptionist for small businesses. It answers every message, books appointments, and captures leads — 24/7, in your voice. This one is answering as my business right now.</p>
   <div class="cta-row">
-    <button class="btn primary" onclick="skOpen()">💬 Try it live</button>
+    <button class="btn primary" onclick="skOpen()">Try it live →</button>
     <a class="btn ghost" href="https://synkasa.com" target="_blank" rel="noopener">Get SynKasa →</a>
   </div>
   <div class="pulse-hint">Tap the <b>copper bubble</b> in the corner and ask it anything.</div>
@@ -173,12 +173,12 @@
     <h2 class="title">Everything a front desk does — without the front desk</h2>
     <p class="lead">SynKasa reads like a real receptionist because it knows your business cold. Here's what it handles the second a customer reaches out.</p>
     <div class="grid">
-      <div class="card"><div class="ic">💬</div><h3>Answers 24/7</h3><p>Every DM, text, and website message gets a warm, on-brand reply in seconds — 3am included.</p></div>
-      <div class="card"><div class="ic">📅</div><h3>Books appointments</h3><p>Walks the customer to a time and drops the booking link — no back-and-forth.</p></div>
-      <div class="card"><div class="ic">🎯</div><h3>Captures leads</h3><p>Grabs the name + contact of anyone interested so a hot lead never slips away.</p></div>
-      <div class="card"><div class="ic">💰</div><h3>Quotes prices</h3><p>Knows your services and prices and answers "how much?" instantly and consistently.</p></div>
-      <div class="card"><div class="ic">❓</div><h3>Handles FAQs</h3><p>Hours, location, parking, walk-ins, payment methods — answered before you'd even see the message.</p></div>
-      <div class="card"><div class="ic">🤝</div><h3>Hands off to you</h3><p>When it's a real human moment, it takes a message and passes it straight to you.</p></div>
+      <div class="card"><div class="ic">◫</div><h3>Answers 24/7</h3><p>Every DM, text, and website message gets a warm, on-brand reply in seconds — 3am included.</p></div>
+      <div class="card"><div class="ic">▦</div><h3>Books appointments</h3><p>Walks the customer to a time and drops the booking link — no back-and-forth.</p></div>
+      <div class="card"><div class="ic">◎</div><h3>Captures leads</h3><p>Grabs the name + contact of anyone interested so a hot lead never slips away.</p></div>
+      <div class="card"><div class="ic">$</div><h3>Quotes prices</h3><p>Knows your services and prices and answers "how much?" instantly and consistently.</p></div>
+      <div class="card"><div class="ic">?</div><h3>Handles FAQs</h3><p>Hours, location, parking, walk-ins, payment methods — answered before you'd even see the message.</p></div>
+      <div class="card"><div class="ic">→</div><h3>Hands off to you</h3><p>When it's a real human moment, it takes a message and passes it straight to you.</p></div>
     </div>
   </section>
 
@@ -241,7 +241,7 @@
 </footer>
 
 <!-- ============ WIDGET ============ -->
-<button id="sk-bubble" aria-label="Open SynKasa chat" onclick="skToggle()">💬<span class="badge">1</span></button>
+<button id="sk-bubble" aria-label="Open SynKasa chat" onclick="skToggle()">S<span class="badge">1</span></button>
 <div id="sk-panel" role="dialog" aria-label="SynKasa chat">
   <div class="sk-head">
     <div class="av" id="sk-av">S</div>
@@ -253,7 +253,7 @@
   <div class="sk-input">
     <input id="sk-text" type="text" placeholder="Type a message…" autocomplete="off"
       onkeydown="if(event.key==='Enter')skSend()">
-    <button aria-label="Send" onclick="skSend()">➤</button>
+    <button aria-label="Send" onclick="skSend()">→</button>
   </div>
   <div class="sk-foot">Powered by <a href="https://synkasa.com" target="_blank" rel="noopener">SynKasa</a> — your AI receptionist</div>
 </div>
@@ -270,7 +270,7 @@ var PRESETS = {
   frimpomaa: {
     label:"NaNa Frimpomaa", av:"N",
     name:"NaNa's Assistant",
-    greeting:"Hey — welcome 👋 I'm NaNa's AI assistant. I can tell you about Som, Soma, custom builds, or SynKasa, or get you booked for a free call. What are you here for?",
+    greeting:"Hey — welcome! I'm NaNa's AI assistant. I can tell you about Som, Soma, custom builds, or SynKasa, or get you booked for a free call. What are you here for?",
     booking:BOOK, email:"hello@frimpomaasync.com",
     services:[
       {name:"Som (capture tool)",price:"$33 · one-time"},
@@ -294,28 +294,28 @@ var PRESETS = {
       {label:"Book a call",msg:"I'd like to book a call"}
     ]
   },
-  barbershop:{
-    label:"Barbershop", av:"K",
-    name:"King's Barbershop",
-    greeting:"Hey! Welcome to King's Barbershop 💈 How can I help — a cut, a time, or a price?",
-    booking:BOOK, email:"hello@kingsbarbershop.com",
-    services:[{name:"Classic Cut",price:"$35 · 30 min"},{name:"Fade + Line Up",price:"$45 · 45 min"},{name:"Hot Towel Shave",price:"$40 · 30 min"},{name:"Full Groom",price:"$80 · 75 min"},{name:"Kids Cut (under 12)",price:"$25"}],
+  detailing:{
+    label:"Auto Detailing", av:"K",
+    name:"Kojo's Mobile Detailing",
+    greeting:"Hey! Welcome to Kojo's Mobile Detailing. How can I help — a package, a price, or a time?",
+    booking:BOOK, email:"hello@kojosdetailing.com",
+    services:[{name:"Express Wash & Vac",price:"$45 · 45 min"},{name:"Interior Deep Clean",price:"$120 · 2 hr"},{name:"Full Detail (in + out)",price:"$180 · 3 hr"},{name:"Pet Hair Removal add-on",price:"$35"},{name:"Ceramic Spray Seal",price:"$60"}],
     faqs:[
-      {keys:["walk","in","appointment","wait"],a:"Walk-ins are always welcome 💈 Saturday mornings run about a 20-min wait; appointments get priority. Want me to book you a time?"},
-      {keys:["hour","open","close","time"],a:"We're open Mon–Fri 9AM–8PM and Sat 8AM–6PM. Closed Sundays. Want to grab a slot?"},
-      {keys:["kid","child","son"],a:"Absolutely — kids under 12 are $25 and our barbers are great with them. Want to book?"},
+      {keys:["come","mobile","drive","where","location"],a:"We come to you — driveway or office lot, all we need is space to park. Want me to book your spot?"},
+      {keys:["hour","open","close","time"],a:"We run Mon–Sat 8AM–6PM. Closed Sundays. Want to grab a slot?"},
+      {keys:["pet","hair","dog","seat"],a:"Pet hair is our specialty — the removal add-on is $35 and it comes out completely. Want to book?"},
       {keys:["card","cash","pay","apple"],a:"We take all major cards, cash, Apple Pay, and Cash App."}
     ],
-    quick:[{label:"Walk-ins?",msg:"Do you take walk-ins?"},{label:"Prices",msg:"What are your prices?"},{label:"Book a cut",msg:"I'd like to book an appointment"},{label:"Hours",msg:"What are your hours?"}]
+    quick:[{label:"Do you come to me?",msg:"Do you come to my location?"},{label:"Prices",msg:"What are your prices?"},{label:"Book a detail",msg:"I'd like to book an appointment"},{label:"Hours",msg:"What are your hours?"}]
   },
   braids:{
     label:"Braids & Hair", av:"A",
     name:"Adwoa Braiding Studio",
-    greeting:"Hi love 🌸 Welcome to Adwoa Braiding Studio. Looking for a style, a price, or a time?",
+    greeting:"Hi love! Welcome to Adwoa Braiding Studio. Looking for a style, a price, or a time?",
     booking:BOOK, email:"hello@adwoabraids.com",
     services:[{name:"Knotless Braids",price:"$180 · 4–5 hrs"},{name:"Box Braids",price:"$150 · 4 hrs"},{name:"Cornrows",price:"$90 · 2 hrs"},{name:"Kids Braids",price:"$70"},{name:"Takedown / Wash",price:"$45"}],
     faqs:[
-      {keys:["hair","provide","bring","own"],a:"Hair is included for knotless and box braids 🌸 If you have a specific brand or color you love, feel free to bring it. Want me to book you in?"},
+      {keys:["hair","provide","bring","own"],a:"Hair is included for knotless and box braids. If you have a specific brand or color you love, feel free to bring it. Want me to book you in?"},
       {keys:["how","long","time","hour"],a:"Most styles take 2–5 hours depending on size and length. Knotless runs 4–5 hrs. I can find you a start time — want one?"},
       {keys:["deposit","hold","cancel"],a:"A $30 deposit holds your slot and goes toward your total. Want me to send the booking link?"},
       {keys:["kid","child","daughter"],a:"Yes! Kids braids start at $70. Want to book a time for them?"}
@@ -325,11 +325,11 @@ var PRESETS = {
   cleaning:{
     label:"Cleaning", av:"A",
     name:"Asase Cleans",
-    greeting:"Hi there ✨ Welcome to Asase Cleans. I can give you a quote, our services, or get you scheduled. What do you need?",
+    greeting:"Hi there! Welcome to Asase Cleans. I can give you a quote, our services, or get you scheduled. What do you need?",
     booking:BOOK, email:"hello@asasecleans.com",
     services:[{name:"Standard Home Clean",price:"from $120"},{name:"Deep Clean",price:"from $220"},{name:"Move-In / Move-Out",price:"from $280"},{name:"Office Clean",price:"custom quote"},{name:"Recurring (weekly/biweekly)",price:"10% off"}],
     faqs:[
-      {keys:["quote","price","cost","how","much"],a:"A standard home clean starts at $120, deep cleans from $220, and move-in/out from $280 ✨ For an exact quote I just need your home size — or I can book a quick call. Which works?"},
+      {keys:["quote","price","cost","how","much"],a:"A standard home clean starts at $120, deep cleans from $220, and move-in/out from $280. For an exact quote I just need your home size — or I can book a quick call. Which works?"},
       {keys:["supply","product","bring","own"],a:"We bring all our own supplies and eco-friendly products — you don't lift a finger. Want to get scheduled?"},
       {keys:["recur","weekly","monthly","regular"],a:"Recurring cleans (weekly or biweekly) get 10% off every visit. Want me to set that up?"},
       {keys:["area","where","travel","location"],a:"We cover the metro area and nearby suburbs. Tell me your zip and I'll confirm — or book a call."}
@@ -339,11 +339,11 @@ var PRESETS = {
   catering:{
     label:"Catering", av:"M",
     name:"Mama's Kitchen Catering",
-    greeting:"Welcome to Mama's Kitchen 🍲 Planning something? I can share our menu, pricing, or check your date.",
+    greeting:"Welcome to Mama's Kitchen! Planning something? I can share our menu, pricing, or check your date.",
     booking:BOOK, email:"hello@mamaskitchen.com",
     services:[{name:"Drop-off Catering",price:"from $14/person"},{name:"Full-Service Event",price:"from $28/person"},{name:"Jollof + Sides Tray",price:"$85 · feeds 8–10"},{name:"Small Bites Package",price:"from $10/person"},{name:"Custom Menu",price:"let's talk"}],
     faqs:[
-      {keys:["menu","food","serve","dish"],a:"We do West African + soul food — jollof, grilled proteins, sides, small bites, and custom menus 🍲 Want the full menu or a quote for your headcount?"},
+      {keys:["menu","food","serve","dish"],a:"We do West African + soul food — jollof, grilled proteins, sides, small bites, and custom menus. Want the full menu or a quote for your headcount?"},
       {keys:["how","many","people","headcount","guest"],a:"We cater anywhere from 10 to 300+ guests. Drop-off starts at $14/person, full-service from $28. What's your date and headcount?"},
       {keys:["date","available","book","when"],a:"I can check your date right now — go ahead and book a quick call and we'll lock it in. Weekends fill fast!"},
       {keys:["deposit","pay","cost"],a:"A 50% deposit holds your date; the balance is due 3 days before. Want me to get you scheduled?"}
@@ -353,11 +353,11 @@ var PRESETS = {
   nails:{
     label:"Nail Salon", av:"L",
     name:"Lush Nail Bar",
-    greeting:"Hi gorgeous 💅 Welcome to Lush Nail Bar. Want a set, a price, or a time?",
+    greeting:"Hi gorgeous! Welcome to Lush Nail Bar. Want a set, a price, or a time?",
     booking:BOOK, email:"hello@lushnailbar.com",
     services:[{name:"Gel Manicure",price:"$45 · 45 min"},{name:"Full Acrylic Set",price:"$65 · 75 min"},{name:"Pedicure (Spa)",price:"$55 · 50 min"},{name:"Nail Art (per nail)",price:"from $5"},{name:"Soak-off + Repair",price:"$20"}],
     faqs:[
-      {keys:["walk","in","appointment","wait"],a:"We take walk-ins when we can, but appointments guarantee your spot 💅 Want me to book you?"},
+      {keys:["walk","in","appointment","wait"],a:"We take walk-ins when we can, but appointments guarantee your spot. Want me to book you?"},
       {keys:["how","long","time"],a:"Gel mani runs about 45 min, a full acrylic set about 75. Want me to find you a time?"},
       {keys:["design","art","nail art"],a:"Nail art starts at $5 a nail — bring an inspo pic and we'll recreate it! Want to book?"},
       {keys:["hour","open","close"],a:"We're open Tue–Sun 10AM–7PM, closed Mondays. Want a slot?"}
@@ -401,13 +401,13 @@ function handle(text){
   if(convo.mode==='lead-contact'){convo.lead.contact=text.trim();convo.mode='idle';
     var mail='mailto:'+p.email+'?subject='+encodeURIComponent('New lead from SynKasa demo')+'&body='+encodeURIComponent('Name: '+convo.lead.name+'\nContact: '+convo.lead.contact);
     try{var L=JSON.parse(localStorage.getItem('sk_leads')||'[]');L.push({biz:p.name,name:convo.lead.name,contact:convo.lead.contact,at:new Date().toISOString()});localStorage.setItem('sk_leads',JSON.stringify(L));}catch(e){}
-    say("Perfect — got it, "+convo.lead.name+" ✅ I've passed your details along and someone will reach out shortly. Want to grab a time now so you don't wait?\n\n👉 <a href='"+p.booking+"' target='_blank' rel='noopener'>Pick a time</a>");
+    say("Perfect — got it, "+convo.lead.name+". I've passed your details along and someone will reach out shortly. Want to grab a time now so you don't wait?\n\n→ <a href='"+p.booking+"' target='_blank' rel='noopener'>Pick a time</a>");
     return;}
 
   /* booking / get-started intent */
   if(has(t,'book','appointment','schedule','get started','sign up','start','reserve','slot','come in')){
     convo.mode='lead-name';
-    say("Love it 🎉 I can set that up. First — what's your name?");
+    say("Love it! I can set that up. First — what's your name?");
     return;}
 
   /* pricing */
@@ -425,7 +425,7 @@ function handle(text){
   if(has(t,'hi','hello','hey','yo','good morning','good evening')&&text.trim().length<14){say(p.greeting);return;}
 
   /* thanks */
-  if(has(t,'thank','thanks','appreciate')){say("Anytime 💛 Want me to get you booked before you go?");return;}
+  if(has(t,'thank','thanks','appreciate')){say("Anytime! Want me to get you booked before you go?");return;}
 
   /* score faqs */
   var best=null,bestScore=0;
@@ -443,7 +443,7 @@ function skSend(){var v=el('sk-text').value.trim();if(!v)return;handle(v);}
   var bar=el('sk-presets');
   Object.keys(PRESETS).forEach(function(k){
     var c=document.createElement('button');c.className='chip'+(k===cur?' active':'');c.dataset.k=k;
-    c.textContent=(k==='frimpomaa'?'⭐ '+PRESETS[k].label:PRESETS[k].label);
+    c.textContent=PRESETS[k].label;
     c.onclick=function(){applyPreset(k);};bar.appendChild(c);
   });
   el('sk-preset-note').innerHTML='Now chatting as <b>'+PRESETS[cur].name+'</b> (my own business). Tap a chip to switch, then open the chat.';

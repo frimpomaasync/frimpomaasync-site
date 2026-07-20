@@ -389,7 +389,7 @@
           <span class="step" id="step3"><i></i> 3 · Book</span>
         </div>
         <br>
-        <button class="rebrand-link" id="rebrandBtn" onclick="openRebrand()">✎ Your logo here — put your business name on this demo</button>
+        <button class="rebrand-link" id="rebrandBtn" onclick="openRebrand()">Your logo here — put your business name on this demo →</button>
       </div>
 
       <div class="tiles">
@@ -423,11 +423,11 @@
         <div class="wt">The custom wiring — what a done-for-you install includes</div>
         <div class="wired-grid">
           <div class="wire">
-            <h4>☎ The call bridge <span class="wchip">Custom glue</span></h4>
+            <h4>The call bridge <span class="wchip">Custom glue</span></h4>
             <p>Off-the-shelf AI packs can't hear your phone ring. The install wires missed calls into the catcher — every unanswered call becomes an instant, personal text-back before the caller dials your competitor.</p>
           </div>
           <div class="wire">
-            <h4>📅 Self-serve booking <span class="wchip">Custom glue</span></h4>
+            <h4>Self-serve booking <span class="wchip">Custom glue</span></h4>
             <p>No AI pack books the appointment for you. The install connects a live booking page to the conversation, so customers pick their own slot and it lands straight on the real calendar.</p>
           </div>
         </div>
@@ -636,8 +636,8 @@
     document.getElementById('threadName').textContent = 'Follow-ups';
     document.getElementById('threadStatus').textContent = 'Replies go out in ' + BRAND.owner + '’s voice, automatically';
     document.getElementById('msgs').innerHTML =
-      '<div class="msg cust">Hi! Do you do pet hair removal? My back seat is… a situation 😅<span class="meta">Dana P. · website form · 9:12 AM</span></div>' +
-      '<div class="msg owner">Ha! Pet hair is my nemesis and I win every time 🐾 Yes — it’s included in the full service. Want me to send you my openings this week?<span class="meta">' + ownerMeta() + ' · 9:12 AM</span></div>';
+      '<div class="msg cust">Hi! Do you do pet hair removal? My back seat is… a situation.<span class="meta">Dana P. · website form · 9:12 AM</span></div>' +
+      '<div class="msg owner">Ha! Pet hair is my nemesis and I win every time. Yes — it’s included in the full service. Want me to send you my openings this week?<span class="meta">' + ownerMeta() + ' · 9:12 AM</span></div>';
   }
   seedThread();
 
@@ -707,12 +707,12 @@
     document.getElementById('msgs').innerHTML = '';
     goView('messages');
     await typingOn(1800);
-    addMsg('owner', 'Hey Jasmine! ' + esc(BRAND.owner) + ' here from ' + esc(BRAND.biz) + ' ✨ So sorry I missed your call — I was mid-appointment. I’d love to take care of you this week!', ownerMeta() + ' · just now');
+    addMsg('owner', 'Hey Jasmine! ' + esc(BRAND.owner) + ' here from ' + esc(BRAND.biz) + '. So sorry I missed your call — I was mid-appointment. I’d love to take care of you this week!', ownerMeta() + ' · just now');
     document.getElementById('demoPill').textContent = 'Replied ✓';
     await wait(2600);
     addMsg('cust', 'yes please!! do you have anything thursday?', 'Jasmine T. · just now');
     await typingOn(1500);
-    addMsg('owner', 'Thursday’s open! Here’s my live booking page — grab whichever time works for you 👉 <u>tap to book</u>', ownerMeta() + ' · just now');
+    addMsg('owner', 'Thursday’s open! Here’s my live booking page — grab whichever time works for you — <u>tap to book</u>', ownerMeta() + ' · just now');
     setStep(2,'done');
     await wait(1800);
 
@@ -721,9 +721,9 @@
     await playBookingSheet();
     toast('Self-serve booking', '<b>Jasmine T.</b> picked her own slot — Thu 10:00 AM. Zero back-and-forth.');
     await wait(1200);
-    addMsg('cust', 'booked!! see you thursday 🙌', 'Jasmine T. · just now');
+    addMsg('cust', 'booked!! see you thursday', 'Jasmine T. · just now');
     await typingOn(1300);
-    addMsg('owner', 'You’re all set for Thursday at 10:00 AM ✨ I’ll text you a reminder Wednesday night. See you then!', ownerMeta() + ' · just now');
+    addMsg('owner', 'You’re all set for Thursday at 10:00 AM. I’ll text you a reminder Wednesday night. See you then!', ownerMeta() + ' · just now');
     await wait(1800);
     goView('calendar');
     var empty = document.getElementById('thuEmpty');
