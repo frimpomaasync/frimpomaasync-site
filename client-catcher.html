@@ -594,6 +594,244 @@ h1,h2,h3{color:var(--ink)}
       <div class="step"><div class="n">2</div><h3>Build — on my stack</h3><p>I build and run your system on <b>my</b> accounts. You don't buy software, manage a subscription, or learn a tool. Zero tech on your plate.</p></div>
       <div class="step"><div class="n">3</div><h3>Live in 7 days</h3><p>Your system is catching leads and chasing follow-ups within a week. I monitor and tune it — that's the care plan.</p></div>
     </div>
+
+    <!-- ================= SOMA · the wiring, running ================= -->
+    <style>
+      #soma{margin-top:44px;background:var(--panel);border:1px solid var(--line);
+        border-radius:22px;padding:clamp(22px,4vw,34px)}
+      #soma .soma-k{display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+        color:var(--copper-deep);margin-bottom:8px}
+      #soma h3{font-family:var(--serif);font-weight:600;font-size:clamp(22px,3.2vw,30px);
+        letter-spacing:-.015em;line-height:1.15;color:var(--ink)}
+      #soma .soma-lede{margin-top:11px;font-size:.95rem;color:var(--ink2);line-height:1.6;max-width:56ch}
+      #soma .soma-lede b{color:var(--ink)}
+
+      #soma .soma-entry{margin-top:24px;background:#FFFFFF;border:1px solid var(--line);
+        border-radius:18px;padding:22px}
+      #soma .soma-ek{font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+        color:var(--muted);margin-bottom:15px}
+      #soma .soma-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+      #soma .soma-f label{display:block;font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+        color:var(--muted);margin-bottom:6px}
+      #soma .soma-f input{width:100%;border:1px solid var(--line);border-radius:14px;
+        padding:13px 15px;font-size:14.5px;background:var(--panel2);color:var(--ink);
+        font-family:inherit;outline:none;transition:border-color .18s ease}
+      #soma .soma-f input:focus{outline:2px solid var(--copper);outline-offset:0;border-color:var(--copper)}
+      #soma .soma-send{display:inline-flex;align-items:center;gap:12px;margin-top:18px;
+        background:var(--ink);color:#F5F3EF;border:none;border-radius:999px;padding:15px 26px;
+        font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;min-height:48px;
+        transition:transform .18s ease,box-shadow .18s ease,opacity .18s ease}
+      #soma .soma-send .dot{width:9px;height:9px;border-radius:50%;background:var(--copper);flex:none}
+      #soma .soma-send .arr{transition:transform .18s ease}
+      #soma .soma-send:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,26,26,.22)}
+      #soma .soma-send:hover:not(:disabled) .arr{transform:translateX(4px)}
+      #soma .soma-send:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
+
+      #soma .soma-status{display:flex;align-items:center;justify-content:space-between;
+        gap:12px;margin:22px 2px 13px;flex-wrap:wrap}
+      #soma .soma-live{display:inline-flex;align-items:center;gap:9px;font-size:.82rem;color:var(--ink2)}
+      #soma .soma-live i{width:8px;height:8px;border-radius:50%;background:var(--line-strong);
+        transition:background .3s ease}
+      #soma .soma-live.on i{background:var(--copper);animation:somaPulse 1.2s infinite}
+      #soma .soma-live.fin i{background:var(--copper)}
+      #soma .soma-relay{font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+        text-transform:uppercase;color:var(--muted)}
+      #soma .soma-relay b{color:var(--copper-deep)}
+      @keyframes somaPulse{0%,100%{opacity:1}50%{opacity:.35}}
+
+      #soma .soma-tools{display:flex;flex-direction:column;gap:10px}
+      #soma .soma-tool{display:flex;align-items:flex-start;gap:15px;background:#FFFFFF;
+        border:1px solid var(--line);border-radius:18px;padding:17px 18px;
+        transition:border-color .3s ease}
+      #soma .soma-tool.on{border-color:var(--copper)}
+      #soma .soma-ico{width:42px;height:42px;border-radius:12px;flex:none;display:grid;
+        place-items:center;background:var(--panel);border:1px solid var(--line);
+        color:var(--muted);transition:all .3s ease}
+      #soma .soma-tool.on .soma-ico,#soma .soma-tool.fin .soma-ico{background:var(--copper);
+        border-color:var(--copper);color:#fff}
+      #soma .soma-ico svg{width:19px;height:19px}
+      #soma .soma-tb{flex:1;min-width:0}
+      #soma .soma-tn{display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+        font-size:14.5px;font-weight:600;color:var(--ink)}
+      #soma .soma-pill{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;
+        border-radius:999px;padding:3.5px 10px;background:var(--panel);
+        border:1px solid var(--line);color:var(--muted);font-weight:600}
+      #soma .soma-tool.on .soma-pill{background:var(--panel);border-color:var(--copper);color:var(--copper-deep)}
+      #soma .soma-tool.fin .soma-pill{background:var(--copper);border-color:var(--copper);color:#fff}
+      #soma .soma-ts{font-size:.86rem;color:var(--muted);margin-top:4px;line-height:1.5}
+      #soma .soma-tp{max-height:0;overflow:hidden;opacity:0;
+        transition:max-height .35s ease,opacity .3s ease,margin .35s ease}
+      #soma .soma-tp.show{max-height:180px;opacity:1;margin-top:12px}
+      #soma .soma-pc{background:var(--panel2);border:1px solid var(--line);border-radius:14px;
+        padding:12px 14px;font-size:13.5px;line-height:1.55;color:var(--ink)}
+      #soma .soma-pc .pk{color:var(--muted)}
+      #soma .soma-pc.msg{background:var(--ink);border-color:var(--ink);color:#F5F3EF;
+        border-bottom-left-radius:6px}
+
+      #soma .soma-done{max-height:0;overflow:hidden;opacity:0;margin-top:0;
+        transition:max-height .4s ease,opacity .35s ease,margin .4s ease}
+      #soma .soma-done.show{max-height:130px;opacity:1;margin-top:16px}
+      #soma .soma-done-in{display:flex;align-items:center;gap:13px;background:var(--ink);
+        color:#F5F3EF;border-radius:18px;padding:17px 20px}
+      #soma .soma-done-in .ck{width:26px;height:26px;border-radius:50%;background:var(--copper);
+        display:grid;place-items:center;flex:none}
+      #soma .soma-done-in .ck svg{width:14px;height:14px}
+      #soma .soma-done-in b{color:var(--copper);font-weight:600}
+      #soma .soma-fine{margin-top:14px;font-size:10px;letter-spacing:.14em;
+        text-transform:uppercase;color:var(--muted)}
+
+      @media (max-width:760px){
+        #soma .soma-fields{grid-template-columns:1fr}
+        #soma .soma-send{width:100%;justify-content:center}
+      }
+      @media (prefers-reduced-motion:reduce){
+        #soma *,#soma *::before,#soma *::after{animation-duration:.01ms !important;
+          transition-duration:.01ms !important}
+      }
+    </style>
+
+    <div class="rv" id="soma">
+      <span class="soma-k">Watch it work &middot; free live demo</span>
+      <h3>Step 2, actually running.</h3>
+      <p class="soma-lede">Automation is invisible, so most owners don't trust it. So watch it.
+        Put one customer in and see them land in four places at once — the same wiring I build
+        on my accounts for you. <b>Nothing saved, nothing to sign up for.</b></p>
+
+      <div class="soma-entry">
+        <div class="soma-ek">One entry</div>
+        <div class="soma-fields">
+          <div class="soma-f"><label for="somaName">Name</label>
+            <input type="text" id="somaName" placeholder="Jordan Blake" autocomplete="off"></div>
+          <div class="soma-f"><label for="somaPhone">Phone</label>
+            <input type="text" id="somaPhone" placeholder="(202) 555-0148" autocomplete="off"></div>
+          <div class="soma-f"><label for="somaService">Service</label>
+            <input type="text" id="somaService" placeholder="Consultation" autocomplete="off"></div>
+        </div>
+        <button class="soma-send" id="somaSend" disabled>
+          <span class="dot"></span> Send it <span class="arr">&rarr;</span></button>
+      </div>
+
+      <div class="soma-status">
+        <span class="soma-live" id="somaLive"><i></i> <span id="somaStatusText">Ready when you are</span></span>
+        <span class="soma-relay">Relayed &middot; <b id="somaRelay">0</b></span>
+      </div>
+
+      <div class="soma-tools" id="somaTools">
+        <div class="soma-tool" data-t="crm">
+          <div class="soma-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M19 8v6M22 11h-6"/></svg></div>
+          <div class="soma-tb">
+            <div class="soma-tn">Your CRM <span class="soma-pill">Idle</span></div>
+            <div class="soma-ts">New contact created — HubSpot, Jobber, or a simple sheet</div>
+            <div class="soma-tp"><div class="soma-pc"><span class="pk">Contact:</span> <span class="sv-name"></span><br><span class="pk">Phone:</span> <span class="sv-phone"></span></div></div>
+          </div>
+        </div>
+        <div class="soma-tool" data-t="cal">
+          <div class="soma-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+          <div class="soma-tb">
+            <div class="soma-tn">Your calendar <span class="soma-pill">Idle</span></div>
+            <div class="soma-ts">Appointment booked straight onto your day</div>
+            <div class="soma-tp"><div class="soma-pc"><span class="pk">Booked:</span> <span class="sv-service"></span> with <span class="sv-name"></span><br><span class="pk">When:</span> next open slot</div></div>
+          </div>
+        </div>
+        <div class="soma-tool" data-t="sms">
+          <div class="soma-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 8.5 8.5 0 0 1-3.8-.9L3 21l1.9-5.1A8.4 8.4 0 0 1 12 3a8.4 8.4 0 0 1 9 8.5z"/></svg></div>
+          <div class="soma-tb">
+            <div class="soma-tn">Text message <span class="soma-pill">Idle</span></div>
+            <div class="soma-ts">Welcome text sent from your business number</div>
+            <div class="soma-tp"><div class="soma-pc msg">Hi <span class="sv-first"></span> — thanks for reaching out. You're booked in for your <span class="sv-service-l"></span>. Anything you need before then, just reply here.</div></div>
+          </div>
+        </div>
+        <div class="soma-tool" data-t="sheet">
+          <div class="soma-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg></div>
+          <div class="soma-tb">
+            <div class="soma-tn">Your customer list <span class="soma-pill">Idle</span></div>
+            <div class="soma-ts">Row added to the running record you can actually read</div>
+            <div class="soma-tp"><div class="soma-pc"><span class="pk">Row:</span> <span class="sv-name"></span> &middot; <span class="sv-phone"></span> &middot; <span class="sv-service"></span> &middot; <span class="sv-date"></span></div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="soma-done" id="somaDone">
+        <div class="soma-done-in">
+          <span class="ck"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+          <span>One entry &rarr; <b>four tools</b> &rarr; zero copy-paste. That evening you'd have spent retyping is just yours now.</span>
+        </div>
+      </div>
+
+      <div class="soma-fine">Demo only &middot; nothing is sent, stored, or saved</div>
+    </div>
+
+    <script>
+    (function(){
+      "use strict";
+      var root=document.getElementById('soma'); if(!root) return;
+      function q(id){ return document.getElementById(id); }
+      var name=q('somaName'), phone=q('somaPhone'), svc=q('somaService'), btn=q('somaSend');
+      var tools=root.querySelectorAll('.soma-tool');
+      var relay=0, running=false;
+      var reduced=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function refresh(){ btn.disabled = running || !name.value.trim(); }
+      [name,phone,svc].forEach(function(i){ i.addEventListener('input', refresh); });
+
+      function setLive(cls, text){
+        var l=q('somaLive'); l.className='soma-live'+(cls?' '+cls:'');
+        q('somaStatusText').textContent=text;
+      }
+
+      function paint(){
+        var n=name.value.trim()||'New customer';
+        var first=n.split(/\s+/)[0];
+        var p=phone.value.trim()||'—';
+        var s=svc.value.trim()||'Consultation';
+        var d=new Date(); var ds=(d.getMonth()+1)+'/'+d.getDate();
+        function set(sel,v){ [].forEach.call(root.querySelectorAll(sel), function(e){ e.textContent=v; }); }
+        set('.sv-name',n); set('.sv-first',first); set('.sv-phone',p);
+        set('.sv-service',s); set('.sv-service-l',s.toLowerCase()); set('.sv-date',ds);
+      }
+
+      function reset(){
+        [].forEach.call(tools, function(t){
+          t.classList.remove('on','fin');
+          t.querySelector('.soma-pill').textContent='Idle';
+          t.querySelector('.soma-tp').classList.remove('show');
+        });
+        q('somaDone').classList.remove('show');
+      }
+
+      function run(){
+        if(running || !name.value.trim()) return;
+        running=true; refresh(); reset(); paint();
+        setLive('on','Sending');
+        var gap = reduced ? 60 : 820;
+        var i=0;
+        function step(){
+          if(i>0){
+            var prev=tools[i-1];
+            prev.classList.remove('on'); prev.classList.add('fin');
+            prev.querySelector('.soma-pill').textContent='Done';
+          }
+          if(i>=tools.length){
+            setLive('fin','Four tools updated');
+            relay++; q('somaRelay').textContent=relay;
+            q('somaDone').classList.add('show');
+            running=false; refresh();
+            return;
+          }
+          var t=tools[i];
+          t.classList.add('on');
+          t.querySelector('.soma-pill').textContent='Receiving';
+          t.querySelector('.soma-tp').classList.add('show');
+          i++;
+          setTimeout(step, gap);
+        }
+        setTimeout(step, reduced ? 40 : 280);
+      }
+
+      btn.addEventListener('click', run);
+      refresh();
+    })();
+    </script>
   </div>
 
   <!-- 05 PROOF -->
@@ -948,7 +1186,7 @@ window.addEventListener("beforeprint",function(){
 });
 })();
 </script>
-<script src="fsnav.js?v=720b" defer></script>
-<script src="fswidget.js?v=720b" defer></script>
+<script src="fsnav.js?v=722a" defer></script>
+<script src="fswidget.js?v=722a" defer></script>
 </body>
 </html>

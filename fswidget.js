@@ -10,12 +10,11 @@ var P={
   services:[
     {name:"The Client Catcher — never lose a lead",price:"$1,500 · live in 7 days · optional $99/mo care"},
     {name:"Founding Client build (first 3 only)",price:"$750"},
-    {name:"Som (capture tool)",price:"free download"},
-    {name:"Soma (watch automation run)",price:"free live demo"}
+    {name:"Som (capture tool)",price:"free download"}
   ],
   faqs:[
-    {keys:["build","make","offer","services","service","create","do you do"],a:"I make one-person businesses feel fully staffed. The main offer is the Client Catcher — calls answered, follow-ups sent, jobs booked while your hands stay on the work. $1,500, live in 7 days, or $750 for the first 3 founding clients. The free tools are Som (catches thoughts before they slip) and Soma (a live automation demo)."},
-    {keys:["soma"],a:"Soma is my free live demo — type one customer in and watch it land in four tools at once. Zero commitment. It's at frimpomaasync.com/soma."},
+    {keys:["build","make","offer","services","service","create","do you do"],a:"I make one-person businesses feel fully staffed. The main offer is the Client Catcher — calls answered, follow-ups sent, jobs booked while your hands stay on the work. $1,500, live in 7 days, or $750 for the first 3 founding clients. The free tool is Som — it catches thoughts before they slip. You can also watch the wiring run for free at frimpomaasync.com/client-catcher#soma."},
+    {keys:["soma"],a:"Soma is the free live demo of what I install — type one customer in and watch them land in four tools at once. Nothing saved, nothing to sign up for. It now lives on the Client Catcher page: frimpomaasync.com/client-catcher#soma."},
     {keys:["som"],a:"Som is free — it catches the things you'd normally lose: ideas, links, follow-ups. One field, no login, yours forever. Grab it at frimpomaasync.com/som."},
     {keys:["catcher","client","lead","missed","follow"],a:"The Client Catcher is the flagship: every call answered, every lead chased, every job on your calendar — without you touching any of it. Live in 7 days, booking in 30 — or you don't pay. Want a free 15-min mapping call?"},
     {keys:["guarantee","refund","risk","pay"],a:"The guarantee, in writing: live and working in 7 days, booking appointments within 30 — or you don't pay."},
@@ -122,7 +121,7 @@ function handle(text){
     say("Love it! I can set that up. First — what's your name?");
     return;}
   if(has(t,'price','pricing','cost','how much','rate','fee','charge','$')){say(servicesReply());return;}
-  if(has(t,'free','tool','tools','download')){say("Two free ones: Som catches the thought before it's gone (frimpomaasync.com/som), and Soma lets you watch one entry land in four tools at once (frimpomaasync.com/soma). Both free, both yours.");return;}
+  if(has(t,'free','tool','tools','download')){say("Som is the free tool — it catches the thought before it's gone, and it's yours to keep (frimpomaasync.com/som). There's also a free live demo where you watch one entry land in four tools at once: frimpomaasync.com/client-catcher#soma.");return;}
   if(has(t,'email','phone','reach','contact','number')){say("You can reach NaNa at "+P.email+", or I can take your details right here — want to do that? Just say 'book me'.");return;}
   if(has(t,'hi','hello','hey','yo','good morning','good evening')&&text.trim().length<14){say(P.greeting);return;}
   if(has(t,'thank','thanks','appreciate')){say("Anytime! Want me to get you booked before you go?");return;}

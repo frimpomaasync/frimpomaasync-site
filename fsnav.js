@@ -61,7 +61,8 @@ function mark(href){return href.replace(/\.html$/,"")===here?' class="fs-here"':
 
 var SUB={"client-catcher.html":[
   ["/client-catcher-demo/","try the live demo","press play — watch a lead get booked"],
-  ["/client-catcher#demo-video","the 40-second run","screen recording of a full save"]
+  ["/client-catcher#demo-video","the 40-second run","screen recording of a full save"],
+  ["/client-catcher#soma","watch the wiring run","one entry lands in four tools at once"]
 ]};
 
 var navLinks=LINKS.map(function(l){
@@ -104,7 +105,7 @@ var footHTML=''
 +'<div class="fs-col"><div class="fs-h">Free</div>'
 +'<a href="planner.html">the Small Business Blueprint</a>'
 +'<a href="som.html">Som — capture tool</a>'
-+'<a href="soma.html">Soma — live automation demo</a>'
++'<a href="/client-catcher#soma">watch the wiring run</a>'
 +'<a href="products.html">all tools</a></div>'
 +'<div class="fs-col"><div class="fs-h">Elsewhere</div>'
 +'<a href="https://www.instagram.com/frimpomaasync" target="_blank" rel="noopener">Instagram</a>'

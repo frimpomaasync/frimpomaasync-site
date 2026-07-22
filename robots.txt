@@ -1,7 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /thank-you.html
-Disallow: /thank-you-soma.html
 Disallow: /intake.html
 
 Sitemap: https://frimpomaasync.com/sitemap.xml
