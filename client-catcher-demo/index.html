@@ -332,6 +332,58 @@
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
   }
+/* ===== conversion layer (added 2026-07-22) — the demo had ZERO links before this ===== */
+  .side-cta{display:inline-flex;align-items:center;gap:9px;background:var(--copper);color:#fff;
+    border-radius:999px;padding:11px 16px;font-size:12px;font-weight:600;text-decoration:none;
+    margin-top:12px;transition:background .18s ease}
+  .side-cta:hover{background:var(--copper-deep)}
+  .side-cta .arr{transition:transform .18s ease}
+  .side-cta:hover .arr{transform:translateX(3px)}
+
+  .cele-actions{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+  .cele-go{display:inline-flex;align-items:center;justify-content:center;gap:11px;
+    background:var(--ink);color:#F5F3EF;border-radius:999px;padding:15px 22px;font-size:14.5px;
+    font-weight:600;text-decoration:none;min-height:50px;
+    transition:transform .18s ease,box-shadow .18s ease}
+  .cele-go .dot{width:9px;height:9px;border-radius:50%;background:var(--copper);flex:none}
+  /* one flex item so a long business name wraps as a block, not word-by-word */
+  .cele-go .cele-t{flex:1;text-align:center;line-height:1.35}
+  .cele-go .arr{transition:transform .18s ease}
+  .cele-go:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,26,26,.22)}
+  .cele-go:hover .arr{transform:translateX(4px)}
+  .cele-later{background:none;border:none;font-size:13px;color:var(--muted);
+    text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-family:inherit}
+  .cele-later:hover{color:var(--ink)}
+  .cele-guar{margin-top:14px;font-size:11px;letter-spacing:.06em;color:var(--muted);line-height:1.6}
+
+  /* closing band — the reliable exit on BOTH desktop and mobile.
+     display:block is REQUIRED: `section{display:none}` (line ~82) drives the
+     view switcher and would otherwise hide this permanently. */
+  .cc-close{display:block;background:var(--ink);color:#F5F3EF;border-radius:26px;
+    padding:clamp(28px,4vw,42px);margin:38px 0 0}
+  .cc-close .cck{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper)}
+  .cc-close h2{font-family:var(--serif);font-weight:600;font-size:clamp(26px,4.4vw,38px);
+    letter-spacing:-.02em;line-height:1.12;margin-top:12px;color:#fff;max-width:20ch}
+  .cc-close p{margin-top:16px;font-size:15px;color:#C9BEA8;line-height:1.65;max-width:54ch}
+  .cc-close p b{color:#fff;font-weight:600}
+  .cc-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:26px}
+  .cc-primary{display:inline-flex;align-items:center;gap:11px;background:var(--copper);color:#fff;
+    border-radius:999px;padding:16px 26px;font-size:15px;font-weight:600;text-decoration:none;
+    min-height:52px;transition:transform .18s ease,background .18s ease}
+  .cc-primary:hover{transform:translateY(-2px);background:var(--copper-deep)}
+  .cc-primary .arr{transition:transform .18s ease}
+  .cc-primary:hover .arr{transform:translateX(4px)}
+  .cc-secondary{display:inline-flex;align-items:center;gap:9px;color:#F5F3EF;font-size:14px;
+    text-decoration:underline;text-underline-offset:4px;min-height:52px;padding:0 4px}
+  .cc-secondary:hover{color:var(--copper)}
+  .cc-guar{margin-top:22px;padding-top:18px;border-top:1px solid rgba(255,255,255,.14);
+    font-size:12.5px;color:#9dbb8a;line-height:1.7}
+  .cc-fine{margin-top:8px;font-size:11.5px;color:#9B968A;line-height:1.7}
+  .cc-fine b{color:#E4C79A}
+  @media(max-width:920px){
+    .cc-close{border-radius:22px;margin-top:30px}
+    .cc-primary,.cc-secondary{width:100%;justify-content:center}
+  }
 </style>
 </head>
 <body>
@@ -361,10 +413,12 @@
     </nav>
     <div class="side-foot">
       <div class="biz"><b class="b-biz">Suds &amp; Shine Mobile Detailing</b><span class="b-ownerline">Maya Reyes · solo owner</span></div>
-      <span class="demo-tag">White-label demo</span>
-      <div class="made-by">Built, wired, and cared for by <b>NaNa Frimpomaa</b></div>
+      <span class="demo-tag">Your live preview</span>
+      <div class="made-by">Everything here runs without <span class="b-owner">Maya</span> touching it.
+        Built by <b>NaNa Frimpomaa</b> — I make one-person businesses feel fully staffed.</div>
+      <a class="side-cta" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">Book a free 15-min call <span class="arr">&rarr;</span></a>
     </div>
-    <span class="demo-tag-mobile">Demo</span>
+    <span class="demo-tag-mobile">Preview</span>
   </aside>
 
   <main>
@@ -507,6 +561,23 @@
         <div class="evts"><div class="evt copper"><span class="tm">11:00</span><span class="tt">Interior refresh — Marcus L.</span><span class="tg auto">Auto-booked</span></div></div>
       </div>
     </section>
+    <!-- closing band: the reliable exit on desktop AND mobile -->
+    <section class="cc-close">
+      <span class="cck">When you close up tonight</span>
+      <h2>Nothing slipped. And you didn't do any of it.</h2>
+      <p>Everything you just watched — the missed call caught, the reply sent in
+        <span class="b-owner">Maya</span>'s own words, the slot the customer booked herself — is the
+        install. <b>It runs on my accounts, wired around the tools you already use.</b> You don't buy
+        software, learn a system, or manage anything. You just stop losing the work you already won.</p>
+      <div class="cc-row">
+        <a class="cc-primary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">Book a free 15-min call <span class="arr">&rarr;</span></a>
+        <a class="cc-secondary" href="https://frimpomaasync.com/client-catcher">See exactly what's included</a>
+      </div>
+      <div class="cc-guar">&#10003; Live and working in 7 days, booking appointments within 30 — or you don't pay.</div>
+      <div class="cc-fine">$1,500 to build &middot; optional $99/mo to keep it cared for &middot;
+        <b>founding rate $750 for the first 3 clients</b> (a named testimonial is the trade).<br>
+        On the call we find the one leak costing you the most — you leave with the map either way.</div>
+    </section>
   </main>
 </div>
 
@@ -542,8 +613,13 @@
     <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
     <h3>Booked ✓</h3>
     <p><b>Jasmine T.</b> · Full service<br>Thursday the 23rd · 10:00 AM<br>She picked the slot herself. Reminder text scheduled for Wednesday night.</p>
-    <button class="go" onclick="closeCele()">Beautiful</button>
     <span class="fine">Caught → followed up → booked · 42 seconds · zero taps from <span class="b-owner">Maya</span></span>
+    <div class="cele-actions">
+      <a class="cele-go" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">
+        <span class="dot"></span><span class="cele-t">Do this for <span class="b-biz">my business</span></span><span class="arr">&rarr;</span></a>
+      <button class="cele-later" onclick="closeCele()">Let me look around a bit more</button>
+    </div>
+    <div class="cele-guar">Live and working in 7 days, booking appointments within 30 — or you don't pay.</div>
   </div>
 </div>
 
