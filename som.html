@@ -2,440 +2,216 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Som — the free tool that catches the thought before it's gone</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Som — the free app that catches the thought before it's gone</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<meta name="description" content="Som — a free tool that catches the thought before it's gone. One field, no login, works offline. Yours forever — a free download by NaNa Frimpomaa.">
+<meta name="description" content="Som — a free app that catches the thought before it's gone. One field, no login, works offline. Install it on your phone in two taps. By NaNa Frimpomaa.">
 <link rel="canonical" href="https://frimpomaasync.com/som">
 <meta name="theme-color" content="#FFFFFF">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="NaNa Frimpomaa">
 <meta property="og:title" content="Som — catch the thought before it's gone">
-<meta property="og:description" content="A free tool that catches the thought before it's gone. One field, no login, works offline. Yours forever.">
+<meta property="og:description" content="A free app that catches the thought before it's gone. One field, no login, works offline. Install it in two taps.">
 <meta property="og:url" content="https://frimpomaasync.com/som">
 <meta property="og:image" content="https://frimpomaasync.com/og-cover.png">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Som — catch the thought before it's gone">
-<meta name="twitter:description" content="A free tool that catches the thought before it's gone. Yours forever.">
+<meta name="twitter:description" content="A free app that catches the thought before it's gone. Install it in two taps.">
 <meta name="twitter:image" content="https://frimpomaasync.com/og-cover.png">
-<!-- Self-contained. No external resources. System fonts only. Vanilla JS, saves to your device. -->
+<!-- Self-contained. No external resources. System fonts only. -->
 <style>
   :root{
-    --bg:#FFFFFF; --panel-2:#FAFAF8; --ink:#1A1A1A;
-    --accent:#C9975B; --accent-soft:#E4C79A; --accent-deep:#A8763B;
-    --card:#FFFFFF; --muted:#6B6458; --hairline:#E2DCD0; --line:#B8AE9C;
+    --paper:#FFFFFF; --panel:#F6F5F3; --panel2:#FAFAF8; --card:#FFFFFF;
+    --ink:#1A1A1A; --ink-soft:#3D3A35; --muted:#8A8479; --hairline:#E8E4DD;
+    --copper:#C9975B; --copper-deep:#A87938;
     --thought:#5E7A5C; --task:#3F6FA8; --reminder:#B0563F;
+    --radius:22px;
+    --serif:ui-serif,"New York","Iowan Old Style",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  html,body{height:100%;}
-  body{
-    background-color:#FFFFFF;
-    background-image:radial-gradient(120% 80% at 50% 0%, #FAFAF8 0%, #F6F5F3 100%);
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-    -webkit-font-smoothing:antialiased; min-height:100vh; min-height:100dvh; overflow-x:hidden;
-  }
-  .mono{ font-family:ui-monospace,'SF Mono','SFMono-Regular',Menlo,Monaco,Consolas,'Courier New',monospace; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  input{font-family:inherit}
+  :focus-visible{outline:2.5px solid var(--ink);outline-offset:3px;border-radius:8px}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);
+    line-height:1.45;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:760px;margin:0 auto;padding:clamp(26px,5vw,44px) clamp(18px,5vw,26px) 90px}
 
-  .wrap{ width:100%; max-width:600px; margin:0 auto; padding:clamp(30px,7vw,56px) clamp(16px,5vw,26px) 96px; }
+  .kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--copper-deep);margin-bottom:14px}
 
-  /* hero — the outcome first, then the tool */
-  .som-hero{ margin-bottom:34px; }
-  .som-k{ font-size:11px; font-weight:600; letter-spacing:0.16em; text-transform:uppercase; color:var(--accent-deep); margin-bottom:14px; }
-  .som-hero h1{ font-family:Georgia,'Palatino Linotype','Iowan Old Style',serif; font-weight:700; font-size:clamp(2.9rem,9.5vw,7rem); line-height:0.98; letter-spacing:-0.025em; color:var(--ink); }
-  .period{ color:var(--accent); }
-  .som-lede{ margin-top:16px; font-size:16px; color:var(--muted); line-height:1.6; }
-  .som-lede b{ color:var(--ink); }
-  .som-who{ margin-top:14px; padding:12px 16px; border-left:3px solid var(--accent); background:rgba(255,255,255,0.7); border-radius:0 10px 10px 0; font-size:14px; color:var(--ink); }
-  .som-try{ margin-top:22px; text-align:center; font-size:11.5px; letter-spacing:0.14em; text-transform:uppercase; color:var(--accent-deep); font-weight:700; font-family:ui-monospace,'SF Mono',Menlo,monospace; }
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(2.6rem,8.5vw,4.6rem);
+    line-height:1.02;letter-spacing:-.025em}
+  h1 .dot{color:var(--copper)}
+  .lede{margin-top:20px;font-size:clamp(16px,2.2vw,18px);color:var(--ink-soft);
+    line-height:1.6;max-width:54ch}
+  .lede b{color:var(--ink);font-weight:600}
 
-  /* free download gate */
-  .som-get{ margin-top:44px; background:linear-gradient(160deg,#1E2A45,#16203A); color:#F4F1EC; border-radius:12px; padding:30px 26px; }
-  .som-get h2{ font-family:Georgia,'Palatino Linotype',serif; font-size:clamp(24px,6vw,32px); font-weight:700; letter-spacing:-0.02em; line-height:1.1; }
-  .som-get h2 .dot{ color:var(--accent); }
-  .som-get p{ margin-top:12px; font-size:14.5px; color:rgba(245,240,232,0.78); line-height:1.55; }
-  .som-get p b{ color:#fff; }
-  .som-get form{ display:flex; gap:10px; margin-top:20px; flex-wrap:wrap; }
-  .som-get input[type=email]{ flex:1; min-width:200px; padding:14px 16px; font-size:15px; border:1.5px solid rgba(255,255,255,0.2); border-radius:12px; background:rgba(255,255,255,0.07); color:#fff; font-family:inherit; outline:none; }
-  .som-get input[type=email]:focus{ border-color:var(--accent); box-shadow:0 0 0 3px rgba(201,151,91,0.25); }
-  .som-get input[type=email]::placeholder{ color:rgba(245,240,232,0.45); }
-  .som-get button{ padding:14px 24px; border:none; border-radius:6px; background:#B4552D; color:#fff; font-family:inherit; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:transform .15s ease, background .2s ease; }
-  .som-get button:hover:not(:disabled){ transform:translateY(-1px); background:#9A4522; }
-  .som-get button:disabled{ opacity:0.5; cursor:wait; }
-  .som-err{ display:none; margin-top:10px; font-size:13px; color:#F0B9A8; }
-  .som-fine{ margin-top:12px; font-size:12px; color:rgba(245,240,232,0.55); }
+  .who{margin-top:20px;background:var(--panel);border:1px solid var(--hairline);
+    border-radius:18px;padding:17px 20px;font-size:14.5px;color:var(--ink-soft);line-height:1.55}
+  .who b{color:var(--ink);font-weight:600}
 
-  .back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:9px 15px; border:1px solid var(--hairline); border-radius:999px; background:var(--panel-2); transition:border-color .2s, color .2s; margin-bottom:26px; }
-  .back:hover{ border-color:var(--accent-soft); color:var(--ink); }
-  .back:focus-visible{ outline:2px solid var(--accent); outline-offset:3px; }
+  .actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:28px;align-items:center}
+  .btn{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:#F5F3EF;
+    border-radius:999px;padding:16px 28px;font-size:15px;font-weight:600;text-decoration:none;
+    min-height:52px;transition:transform .18s ease,box-shadow .18s ease}
+  .btn .dot{width:9px;height:9px;border-radius:50%;background:var(--copper);flex:none}
+  .btn .arr{transition:transform .18s ease}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,26,26,.22)}
+  .btn:hover .arr{transform:translateX(4px)}
+  .btn-note{font-size:12.5px;color:var(--muted);line-height:1.55}
 
-  /* masthead */
-  .masthead{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:26px; }
-  .mast-left{ display:flex; align-items:flex-start; gap:15px; }
-  .bigday{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-weight:700; font-size:clamp(54px,15vw,72px); line-height:0.8; letter-spacing:-0.03em; }
-  .datecol{ padding-top:5px; }
-  .datecol .mname{ font-size:13px; font-weight:700; letter-spacing:0.02em; text-transform:uppercase; }
-  .datecol .yr{ font-size:13px; color:var(--muted); }
-  .datecol .wd{ font-size:12px; color:var(--muted); margin-top:2px; }
-  .brandcol{ text-align:right; }
-  .brandname{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-weight:700; font-size:23px; letter-spacing:-0.01em; }
-  .brandname .dot{ color:var(--accent); }
-  .tagline{ font-size:12.5px; color:var(--muted); line-height:1.35; margin-top:4px; max-width:170px; }
+  .sec{margin-top:56px}
+  .sec-h{font-family:var(--serif);font-weight:600;font-size:clamp(22px,4vw,30px);
+    letter-spacing:-.015em;line-height:1.15}
+  .sec-s{margin-top:10px;font-size:15px;color:var(--ink-soft);line-height:1.6;max-width:56ch}
 
-  /* yesterday nudge */
-  .nudge{ display:flex; align-items:center; justify-content:space-between; gap:12px; background:rgba(255,255,255,0.7); border:1px solid var(--hairline); border-radius:14px; padding:13px 16px; margin-bottom:18px; animation:nudgeIn .4s ease; }
-  .nudge .ntext{ font-size:13.5px; color:var(--ink); line-height:1.4; }
-  .nudge .ntext b{ color:var(--accent-deep); }
-  .nudge .nactions{ display:flex; align-items:center; gap:6px; flex-shrink:0; }
-  .nudge a.review{ font-size:12px; font-weight:600; color:var(--accent-deep); text-decoration:none; white-space:nowrap; cursor:pointer; }
-  .nudge button.dismiss{ background:none; border:none; color:var(--muted); cursor:pointer; font-size:16px; line-height:1; padding:2px 4px; border-radius:6px; }
-  .nudge button.dismiss:hover{ background:rgba(0,0,0,0.05); }
+  /* what it catches */
+  .kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+  .kind{border-radius:18px;padding:18px 18px 16px;color:#fff}
+  .kind.task{background:var(--task)} .kind.reminder{background:var(--reminder)}
+  .kind.thought{background:var(--thought)}
+  .kind .kn{font-family:var(--serif);font-size:17px;font-weight:600}
+  .kind .kx{font-size:12.5px;margin-top:6px;opacity:.9;line-height:1.5}
+  @media(max-width:620px){.kinds{grid-template-columns:1fr}}
 
-  /* capture card */
-  .capture{ background:var(--card); border:1.5px solid var(--hairline); border-radius:18px; padding:6px 6px 6px; box-shadow:0 1px 2px rgba(26,25,22,.04), 0 10px 30px rgba(26,25,22,.05); transition:border-color .2s, box-shadow .2s; margin-bottom:14px; }
-  .capture:focus-within{ border-color:var(--accent); box-shadow:0 1px 2px rgba(26,25,22,.04), 0 14px 38px rgba(176,125,63,.13); }
-  .capture textarea{ width:100%; border:none; outline:none; resize:none; background:transparent; font-family:inherit; font-size:17px; line-height:1.5; color:var(--ink); padding:16px 16px 6px; min-height:56px; }
-  .capture textarea::placeholder{ color:#A8A398; }
-  .capture-bottom{ display:flex; align-items:center; justify-content:space-between; padding:4px 12px 10px; }
-  .hint{ font-size:11.5px; color:var(--muted); }
-  .hint kbd{ font-family:inherit; background:var(--bg); border:1px solid var(--hairline); border-radius:5px; padding:1px 6px; font-size:10.5px; }
-  .save{ border:none; border-radius:6px; background:#B4552D; color:#fff; font-family:inherit; font-size:12px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:10px 22px; cursor:pointer; transition:transform .15s ease, opacity .2s ease, background .2s ease; }
-  .save:hover:not(:disabled){ transform:translateY(-1px); background:#9A4522; }
-  .save:disabled{ opacity:0.4; cursor:default; }
+  /* install */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
+  .step{background:var(--card);border:1px solid var(--hairline);border-radius:18px;padding:20px}
+  .step .n{font-family:var(--mono);font-size:11px;color:var(--copper-deep);letter-spacing:.06em}
+  .step b{display:block;font-size:15px;margin-top:8px;color:var(--ink)}
+  .step p{font-size:13.5px;color:var(--muted);margin-top:5px;line-height:1.5}
+  @media(max-width:620px){.steps{grid-template-columns:1fr}}
 
-  /* search */
-  .toolbar{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin:18px 2px 12px; }
-  .tabs{ display:flex; gap:7px; }
-  .tab{ border:1.5px solid var(--hairline); background:var(--panel-2); border-radius:999px; padding:8px 16px; font-size:12.5px; font-weight:600; color:var(--muted); cursor:pointer; font-family:inherit; transition:all .15s ease; }
-  .tab:hover{ filter:brightness(0.97); }
-  .tab.active{ background:var(--ink); border-color:var(--ink); color:#fff; }
-  .tab .ct{ opacity:0.7; font-weight:500; }
-  .searchbtn{ width:38px; height:38px; border-radius:50%; border:1.5px solid var(--hairline); background:var(--panel-2); cursor:pointer; color:var(--muted); font-size:15px; display:flex; align-items:center; justify-content:center; transition:all .15s ease; flex-shrink:0; }
-  .searchbtn:hover{ border-color:var(--accent-soft); color:var(--ink); }
-  .searchbtn.on{ background:var(--accent); border-color:var(--accent); color:#fff; }
-  .searchbox{ overflow:hidden; max-height:0; opacity:0; transition:max-height .25s ease, opacity .2s ease, margin .25s ease; margin:0 2px; }
-  .searchbox.open{ max-height:60px; opacity:1; margin:0 2px 12px; }
-  .searchbox input{ width:100%; border:1.5px solid var(--hairline); border-radius:12px; padding:12px 16px; font-family:inherit; font-size:15px; background:#fff; color:var(--ink); outline:none; }
-  .searchbox input:focus{ border-color:var(--accent); box-shadow:0 0 0 4px rgba(176,125,63,.08); }
+  .facts{display:flex;flex-wrap:wrap;gap:9px;margin-top:24px}
+  .fact{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;border-radius:999px;
+    padding:8px 14px;background:var(--panel);border:1px solid var(--hairline);color:var(--ink-soft)}
 
-  /* list */
-  .list{ display:flex; flex-direction:column; gap:9px; }
-  .grouphdr{ font-size:11px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); margin:16px 2px 2px; display:flex; align-items:center; gap:8px; }
-  .grouphdr .gct{ color:var(--accent); font-weight:600; }
-  .item{ display:flex; align-items:flex-start; gap:13px; background:var(--card); border:1.5px solid var(--hairline); border-radius:15px; padding:15px 16px; animation:itemIn .3s ease; transition:border-color .15s ease, box-shadow .15s ease; }
-  .item:focus-within{ border-color:var(--accent); }
-  .item.removing{ animation:itemOut .3s ease forwards; }
-  .item.done{ opacity:0.62; }
-  .check{ width:21px; height:21px; border-radius:50%; border:2px solid var(--line); background:transparent; cursor:pointer; flex-shrink:0; margin-top:1px; display:flex; align-items:center; justify-content:center; color:#fff; font-size:11px; transition:all .15s ease; padding:0; }
-  .check:hover{ border-color:var(--accent); }
-  .check.on{ background:var(--accent); border-color:var(--accent); }
-  .item-body{ flex:1; min-width:0; }
-  .item-text{ font-size:15.5px; line-height:1.45; color:var(--ink); word-wrap:break-word; }
-  .item.done .item-text{ text-decoration:line-through; text-decoration-color:var(--line); color:var(--muted); }
-  .item-meta{ display:flex; align-items:center; gap:9px; margin-top:7px; }
-  .chip{ display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600; letter-spacing:0.02em; padding:3px 9px; border-radius:999px; }
-  .chip .cdot{ width:6px; height:6px; border-radius:50%; }
-  .chip.thought{ background:rgba(94,122,92,0.12); color:var(--thought); }
-  .chip.thought .cdot{ background:var(--thought); }
-  .chip.task{ background:rgba(63,111,168,0.12); color:var(--task); }
-  .chip.task .cdot{ background:var(--task); }
-  .chip.reminder{ background:rgba(176,86,63,0.12); color:var(--reminder); }
-  .chip.reminder .cdot{ background:var(--reminder); }
-  .time{ font-size:11.5px; color:var(--muted); }
-  .del{ background:none; border:none; color:var(--line); cursor:pointer; font-size:17px; line-height:1; padding:3px 5px; border-radius:7px; flex-shrink:0; opacity:0; transition:opacity .15s ease, background .15s ease, color .15s ease; }
-  .item:hover .del, .item:focus-within .del{ opacity:1; }
-  .del:hover{ background:rgba(176,86,63,0.1); color:var(--reminder); }
+  /* email gate */
+  .gate{margin-top:56px;background:var(--panel);border:1px solid var(--hairline);
+    border-radius:var(--radius);padding:clamp(24px,4vw,34px)}
+  .gate h2{font-family:var(--serif);font-weight:600;font-size:clamp(22px,4vw,30px);
+    letter-spacing:-.015em;line-height:1.15}
+  .gate h2 .dot{color:var(--copper)}
+  .gate p{margin-top:12px;font-size:14.5px;color:var(--ink-soft);line-height:1.6;max-width:54ch}
+  .gate p b{color:var(--ink)}
+  .gate form{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+  .gate input[type=email]{flex:1;min-width:220px;border:1px solid var(--hairline);
+    border-radius:14px;padding:14px 16px;font-size:15px;background:#fff;color:var(--ink);outline:none}
+  .gate input[type=email]:focus{outline:2px solid var(--copper);outline-offset:0;border-color:var(--copper)}
+  .gate button{background:var(--ink);color:#F5F3EF;border-radius:999px;padding:14px 26px;
+    font-size:14.5px;font-weight:600;min-height:50px;display:inline-flex;align-items:center;gap:11px;
+    transition:transform .18s ease,box-shadow .18s ease,opacity .18s ease}
+  .gate button .dot{width:8px;height:8px;border-radius:50%;background:var(--copper);flex:none}
+  .gate button:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,26,26,.22)}
+  .gate button:disabled{opacity:.5;cursor:wait;transform:none;box-shadow:none}
+  .err{display:none;margin-top:11px;font-size:13px;color:#A63A2B}
+  .fine{margin-top:13px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
-  /* empty */
-  .empty{ text-align:center; padding:54px 24px; }
-  .empty .etitle{ font-size:18px; font-weight:700; letter-spacing:-0.01em; margin-bottom:8px; }
-  .empty .esub{ font-size:14px; color:var(--muted); line-height:1.5; max-width:320px; margin:0 auto; }
-
-  .footer{ margin-top:40px; text-align:center; font-size:11.5px; color:var(--muted); line-height:1.7; }
-  .footer .brand{ font-weight:600; color:var(--ink); }
-  .footer a{ color:var(--accent-deep); text-decoration:none; }
-
-  @keyframes itemIn{ from{opacity:0; transform:translateY(-10px) scale(.985);} to{opacity:1; transform:none;} }
-  @keyframes itemOut{ to{opacity:0; transform:translateX(-12px); max-height:0; padding-top:0; padding-bottom:0; margin:0;} }
-  @keyframes nudgeIn{ from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:none;} }
-
-  @media (max-width:520px){
-    .wrap{ padding:24px 14px 84px; }
-    .tagline{ display:none; }
-  }
-  @media (prefers-reduced-motion: reduce){
-    *{ animation:none !important; transition:none !important; }
-    html{ scroll-behavior:auto; }
-  }
+  .foot{margin-top:56px;padding-top:26px;border-top:1px solid var(--hairline);
+    font-size:12px;color:var(--muted);line-height:1.8}
+  .foot a{color:var(--copper-deep);text-decoration:underline;text-underline-offset:3px}
 </style>
 </head>
 <body>
-  <div class="wrap">
+<div class="wrap">
 
-    <header class="som-hero">
-      <div class="som-k mono">Som · free capture tool · Twi for “take it”</div>
-      <h1>Never lose another thought<span class="period">.</span></h1>
-      <p class="som-lede">A thought hits — a task, an idea, something a kid needs — and it’s gone by the time your hands are free. <b>Som catches it in one field before it slips.</b> No categories, no login, no friction. It figures out if it’s an idea, a to-do, or a reminder, and holds it.</p>
-      <div class="som-who"><b>Built for:</b> solo owners and busy parents running a business — and a household — from their head.</div>
-      <div class="som-try">↓ This is the real tool — try it right here ↓</div>
-    </header>
+  <header>
+    <div class="kicker">Som &middot; free app &middot; Twi for &ldquo;take it&rdquo;</div>
+    <h1>Never lose another thought<span class="dot">.</span></h1>
+    <p class="lede">A thought hits — a job to quote, an idea, something a kid needs — and it's
+      gone by the time your hands are free. <b>Som catches it in one field before it slips.</b>
+      No categories to pick, no login, no friction. It works out whether it's an idea, a to-do,
+      or a reminder, and holds it.</p>
+    <div class="who"><b>Built for:</b> solo owners and busy parents running a business — and a
+      household — out of their own head.</div>
 
-    <div class="masthead">
-      <div class="mast-left">
-        <div class="bigday" id="bigDay">—</div>
-        <div class="datecol">
-          <div class="mname" id="monthName">—</div>
-          <div class="yr" id="year">—</div>
-          <div class="wd" id="weekday">—</div>
-        </div>
-      </div>
-      <div class="brandcol">
-        <div class="brandname">som<span class="dot">.</span></div>
-        <div class="tagline">Catch the thought before it's gone.</div>
-      </div>
+    <div class="actions">
+      <a class="btn" href="/som-app/"><span class="dot"></span> Open Som &mdash; it's free <span class="arr">&rarr;</span></a>
+      <span class="btn-note">Nothing to buy, nothing to unzip.<br>It opens and works right away.</span>
     </div>
+  </header>
 
-    <div class="nudge" id="nudge" style="display:none;">
-      <div class="ntext" id="nudgeText"></div>
-      <div class="nactions">
-        <a class="review" id="nudgeReview">Review →</a>
-        <button class="dismiss" id="nudgeDismiss" aria-label="Dismiss">×</button>
-      </div>
+  <section class="sec">
+    <h2 class="sec-h">One field. It sorts the rest.</h2>
+    <p class="sec-s">You never pick a category — that's the whole point. You type the thing and
+      keep moving. Som reads it and files it for you.</p>
+    <div class="kinds">
+      <div class="kind task"><div class="kn">To-dos</div>
+        <div class="kx">&ldquo;Call Rita back about the quote&rdquo;</div></div>
+      <div class="kind reminder"><div class="kn">Reminders</div>
+        <div class="kx">&ldquo;Dentist tomorrow at 3pm&rdquo;</div></div>
+      <div class="kind thought"><div class="kn">Ideas</div>
+        <div class="kx">&ldquo;Referral card in the welcome pack&rdquo;</div></div>
     </div>
+  </section>
 
-    <div class="capture">
-      <textarea id="draft" rows="1" placeholder="What's on your mind?" aria-label="Capture a thought"></textarea>
-      <div class="capture-bottom">
-        <span class="hint"><kbd>Enter</kbd> to save · <kbd>Shift</kbd>+<kbd>Enter</kbd> for a line</span>
-        <button class="save" id="saveBtn" disabled>Save</button>
-      </div>
+  <section class="sec" id="install">
+    <h2 class="sec-h">Put it on your phone in two taps.</h2>
+    <p class="sec-s">Som installs straight from your browser — no App Store, no account, nothing
+      to unzip. Once it's on your home screen it opens fullscreen and works with no signal at all.</p>
+    <div class="steps">
+      <div class="step"><span class="n">01</span><b>Open Som</b>
+        <p>Tap the button above, on the phone you want it on.</p></div>
+      <div class="step"><span class="n">02</span><b>Tap Share</b>
+        <p>The square with the arrow, at the bottom of Safari.</p></div>
+      <div class="step"><span class="n">03</span><b>Add to Home Screen</b>
+        <p>Som lands as an app icon. Open it like anything else.</p></div>
     </div>
-
-    <div class="toolbar">
-      <div class="tabs" id="tabs">
-        <button class="tab active" data-filter="open">Open <span class="ct" id="ctOpen"></span></button>
-        <button class="tab" data-filter="all">All</button>
-        <button class="tab" data-filter="done">Done</button>
-      </div>
-      <button class="searchbtn" id="searchBtn" aria-label="Search">⌕</button>
+    <div class="facts">
+      <span class="fact">Free forever</span>
+      <span class="fact">No account</span>
+      <span class="fact">Works offline</span>
+      <span class="fact">Saves to your device</span>
+      <span class="fact">Nothing tracked</span>
     </div>
+  </section>
 
-    <div class="searchbox" id="searchBox">
-      <input type="text" id="searchInput" placeholder="Search your captures…" aria-label="Search captures">
-    </div>
+  <section class="gate" id="get">
+    <h2>Want the link sent to you<span class="dot">?</span></h2>
+    <p>If you're at a computer right now, this is the easy way to get Som onto your phone —
+      I'll email you the link so you can open it there and install it in two taps.
+      <b>You'll also get my build notes now and then</b>, and you can leave anytime.</p>
+    <form id="somForm" novalidate>
+      <input type="email" id="somEmail" name="email" placeholder="you@yourbusiness.com"
+             aria-label="Email address" required autocomplete="email" inputmode="email">
+      <button type="submit" id="somBtn"><span class="dot"></span> Send me the link</button>
+    </form>
+    <p class="err" id="somErr">That didn't go through — check the email and try again.</p>
+    <p class="fine">Free &middot; no card &middot; leave anytime</p>
+  </section>
 
-    <div class="list" id="list"></div>
-
-    <section class="som-get" id="get">
-      <h2>Take Som with you<span class="dot">.</span> Free<span class="dot">.</span></h2>
-      <p><b>What changes:</b> your head stops being the storage unit. The invoice you almost forgot, the 2am idea — caught before it slips. One small file, nothing to install, works offline, yours forever. No account, no subscription. I’ll email it over, plus my build notes now and then (unsubscribe anytime).</p>
-      <form id="somForm" novalidate>
-        <input type="email" id="somEmail" name="email" placeholder="you@yourbusiness.com" aria-label="Email address" required autocomplete="email" inputmode="email">
-        <button type="submit" id="somBtn">get som free</button>
-      </form>
-      <p class="som-err" id="somErr">That didn’t go through — check the email and try again.</p>
-      <p class="som-fine">Instant download on the next page, plus a copy to your inbox.</p>
-    </section>
-
-    <div class="footer">
-      <div class="brand">Som · by NaNa Frimpomaa</div>
-      Saves to this device · works offline · yours to keep
-    </div>
-
+  <div class="foot">
+    <b>Som &middot; by NaNa Frimpomaa</b><br>
+    Saves to your device &middot; works offline &middot; yours to keep<br>
+    Want your booking, leads, and follow-up running without you in it?
+    That's <a href="/client-catcher">the Client Catcher</a>.
   </div>
+
+</div>
 
 <script>
 (function(){
   "use strict";
-
-  var KEY='thoughtcapture.items.v2', OLD_KEY='thoughtcapture.items.v1', NUDGE_KEY='thoughtcapture.nudge';
-
-  // ---------- classification (faithful to the original) ----------
-  function classifyText(text){
-    var t=(text||'').trim();
-    if(!t) return 'thought';
-    if(/^(idea|note|thought|wondering|wonder|maybe|hmm|observation|question)\b/i.test(t)) return 'thought';
-    var reminderRe=/\b(today|tomorrow|tonight|yesterday|monday|tuesday|wednesday|thursday|friday|saturday|sunday|next\s+(week|month|year|monday|tuesday|wednesday|thursday|friday|saturday|sunday)|this\s+(week|weekend|month|afternoon|evening|morning)|in\s+\d+\s*(min|mins|minutes|hour|hours|hr|hrs|day|days|week|weeks|month|months)|at\s+\d{1,2}(:\d{2})?\s*(am|pm)?|by\s+\d{1,2}(:\d{2})?\s*(am|pm)?|by\s+(eod|noon|midnight|tomorrow|tonight|monday|tuesday|wednesday|thursday|friday|saturday|sunday|next\s+week|the\s+\w+)|before\s+\d{1,2}|\d{1,2}(:\d{2})?\s*(am|pm))\b/i;
-    if(reminderRe.test(t)) return 'reminder';
-    var taskVerbs=new Set(['call','email','text','message','dm','write','send','pick','buy','order','fix','finish','schedule','book','reschedule','review','check','remind','make','create','prepare','plan','draft','update','reply','respond','pay','clean','wash','file','submit','print','sign','ship','deliver','ask','tell','meet','set','do','get','go','find','build','design','test','launch','publish','post','share','add','remove','delete','rename','move','copy','organize','sort','collect','gather','setup']);
-    var first=t.toLowerCase().split(/[\s,]+/)[0];
-    if(taskVerbs.has(first)) return 'task';
-    return 'thought';
-  }
-
-  function relTime(createdAt){
-    var s=Math.max(0,(Date.now()-createdAt)/1000);
-    if(s<45) return 'just now';
-    var m=Math.floor(s/60);
-    if(m<1) return 'just now';
-    if(m<60) return m+'m ago';
-    var h=Math.floor(m/60);
-    if(h<24) return h+'h ago';
-    var d=Math.floor(h/24);
-    return d+'d ago';
-  }
-
-  var TYPE_LABEL={thought:'thought', task:'to-do', reminder:'reminder'};
-
-  // ---------- state ----------
-  var items=loadItems(), draft='', filter='open', query='', searchOpen=false;
-
-  function loadItems(){
-    try{ var raw=localStorage.getItem(KEY); if(raw){ var p=JSON.parse(raw); if(Array.isArray(p)) return p; } }catch(e){}
-    // migrate v1
-    try{ var r1=localStorage.getItem(OLD_KEY); if(r1){ var p1=JSON.parse(r1); if(Array.isArray(p1)) return p1.map(function(it){ return Object.assign({},it,{type:classifyText(it.text),archived:false}); }); } }catch(e){}
-    // First visit: an empty list, so the real empty state can explain the tool.
-    return [];
-  }
-  function save(){ try{ localStorage.setItem(KEY, JSON.stringify(items)); }catch(e){} }
-
-  // ---------- date masthead ----------
-  function paintDate(){
-    var d=new Date();
-    var months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-    var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    el('bigDay').textContent=d.getDate();
-    el('monthName').textContent=months[d.getMonth()];
-    el('year').textContent=d.getFullYear();
-    el('weekday').textContent=days[d.getDay()];
-  }
-
-  // ---------- yesterday nudge ----------
-  function setupNudge(){
-    var todayKey=new Date().toDateString();
-    var dismissed=false;
-    try{ if(localStorage.getItem(NUDGE_KEY)===todayKey) dismissed=true; }catch(e){}
-    // count items created yesterday
-    var now=new Date(), y=new Date(now); y.setDate(now.getDate()-1);
-    var yKey=y.toDateString();
-    var yItems=items.filter(function(it){ return new Date(it.createdAt).toDateString()===yKey; });
-    var yOpen=yItems.filter(function(it){ return !it.done; }).length;
-    if(dismissed || yItems.length===0){ el('nudge').style.display='none'; return; }
-    el('nudge').style.display='flex';
-    el('nudgeText').innerHTML='You captured <b>'+yItems.length+'</b> '+(yItems.length===1?'thing':'things')+' yesterday'+(yOpen?' — '+yOpen+' still open.':'.');
-    el('nudgeReview').onclick=function(){ filter='all'; query=''; renderTabs(); render(); el('nudge').style.display='none'; window.scrollTo({top:300,behavior:'smooth'}); };
-    el('nudgeDismiss').onclick=function(){ try{ localStorage.setItem(NUDGE_KEY, todayKey); }catch(e){} el('nudge').style.display='none'; };
-  }
-
-  // ---------- rendering ----------
-  function visibleItems(){
-    var out=items.filter(function(it){ return !it.archived; });
-    if(filter==='open') out=out.filter(function(it){ return !it.done; });
-    else if(filter==='done') out=out.filter(function(it){ return it.done; });
-    if(query.trim()){ var q=query.trim().toLowerCase(); out=out.filter(function(it){ return it.text.toLowerCase().indexOf(q)>-1; }); }
-    out.sort(function(a,b){ return b.createdAt-a.createdAt; });
-    return out;
-  }
-
-  function render(){
-    var list=el('list'); list.innerHTML='';
-    var vis=visibleItems();
-    if(vis.length===0){ list.appendChild(emptyState()); return; }
-    vis.forEach(function(it){ list.appendChild(itemEl(it)); });
-  }
-
-  function emptyState(){
-    var d=document.createElement('div'); d.className='empty';
-    var t='Nothing here yet.', s='Type a thought above and press Enter. Som figures out if it’s an idea, a to-do, or a reminder.';
-    var total=items.filter(function(it){ return !it.archived; }).length;
-    if(query.trim()){ t='No matches.'; s='Nothing matches “'+query.trim()+'”. Try another word.'; }
-    else if(total===0){ /* first visit: keep the explainer */ }
-    else if(filter==='done'){ t='Nothing done yet.'; s='Items you check off will gather here.'; }
-    else if(filter==='open'){ t='All clear.'; s='No open items. Your mind can rest.'; }
-    d.innerHTML='<div class="etitle">'+t+'</div><div class="esub">'+s+'</div>';
-    return d;
-  }
-
-  function itemEl(it){
-    var row=document.createElement('div');
-    row.className='item'+(it.done?' done':'');
-    var checked=it.done?' on':'';
-    var label=TYPE_LABEL[it.type]||'thought';
-    row.innerHTML=
-      '<button class="check'+checked+'" aria-label="Mark done">'+(it.done?'✓':'')+'</button>'+
-      '<div class="item-body">'+
-        '<div class="item-text"></div>'+
-        '<div class="item-meta">'+
-          '<span class="chip '+it.type+'"><span class="cdot"></span>'+label+'</span>'+
-          '<span class="time">'+relTime(it.createdAt)+'</span>'+
-        '</div>'+
-      '</div>'+
-      '<button class="del" aria-label="Delete">×</button>';
-    row.querySelector('.item-text').textContent=it.text;
-    row.querySelector('.check').onclick=function(){ it.done=!it.done; save(); renderTabs(); render(); };
-    row.querySelector('.del').onclick=function(){
-      row.classList.add('removing');
-      setTimeout(function(){ items=items.filter(function(x){ return x.id!==it.id; }); save(); renderTabs(); render(); }, 280);
-    };
-    return row;
-  }
-
-  function renderTabs(){
-    var open=items.filter(function(it){ return !it.archived && !it.done; }).length;
-    el('ctOpen').textContent=open?'('+open+')':'';
-    [].forEach.call(document.querySelectorAll('.tab'), function(t){
-      t.classList.toggle('active', t.getAttribute('data-filter')===filter);
-    });
-  }
-
-  // ---------- capture ----------
-  function addThought(){
-    var text=draft.trim();
-    if(!text) return;
-    items.unshift({ id:'i'+Date.now()+Math.random().toString(36).slice(2,6), text:text, type:classifyText(text), done:false, archived:false, createdAt:Date.now() });
-    draft=''; var ta=el('draft'); ta.value=''; autoGrow(ta); el('saveBtn').disabled=true;
-    save(); renderTabs(); render(); ta.focus();
-  }
-
-  function autoGrow(ta){ ta.style.height='auto'; ta.style.height=Math.max(56, ta.scrollHeight)+'px'; }
-
-  // ---------- wire up ----------
-  function el(id){ return document.getElementById(id); }
-
-  var ta=el('draft');
-  ta.addEventListener('input', function(){ draft=ta.value; el('saveBtn').disabled=!draft.trim(); autoGrow(ta); });
-  ta.addEventListener('keydown', function(e){
-    if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); addThought(); }
+  var f=document.getElementById('somForm');
+  if(!f) return;
+  f.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var em=document.getElementById('somEmail').value.trim(),
+        err=document.getElementById('somErr'),
+        btn=document.getElementById('somBtn');
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ err.style.display='block'; return; }
+    err.style.display='none'; btn.disabled=true; btn.textContent='Sending…';
+    // NOTE: this source string is matched by the som-responder automation. Do not rename.
+    fetch('https://formspree.io/f/mnjkqydb',{method:'POST',
+      headers:{'Accept':'application/json','Content-Type':'application/json'},
+      body:JSON.stringify({email:em,source:'som-free-download'})})
+    .then(function(r){ if(r.ok){ window.location.href='thank-you.html'; } else { throw 0; } })
+    .catch(function(){ btn.disabled=false;
+      btn.innerHTML='<span class="dot"></span> Send me the link'; err.style.display='block'; });
   });
-  el('saveBtn').addEventListener('click', addThought);
-
-  el('tabs').addEventListener('click', function(e){
-    var t=e.target.closest('.tab'); if(!t) return;
-    filter=t.getAttribute('data-filter'); renderTabs(); render();
-  });
-
-  el('searchBtn').addEventListener('click', function(){
-    searchOpen=!searchOpen;
-    el('searchBox').classList.toggle('open', searchOpen);
-    el('searchBtn').classList.toggle('on', searchOpen);
-    if(searchOpen){ el('searchInput').focus(); } else { query=''; el('searchInput').value=''; render(); }
-  });
-  el('searchInput').addEventListener('input', function(){ query=el('searchInput').value; render(); });
-  el('searchInput').addEventListener('keydown', function(e){ if(e.key==='Escape'){ el('searchBtn').click(); } });
-
-  // refresh relative times every minute
-  setInterval(render, 60000);
-
-  // ---------- free download gate ----------
-  var somForm=el('somForm');
-  if(somForm){
-    somForm.addEventListener('submit', function(ev){
-      ev.preventDefault();
-      var em=el('somEmail').value.trim(), err=el('somErr'), btn=el('somBtn');
-      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){ err.style.display='block'; return; }
-      err.style.display='none'; btn.disabled=true; btn.textContent='sending…';
-      fetch('https://formspree.io/f/mnjkqydb',{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},body:JSON.stringify({email:em,source:'som-free-download'})})
-      .then(function(r){ if(r.ok){ window.location.href='thank-you.html'; } else { throw 0; } })
-      .catch(function(){ btn.disabled=false; btn.textContent='get som free'; err.style.display='block'; });
-    });
-  }
-
-  // init
-  paintDate();
-  setupNudge();
-  renderTabs();
-  render();
 })();
 </script>
 <script src="fsnav.js?v=722a" defer></script>
