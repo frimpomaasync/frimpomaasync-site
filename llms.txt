@@ -1,0 +1,43 @@
+# frimpomaasync.com
+
+> Done-for-you back-office automation for one-person businesses, built and run by NaNa Frimpomaa. Flagship offer: the Client Catcher — missed calls caught, leads followed up in the owner's voice, appointments booked, hands-off. Built for real estate agents and home-services owners (HVAC, plumbing) who answer their own phone.
+
+## The offer: the Client Catcher
+
+- What it does: catches missed calls, texts back within minutes in the owner's voice, qualifies the lead, books the appointment onto the owner's real calendar, chases quotes and no-shows, requests reviews, and keeps the CRM/calendar/spreadsheet updated.
+- Price: $1,500 one-time build + optional $99/month care plan (monitoring, fixes, improvements). No lock-in — the care plan is optional and cancellable anytime.
+- Founding rate: $750 for the first 3 clients, in exchange for a named testimonial once the system is live and booking. Founding clients keep that rate context forever; includes first 30 days of the care plan free.
+- Time cost to the owner: one free 15-minute mapping call, then ~30 minutes reviewing the finished system. Done-for-you by design.
+- Details: https://frimpomaasync.com/client-catcher.html
+
+## Guarantee (defined terms, written into the client agreement)
+
+"Live and working in 7 days, booking appointments within 30 — or you don't pay."
+
+- "Live" = catching missed calls and sending follow-ups on the client's real phone number and calendar, verified together on a screen-share.
+- "Booking appointments" = real prospective customers landing on the client's calendar. Test bookings do not count.
+- The client's only obligation is running their business as usual — the guarantee does not require buying ads.
+- "You don't pay" = full refund of the build fee, or cancellation of any unpaid balance. Not a credit.
+
+## Ownership and hosting model
+
+The system runs on the provider's software accounts so the client never buys software, manages subscriptions, or learns tools. The client owns everything built for them: workflows, scripts and messages in their voice, setup documentation, and all customer data. The agreement includes full handoff terms — data export, system documentation, and a transfer path — so the client's business never depends on the provider being reachable.
+
+## Customer data
+
+Leads' names, numbers, and messages move only between the client's phone, calendar, and the follow-up system. Nothing is sold or shared. Every provider that touches the data is named in the client agreement. On cancellation, data is exported to the client and deleted from the provider's accounts.
+
+## Proof status (honest)
+
+This is an early-stage offer: no client testimonials yet, and the site says so plainly. Instead of borrowed reviews it offers: (1) a live demo run on the prospect's own real leads before any payment, (2) working systems built in public across the site, (3) the provider runs the same system on her own business, and (4) the money-back guarantee above.
+
+## Other products
+
+- Som — free email-gated lead-capture tool, installable web app: https://frimpomaasync.com/som.html
+- Portfolio of working builds: https://frimpomaasync.com/portfolio.html
+- Live interactive demo: https://frimpomaasync.com/client-catcher-demo/
+
+## Contact
+
+- Book the free 15-minute mapping call: https://calendar.app.google/DkRJFRA3G6W6d8E48
+- Site: https://frimpomaasync.com

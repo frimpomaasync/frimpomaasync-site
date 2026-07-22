@@ -21,7 +21,9 @@
  {"@type":"Question","name":"Do I need to buy any software or sign up for anything?","acceptedAnswer":{"@type":"Answer","text":"No. The whole system runs on my accounts — you don't sign up for anything, install anything, or pay any software bill. Your only tools stay the ones you already use: your phone, your calendar, your inbox."}},
  {"@type":"Question","name":"How much of my time does this take?","acceptedAnswer":{"@type":"Answer","text":"One free 15-minute mapping call, then about 30 minutes reviewing the finished system before it goes live. It's a done-for-you build."}},
  {"@type":"Question","name":"Will it work with what I already use?","acceptedAnswer":{"@type":"Answer","text":"It's built around your current setup — your existing phone number, Google or Outlook calendar, and whatever you use to track customers today."}},
- {"@type":"Question","name":"What happens if it doesn't get me bookings?","acceptedAnswer":{"@type":"Answer","text":"The guarantee is in the agreement: live and working in 7 days, booking appointments within 30 — or you don't pay."}}
+ {"@type":"Question","name":"If it runs on your accounts, what do I actually own?","acceptedAnswer":{"@type":"Answer","text":"Everything built for you: the workflows, the scripts in your voice, the setup documentation, and all of your customer data. It runs on the provider's accounts as a convenience, and the agreement includes full handoff terms — data export, system documentation, and a transfer path if you ever part ways."}},
+ {"@type":"Question","name":"Where does my customers' information live, and what happens if I cancel?","acceptedAnswer":{"@type":"Answer","text":"Leads' names, numbers, and messages move only between your phone, your calendar, and the follow-up system. Nothing is sold or shared, every provider that touches it is named in the agreement, and on cancellation the data is exported to the client and deleted."}},
+ {"@type":"Question","name":"What happens if it doesn't get me bookings?","acceptedAnswer":{"@type":"Answer","text":"The guarantee is in the agreement: live and working in 7 days, booking appointments within 30 — or you don't pay. Defined terms: booking means real prospective customers on the calendar (test bookings don't count), and not paying means a full refund of the build fee or a cancelled balance."}}
 ]}
 </script>
 <style>
@@ -225,6 +227,10 @@ h1,h2,h3{color:var(--ink)}
 .guarantee .gl{font-family:var(--mono);font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:var(--copper);font-weight:700}
 .guarantee p{font-family:var(--serif);font-size:clamp(1.2rem,3vw,1.65rem);line-height:1.4;margin-top:14px}
 .guarantee small{display:block;font-size:.8rem;color:#A9B1C8;margin-top:12px}
+.gdefs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0 28px;margin-top:26px;border-top:1px solid #E7E3DC}
+.gdef{padding:18px 0;border-bottom:1px solid #E7E3DC}
+.gdef .gk{font-family:var(--mono);font-size:.62rem;letter-spacing:.22em;text-transform:uppercase;color:var(--copper);font-weight:700}
+.gdef p{font-size:.88rem;color:var(--ink2);line-height:1.65;margin-top:8px}
 
 .founding{border:1px solid var(--copper);border-radius:12px;padding:26px 26px;background:var(--panel2);display:grid;grid-template-columns:1fr auto;gap:20px;align-items:center}
 .founding h3{font-family:var(--serif);font-size:1.2rem}
@@ -492,8 +498,8 @@ h1,h2,h3{color:var(--ink)}
   <div class="sec" id="leak">
     <div class="shead rv"><span class="no">/01</span><h2>The leak in your business</h2></div>
     <div class="subh rv">You're not losing to a better competitor. You're losing to a faster one.</div>
-    <div class="prob rv"><div class="n">30–40%</div><div>of inbound calls to home-services businesses go unanswered in peak season — you're on a roof, under a sink, or with a client.<span class="src">source: industry call-tracking studies, home-services inbound calls</span></div></div>
-    <div class="prob rv d1"><div class="n">$3k–$10k</div><div>is what a single missed call can cost in HVAC or plumbing — a replacement system, a repipe, a listing. <b>Miss two calls a week and that's a six-figure leak per year.</b><span class="src">source: average ticket ranges, HVAC/plumbing trade publications</span></div></div>
+    <div class="prob rv"><div class="n">30–40%</div><div>of inbound calls to home-services businesses go unanswered in peak season — you're on a roof, under a sink, or with a client.<span class="src">source: call-tracking industry reports on home-services answer rates — and the number that actually matters is yours: on the free mapping call we count YOUR missed calls, straight from your phone log</span></div></div>
+    <div class="prob rv d1"><div class="n">$3k–$10k</div><div>is what a single missed call can cost in HVAC or plumbing — a replacement system, a repipe, a listing. <b>Miss two calls a week and that's a six-figure leak per year.</b><span class="src">source: published cost guides for HVAC replacement and repiping (Angi and similar) — check your own average ticket against it</span></div></div>
     <div class="prob rv d2"><div class="n">78%</div><div>of customers buy from the business that responds <b>first</b>. Not the best one. Not the cheapest one. The first one.<span class="src">source: Lead Connect follow-up study, widely cited in sales-response research</span></div></div>
   </div>
 
@@ -512,7 +518,7 @@ h1,h2,h3{color:var(--ink)}
         <p>Send it within 5 minutes of any missed call. Two time options, one question. That's the whole trick — you answer first <b>and</b> make booking a one-word reply.</p>
       </div>
       <div class="stealside rv d1">
-        <div class="whybox"><div class="wn">21×</div><div>more likely to qualify a lead when you respond within 5 minutes instead of 30.<span class="src">source: InsideSales response-time study, cited in Harvard Business Review</span></div></div>
+        <div class="whybox"><div class="wn">21×</div><div>more likely to qualify a lead when you respond within 5 minutes instead of 30.<span class="src">source: InsideSales lead-response study — see <a href="https://hbr.org/2011/03/the-short-life-of-online-sales-leads" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">Harvard Business Review, “The Short Life of Online Sales Leads” (2011)</a></span></div></div>
         <div class="cadence">
           <div class="cstep"><span class="cn">1</span><div><b>Within 5 min:</b> the text above</div></div>
           <div class="cstep"><span class="cn">2</span><div><b>Within 1 hour:</b> one call — voicemail is fine, mention the text</div></div>
@@ -591,7 +597,7 @@ h1,h2,h3{color:var(--ink)}
     <div class="shead rv"><span class="no">/04</span><h2>How it works — 3 steps, hands-off</h2></div>
     <div class="steps rv" id="steps">
       <div class="step"><div class="n">1</div><h3>Map</h3><p>One free 15-minute call. We walk through where leads, bookings, and callbacks slip through your cracks today.</p></div>
-      <div class="step"><div class="n">2</div><h3>Build — on my stack</h3><p>I build and run your system on <b>my</b> accounts. You don't buy software, manage a subscription, or learn a tool. Zero tech on your plate.</p></div>
+      <div class="step"><div class="n">2</div><h3>Build — on my stack</h3><p>I build and run your system on <b>my</b> accounts. You don't buy software, manage a subscription, or learn a tool. Zero tech on your plate — and you still own everything: <a href="#faq" style="color:inherit;text-decoration:underline">what that means, exactly</a>.</p></div>
       <div class="step"><div class="n">3</div><h3>Live in 7 days</h3><p>Your system is catching leads and chasing follow-ups within a week. I monitor and tune it — that's the care plan.</p></div>
     </div>
 
@@ -855,6 +861,12 @@ h1,h2,h3{color:var(--ink)}
       <p>“Live and working in 7 days, booking appointments within 30 — or you don't pay.”</p>
       <small>No fine print gymnastics. If the system isn't doing its job, the risk is mine.</small>
     </div>
+    <div class="gdefs rv d1">
+      <div class="gdef"><div class="gk">“Live” means</div><p>Catching missed calls and sending follow-ups on your real phone number and real calendar — verified together on a screen-share, not declared by me.</p></div>
+      <div class="gdef"><div class="gk">“Booking appointments” means</div><p>Real prospective customers landing on your calendar. Test bookings, my bookings, and friends doing you a favor don't count.</p></div>
+      <div class="gdef"><div class="gk">Your only part</div><p>Keep running your business as usual. The guarantee doesn't require you to buy ads or change how you get calls — it works on the calls you already miss.</p></div>
+      <div class="gdef"><div class="gk">“You don't pay” means</div><p>Your build fee comes back in full — or any unpaid balance is cancelled. Not a credit, not a discount on round two. These exact definitions go in the agreement.</p></div>
+    </div>
   </div>
 
   <!-- 06 FOUNDING -->
@@ -889,9 +901,11 @@ h1,h2,h3{color:var(--ink)}
     <div class="shead rv"><span class="no">/08</span><h2>Questions owners actually ask</h2></div>
     <div class="faq rv">
       <details><summary>Do I need to buy any software or sign up for anything?</summary><p>No. The whole system runs on my accounts — you don't sign up for anything, install anything, or pay any software bill. Your only tools stay the ones you already use: your phone, your calendar, your inbox.</p></details>
+      <details><summary>If it runs on your accounts, what do I actually own?</summary><p>Everything I build for you: the workflows, the scripts and messages written in your voice, the setup documentation, and every scrap of your customer data. Running it on my accounts is a convenience — it's how you get zero tech on your plate — not a leash. Your agreement includes the full handoff terms: if we ever part ways, you get your data exported, the documentation for how your system works, and a transfer path so nothing about your business depends on me being reachable.</p></details>
+      <details><summary>Where does my customers' information live — and what happens if I cancel?</summary><p>Your leads' names, numbers, and messages move between your phone, your calendar, and the follow-up system — that's it. Nothing is sold, shared, or used for anything but running your business, and every provider that touches it is named in your agreement so you know exactly where it sits. Cancel anytime: your data is exported to you and then deleted from my accounts.</p></details>
       <details><summary>How much of my time does this take?</summary><p>One free 15-minute mapping call, then about 30 minutes reviewing the finished system before it goes live. That's the whole ask. It's a done-for-you build — that's the point.</p></details>
       <details><summary>Will it work with what I already use?</summary><p>It's built around your current setup — your existing phone number, Google or Outlook calendar, and whatever you use to track customers today (even if that's a notebook — the CRM Auto-Entry skill becomes your first real one).</p></details>
-      <details><summary>What happens if it doesn't get me bookings?</summary><p>The guarantee is in the agreement: live and working in 7 days, booking appointments within 30 — or you don't pay. The risk sits with me, where it belongs.</p></details>
+      <details><summary>What happens if it doesn't get me bookings?</summary><p>The guarantee is in the agreement: live and working in 7 days, booking appointments within 30 — or you don't pay. And those words are defined, not vibes: "booking" means real prospective customers on your calendar (test bookings don't count), and "you don't pay" means a full refund of the build fee or a cancelled balance — not a credit. The exact definitions are spelled out in the guarantee section above and repeated in your agreement.</p></details>
     </div>
   </div>
 
