@@ -2,8 +2,15 @@ name: Deploy frimpomaasync.com to Hostinger
 # Every push to main uploads the site to public_html on Hostinger.
 # Needs repo secrets: FTP_SERVER / FTP_USERNAME / FTP_PASSWORD
 # The FTP root already IS public_html, so server-dir stays ./
-# This only uploads/updates files - it never deletes anything on the
-# server, so the NanaOS folder (os-fad13324c3/) is untouched.
+#
+# DELETION BEHAVIOUR (corrected 2026-07-22 - the previous note here was wrong):
+# This action keeps a .ftp-deploy-sync-state.json on the server and DOES delete
+# files it previously uploaded, once they leave the repo. Removing Som.zip from
+# the repo deleted it from the live server within a minute.
+# What it does NOT touch is anything it never uploaded - so the hand-uploaded
+# NanaOS folder (os-fad13324c3/) really is safe, just not for the reason the
+# old comment gave. If you retire a file people may still hold a link to, add a
+# redirect in .htaccess rather than assuming the old URL survives.
 on:
   push:
     branches: [main]
