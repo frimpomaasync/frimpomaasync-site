@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>Tools — NaNa Frimpomaa</title>
 <meta name="description" content="The tools — starting with Som, free: catch every thought before it's gone. Small tools you own, by NaNa Frimpomaa.">
@@ -21,261 +21,230 @@
 <!-- Self-contained. No external resources. System fonts only. -->
 <style>
   :root{
-    --bg:#FFFFFF; --panel-2:#FAFAF8; --ink:#1A1A1A;
-    --copper:#C9975B; --copper-soft:#E4C79A; --copper-deep:#A8763B;
-    --card:#FFFFFF; --muted:#6B6458; --hairline:#E4DDD0; --line:#B8AE9C;
+    --paper:#FFFFFF; --panel:#F6F5F3; --panel2:#FAFAF8; --card:#FFFFFF;
+    --ink:#1A1A1A; --ink-soft:#3D3A35; --muted:#8A8479; --hairline:#E8E4DD;
+    --copper:#C9975B; --copper-deep:#A87938;
+    --navy:#1E2A45; --navy-deep:#16203A;
+    --thought:#5E7A5C; --task:#3F6FA8; --reminder:#B0563F;
+    --radius:22px;
+    --serif:ui-serif,"New York","Iowan Old Style",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
   }
-  *{margin:0;padding:0;box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  html,body{height:100%;}
-  body{
-    background-color:#FFFFFF;
-    background-image:radial-gradient(circle at 50% -6%, #FAFAF8 0%, #FFFFFF 60%);
-    color:var(--ink);
-    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
-    -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden;
-  }
-  body::before{ content:""; position:fixed; inset:0; background-image:radial-gradient(var(--hairline) 1px, transparent 1px); background-size:28px 28px; opacity:0.45; pointer-events:none; z-index:0; }
-  .mono{ font-family:ui-monospace,'SF Mono','SFMono-Regular',Menlo,Monaco,Consolas,'Courier New',monospace; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+  a{color:inherit}
+  :focus-visible{outline:2.5px solid var(--ink);outline-offset:3px;border-radius:8px}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);
+    line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:820px;margin:0 auto;padding:clamp(26px,5vw,44px) clamp(18px,5vw,26px) 90px}
 
-  .stage{ position:relative; z-index:1; max-width:680px; margin:0 auto; padding:30px 20px 90px; }
+  .kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--copper-deep);margin-bottom:14px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(2.6rem,9vw,4.8rem);
+    line-height:1.02;letter-spacing:-.025em}
+  h1 .dot{color:var(--copper)}
+  .lede{margin-top:20px;font-size:clamp(16px,2.2vw,18px);color:var(--ink-soft);
+    line-height:1.6;max-width:56ch}
+  .lede b{color:var(--ink);font-weight:600}
 
-  .back{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; font-size:12px; letter-spacing:0.06em; text-transform:uppercase; color:var(--muted); padding:9px 15px; border:1px solid var(--hairline); border-radius:999px; background:var(--panel-2); transition:border-color .2s, color .2s; margin-bottom:26px; }
-  .back:hover{ border-color:var(--copper-soft); color:var(--ink); }
+  .sec-k{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+    margin:56px 2px 14px}
 
-  .chrome{ display:flex; align-items:center; gap:8px; padding:0 2px 16px; }
-  .dot{width:11px;height:11px;border-radius:50%;}
-  .dot.r{background:#E0A38C;}.dot.y{background:var(--copper-soft);}.dot.g{background:#B9C7A6;}
-  .chrome-label{ margin-left:10px; font-size:12px; letter-spacing:0.04em; color:var(--muted); }
+  /* the one real tool */
+  .tool{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);
+    padding:clamp(24px,4vw,34px)}
+  .tool-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .tool-k{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--copper-deep)}
+  .pill{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;border-radius:999px;
+    padding:5px 12px;background:var(--copper);color:#fff;font-weight:600}
+  .tool h2{font-family:var(--serif);font-weight:600;font-size:clamp(34px,7vw,52px);
+    letter-spacing:-.025em;line-height:1;margin-top:14px}
+  .tool h2 .dot{color:var(--copper)}
+  .tool p{margin-top:14px;font-size:15px;color:var(--ink-soft);line-height:1.65;max-width:58ch}
+  .tool p b{color:var(--ink);font-weight:600}
+  .tool p i{font-style:italic}
 
-  .hero{ padding:4px 2px 2px; }
-  .eyebrow{ font-size:12px; font-weight:500; letter-spacing:0.16em; text-transform:uppercase; color:var(--copper); margin-bottom:14px; }
-  .title{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-size:clamp(2.9rem,9.5vw,7rem); font-weight:700; letter-spacing:-0.025em; line-height:0.98; }
-  .title .period{ color:var(--copper); }
-  .lede{ margin-top:20px; font-size:16px; color:var(--muted); line-height:1.5; max-width:470px; }
-  .lede .accent{ font-family:Georgia,'Times New Roman',serif; font-style:italic; font-weight:500; font-size:20px; color:var(--ink); }
+  .kinds{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:22px}
+  .kind{border-radius:14px;padding:14px 15px;color:#fff}
+  .kind.task{background:var(--task)} .kind.reminder{background:var(--reminder)}
+  .kind.thought{background:var(--thought)}
+  .kind .kn{font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.9}
+  .kind .kx{font-size:13px;margin-top:5px;line-height:1.45}
+  @media(max-width:620px){.kinds{grid-template-columns:1fr}}
 
-  .tools{ margin-top:36px; display:flex; flex-direction:column; gap:18px; }
+  .tool-bottom{display:flex;align-items:center;justify-content:space-between;gap:16px;
+    flex-wrap:wrap;margin-top:26px;padding-top:22px;border-top:1px solid var(--hairline)}
+  .price{font-size:12.5px;color:var(--muted);line-height:1.6}
+  .price .amt{display:block;font-family:var(--serif);font-size:26px;font-weight:600;
+    color:var(--ink);letter-spacing:-.01em}
+  .btn{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:#F5F3EF;
+    border-radius:999px;padding:15px 26px;font-size:14.5px;font-weight:600;text-decoration:none;
+    min-height:50px;transition:transform .18s ease,box-shadow .18s ease}
+  .btn .d{width:9px;height:9px;border-radius:50%;background:var(--copper);flex:none}
+  .btn .arr{transition:transform .18s ease}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,26,26,.22)}
+  .btn:hover .arr{transform:translateX(4px)}
+  .btn.quiet{background:var(--card);color:var(--ink);border:1px solid var(--hairline)}
+  .btn.quiet:hover{border-color:var(--copper);box-shadow:none}
 
-  .tool{
-    position:relative; background:var(--card); border:1.5px solid var(--hairline);
-    border-radius:26px; padding:32px 30px; overflow:hidden;
-    transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-  }
-  .tool:hover{ transform:translateY(-3px); box-shadow:0 18px 44px rgba(22,20,15,0.10); border-color:var(--copper-soft); }
+  /* see it run */
+  .watch{margin-top:14px;background:var(--panel2);border:1px dashed var(--copper);
+    border-radius:18px;padding:20px 22px;display:flex;align-items:center;
+    justify-content:space-between;gap:16px;flex-wrap:wrap}
+  .watch .wt{flex:1;min-width:220px}
+  .watch .wt b{display:block;font-family:var(--serif);font-size:19px;font-weight:600;color:var(--ink)}
+  .watch .wt span{display:block;font-size:13.5px;color:var(--ink-soft);margin-top:5px;line-height:1.5}
+  .watch a{font-size:13px;font-weight:600;color:var(--copper-deep);text-decoration:underline;
+    text-underline-offset:3px;white-space:nowrap}
 
-  .tool-top{ display:flex; align-items:flex-start; justify-content:space-between; gap:14px; margin-bottom:14px; }
-  .tool-kicker{ font-size:11px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--copper); }
-  .badge{ font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; padding:5px 11px; border-radius:999px; flex-shrink:0; }
-  .badge.live{ background:rgba(185,199,166,0.3); color:#5a6b48; border:1px solid #B9C7A6; }
-  .badge.buy{ background:rgba(201,151,91,0.16); color:var(--copper-deep); border:1px solid var(--copper-soft); }
-  .badge.soon{ background:var(--bg); color:var(--muted); border:1px solid var(--hairline); }
+  /* what's next — honest, no promises */
+  .next{background:var(--panel);border:1px solid var(--hairline);border-radius:var(--radius);
+    padding:clamp(24px,4vw,32px)}
+  .next h3{font-family:var(--serif);font-weight:600;font-size:clamp(21px,4vw,27px);
+    letter-spacing:-.015em;line-height:1.2}
+  .next p{margin-top:12px;font-size:14.5px;color:var(--ink-soft);line-height:1.65;max-width:58ch}
+  .next p b{color:var(--ink)}
+  .next a.btn{margin-top:20px}
 
-  .tool-name{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-size:clamp(28px,7vw,44px); font-weight:700; letter-spacing:-0.02em; line-height:1.0; margin-bottom:12px; }
-  .tool-name .period{ color:var(--copper); }
-  .tool-desc{ font-size:15px; color:var(--muted); line-height:1.5; margin-bottom:18px; max-width:94%; }
-  .tool-desc b{ color:var(--ink); font-weight:600; }
+  /* flagship */
+  .flag{margin-top:56px;background:linear-gradient(160deg,var(--navy),var(--navy-deep));
+    color:#F5F0E8;border-radius:26px;padding:clamp(30px,5vw,46px);position:relative;overflow:hidden}
+  .flag::before{content:"";position:absolute;inset:0;
+    background:radial-gradient(42% 60% at 88% 2%,rgba(201,151,91,.22),transparent 58%);pointer-events:none}
+  .flag>*{position:relative;z-index:1}
+  .flag .fk{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#E4C79A}
+  .flag h3{font-family:var(--serif);font-weight:600;font-size:clamp(28px,5.4vw,44px);
+    letter-spacing:-.02em;line-height:1.05;margin-top:12px;color:#fff}
+  .flag h3 .dot{color:var(--copper)}
+  .flag .fd{margin-top:16px;font-size:15.5px;color:#C9BEA8;line-height:1.65;max-width:56ch}
+  .phases{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+  .phase{background:rgba(255,255,255,.05);border:1px solid rgba(228,199,154,.25);
+    border-radius:16px;padding:18px}
+  .phase .pn{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:#E4C79A}
+  .phase b{display:block;color:#fff;font-size:15px;margin-top:7px}
+  .phase span{display:block;font-size:13px;color:#C9BEA8;margin-top:4px;line-height:1.5}
+  @media(max-width:700px){.phases{grid-template-columns:1fr}}
+  .fbottom{display:flex;align-items:center;justify-content:space-between;gap:18px;
+    flex-wrap:wrap;margin-top:30px}
+  .fprice{font-family:var(--mono);font-size:13px;color:#E4C79A;line-height:1.7}
+  .fprice b{color:#fff;font-size:18px}
+  .fcta{display:inline-flex;align-items:center;gap:11px;background:#B4552D;color:#fff;
+    border-radius:999px;padding:15px 28px;font-size:14px;font-weight:600;text-decoration:none;
+    min-height:50px;white-space:nowrap;transition:transform .18s ease,background .2s ease}
+  .fcta:hover{transform:translateY(-2px);background:#9A4522}
+  .fguar{margin-top:22px;font-family:var(--mono);font-size:12.5px;color:#9dbb8a}
 
-  .tool-bottom{ display:flex; align-items:center; justify-content:space-between; gap:14px; flex-wrap:wrap; }
-  .tool-price{ font-size:13px; color:var(--muted); }
-  .tool-price .amt{ display:block; font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-size:22px; font-weight:700; letter-spacing:-0.01em; color:var(--ink); }
-  .tool-actions{ display:flex; gap:9px; flex-wrap:wrap; }
-  .tcta{ display:inline-flex; align-items:center; gap:8px; text-decoration:none; padding:13px 24px; border-radius:6px; font-size:12.5px; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; transition:transform .2s ease, box-shadow .2s ease, border-color .2s ease; }
-  .tcta.primary{ background:#B4552D; color:#fff; box-shadow:0 12px 28px -10px rgba(154,69,34,0.55); }
-  .tcta.primary:hover{ transform:translateY(-2px); background:#9A4522; box-shadow:0 16px 36px -10px rgba(154,69,34,0.55); }
-  .tcta.ghost{ background:var(--panel-2); color:var(--ink); border:1.5px solid var(--hairline); }
-  .tcta.ghost:hover{ transform:translateY(-2px); border-color:var(--copper); }
-  .tcta .arr{ transition:transform .2s ease; } .tcta:hover .arr{ transform:translateX(4px); }
-  .tcta.disabled{ background:var(--bg); color:var(--muted); border:1.5px solid var(--hairline); cursor:default; }
-  .tcta.disabled:hover{ transform:none; }
+  .valueframe{margin-top:22px;padding:17px 20px;border-left:3px solid var(--copper);
+    background:var(--panel2);border-radius:0 14px 14px 0;font-size:14.5px;
+    color:var(--ink-soft);line-height:1.6}
+  .valueframe b{color:var(--ink)}
 
-  .tool.soon{ opacity:0.92; }
-  .tool.soon .tool-name{ color:var(--muted); }
+  .close{margin-top:56px;text-align:center;padding-top:34px;border-top:1px solid var(--hairline)}
+  .close h3{font-family:var(--serif);font-weight:600;font-size:clamp(24px,5vw,36px);
+    letter-spacing:-.02em;line-height:1.1}
+  .close h3 .dot{color:var(--copper)}
+  .close p{margin-top:12px;font-size:15px;color:var(--ink-soft);line-height:1.6;
+    max-width:44ch;margin-left:auto;margin-right:auto}
+  .close .btn{margin-top:22px}
 
-  /* coming-soon mini grid for the two not-yet-built */
-  .soon-note{ margin-top:6px; font-size:13px; color:var(--muted); }
-
-  .close-cta{ margin-top:48px; text-align:center; background:linear-gradient(160deg,#1E2A45,#16203A); color:#F4F1EC; border-radius:12px; padding:46px 30px; }
-  .close-cta h3{ font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif; font-size:clamp(26px,7vw,42px); font-weight:700; letter-spacing:-0.02em; line-height:1.02; margin-bottom:12px; }
-  .close-cta h3 .period{ color:var(--copper); }
-  .close-cta p{ font-size:15px; color:rgba(245,240,232,0.7); line-height:1.5; margin-bottom:24px; max-width:420px; margin-left:auto; margin-right:auto; }
-  .close-cta .cta{ display:inline-flex; align-items:center; gap:9px; text-decoration:none; padding:16px 32px; border-radius:6px; background:#B4552D; color:#fff; font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; box-shadow:0 14px 36px -10px rgba(154,69,34,0.55); transition:transform .2s ease, box-shadow .2s ease, background .2s ease; }
-  .close-cta .cta:hover{ transform:translateY(-3px); background:#9A4522; box-shadow:0 20px 46px -10px rgba(154,69,34,0.55); }
-
-  .foot{ margin-top:34px; text-align:center; font-size:12px; color:var(--muted); line-height:1.8; }
-  .foot .brand{ font-weight:600; color:var(--ink); }
-  .foot a{ color:var(--copper); text-decoration:none; }
-
-  /* ===== high-ticket components (ht-*) ===== */
-  .ht-flagship{position:relative;margin:26px 0 0;border-radius:12px;overflow:hidden;padding:38px 34px;color:#F4F1EC;background:linear-gradient(160deg,#1E2A45,#16203A);border:1px solid rgba(201,151,91,0.4);box-shadow:0 26px 60px rgba(22,32,58,0.35)}
-  .ht-flagship .glow{position:absolute;inset:0;pointer-events:none;background:radial-gradient(40% 50% at 92% 0%,rgba(201,151,91,0.2),transparent 60%)}
-  .ht-flagship .k{position:relative;font-size:11px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:var(--copper);margin-bottom:12px}
-  .ht-flagship h3{position:relative;font-family:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif;font-size:clamp(28px,6.5vw,44px);font-weight:700;letter-spacing:-0.02em;line-height:1.02;color:#FFFFFF}
-  .ht-flagship h3 .period{color:var(--copper)}
-  .ht-flagship .d{position:relative;margin-top:14px;font-size:15.5px;color:#CBC4B5;line-height:1.55;max-width:620px}
-  .ht-phases{position:relative;display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:22px}
-  .ht-phase{background:rgba(255,255,255,0.04);border:1px solid rgba(245,240,232,0.14);border-radius:14px;padding:16px}
-  .ht-phase .n{font-size:11px;color:var(--copper);letter-spacing:0.08em}
-  .ht-phase b{display:block;margin-top:4px;font-size:14.5px;color:#F5F0E8}
-  .ht-phase span{font-size:12.5px;color:#9AA1AD;line-height:1.4}
-  .ht-fbottom{position:relative;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:24px}
-  .ht-price{font-size:13px;color:#9AA1AD}.ht-price b{display:block;font-size:21px;color:#F5F0E8;font-weight:800;letter-spacing:-0.01em}
-  .ht-cta{display:inline-flex;align-items:center;gap:9px;text-decoration:none;padding:15px 28px;border-radius:6px;background:#B4552D;color:#fff;font-size:13px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;transition:transform .2s,box-shadow .2s,background .2s}
-  .ht-cta:hover{transform:translateY(-2px);box-shadow:0 10px 24px -10px rgba(154,69,34,0.55);background:#9A4522}
-  .ht-guar{position:relative;margin-top:18px;font-size:13px;color:var(--copper-soft);display:flex;align-items:center;gap:8px}
-  .ht-gband{margin:24px 0 0;display:flex;align-items:center;gap:16px;padding:22px 26px;border-radius:18px;background:var(--panel-2);border:1px solid var(--hairline)}
-  .ht-gband .seal{width:46px;height:46px;border-radius:50%;flex:none;border:2px solid var(--copper);display:flex;align-items:center;justify-content:center;color:var(--copper);font-size:20px;font-weight:700}
-  .ht-gband .gt{font-size:16px;font-weight:800;letter-spacing:-0.01em;color:var(--ink)}
-  .ht-gband .gs{font-size:13.5px;color:var(--muted);line-height:1.45;margin-top:2px}
-  @media(max-width:560px){.ht-phases{grid-template-columns:1fr}}
-  .ht-valueframe{margin:18px 0 0;padding:16px 20px;border-left:3px solid var(--copper);background:var(--panel-2);border-radius:0 12px 12px 0;font-size:15px;color:var(--ink);line-height:1.5}
-  .ht-valueframe b{color:var(--copper-deep)}
-
-  @media (max-width:520px){
-    .stage{ padding:26px 16px 80px; }
-    .tool{ padding:26px 22px; border-radius:22px; }
-    .tool-desc{ max-width:100%; }
-  }
   @media (prefers-reduced-motion: reduce){
-    *{ animation:none !important; transition:none !important; }
-    html{ scroll-behavior:auto; }
+    *{animation:none !important;transition:none !important}
+    html{scroll-behavior:auto}
   }
 </style>
 </head>
 <body data-no-fscta>
-  <div class="stage">
+<div class="wrap">
 
-    <div class="chrome">
-      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
-      <span class="chrome-label mono">frimpomaasync.com / tools</span>
+  <header>
+    <div class="kicker">Grab &amp; go</div>
+    <h1>the tools<span class="dot">.</span></h1>
+    <p class="lede">Small tools I built to fix my own daily chaos — each one does
+      <b>one simple thing you own.</b> I build them one at a time and I only put them here
+      once they actually work. Start with a tool; scale into a system.</p>
+  </header>
+
+  <div class="sec-k">Free &middot; ready now</div>
+
+  <section class="tool">
+    <div class="tool-top">
+      <span class="tool-k">Step 1 &middot; Capture</span>
+      <span class="pill">Free app</span>
     </div>
-
-    <header class="hero">
-      <div class="eyebrow mono">Grab &amp; go</div>
-      <h1 class="title">the tools<span class="period">.</span></h1>
-      <p class="lede">
-        Small tools I built to fix my own daily chaos — each does <span class="accent">one simple thing you own.</span> Start with a tool; scale into a system. Yours to keep.
-      </p>
-    </header>
-
-    <main class="tools">
-
-      <!-- ===== SOM (free installable app) — formerly "Catch" ===== -->
-      <section class="tool">
-        <div class="tool-top">
-          <span class="tool-kicker mono">Step 1 · Free · Capture</span>
-          <span class="badge live">Free app</span>
-        </div>
-        <h2 class="tool-name">som<span class="period">.</span></h2>
-        <p class="tool-desc">
-          <b>Som</b> — Twi for <i>take it</i>. The anti-forgetting tool. A thought hits — a task, an idea, something a kid needs — you dump it in
-          <b>one field</b> and it's caught before it's gone. No categories, no friction, just speed. Works offline, saves to your device.
-        </p>
-        <div class="tool-bottom">
-          <span class="tool-price mono"><span class="amt">free</span>yours forever · installs in two taps</span>
-          <div class="tool-actions">
-            <a class="tcta primary mono" href="som.html">get som free <span class="arr">→</span></a>
-          </div>
-        </div>
-      </section>
-
-      <!-- Soma retired as a product 2026-07-22 — it was a demo of the Client Catcher, not a
-           thing you own, so it now lives at /client-catcher#soma as the "watch it work" section. -->
-
-      <!-- ===== ANSWER CARDS (coming soon) ===== -->
-      <section class="tool soon">
-        <div class="tool-top">
-          <span class="tool-kicker mono">Repeat · For your mouth</span>
-          <span class="badge soon">Coming soon</span>
-        </div>
-        <h2 class="tool-name">answer cards<span class="period">.</span></h2>
-        <p class="tool-desc">
-          For the info you type a hundred times — your address, your prices, your hours, your links.
-          <b>Tap to copy</b>, paste, done. Stop retyping the same answers all day.
-        </p>
-        <div class="tool-bottom">
-          <span class="tool-price mono"><span class="amt">in the works</span>building in public</span>
-          <div class="tool-actions">
-            <a class="tcta ghost mono" href="/#join">get notified <span class="arr">→</span></a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===== KID DAY (coming soon) ===== -->
-      <section class="tool soon">
-        <div class="tool-top">
-          <span class="tool-kicker mono">Home · For your kids</span>
-          <span class="badge soon">Coming soon</span>
-        </div>
-        <h2 class="tool-name">kid day<span class="period">.</span></h2>
-        <p class="tool-desc">
-          One glance, the whole day for all the kids — meals, naps, school, activities. The board that keeps
-          <b>three little schedules</b> straight without living in your head.
-        </p>
-        <div class="tool-bottom">
-          <span class="tool-price mono"><span class="amt">in the works</span>building in public</span>
-          <div class="tool-actions">
-            <a class="tcta ghost mono" href="/#join">get notified <span class="arr">→</span></a>
-          </div>
-        </div>
-      </section>
-
-      <!-- ===== MONEY GLANCE (coming soon) ===== -->
-      <section class="tool soon">
-        <div class="tool-top">
-          <span class="tool-kicker mono">Wallet · For your business</span>
-          <span class="badge soon">Coming soon</span>
-        </div>
-        <h2 class="tool-name">money glance<span class="period">.</span></h2>
-        <p class="tool-desc">
-          Is the business okay this week? <b>One number</b>, one glance, no spreadsheet spiral. The quick gut-check
-          on where you actually stand, without the dread.
-        </p>
-        <div class="tool-bottom">
-          <span class="tool-price mono"><span class="amt">in the works</span>building in public</span>
-          <div class="tool-actions">
-            <a class="tcta ghost mono" href="/#join">get notified <span class="arr">→</span></a>
-          </div>
-        </div>
-      </section>
-
-    </main>
-
-    <!-- ===== FLAGSHIP ENGAGEMENT (upsell from the small tools) ===== -->
-    <section class="ht-flagship">
-      <span class="glow"></span>
-      <div class="k mono">Step 2 · Done for you · Live in 7 days</div>
-      <h3>The Client Catcher<span class="period">.</span></h3>
-      <div class="d">Love the small tools? This is all of them, wired together. Your booking, lead capture, and follow-up — automated into one connected system that runs without you. Built around how you already work. You own it.</div>
-      <div class="ht-phases">
-        <div class="ht-phase"><div class="n mono">Phase 1</div><b>Map</b><span>a free 15-min call — we find the one leak costing you the most.</span></div>
-        <div class="ht-phase"><div class="n mono">Phase 2</div><b>Build &amp; wire</b><span>the system, in 7 days, around how you already work.</span></div>
-        <div class="ht-phase"><div class="n mono">Phase 3</div><b>Handoff + care</b><span>installed, walkthrough, yours forever — optional $99/mo care plan.</span></div>
-      </div>
-      <div class="ht-fbottom">
-        <div class="ht-price mono"><b>$1,500 build</b>+ optional $99/mo care · founding rate $750 for the first 3 clients</div>
-        <a class="ht-cta mono" href="client-catcher.html">see the client catcher →</a>
-      </div>
-      <div class="ht-guar mono">✓ Live and working in 7 days, booking appointments within 30 — or you don't pay.</div>
-    </section>
-
-    <!-- ===== VALUE FRAME ===== -->
-    <div class="ht-valueframe">Every tool here is a piece of the bigger system — <b>you own what I build, forever.</b> No subscriptions to me unless you want the care plan.</div>
-
-    <!-- ===== GUARANTEE BAND ===== -->
-    <div class="ht-gband">
-      <span class="seal">✓</span>
-      <div><div class="gt">The guarantee.</div><div class="gs">The Client Catcher is live and working in 7 days, booking appointments within 30 — or you don't pay.</div></div>
+    <h2>som<span class="dot">.</span></h2>
+    <p><b>Som</b> — Twi for <i>take it</i>. The anti-forgetting tool. A thought hits — a job to
+      quote, an idea, something a kid needs — you put it in <b>one field</b> and it's caught
+      before it's gone. No categories to pick, no login, no friction. It works out what kind of
+      thing it is and holds it.</p>
+    <div class="kinds">
+      <div class="kind task"><div class="kn">To-do</div>
+        <div class="kx">&ldquo;Call Rita back about the quote&rdquo;</div></div>
+      <div class="kind reminder"><div class="kn">Reminder</div>
+        <div class="kx">&ldquo;Dentist tomorrow at 3pm&rdquo;</div></div>
+      <div class="kind thought"><div class="kn">Idea</div>
+        <div class="kx">&ldquo;Referral card in the welcome pack&rdquo;</div></div>
     </div>
+    <div class="tool-bottom">
+      <span class="price"><span class="amt">free</span>yours forever &middot; installs in two taps
+        &middot; works offline</span>
+      <a class="btn" href="som.html"><span class="d"></span> Get Som free <span class="arr">&rarr;</span></a>
+    </div>
+  </section>
 
-    <section class="close-cta">
-      <h3>need one built for you<span class="period">.</span></h3>
-      <p>These fix my chaos. If you've got chaos of your own that needs a custom tool, that's the done-for-you service.</p>
-      <a class="cta mono" href="services.html">see services →</a>
-    </section>
-
-
+  <div class="watch">
+    <div class="wt"><b>Want to see the bigger thing run?</b>
+      <span>Type one customer in and watch them land in four tools at once — free, nothing saved.</span></div>
+    <a href="/client-catcher#soma">Watch the wiring run &rarr;</a>
   </div>
+
+  <div class="sec-k">What's next</div>
+
+  <section class="next">
+    <h3>I build these one at a time, and slowly on purpose.</h3>
+    <p>There's a longer list — the info you retype fifty times a week, the kids' schedules, the
+      "is the business okay?" number. They're real problems and I want to solve all of them.
+      <b>But I'd rather ship one tool that genuinely works than announce four that don't yet.</b>
+      Som took a rebuild and a hundred tests to earn its place on this page.</p>
+    <p>If you want to know when the next one lands — or you want to tell me which of your own
+      weekly annoyances deserves to be first — get on the list. That's genuinely how I pick.</p>
+    <a class="btn quiet" href="/#join">Tell me what to build <span class="arr">&rarr;</span></a>
+  </section>
+
+  <section class="flag">
+    <div class="fk">Step 2 &middot; Done for you &middot; Live in 7 days</div>
+    <h3>The Client Catcher<span class="dot">.</span></h3>
+    <div class="fd">Love the small tools? This is all of them, wired together. Your booking, lead
+      capture, and follow-up — automated into one connected system that runs without you. Built
+      around how you already work. You own it.</div>
+    <div class="phases">
+      <div class="phase"><div class="pn">Phase 1</div><b>Map</b>
+        <span>a free 15-min call — we find the one leak costing you the most.</span></div>
+      <div class="phase"><div class="pn">Phase 2</div><b>Build &amp; wire</b>
+        <span>the system, in 7 days, around how you already work.</span></div>
+      <div class="phase"><div class="pn">Phase 3</div><b>Handoff + care</b>
+        <span>installed, walkthrough, yours forever — optional $99/mo care plan.</span></div>
+    </div>
+    <div class="fbottom">
+      <div class="fprice"><b>$1,500 build</b> + optional $99/mo care<br>
+        founding rate $750 for the first 3 clients</div>
+      <a class="fcta" href="client-catcher.html">See the Client Catcher &rarr;</a>
+    </div>
+    <div class="fguar">&#10003; Live and working in 7 days, booking appointments within 30 — or you don't pay.</div>
+  </section>
+
+  <div class="valueframe">Every tool here is a piece of the bigger system —
+    <b>you own what I build, forever.</b> No subscriptions to me unless you want the care plan.</div>
+
+  <section class="close">
+    <h3>Need one built for you<span class="dot">?</span></h3>
+    <p>These fix my chaos. If you've got chaos of your own that needs a custom tool, that's the
+      done-for-you service.</p>
+    <a class="btn" href="services.html"><span class="d"></span> See services <span class="arr">&rarr;</span></a>
+  </section>
+
+</div>
 <script src="fsnav.js?v=722a" defer></script>
 <script src="fswidget.js?v=722a" defer></script>
 </body>
