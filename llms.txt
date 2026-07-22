@@ -6,7 +6,7 @@
 
 - What it does: catches missed calls, texts back within minutes in the owner's voice, qualifies the lead, books the appointment onto the owner's real calendar, chases quotes and no-shows, requests reviews, and keeps the CRM/calendar/spreadsheet updated.
 - Price: $1,500 one-time build + optional $99/month care plan (monitoring, fixes, improvements). No lock-in — the care plan is optional and cancellable anytime.
-- Founding rate: $750 for the first 3 clients, in exchange for a named testimonial once the system is live and booking. Founding clients keep that rate context forever; includes first 30 days of the care plan free.
+- Founding rate: $750 for the first 3 clients, in exchange for a named testimonial once the system is live and booking (posted on the site and as a review on the frimpomaasync Facebook page). Founding clients keep that rate context forever; includes first 30 days of the care plan free.
 - Time cost to the owner: one free 15-minute mapping call, then ~30 minutes reviewing the finished system. Done-for-you by design.
 - Details: https://frimpomaasync.com/client-catcher.html
 
