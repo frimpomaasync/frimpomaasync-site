@@ -84,7 +84,7 @@ var html=''
 +'<div class="sk-quick" id="sk-quick"></div>'
 +'<div class="sk-input"><input id="sk-text" type="text" placeholder="Type a message&hellip;" autocomplete="off">'
 +'<button id="sk-send" aria-label="Send">&rarr;</button></div>'
-+'<div class="sk-foot">Powered by <a href="/synkasa">SynKasa</a> &mdash; built, wired, and cared for by NaNa Frimpomaa</div>'
++'<div class="sk-foot">Powered by <a href="/synkasa">SynKasa</a> &middot; Built by <a href="https://frimpomaasync.com">frimpomaasync.com</a></div>'
 +'</div>'
 +'<button id="sk-bubble" aria-label="Chat with NaNa\'s assistant"><img src="/favicon.svg" alt=""><span class="badge">1</span></button>';
 

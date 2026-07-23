@@ -1,7 +1,7 @@
 /* Som service worker.
    IMPORTANT: bump CACHE on EVERY change to any cached file, or the update
    never reaches a phone that already installed the app. */
-var CACHE = 'som-v1';
+var CACHE = 'som-v2';
 
 var SHELL = [
   './',

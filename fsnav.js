@@ -127,7 +127,8 @@ var footHTML=''
 +'<a href="https://www.tiktok.com/@frimpomaasync?_r=1&amp;_t=ZT-97e6dr2nWms" target="_blank" rel="noopener">TikTok</a>'
 +'<a href="/blog/">notes</a></div>'
 +'</div>'
-+'<div class="fs-base"><span>© 2026 NaNa Frimpomaa · frimpomaasync.com</span><span>Built in public.</span></div>';
++'<div class="fs-base"><span>© 2026 NaNa Frimpomaa · frimpomaasync.com</span>'
++'<span><a href="/privacy" style="color:inherit;text-decoration:none;border-bottom:1px solid #E8E5E0">Privacy</a> · Built in public.</span></div>';
 
 var bandCSS=""
 +"#fscta{background:linear-gradient(160deg,#1E2A45,#16203A);color:#F4F1EC;padding:72px 24px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Arial,sans-serif}"
@@ -158,7 +159,7 @@ if(!document.body.hasAttribute("data-no-fscta")){
     +'<p>One free 15-minute call. We find the leak costing you the most — and you leave with the map either way.</p>'
     +'<a class="fs-book" href="'+BOOK+'" target="_blank" rel="noopener">book a free 15-min call →</a>'
     +'<div class="fs-guar">✓ Live and working in 7 days, booking appointments within 30 — or you don\u2019t pay.</div>'
-    +'<div class="fs-trust">Built, wired, and cared for by NaNa Frimpomaa · frimpomaasync.com</div>';
+    +'<div class="fs-trust">Built by frimpomaasync.com</div>';
   document.body.appendChild(band);
 }
 

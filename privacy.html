@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<title>Privacy — what happens to your details | NaNa Frimpomaa</title>
+<meta name="description" content="Plain-English privacy policy for frimpomaasync.com: what is collected, where it goes, how long it is kept, and what happens to customer data inside a Client Catcher system. No tracking, no selling, no ad pixels.">
+<link rel="canonical" href="https://frimpomaasync.com/privacy">
+<meta name="theme-color" content="#FFFFFF">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="NaNa Frimpomaa">
+<meta property="og:title" content="Privacy — what happens to your details">
+<meta property="og:description" content="What's collected, where it goes, how long it's kept. No tracking, no selling, no ad pixels.">
+<meta property="og:url" content="https://frimpomaasync.com/privacy">
+<meta property="og:image" content="https://frimpomaasync.com/og-cover.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Privacy — what happens to your details">
+<meta name="twitter:description" content="What's collected, where it goes, how long it's kept.">
+<meta name="twitter:image" content="https://frimpomaasync.com/og-cover.png">
+<!-- Self-contained. System fonts only. No external requests. -->
+<style>
+  :root{
+    --paper:#FFFFFF; --panel:#F6F5F3; --panel2:#FAFAF8; --card:#FFFFFF;
+    --ink:#1A1A1A; --ink-soft:#3D3A35; --muted:#8A8479; --hairline:#E8E4DD;
+    --copper:#C9975B; --copper-deep:#A87938; --green:#2E7D4F; --red:#D64425;
+    --radius:22px;
+    --serif:ui-serif,"New York","Iowan Old Style",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  em{font-style:normal;color:var(--copper-deep)}
+  .wrap{max-width:720px;margin:0 auto;padding:26px 20px 90px}
+
+  .k{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--copper-deep)}
+  .k-lg{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+
+  .crumbs{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+  .crumbs a{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--hairline);padding-bottom:2px}
+  .crumbs a:hover{color:var(--ink);border-color:var(--copper)}
+  .crumbs span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--hairline)}
+
+  .head{border-bottom:1px solid var(--hairline);padding-bottom:30px;margin-bottom:30px}
+  h1{font-family:var(--serif);font-size:clamp(2.6rem,10vw,4.6rem);font-weight:700;letter-spacing:-.03em;line-height:1}
+  h1 .p{color:var(--copper)}
+  .dek{margin-top:18px;font-size:16.5px;color:var(--ink-soft);line-height:1.55}
+  .byline{margin-top:22px;display:flex;gap:10px;flex-wrap:wrap;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+  .byline b{color:var(--ink)}
+  .dot{color:var(--hairline)}
+
+  .answer{border:1px solid var(--hairline);border-radius:var(--radius);background:var(--panel2);padding:24px 26px;margin-bottom:34px}
+  .answer .k{display:block;margin-bottom:11px}
+  .answer p{font-size:16.5px;line-height:1.58;font-weight:600}
+
+  h2{font-family:var(--serif);font-size:clamp(1.5rem,4.4vw,2.05rem);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin:46px 0 16px}
+  h2 .p{color:var(--copper)}
+  h3{font-size:16.5px;font-weight:700;margin:30px 0 12px}
+  p{font-size:16px;line-height:1.68;color:var(--ink-soft);margin-bottom:18px}
+  p strong,li strong{color:var(--ink);font-weight:700}
+  a{color:var(--copper-deep)}
+
+  ul.arrows{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-direction:column;gap:11px}
+  ul.arrows li{font-size:15.5px;line-height:1.55;color:var(--ink-soft);padding-left:24px;position:relative}
+  ul.arrows li::before{content:"→";position:absolute;left:0;color:var(--copper);font-weight:700}
+  ul.nos{list-style:none;margin:0 0 22px;padding:0;display:flex;flex-direction:column;gap:11px}
+  ul.nos li{font-size:15.5px;line-height:1.55;color:var(--ink-soft);padding-left:26px;position:relative}
+  ul.nos li::before{content:"✗";position:absolute;left:0;color:var(--red);font-weight:700}
+
+  .tw{overflow-x:auto;margin:0 0 26px;border:1px solid var(--hairline);border-radius:var(--radius);background:var(--card)}
+  table{border-collapse:collapse;width:100%;min-width:520px}
+  caption{caption-side:top;text-align:left;font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);padding:18px 20px 0}
+  th,td{text-align:left;padding:13px 18px;font-size:14px;line-height:1.45;border-bottom:1px solid var(--hairline);vertical-align:top}
+  th{font-family:var(--mono);font-size:9.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);background:var(--panel2)}
+  td:first-child{font-weight:700;color:var(--ink)}
+  tbody tr:last-child td{border-bottom:none}
+
+  .glue{border:1px dashed var(--copper);border-radius:var(--radius);background:var(--panel2);padding:24px 26px;margin:30px 0}
+  .glue .k{display:block;margin-bottom:10px}
+  .glue p:last-child{margin-bottom:0}
+
+  .pull{font-family:var(--serif);font-size:21px;line-height:1.42;color:var(--ink);border-left:2px solid var(--copper);padding:2px 0 2px 20px;margin:30px 0}
+
+  .close{margin-top:46px;border:1px solid var(--hairline);border-radius:var(--radius);background:var(--panel);padding:28px}
+  .close .k{display:block;margin-bottom:12px}
+  .close h3{font-family:var(--serif);font-size:24px;font-weight:700;margin:0 0 12px;line-height:1.18}
+  .btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;padding:14px 22px;border-radius:999px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;background:var(--ink);color:#fff;transition:transform .2s ease}
+  .btn:hover{transform:translateY(-2px)}
+  .btn:focus-visible{outline:2px solid var(--copper);outline-offset:3px}
+  .btn .cd{width:7px;height:7px;border-radius:50%;background:var(--copper)}
+  .btn .arr{transition:transform .2s ease}
+  .btn:hover .arr{transform:translateX(4px)}
+
+  .signoff{margin-top:34px;padding-top:22px;border-top:1px solid var(--hairline);text-align:center}
+  .signoff .name{font-family:var(--serif);font-size:18px;font-weight:700}
+  .signoff .line{margin-top:6px;font-size:14px;color:var(--muted)}
+  .signoff .credit{margin-top:16px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase}
+  .signoff .credit a{color:var(--copper-deep);text-decoration:none}
+
+  @media (max-width:560px){
+    .wrap{padding:22px 16px 80px}
+    .answer,.glue,.close{padding:22px 18px}
+    th,td{padding:11px 14px;font-size:13.5px}
+  }
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebPage",
+"name":"Privacy — frimpomaasync.com",
+"description":"Plain-English privacy policy: what is collected, where it goes, how long it is kept, and what happens to customer data inside a Client Catcher system.",
+"url":"https://frimpomaasync.com/privacy",
+"datePublished":"2026-07-22","dateModified":"2026-07-22",
+"publisher":{"@type":"Organization","name":"frimpomaasync","url":"https://frimpomaasync.com","email":"hello@frimpomaasync.com"}}
+</script>
+</head>
+<body>
+<div class="wrap">
+
+  <nav class="crumbs" aria-label="Breadcrumb">
+    <a href="/">home</a><span>·</span><a href="/client-catcher">the client catcher</a><span>·</span><a href="/blog/">notes</a>
+  </nav>
+
+  <header class="head">
+    <h1>Privacy<span class="p">.</span></h1>
+    <p class="dek">What happens to your details when you fill something in here — and what happens to your customers' details if I build you a system. Written to be read, not to be survived.</p>
+    <div class="byline">
+      <b>frimpomaasync.com</b><span class="dot">·</span><span>Last updated 22 July 2026</span>
+    </div>
+  </header>
+
+  <div class="answer">
+    <span class="k">The short version</span>
+    <p>I collect the details you type in — usually just an email, sometimes a name and phone number — and I use them to reply to you. <em>I don't sell them, share them, or advertise to you.</em> There are no tracking pixels and no analytics on this site. Ask me to delete you and I will, within 30 days, no questions.</p>
+  </div>
+
+  <p>This page covers <strong>frimpomaasync.com</strong> and everything on it. It's written by NaNa Frimpomaa, who is the whole company — so when it says "I", that's literal. If anything here is unclear, email <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a> and I'll answer you myself.</p>
+
+  <h2>What I collect, and why<span class="p">.</span></h2>
+
+  <div class="tw">
+  <table>
+    <caption>Everything this website collects</caption>
+    <thead><tr><th>When</th><th>What</th><th>Why</th><th>How long I keep it</th></tr></thead>
+    <tbody>
+      <tr><td>You download the free blueprint or Som</td><td>Email address</td><td>To send you the thing, and occasional notes about what I'm building</td><td>Until you unsubscribe or ask me to delete it</td></tr>
+      <tr><td>You fill in the build brief</td><td>Name, email, and what you told me about your business</td><td>To quote your build and reply properly</td><td>2 years, or until you ask me to delete it</td></tr>
+      <tr><td>You book a call</td><td>Name, email, whatever you add to the invite</td><td>To turn up to the call</td><td>Kept in my calendar; deletable on request</td></tr>
+      <tr><td>You email me</td><td>Whatever's in the email</td><td>To reply</td><td>In my inbox, like any email</td></tr>
+      <tr><td>You use the chat widget</td><td>Name and contact, if you type them</td><td>To follow up</td><td><em>Stored on your own device</em> — see below</td></tr>
+      <tr><td>You just read a page</td><td>Nothing that identifies you</td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>That's the complete list. There is no hidden sixth thing.</p>
+
+  <h2>What I don't do<span class="p">.</span></h2>
+
+  <ul class="nos">
+    <li><strong>No selling or sharing your details.</strong> Not to advertisers, not to data brokers, not to anyone. There is no version of my business where that happens.</li>
+    <li><strong>No analytics.</strong> As of the date at the top of this page this site runs no analytics tool. I genuinely do not know who visits.</li>
+    <li><strong>No advertising pixels.</strong> Nothing here is following you to another website.</li>
+    <li><strong>No tracking cookies.</strong> See the next section for the small amount of storage that does happen.</li>
+    <li><strong>No buying lists.</strong> If I contact you, it's because you contacted me first.</li>
+  </ul>
+
+  <p>If I ever add a privacy-friendly visitor counter, I'll say so here and change the date at the top. I'm not going to add it quietly.</p>
+
+  <div class="pull">A one-person business has no use for your data beyond talking to you. That's not a policy position, it's just the truth of the size.</div>
+
+  <h2>Cookies and what's stored on your device<span class="p">.</span></h2>
+
+  <p>This site sets <strong>no tracking cookies</strong>. Two things do save small amounts of information, and both save it <em>on your own device</em>, not to me:</p>
+
+  <ul class="arrows">
+    <li><strong>The chat widget.</strong> If you give it your name and contact, that sits in your own browser's local storage so the conversation makes sense. Clearing your browser data removes it.</li>
+    <li><strong>Som, the free capture app.</strong> Everything you write in Som stays on your device. It's designed that way — your notes never reach me, which is also why I can't recover them for you if you clear them.</li>
+  </ul>
+
+  <h2>Who else touches it<span class="p">.</span></h2>
+
+  <p>I don't run my own mail server or my own datacentre, so a few ordinary service providers necessarily handle things on the way through:</p>
+
+  <div class="tw">
+  <table>
+    <caption>Service providers for this website</caption>
+    <thead><tr><th>Who</th><th>What they handle</th></tr></thead>
+    <tbody>
+      <tr><td>Hostinger</td><td>Hosts the website itself</td></tr>
+      <tr><td>Formspree</td><td>Delivers form submissions to my email inbox</td></tr>
+      <tr><td>Google</td><td>My email and the calendar used for booking calls</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <p>Each has its own privacy terms. None of them is given your details for their own marketing by me.</p>
+
+  <h2>If I build you a Client Catcher<span class="p">.</span></h2>
+
+  <p>This is the part that matters most, because then I'm handling <em>your customers'</em> details, not just yours. The commitments below are the same ones on <a href="/client-catcher">the offer page</a>, and they're written into the client agreement you sign:</p>
+
+  <ul class="arrows">
+    <li><strong>Your customers' names, numbers and messages move between your phone, your calendar, and your follow-up system.</strong> That's the whole journey. Nothing is sold and nothing is shared.</li>
+    <li><strong>Every provider that touches your customer data is named in your agreement</strong> before you sign, so you know exactly who is in the chain.</li>
+    <li><strong>You own it all</strong> — the workflows, the scripts written in your voice, the documentation, and every piece of customer data in the system.</li>
+    <li><strong>The system runs on my software accounts</strong> so you never buy or manage subscriptions. Your agreement includes the handoff terms — export, documentation and a transfer path — so your business never depends on me being reachable.</li>
+    <li><strong>If you cancel, your data is exported to you and then deleted from my accounts.</strong> Not archived. Deleted.</li>
+  </ul>
+
+  <div class="glue">
+    <span class="k">And your obligations to your own customers</span>
+    <p>When a system texts your customers on your behalf, <em>you</em> are the one who owes them a privacy notice and a way to opt out. Every message sequence I build includes a working opt-out, and stopping means stopping — first request, no rescue message afterwards.</p>
+    <p>I'll walk you through what you need on your own side during the build. It isn't complicated, but it isn't optional either.</p>
+  </div>
+
+  <h2>What you can ask me for<span class="p">.</span></h2>
+
+  <p>Email <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a> and ask for any of these. There's no form, no account to log into, and no charge:</p>
+
+  <ul class="arrows">
+    <li><strong>A copy</strong> of what I hold about you</li>
+    <li><strong>A correction</strong> if something's wrong</li>
+    <li><strong>Deletion</strong> — I'll do it within 30 days and confirm when it's done</li>
+    <li><strong>To stop hearing from me</strong> — every email has an unsubscribe link, and replying "stop" works just as well</li>
+  </ul>
+
+  <p>Depending on where you live you may have these rights by law. I'd rather just give them to you regardless of where you live, so I do.</p>
+
+  <h3>Children<span class="p">.</span></h3>
+  <p>This is a business-to-business site. It isn't aimed at children and I don't knowingly collect anything from anyone under 16. If you think I have, email me and I'll delete it.</p>
+
+  <h3>Security, honestly<span class="p">.</span></h3>
+  <p>Accounts holding client data use strong unique passwords and two-factor authentication, and access is limited to me. I'm not going to claim more than that — anyone promising a small business unbreakable security is selling something. What I can promise is that if something went wrong, I'd tell you quickly rather than quietly.</p>
+
+  <h3>Changes to this page<span class="p">.</span></h3>
+  <p>If this changes, the date at the top changes with it. If a change actually affects what happens to your details — as opposed to fixing a typo — I'll email the people on my list rather than hoping they re-read this page.</p>
+
+  <div class="close">
+    <span class="k">Questions</span>
+    <h3>Ask me anything on this page directly.</h3>
+    <p>Email <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a>, or bring it to the free 15-minute call — data questions are a completely reasonable thing to spend a call on.</p>
+    <a class="btn" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener"><span class="cd"></span>book a 15-min call <span class="arr">→</span></a>
+  </div>
+
+  <div class="signoff">
+    <div class="name">NaNa Frimpomaa</div>
+    <div class="line">I make one-person businesses feel fully staffed.</div>
+    <div class="credit"><a href="https://frimpomaasync.com">Built by frimpomaasync.com</a></div>
+  </div>
+
+</div>
+<script src="/fsnav.js?v=722c" defer></script>
+<script src="/fswidget.js?v=722c" defer></script>
+</body>
+</html>
