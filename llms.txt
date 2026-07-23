@@ -12,10 +12,10 @@
 
 ## Guarantee (defined terms, written into the client agreement)
 
-"Live and working in 7 days, booking appointments within 30 — or you don't pay."
+"Live and working in 7 days — or you don't pay."
 
 - "Live" = catching missed calls and sending follow-ups on the client's real phone number and calendar, verified together on a screen-share.
-- "Booking appointments" = real prospective customers landing on the client's calendar. Test bookings do not count.
+- A number of bookings is not guaranteed: bookings depend on the client's lead flow. The system catches and follows up every inquiry it receives.
 - The client's only obligation is running their business as usual — the guarantee does not require buying ads.
 - "You don't pay" = full refund of the build fee, or cancellation of any unpaid balance. Not a credit.
 

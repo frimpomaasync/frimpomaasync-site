@@ -17,7 +17,7 @@ var P={
     {keys:["soma"],a:"Soma is the free live demo of what I install — type one customer in and watch them land in four tools at once. Nothing saved, nothing to sign up for. It now lives on the Client Catcher page: frimpomaasync.com/client-catcher#soma."},
     {keys:["som"],a:"Som is free — it catches the things you'd normally lose: ideas, links, follow-ups. One field, no login, yours forever. It installs on your phone in two taps — no App Store, nothing to unzip: frimpomaasync.com/som."},
     {keys:["catcher","client","lead","missed","follow"],a:"The Client Catcher is the flagship: every call answered, every lead chased, every job on your calendar — without you touching any of it. Live in 7 days, booking in 30 — or you don't pay. Want a free 15-min mapping call?"},
-    {keys:["guarantee","refund","risk","pay"],a:"The guarantee, in writing: live and working in 7 days, booking appointments within 30 — or you don't pay."},
+    {keys:["guarantee","refund","risk","pay"],a:"The guarantee, in writing: live and working in 7 days — or you don't pay."},
     {keys:["receptionist","chatbot","assistant","answer","widget"],a:"You're talking to it — this same assistant gets built for your business, answering your customers 24/7 in your voice. It's part of what a Client Catcher install can include. Want a free call to see it on your business?"},
     {keys:["who","nana","frimpomaa","yourself"],a:"NaNa Frimpomaa — a solo founder who makes one-person businesses feel fully staffed. Everything on this site is real and live. What can I help you with?"}
   ],

@@ -158,7 +158,7 @@ if(!document.body.hasAttribute("data-no-fscta")){
   band.innerHTML='<h2>Ready when you are<span class="fs-period">.</span></h2>'
     +'<p>One free 15-minute call. We find the leak costing you the most — and you leave with the map either way.</p>'
     +'<a class="fs-book" href="'+BOOK+'" target="_blank" rel="noopener">book a free 15-min call →</a>'
-    +'<div class="fs-guar">✓ Live and working in 7 days, booking appointments within 30 — or you don\u2019t pay.</div>'
+    +'<div class="fs-guar">✓ Live and working in 7 days — or you don\u2019t pay.</div>'
     +'<div class="fs-trust">Built by frimpomaasync.com</div>';
   document.body.appendChild(band);
 }
