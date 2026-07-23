@@ -23,6 +23,16 @@
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ProfessionalService","name":"NaNa Frimpomaa — frimpomaasync.com","url":"https://frimpomaasync.com","description":"The Client Catcher: booking, leads, and follow-up automated into one connected system for solo business owners. Done for you, live in 7 days.","founder":{"@type":"Person","name":"NaNa Frimpomaa"},"priceRange":"$750-$1,500","sameAs":["https://www.facebook.com/frimpomaasync/","https://www.pinterest.com/frimpomaasync/"],"makesOffer":{"@type":"Offer","name":"The Client Catcher — done-for-you missed-call, follow-up, and booking system","price":"1500","priceCurrency":"USD","url":"https://frimpomaasync.com/client-catcher.html","description":"One-time build, $1,500 (founding rate $750 for the first 3 clients) plus optional $99/month care plan. Guarantee in the client agreement: live and working in 7 days, booking real appointments within 30 — or the client does not pay.","availability":"https://schema.org/InStock"},"knowsAbout":["missed call text back","lead follow-up automation","appointment booking automation","small business back office automation"],"slogan":"I make one-person businesses feel fully staffed"}
 </script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
+ {"@type":"Question","name":"What exactly do you build?","acceptedAnswer":{"@type":"Answer","text":"One connected system around the phone, calendar, and customer list the owner already has: missed calls caught and texted back in the owner's voice within minutes, leads followed up, appointments booked onto the real calendar, quotes chased, reviews requested."}},
+ {"@type":"Question","name":"Do I have to learn or buy any software?","acceptedAnswer":{"@type":"Answer","text":"No. It runs on the provider's accounts so there is zero tech on the client's plate — and the client still owns everything: the workflows, the scripts in their voice, the documentation, and all customer data, with full handoff terms written into the agreement."}},
+ {"@type":"Question","name":"What does it cost?","acceptedAnswer":{"@type":"Answer","text":"The Client Catcher is $1,500 one-time, plus an optional $99/month care plan cancellable anytime. The first three clients get the founding rate of $750 in exchange for a named testimonial. No other fees or software bills."}},
+ {"@type":"Question","name":"What if it doesn't get me bookings?","acceptedAnswer":{"@type":"Answer","text":"Then the client doesn't pay — in writing. Live and working in 7 days, booking appointments within 30, or the build fee is refunded in full. Booking means real prospective customers on the calendar, not test bookings."}},
+ {"@type":"Question","name":"Who is this for?","acceptedAnswer":{"@type":"Answer","text":"Real estate agents, HVAC and plumbing owners, and solo owners who answer their own phone and know calls are slipping."}},
+ {"@type":"Question","name":"What happens to my customers' information?","acceptedAnswer":{"@type":"Answer","text":"It moves between the client's phone, calendar, and the follow-up system — nothing else. Never sold or shared, every provider that touches it is named in the agreement, and on cancellation it is exported to the client and deleted."}}
+]}
+</script>
 <!-- Self-contained. No external resources. System fonts only. -->
 <style>
 :root{
@@ -120,6 +130,17 @@ a{color:inherit}
 @media(max-width:820px){.steal-grid{grid-template-columns:1fr}}
 
 /* tools ladder */
+.faqs{padding:90px 0;border-top:1px solid var(--line)}
+.faqs h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.02em;color:var(--ink);text-align:center}
+.faqs .sub{text-align:center;color:var(--muted);margin-top:12px;font-size:15.5px}
+.faqwrap{max-width:680px;margin:34px auto 0}
+.faqwrap details{border-bottom:1px solid var(--line)}
+.faqwrap summary{cursor:pointer;padding:18px 2px;font-weight:600;color:var(--ink);font-size:16px;list-style:none;display:flex;justify-content:space-between;align-items:baseline;gap:14px}
+.faqwrap summary::-webkit-details-marker{display:none}
+.faqwrap summary::after{content:"+";font-family:var(--mono);color:var(--copper-deep);font-size:18px;flex-shrink:0}
+.faqwrap details[open] summary::after{content:"\2212"}
+.faqwrap details p{color:var(--muted);padding:0 2px 20px;font-size:14.5px;line-height:1.75;max-width:600px}
+.faqwrap details p a{color:var(--copper-deep)}
 .tools{padding:90px 0;border-top:1px solid var(--line)}
 .tools h2{font-family:var(--serif);font-size:clamp(1.9rem,4.2vw,2.9rem);font-weight:700;letter-spacing:-.02em;color:var(--ink);text-align:center}
 .tools .sub{text-align:center;color:var(--muted);margin-top:12px;font-size:15.5px}
@@ -434,6 +455,41 @@ io.observe(document.getElementById("ccbFeed"));
       <a class="tool dark" href="client-catcher.html"><span class="k">Step 2 · Done for you</span><div class="t">the client catcher<span class="period">.</span></div><p>Calls answered, follow-ups sent, jobs booked — while your hands stay on the work. Live in 7 days, yours forever.</p><div class="p">$1,500 · founding $750 →</div></a>
     </div>
     <p class="sub" style="margin-top:22px">Want to see it before you believe it? <a href="/client-catcher#soma" style="color:var(--copper-deep,#A97B3F)">Watch one entry land in four tools &rarr;</a></p>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="faqs" id="faq">
+  <div class="wrap">
+    <div class="kicker">Straight answers</div>
+    <h2>Questions owners ask first<span class="period">.</span></h2>
+    <p class="sub">The short versions. The full list lives on <a href="/client-catcher.html#faq" style="color:var(--copper-deep)">the Client Catcher page</a>.</p>
+    <div class="faqwrap">
+      <details>
+        <summary>What exactly do you build?</summary>
+        <p>One connected system around the phone, calendar, and customer list you already have: missed calls get caught and texted back in your voice within minutes, leads get followed up, appointments land on your real calendar, quotes get chased, reviews get requested. You close up at 5 knowing nothing slipped.</p>
+      </details>
+      <details>
+        <summary>Do I have to learn or buy any software?</summary>
+        <p>No. It runs on my accounts, so there's zero tech on your plate — and you still own everything: the workflows, the scripts in your voice, the documentation, and all of your customer data, with full handoff terms written into your agreement. <a href="/client-catcher.html#faq">What "own" means, exactly →</a></p>
+      </details>
+      <details>
+        <summary>What does it cost?</summary>
+        <p>The Client Catcher is $1,500 once, plus an optional $99/month care plan you can cancel anytime. The first three clients get the founding rate — $750 — in exchange for a named testimonial. No other fees, no software bills, ever.</p>
+      </details>
+      <details>
+        <summary>What if it doesn't get me bookings?</summary>
+        <p>Then you don't pay — that's in writing. Live and working in 7 days, booking appointments within 30, or your build fee comes back in full. "Booking" means real prospective customers on your calendar, not test bookings. <a href="/client-catcher.html">The exact definitions →</a></p>
+      </details>
+      <details>
+        <summary>Who is this for?</summary>
+        <p>Real estate agents, HVAC and plumbing owners, and every solo owner who answers their own phone and knows calls are slipping. If you spend your day on a roof, under a sink, or with a client — this was built for you.</p>
+      </details>
+      <details>
+        <summary>What happens to my customers' information?</summary>
+        <p>It moves between your phone, your calendar, and the follow-up system — nothing else. It's never sold or shared, every provider that touches it is named in your agreement, and if you ever cancel, it's exported to you and deleted from my accounts.</p>
+      </details>
+    </div>
   </div>
 </section>
 
