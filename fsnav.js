@@ -3,12 +3,14 @@
 (function(){
 "use strict";
 var BOOK="https://calendar.app.google/DkRJFRA3G6W6d8E48";
+/* Root-absolute paths: pages now live in sub-folders too (/blog/…), so relative
+   hrefs would resolve against the folder and 404. */
 var LINKS=[
-  ["client-catcher.html","the client catcher"],
-  ["services.html","services"],
-  ["products.html","tools"],
-  ["portfolio.html","portfolio"],
-  ["blog.html","notes"]
+  ["/client-catcher","the client catcher"],
+  ["/services","services"],
+  ["/products","tools"],
+  ["/portfolio","portfolio"],
+  ["/blog/","notes"]
 ];
 
 var css=""
@@ -56,10 +58,21 @@ var css=""
 +"#fsfoot .fs-col a:hover{color:#A8763B}"
 +"#fsfoot .fs-base{max-width:1060px;margin:40px auto 0;padding:18px 24px 0;border-top:1px solid #E8E5E0;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:12px;color:#9A948A}";
 
-var here=(location.pathname.split("/").pop()||"index.html").replace(/\.html$/,"")||"index";
-function mark(href){return href.replace(/\.html$/,"")===here?' class="fs-here"':"";}
+/* Normalise both sides to a slash-less, extension-less path so /a, /a.html and
+   /a/ all compare equal. A section link also marks its child pages (/blog marks
+   /blog/some-note). */
+function norm(p){
+  p=p.replace(/\/index\.html$/,"/").replace(/\.html$/,"");
+  if(p.length>1&&p.charAt(p.length-1)==="/") p=p.slice(0,-1);
+  return p||"/";
+}
+var here=norm(location.pathname);
+function mark(href){
+  var h=norm(href);
+  return (h===here || (h!=="/" && here.indexOf(h+"/")===0)) ? ' class="fs-here"' : "";
+}
 
-var SUB={"client-catcher.html":[
+var SUB={"/client-catcher":[
   ["/client-catcher-demo/","try the live demo","press play — watch a lead get booked"],
   ["/client-catcher#demo-video","the 40-second run","screen recording of a full save"],
   ["/client-catcher#soma","watch the wiring run","one entry lands in four tools at once"]
@@ -74,7 +87,7 @@ var navLinks=LINKS.map(function(l){
   }).join("");
   return '<span class="fs-dd">'+a+'<span class="fs-car">▾</span><span class="fs-sub"><span class="fs-sub-in">'+items+'</span></span></span>';
 }).join("");
-var menuLinks=[["index.html","home"]].concat(LINKS,[["planner.html","the free blueprint"]]).map(function(l){
+var menuLinks=[["/","home"]].concat(LINKS,[["/planner","the free blueprint"]]).map(function(l){
   var out='<a href="'+l[0]+'"'+mark(l[0])+'>'+l[1]+'</a>';
   var sub=SUB[l[0]];
   if(sub){out+=sub.map(function(s){
@@ -97,22 +110,22 @@ var footHTML=''
 +'<div class="fs-in">'
 +'<div class="fs-brand">NaNa Frimpomaa<span class="fs-dot">.</span><p>I make one-person businesses feel fully staffed — done for you, owned by you.</p></div>'
 +'<div class="fs-col"><div class="fs-h">Work with me</div>'
-+'<a href="client-catcher.html">the Client Catcher — the flagship</a>'
-+'<a href="services.html">services &amp; pricing</a>'
-+'<a href="portfolio.html">portfolio</a>'
-+'<a href="ugc.html">UGC for brands</a>'
-+'<a href="intake.html">build brief</a></div>'
++'<a href="/client-catcher">the Client Catcher — the flagship</a>'
++'<a href="/services">services &amp; pricing</a>'
++'<a href="/portfolio">portfolio</a>'
++'<a href="/ugc">UGC for brands</a>'
++'<a href="/intake">build brief</a></div>'
 +'<div class="fs-col"><div class="fs-h">Free</div>'
-+'<a href="planner.html">the Small Business Blueprint</a>'
-+'<a href="som.html">Som — capture tool</a>'
++'<a href="/planner">the Small Business Blueprint</a>'
++'<a href="/som">Som — capture tool</a>'
 +'<a href="/client-catcher#soma">watch the wiring run</a>'
-+'<a href="products.html">all tools</a></div>'
++'<a href="/products">all tools</a></div>'
 +'<div class="fs-col"><div class="fs-h">Elsewhere</div>'
 +'<a href="https://www.instagram.com/frimpomaasync" target="_blank" rel="noopener">Instagram</a>'
 +'<a href="https://www.facebook.com/share/18qcDjQme8/?mibextid=wwXIfr" target="_blank" rel="noopener">Facebook</a>'
 +'<a href="https://youtube.com/@frimpomaasync?si=KKimG0QwsgOsB1Xl" target="_blank" rel="noopener">YouTube</a>'
 +'<a href="https://www.tiktok.com/@frimpomaasync?_r=1&amp;_t=ZT-97e6dr2nWms" target="_blank" rel="noopener">TikTok</a>'
-+'<a href="blog.html">notes</a></div>'
++'<a href="/blog/">notes</a></div>'
 +'</div>'
 +'<div class="fs-base"><span>© 2026 NaNa Frimpomaa · frimpomaasync.com</span><span>Built in public.</span></div>';
 

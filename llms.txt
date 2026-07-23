@@ -31,6 +31,17 @@ Leads' names, numbers, and messages move only between the client's phone, calend
 
 This is an early-stage offer: no client testimonials yet, and the site says so plainly. Instead of borrowed reviews it offers: (1) a live demo run on the prospect's own real leads before any payment, (2) working systems built in public across the site, (3) the provider runs the same system on her own business, and (4) the money-back guarantee above.
 
+## Notes — free, ungated answer pages
+
+Written by NaNa Frimpomaa for one-person businesses. Each one hands over the usable material (scripts, tables, real numbers) rather than gating it. Index: https://frimpomaasync.com/blog/
+
+- How to reply to every lead in five minutes when you're the only one there — splits a reply into an instant automatic acknowledgement and a same-day human answer; five copy-paste texts; a four-touch follow-up ladder over seven days; free phone-only setup steps. https://frimpomaasync.com/blog/reply-to-every-lead-in-five-minutes
+- What automating a one-person business actually costs in 2026 — five routes compared with real ranges (free phone setup, all-in-one software $97–$497/mo plus 10–20 setup hours, app patchwork, live answering service $250–$600/mo, virtual assistant $800–$1,600/mo, done-for-you build $800–$3,000 one time); hidden costs; a break-even formula. https://frimpomaasync.com/blog/what-automating-a-one-person-business-actually-costs
+- Answering service vs AI receptionist vs missed-call text-back — capability comparison across five options, a decision tree based on where inquiries are lost, six questions to ask any vendor, and a mystery-call test. States plainly what a follow-up system cannot do. https://frimpomaasync.com/blog/answering-service-vs-ai-receptionist-vs-text-back
+- How to stop no-shows without being the bad guy — a three-reminder cadence (instant confirmation, 24-hour reminder requesting a one-word reply, two-hour nudge), six copy-paste messages, deposit guidance, and cancellation-policy wording. https://frimpomaasync.com/blog/stop-no-shows-without-being-the-bad-guy
+- Do I need a CRM if I'm a one-person business — answer: usually not at first. A nine-column lead sheet, four statuses (new, quoted, booked, closed), a ten-minute weekly review, and the five triggers for upgrading. https://frimpomaasync.com/blog/do-i-need-a-crm-if-im-a-one-person-business
+- Your website doesn't have to be Squarespace or Shopify — why a one-person business often doesn't need a website platform. https://frimpomaasync.com/blog/your-website-doesnt-have-to-be-squarespace
+
 ## Other products
 
 - Som — free email-gated lead-capture tool, installable web app: https://frimpomaasync.com/som.html

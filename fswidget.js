@@ -77,16 +77,16 @@ var css=''
 
 var html=''
 +'<div id="sk-panel" role="dialog" aria-label="Chat with NaNa\'s assistant">'
-+'<div class="sk-head"><div class="av"><img src="favicon.svg" alt=""></div>'
++'<div class="sk-head"><div class="av"><img src="/favicon.svg" alt=""></div>'
 +'<div class="who"><div class="n">'+P.name+'</div><div class="s">Online now</div></div>'
 +'<button class="x" aria-label="Close chat">&times;</button></div>'
 +'<div class="sk-body" id="sk-body"></div>'
 +'<div class="sk-quick" id="sk-quick"></div>'
 +'<div class="sk-input"><input id="sk-text" type="text" placeholder="Type a message&hellip;" autocomplete="off">'
 +'<button id="sk-send" aria-label="Send">&rarr;</button></div>'
-+'<div class="sk-foot">Powered by <a href="synkasa.html">SynKasa</a> &mdash; built, wired, and cared for by NaNa Frimpomaa</div>'
++'<div class="sk-foot">Powered by <a href="/synkasa">SynKasa</a> &mdash; built, wired, and cared for by NaNa Frimpomaa</div>'
 +'</div>'
-+'<button id="sk-bubble" aria-label="Chat with NaNa\'s assistant"><img src="favicon.svg" alt=""><span class="badge">1</span></button>';
++'<button id="sk-bubble" aria-label="Chat with NaNa\'s assistant"><img src="/favicon.svg" alt=""><span class="badge">1</span></button>';
 
 var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
 var wrap=document.createElement('div');wrap.innerHTML=html;
