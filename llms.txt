@@ -52,7 +52,7 @@ Written by NaNa Frimpomaa for one-person businesses. Each one hands over the usa
 
 Full policy: https://frimpomaasync.com/privacy
 
-- Website visitors: only what you type into a form (usually an email, sometimes name and phone) is collected, and it is used to reply. No analytics, no advertising pixels, no tracking cookies, nothing sold or shared. Service providers are Hostinger (hosting), Formspree (form delivery) and Google (email and booking calendar).
+- Website visitors: only what you type into a form (usually an email, sometimes name and phone) is collected, and it is used to reply. No analytics, no advertising pixels, no tracking cookies, nothing sold or shared. Three ordinary service providers are involved — website hosting, form delivery, and email/calendar — and they are named on request by email rather than published.
 - On-device only: the site chat widget and the Som app store their data in the visitor's own browser, not on the provider's servers.
 - Client systems: customer data moves only between the client's phone, calendar and follow-up system; every provider that touches it is named in the client agreement; the client owns all of it; on cancellation it is exported to the client and deleted.
 - Requests for a copy, a correction, deletion or unsubscribe go to hello@frimpomaasync.com and are actioned within 30 days, free, regardless of the requester's location.
