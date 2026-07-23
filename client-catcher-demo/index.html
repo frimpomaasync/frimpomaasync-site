@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-07-19.2 · rebrandable links -->
+<!-- v2026-07-23.1 · rebrandable links + build=events scope panel -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -149,6 +149,15 @@
   .wire h4{font-family:var(--serif);font-size:17px;font-weight:600;display:flex;align-items:center;gap:9px}
   .wire h4 .wchip{font-size:9px;letter-spacing:.16em;text-transform:uppercase;background:var(--copper);color:#fff;border-radius:999px;padding:3.5px 10px;font-family:var(--sans)}
   .wire p{font-size:13px;color:var(--ink-soft);margin-top:7px}
+  .yourbuild{margin-top:26px;border:1px solid var(--line);border-radius:14px;background:#FFFFFF;padding:22px 24px 18px}
+  .yourbuild .wt{margin-bottom:4px}
+  .yb-row{display:flex;gap:16px;padding:14px 0;border-bottom:1px solid var(--line);align-items:flex-start}
+  .yb-n{font-family:var(--serif);font-size:21px;color:var(--copper);line-height:1.1;min-width:34px}
+  .yb-row h4{font-family:var(--serif);font-size:16.5px;font-weight:600}
+  .yb-row p{font-size:13px;color:var(--ink-soft);margin-top:4px}
+  .yb-foot{padding-top:16px;font-size:13px;color:var(--ink-soft);line-height:1.6}
+  .yb-foot b{color:var(--ink);font-family:var(--serif);font-size:14.5px}
+  .yb-price{display:block;margin-top:10px;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
 
   /* ---------- inbox ---------- */
   .lead{
@@ -490,6 +499,39 @@
           </div>
         </div>
       </div>
+
+      <div class="yourbuild" id="yourBuild" hidden>
+        <div class="wt">Your build &mdash; exactly what <span class="b-biz">Suds &amp; Shine Mobile Detailing</span> is getting</div>
+        <div class="yb-row">
+          <span class="yb-n">01</span>
+          <div><h4>The WhatsApp front door</h4>
+          <p>Every inquiry &mdash; Ghana or the USA, any hour &mdash; gets a warm reply in <span class="b-owner">Maya</span>'s voice within seconds. Mid-event, mid-flight, or asleep: nothing sits unanswered.</p></div>
+        </div>
+        <div class="yb-row">
+          <span class="yb-n">02</span>
+          <div><h4>Follow-up that never forgets</h4>
+          <p>Sequences written in <span class="b-owner">Maya</span>'s own voice keep every conversation warm until the client books. No lead cools quietly again.</p></div>
+        </div>
+        <div class="yb-row">
+          <span class="yb-n">03</span>
+          <div><h4>The date-hold booking sheet</h4>
+          <p>Events book dates, not appointments. Clients check availability themselves and hold their date with a deposit &mdash; it lands straight on the real calendar.</p></div>
+        </div>
+        <div class="yb-row">
+          <span class="yb-n">04</span>
+          <div><h4>Deposits that clear from both countries</h4>
+          <p>Payment links that take Mobile Money and cards, so a bride in the US and a client in Accra can both pay the moment they decide &mdash; not after a bank visit.</p></div>
+        </div>
+        <div class="yb-row">
+          <span class="yb-n">05</span>
+          <div><h4>The package sheet</h4>
+          <p>Decor packages and curated dining menus, sent automatically with deposit-to-lock built in &mdash; so quoting stops eating your evenings.</p></div>
+        </div>
+        <div class="yb-foot">
+          <b>The Seven-Day Switch-On.</b> Not live within 7 days of our first call &mdash; you pay nothing at all. Live but it hasn't booked a single event in 30 days &mdash; every dollar back. Either way you keep the follow-up scripts written in your voice, and the setup documentation.
+          <span class="yb-price">Done-for-you install &middot; $1,500 &mdash; founding rate $750 for the first 3 clients, a named review in exchange &middot; optional $99/mo care plan</span>
+        </div>
+      </div>
     </section>
 
     <!-- INBOX -->
@@ -734,6 +776,10 @@
   if((qs.get('biz')||'').trim() || (qs.get('owner')||'').trim()){
     setBrand((qs.get('biz')||'').trim(), (qs.get('owner')||'').trim());
     seedThread();
+  }
+  /* ?build=events adds the "your build" scope panel — prospect-specific links only */
+  if((qs.get('build')||'').trim() === 'events'){
+    document.getElementById('yourBuild').hidden = false;
   }
 
   async function playBookingSheet(){
