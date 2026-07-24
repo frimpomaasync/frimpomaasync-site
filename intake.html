@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Your Build Brief — NaNa Frimpomaa</title>
+<title>Your Build Brief · NaNa Frimpomaa</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <meta name="robots" content="noindex, follow">
-<meta name="description" content="Your build brief — tell NaNa exactly what to build after your order. Takes about 3 minutes.">
+<meta name="description" content="Your build brief: tell me exactly what to build after your order. Takes about 3 minutes.">
 <meta name="theme-color" content="#FFFFFF">
 <!-- Self-contained. No external resources. System fonts only.
      SETUP: see the SETUP NOTE near the </form> tag to connect this form to your email/inbox. -->
@@ -125,7 +125,7 @@
       <div class="eyebrow mono">Step 2 · Tell me what to build</div>
       <h1 class="title">your build brief<span class="period">.</span></h1>
       <p class="lede">
-        Payment's in — now the fun part. Tell me about the tool you want and I'll get to work.
+        Payment's in. Now the fun part. Tell me about the tool you want and I'll get to work.
         <span class="accent">The more detail, the better the build.</span> Takes about 3 minutes.
       </p>
       <div class="paid">
@@ -162,8 +162,8 @@
       <div class="field">
         <label>Which build is this? <span class="req">*</span></label>
         <div class="chips">
-          <span class="chip"><input type="radio" name="tier" id="t-founding" value="Founding Client — $750" required><label for="t-founding">Founding Client · $750</label></span>
-          <span class="chip"><input type="radio" name="tier" id="t-system" value="The Client Catcher — $1,500"><label for="t-system">The Client Catcher · $1,500</label></span>
+          <span class="chip"><input type="radio" name="tier" id="t-founding" value="Founding Client · $750" required><label for="t-founding">Founding Client · $750</label></span>
+          <span class="chip"><input type="radio" name="tier" id="t-system" value="The Client Catcher · $1,500"><label for="t-system">The Client Catcher · $1,500</label></span>
           <span class="chip"><input type="radio" name="tier" id="t-custom" value="Custom / not sure"><label for="t-custom">Custom / not sure</label></span>
         </div>
       </div>
@@ -188,7 +188,7 @@
 
       <div class="field">
         <label>Tell me the whole story <span class="req">*</span></label>
-        <div class="hint">What's the problem or idea? What should the tool do? Walk me through how you'd use it. Don't worry about tech words — just describe it like you'd tell a friend.</div>
+        <div class="hint">What's the problem or idea? What should the tool do? Walk me through how you'd use it. Don't worry about tech words. Just describe it like you'd tell a friend.</div>
         <textarea name="details" required placeholder="Right now I… / I wish I had something that… / It should let me…"></textarea>
       </div>
 
@@ -215,7 +215,7 @@
 
       <div class="field">
         <label>Anything I should see? Examples, screenshots, notes</label>
-        <div class="hint">Links to a tool you like, a sketch, a spreadsheet you use now — paste any links here.</div>
+        <div class="hint">Links to a tool you like, a sketch, a spreadsheet you use now. Paste any links here.</div>
         <textarea name="references" placeholder="Links or notes… (optional)" style="min-height:80px;"></textarea>
       </div>
 
@@ -263,14 +263,14 @@
     <div class="done" id="done">
       <div class="ring">✓</div>
       <h2>got it<span class="period">.</span></h2>
-      <p>Your build brief is on its way to me. I'll review it and email you next steps — usually within a day. Talk soon.</p>
+      <p>Your build brief is on its way to me. I'll review it and email you next steps, usually within a day. Talk soon.</p>
       <a class="cta mono" href="/">back to the hub →</a>
     </div>
 
     <footer class="foot">
       <div class="brand">NaNa Frimpomaa</div>
       Custom AI tools, dashboards &amp; automations<br>
-      <a href="/">← back to the hub</a> · © 2026 · Built in public
+      <a href="/">← back to the hub</a> · © 2026 · Watch it work before you pay
     </footer>
 
   </div>
@@ -305,7 +305,7 @@
     add("References","references"); add("Timeline","timeline");
     add("Anything else","anything");
 
-    var subject = "New Build Brief — " + (data.get('name') || 'SynKasa');
+    var subject = "New Build Brief: " + (data.get('name') || 'Client Catcher');
     var body = "MY BUILD BRIEF\n\n" + lines.join("\n\n");
     var href = "mailto:" + YOUR_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
 

@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Som</title>
-<meta name="description" content="Som — catch the thought before it's gone.">
+<meta name="description" content="Som · catch the thought before it's gone.">
 <meta name="robots" content="noindex">
 
 <link rel="manifest" href="manifest.json">
@@ -255,7 +255,7 @@
   <div class="top">
     <div>
       <div class="brand">som<span>.</span></div>
-      <div class="brandline" id="brandline">Som is Twi for <em>take it</em> — so hand it over. Type the thing, press Enter, let your brain off the hook.</div>
+      <div class="brandline" id="brandline">Som is Twi for <em>take it</em>. So hand it over. Type the thing, press Enter, let your brain off the hook.</div>
       <div class="bizline" id="bizline"></div>
     </div>
     <div class="today-date" id="dateLine">—</div>
@@ -703,7 +703,7 @@
     try{ if(localStorage.getItem(INSTALL_KEY)==='1') return; }catch(e){}
     var bar=el('installBar'), txt=el('installText'), btn=el('installBtn');
     if(isIOS()){
-      txt.innerHTML='Put Som on your home screen — tap <b>Share</b>, then <b>Add to Home Screen</b>.';
+      txt.innerHTML='Put Som on your home screen. Tap <b>Share</b>, then <b>Add to Home Screen</b>.';
       btn.style.display='none';
     } else if(deferredPrompt){
       txt.innerHTML='Install Som so it opens like an app, even offline.';
