@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>This one got away · NaNa Frimpomaa</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<meta name="robots" content="noindex, follow">
+<meta name="description" content="That page isn't here. Everything that is, in one short list.">
+<meta name="theme-color" content="#FFFFFF">
+<!-- 404 page. Wired in .htaccess with: ErrorDocument 404 /404.html
+     Nav + footer come from fsnav.js, so this page carries the real site chrome
+     instead of dead-ending on the host's generic error page. -->
+<style>
+  :root{
+    --paper:#FFFFFF; --panel:#F6F5F3; --panel2:#FAFAF8; --card:#FFFFFF;
+    --ink:#1A1A1A; --ink-soft:#3D3A35; --muted:#8A8479; --hairline:#E8E4DD;
+    --copper:#C9975B; --copper-deep:#A87938; --radius:22px;
+    --serif:ui-serif,"New York","Iowan Old Style",Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,Roboto,sans-serif;
+    --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  :focus-visible{outline:2.5px solid var(--ink);outline-offset:3px;border-radius:8px}
+  body{font-family:var(--sans);color:var(--ink);background:var(--paper);
+    line-height:1.45;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .wrap{max-width:660px;margin:0 auto;padding:clamp(30px,6vw,58px) clamp(18px,5vw,26px) 70px}
+
+  .num{font-family:var(--serif);font-weight:600;font-size:clamp(56px,16vw,92px);
+    line-height:.9;letter-spacing:-.04em;color:var(--copper);margin-bottom:20px}
+  .kicker{font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--copper-deep);margin-bottom:12px}
+  h1{font-family:var(--serif);font-weight:600;font-size:clamp(2.2rem,7.2vw,3.4rem);
+    line-height:1.04;letter-spacing:-.025em}
+  h1 .dot{color:var(--copper)}
+  .lede{margin-top:18px;font-size:16px;color:var(--ink-soft);line-height:1.6;max-width:52ch}
+  .lede b{color:var(--ink);font-weight:600}
+
+  .sec-h{font-family:var(--serif);font-weight:600;font-size:clamp(20px,4vw,26px);
+    letter-spacing:-.015em;margin-top:44px}
+  .sec-h .dot{color:var(--copper)}
+  .sec-s{margin-top:9px;font-size:14.5px;color:var(--ink-soft);line-height:1.6;max-width:54ch}
+
+  .links{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+  .go{display:flex;gap:15px;align-items:flex-start;background:var(--card);
+    border:1px solid var(--hairline);border-radius:18px;padding:17px 18px;
+    text-decoration:none;color:inherit;transition:border-color .18s ease,transform .18s ease}
+  .go:hover{border-color:var(--copper);transform:translateX(3px)}
+  .go .n{font-family:var(--mono);font-size:11px;color:var(--copper-deep);
+    letter-spacing:.06em;padding-top:3px;flex:none}
+  .go b{display:block;font-size:15px;color:var(--ink)}
+  .go p{font-size:13.5px;color:var(--muted);margin-top:4px;line-height:1.5}
+  .go .arr{margin-left:auto;align-self:center;color:var(--copper-deep);flex:none}
+
+  .btn{display:inline-flex;align-items:center;gap:12px;background:var(--ink);color:#F5F3EF;
+    border-radius:999px;padding:16px 28px;font-size:15px;font-weight:600;text-decoration:none;
+    min-height:52px;margin-top:26px;transition:transform .18s ease,box-shadow .18s ease}
+  .btn .dot{width:9px;height:9px;border-radius:50%;background:var(--copper);flex:none}
+  .btn .arr{transition:transform .18s ease}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,26,26,.22)}
+  .btn:hover .arr{transform:translateX(4px)}
+
+  .note{margin-top:30px;background:var(--panel2);border:1px dashed var(--copper);
+    border-radius:18px;padding:17px 19px;font-size:13.5px;color:var(--ink-soft);line-height:1.6}
+  .note b{color:var(--ink);font-weight:600}
+  .note a{color:var(--copper-deep);text-decoration:underline;text-underline-offset:3px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="num">404</div>
+  <div class="kicker">Page not found</div>
+  <h1>This one got away<span class="dot">.</span></h1>
+  <p class="lede">The page you wanted isn't at that address. Either the link is old, or I moved
+    something and didn't leave a forwarding note. <b>Nothing is broken on your end.</b></p>
+
+  <h2 class="sec-h">Everything that does exist<span class="dot">.</span></h2>
+  <p class="sec-s">Short list, so you can get where you were going.</p>
+
+  <div class="links">
+    <a class="go" href="/client-catcher"><span class="n">01</span>
+      <div><b>The Client Catcher</b>
+        <p>Your booking, leads and follow-up, done for you and live in 7 days.</p></div>
+      <span class="arr">&rarr;</span></a>
+
+    <a class="go" href="/client-catcher-demo/"><span class="n">02</span>
+      <div><b>Watch it catch a lead</b>
+        <p>The live demo. Press play and see one lead go from missed call to booked.</p></div>
+      <span class="arr">&rarr;</span></a>
+
+    <a class="go" href="/blog/"><span class="n">03</span>
+      <div><b>The notes</b>
+        <p>Straight answers on no-shows, follow-up, CRMs and what automation really costs. Free, no email required.</p></div>
+      <span class="arr">&rarr;</span></a>
+
+    <a class="go" href="/som"><span class="n">04</span>
+      <div><b>Som</b>
+        <p>The free app that catches a thought before it's gone. Installs in two taps.</p></div>
+      <span class="arr">&rarr;</span></a>
+
+    <a class="go" href="/services"><span class="n">05</span>
+      <div><b>Work with me</b>
+        <p>What I build, what it costs, and how the guarantee works.</p></div>
+      <span class="arr">&rarr;</span></a>
+  </div>
+
+  <a class="btn" href="/"><span class="dot"></span> Back to the start <span class="arr">&rarr;</span></a>
+
+  <div class="note"><b>Losing things is the whole problem I build around,</b> so a missing page is
+    a bit rich coming from me. If you followed a link from somewhere and it broke, tell me at
+    <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a> and I'll fix it properly.</div>
+
+</div>
+<script src="/fsnav.js?v=725h" defer></script>
+<script src="/fswidget.js?v=725h" defer></script>
+</body>
+</html>

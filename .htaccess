@@ -15,6 +15,8 @@ RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
 RewriteRule ^index\.html$ / [R=301,L]
 
 # /page.html -> /page  (permanent, keeps query strings)
+# 404.html is exempt: ErrorDocument must be able to serve it by its real path.
+RewriteCond %{REQUEST_URI} !^/404\.html$
 RewriteCond %{THE_REQUEST} \s/+([^\s?]+)\.html[\s?] [NC]
 RewriteRule ^(.+)\.html$ /$1 [R=301,L]
 
@@ -23,3 +25,6 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.+)$ $1.html [L]
+
+# Custom 404. Replaces the host's generic error page, keeps visitors on the site.
+ErrorDocument 404 /404.html
