@@ -21,11 +21,11 @@
 
 ## Ownership and hosting model
 
-The system runs on the provider's software accounts so the client never buys software, manages subscriptions, or learns tools. The client owns everything built for them: workflows, scripts and messages in their voice, setup documentation, and all customer data. The agreement includes full handoff terms — data export, system documentation, and a transfer path — so the client's business never depends on the provider being reachable.
+The system is built in the client's own accounts, in the client's name — the client never manages subscriptions or learns tools during the build, and owns everything from day one: the accounts, workflows, scripts and messages in their voice, setup documentation, and all customer data. There are no software subscriptions; the only running cost is a few dollars a month of metered usage billed to the client's own card, never marked up. Nothing about the client's business depends on the provider being reachable, and no transfer is ever needed — the keys were always the client's.
 
 ## Customer data
 
-Leads' names, numbers, and messages move only between the client's phone, calendar, and the follow-up system. Nothing is sold or shared. Every provider that touches the data is named in the client agreement. On cancellation, data is exported to the client and deleted from the provider's accounts.
+Leads' names, numbers, and messages move only between the client's phone, calendar, and the follow-up system — all of it living in the client's own accounts, never the provider's. Nothing is sold or shared. Every provider that touches the data is named in the client agreement. On cancellation nothing needs exporting: the data was never anywhere but the client's own accounts.
 
 ## Proof status (honest)
 
