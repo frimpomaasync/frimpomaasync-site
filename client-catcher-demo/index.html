@@ -756,15 +756,15 @@
     ty.classList.remove('on');
   }
 
-  function ownerMeta(){ return 'Sent automatically · in ' + esc(BRAND.owner) + ''s voice'; }
+  function ownerMeta(){ return 'Sent automatically · in ' + esc(BRAND.owner) + '’s voice'; }
 
   function seedThread(){
     document.getElementById('threadAva').textContent = 'FU';
     document.getElementById('threadName').textContent = 'Follow-ups';
-    document.getElementById('threadStatus').textContent = 'Replies go out in ' + BRAND.owner + ''s voice, automatically';
+    document.getElementById('threadStatus').textContent = 'Replies go out in ' + BRAND.owner + '’s voice, automatically';
     document.getElementById('msgs').innerHTML =
       '<div class="msg cust">Hi! Do you do pet hair removal? My back seat is… a situation.<span class="meta">Dana P. · website form · 9:12 AM</span></div>' +
-      '<div class="msg owner">Ha! Pet hair is my nemesis and I win every time. Yes, it's included in the full service. Want me to send you my openings this week?<span class="meta">' + ownerMeta() + ' · 9:12 AM</span></div>';
+      '<div class="msg owner">Ha! Pet hair is my nemesis and I win every time. Yes, it’s included in the full service. Want me to send you my openings this week?<span class="meta">' + ownerMeta() + ' · 9:12 AM</span></div>';
   }
   seedThread();
 
@@ -834,16 +834,16 @@
     setStep(2,'doing');
     document.getElementById('threadAva').textContent = 'JT';
     document.getElementById('threadName').textContent = 'Jasmine T.';
-    document.getElementById('threadStatus').textContent = 'Missed call · replying in ' + BRAND.owner + ''s voice';
+    document.getElementById('threadStatus').textContent = 'Missed call · replying in ' + BRAND.owner + '’s voice';
     document.getElementById('msgs').innerHTML = '';
     goView('messages');
     await typingOn(1800);
-    addMsg('owner', 'Hey Jasmine! ' + esc(BRAND.owner) + ' here from ' + esc(BRAND.biz) + '. So sorry I missed your call. I was mid-appointment. I'd love to take care of you this week!', ownerMeta() + ' · just now');
+    addMsg('owner', 'Hey Jasmine! ' + esc(BRAND.owner) + ' here from ' + esc(BRAND.biz) + '. So sorry I missed your call. I was mid-appointment. I’d love to take care of you this week!', ownerMeta() + ' · just now');
     document.getElementById('demoPill').textContent = 'Replied ✓';
     await wait(2600);
     addMsg('cust', 'yes please!! do you have anything thursday?', 'Jasmine T. · just now');
     await typingOn(1500);
-    addMsg('owner', 'Thursday's open! Here's my live booking page, grab whichever time works for you. <u>tap to book</u>', ownerMeta() + ' · just now');
+    addMsg('owner', 'Thursday’s open! Here’s my live booking page, grab whichever time works for you. <u>tap to book</u>', ownerMeta() + ' · just now');
     setStep(2,'done');
     await wait(1800);
 
@@ -854,7 +854,7 @@
     await wait(1200);
     addMsg('cust', 'booked!! see you thursday', 'Jasmine T. · just now');
     await typingOn(1300);
-    addMsg('owner', 'You're all set for Thursday at 10:00 AM. I'll text you a reminder Wednesday night. See you then!', ownerMeta() + ' · just now');
+    addMsg('owner', 'You’re all set for Thursday at 10:00 AM. I’ll text you a reminder Wednesday night. See you then!', ownerMeta() + ' · just now');
     await wait(1800);
     goView('calendar');
     var empty = document.getElementById('thuEmpty');
