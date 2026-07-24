@@ -73,7 +73,7 @@ function mark(href){
 }
 
 var SUB={"/client-catcher":[
-  ["/client-catcher-demo/","try the live demo","press play — watch a lead get booked"],
+  ["/client-catcher-demo/","try the live demo","press play, watch a lead get booked"],
   ["/client-catcher#demo-video","the 40-second run","screen recording of a full save"],
   ["/client-catcher#soma","watch the wiring run","one entry lands in four tools at once"]
 ]};
@@ -108,16 +108,16 @@ var navHTML=''
 
 var footHTML=''
 +'<div class="fs-in">'
-+'<div class="fs-brand">NaNa Frimpomaa<span class="fs-dot">.</span><p>I make one-person businesses feel fully staffed — done for you, owned by you.</p></div>'
++'<div class="fs-brand">NaNa Frimpomaa<span class="fs-dot">.</span><p>I make one-person businesses feel fully staffed. Done for you, owned by you.</p></div>'
 +'<div class="fs-col"><div class="fs-h">Work with me</div>'
-+'<a href="/client-catcher">the Client Catcher — the flagship</a>'
++'<a href="/client-catcher">the Client Catcher · the flagship</a>'
 +'<a href="/services">services &amp; pricing</a>'
 +'<a href="/portfolio">portfolio</a>'
 +'<a href="/ugc">UGC for brands</a>'
 +'<a href="/intake">build brief</a></div>'
 +'<div class="fs-col"><div class="fs-h">Free</div>'
 +'<a href="/planner">the Small Business Blueprint</a>'
-+'<a href="/som">Som — capture tool</a>'
++'<a href="/som">Som · capture tool</a>'
 +'<a href="/client-catcher#soma">watch the wiring run</a>'
 +'<a href="/products">all tools</a></div>'
 +'<div class="fs-col"><div class="fs-h">Elsewhere</div>'
@@ -128,7 +128,7 @@ var footHTML=''
 +'<a href="/blog/">notes</a></div>'
 +'</div>'
 +'<div class="fs-base"><span>© 2026 NaNa Frimpomaa · frimpomaasync.com</span>'
-+'<span><a href="/privacy" style="color:inherit;text-decoration:none;border-bottom:1px solid #E8E5E0">Privacy</a> · Built in public.</span></div>';
++'<span><a href="/privacy" style="color:inherit;text-decoration:none;border-bottom:1px solid #E8E5E0">Privacy</a> · Watch it work before you pay.</span></div>';
 
 var bandCSS=""
 +"#fscta{background:linear-gradient(160deg,#1E2A45,#16203A);color:#F4F1EC;padding:72px 24px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Arial,sans-serif}"
@@ -156,9 +156,9 @@ if(!document.body.hasAttribute("data-no-fscta")){
   band.id="fscta";
   band.setAttribute("aria-label","Book a call");
   band.innerHTML='<h2>Ready when you are<span class="fs-period">.</span></h2>'
-    +'<p>One free 15-minute call. We find the leak costing you the most — and you leave with the map either way.</p>'
+    +'<p>One free 15-minute call. We find the leak costing you the most, and you leave with the map either way.</p>'
     +'<a class="fs-book" href="'+BOOK+'" target="_blank" rel="noopener">book a free 15-min call →</a>'
-    +'<div class="fs-guar">✓ Live and working in 7 days — or you don\u2019t pay.</div>'
+    +'<div class="fs-guar">✓ Live and working in 7 days, or you don\'t pay.</div>'
     +'<div class="fs-trust">Built by frimpomaasync.com</div>';
   document.body.appendChild(band);
 }

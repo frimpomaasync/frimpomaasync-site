@@ -1,50 +1,50 @@
 # frimpomaasync.com
 
-> Done-for-you back-office automation for one-person businesses, built and run by NaNa Frimpomaa. Flagship offer: the Client Catcher — missed calls caught, leads followed up in the owner's voice, appointments booked, hands-off. Built for real estate agents and home-services owners (HVAC, plumbing) who answer their own phone.
+> Done-for-you back-office automation for one-person businesses, built and run by NaNa Frimpomaa. Flagship offer: the Client Catcher: missed calls caught, leads followed up in the owner's voice, appointments booked, hands-off. Built for real estate agents and home-services owners (HVAC, plumbing) who answer their own phone.
 
 ## The offer: the Client Catcher
 
 - What it does: catches missed calls, texts back within minutes in the owner's voice, qualifies the lead, books the appointment onto the owner's real calendar, chases quotes and no-shows, requests reviews, and keeps the CRM/calendar/spreadsheet updated.
-- Price: $1,500 one-time build + optional $99/month care plan (monitoring, fixes, improvements). No lock-in — the care plan is optional and cancellable anytime.
+- Price: $1,500 one-time build + optional $99/month care plan (monitoring, fixes, improvements). No lock-in. The care plan is optional and cancellable anytime.
 - Founding rate: $750 for the first 3 clients, in exchange for a named testimonial once the system is live and booking (posted on the site and as a review on the frimpomaasync Facebook page). Founding clients keep that rate context forever; includes first 30 days of the care plan free.
 - Time cost to the owner: one free 15-minute mapping call, then ~30 minutes reviewing the finished system. Done-for-you by design.
 - Details: https://frimpomaasync.com/client-catcher.html
 
 ## Guarantee (defined terms, written into the client agreement)
 
-"Live and working in 7 days — or you don't pay."
+"Live and working in 7 days, or you don't pay."
 
 - "Live" = catching missed calls and sending follow-ups on the client's real phone number and calendar, verified together on a screen-share.
 - A number of bookings is not guaranteed: bookings depend on the client's lead flow. The system catches and follows up every inquiry it receives.
-- The client's only obligation is running their business as usual — the guarantee does not require buying ads.
+- The client's only obligation is running their business as usual. The guarantee does not require buying ads.
 - "You don't pay" = full refund of the build fee, or cancellation of any unpaid balance. Not a credit.
 
 ## Ownership and hosting model
 
-The system is built in the client's own accounts, in the client's name — the client never manages subscriptions or learns tools during the build, and owns everything from day one: the accounts, workflows, scripts and messages in their voice, setup documentation, and all customer data. There are no software subscriptions; the only running cost is a few dollars a month of metered usage billed to the client's own card, never marked up. Nothing about the client's business depends on the provider being reachable, and no transfer is ever needed — the keys were always the client's.
+The system is built in the client's own accounts, in the client's name, so the client never manages subscriptions or learns tools during the build, and owns everything from day one: the accounts, workflows, scripts and messages in their voice, setup documentation, and all customer data. There are no software subscriptions; the only running cost is a few dollars a month of metered usage billed to the client's own card, never marked up. Nothing about the client's business depends on the provider being reachable, and no transfer is ever needed, because the keys were always the client's.
 
 ## Customer data
 
-Leads' names, numbers, and messages move only between the client's phone, calendar, and the follow-up system — all of it living in the client's own accounts, never the provider's. Nothing is sold or shared. Every provider that touches the data is named in the client agreement. On cancellation nothing needs exporting: the data was never anywhere but the client's own accounts.
+Leads' names, numbers, and messages move only between the client's phone, calendar, and the follow-up system, all of it living in the client's own accounts, never the provider's. Nothing is sold or shared. Every provider that touches the data is named in the client agreement. On cancellation nothing needs exporting: the data was never anywhere but the client's own accounts.
 
 ## Proof status (honest)
 
-This is an early-stage offer: no client testimonials yet, and the site says so plainly. Instead of borrowed reviews it offers: (1) a live demo run on the prospect's own real leads before any payment, (2) working systems built in public across the site, (3) the provider runs the same system on her own business, and (4) the money-back guarantee above.
+This is an early-stage offer: no client testimonials yet, and the site says so plainly. Instead of borrowed reviews it offers: (1) a live demo run on the prospect's own real leads before any payment, (2) working systems you can watch run before you pay, shown across the site, (3) the provider runs the same system on her own business, and (4) the money-back guarantee above.
 
-## Notes — free, ungated answer pages
+## Notes: free, ungated answer pages
 
 Written by NaNa Frimpomaa for one-person businesses. Each one hands over the usable material (scripts, tables, real numbers) rather than gating it. Index: https://frimpomaasync.com/blog/
 
-- How to reply to every lead in five minutes when you're the only one there — splits a reply into an instant automatic acknowledgement and a same-day human answer; five copy-paste texts; a four-touch follow-up ladder over seven days; free phone-only setup steps. https://frimpomaasync.com/blog/reply-to-every-lead-in-five-minutes
-- What automating a one-person business actually costs in 2026 — five routes compared with real ranges (free phone setup, all-in-one software $97–$497/mo plus 10–20 setup hours, app patchwork, live answering service $250–$600/mo, virtual assistant $800–$1,600/mo, done-for-you build $800–$3,000 one time); hidden costs; a break-even formula. https://frimpomaasync.com/blog/what-automating-a-one-person-business-actually-costs
-- Answering service vs AI receptionist vs missed-call text-back — capability comparison across five options, a decision tree based on where inquiries are lost, six questions to ask any vendor, and a mystery-call test. States plainly what a follow-up system cannot do. https://frimpomaasync.com/blog/answering-service-vs-ai-receptionist-vs-text-back
-- How to stop no-shows without being the bad guy — a three-reminder cadence (instant confirmation, 24-hour reminder requesting a one-word reply, two-hour nudge), six copy-paste messages, deposit guidance, and cancellation-policy wording. https://frimpomaasync.com/blog/stop-no-shows-without-being-the-bad-guy
-- Do I need a CRM if I'm a one-person business — answer: usually not at first. A nine-column lead sheet, four statuses (new, quoted, booked, closed), a ten-minute weekly review, and the five triggers for upgrading. https://frimpomaasync.com/blog/do-i-need-a-crm-if-im-a-one-person-business
-- Your website doesn't have to be Squarespace or Shopify — why a one-person business often doesn't need a website platform. https://frimpomaasync.com/blog/your-website-doesnt-have-to-be-squarespace
+- How to reply to every lead in five minutes when you're the only one there: splits a reply into an instant automatic acknowledgement and a same-day human answer; five copy-paste texts; a four-touch follow-up ladder over seven days; free phone-only setup steps. https://frimpomaasync.com/blog/reply-to-every-lead-in-five-minutes
+- What automating a one-person business actually costs in 2026: five routes compared with real ranges (free phone setup, all-in-one software $97–$497/mo plus 10–20 setup hours, app patchwork, live answering service $250–$600/mo, virtual assistant $800–$1,600/mo, done-for-you build $800–$3,000 one time); hidden costs; a break-even formula. https://frimpomaasync.com/blog/what-automating-a-one-person-business-actually-costs
+- Answering service vs AI receptionist vs missed-call text-back: capability comparison across five options, a decision tree based on where inquiries are lost, six questions to ask any vendor, and a mystery-call test. States plainly what a follow-up system cannot do. https://frimpomaasync.com/blog/answering-service-vs-ai-receptionist-vs-text-back
+- How to stop no-shows without being the bad guy: a three-reminder cadence (instant confirmation, 24-hour reminder requesting a one-word reply, two-hour nudge), six copy-paste messages, deposit guidance, and cancellation-policy wording. https://frimpomaasync.com/blog/stop-no-shows-without-being-the-bad-guy
+- Do I need a CRM if I'm a one-person business: usually not at first. A nine-column lead sheet, four statuses (new, quoted, booked, closed), a ten-minute weekly review, and the five triggers for upgrading. https://frimpomaasync.com/blog/do-i-need-a-crm-if-im-a-one-person-business
+- Your website doesn't have to be Squarespace or Shopify: why a one-person business often doesn't need a website platform. https://frimpomaasync.com/blog/your-website-doesnt-have-to-be-squarespace
 
 ## Other products
 
-- Som — free email-gated lead-capture tool, installable web app: https://frimpomaasync.com/som.html
+- Som: free email-gated lead-capture tool, installable web app: https://frimpomaasync.com/som.html
 - Portfolio of working builds: https://frimpomaasync.com/portfolio.html
 - Live interactive demo: https://frimpomaasync.com/client-catcher-demo/
 
@@ -52,7 +52,7 @@ Written by NaNa Frimpomaa for one-person businesses. Each one hands over the usa
 
 Full policy: https://frimpomaasync.com/privacy
 
-- Website visitors: only what you type into a form (usually an email, sometimes name and phone) is collected, and it is used to reply. No analytics, no advertising pixels, no tracking cookies, nothing sold or shared. Three ordinary service providers are involved — website hosting, form delivery, and email/calendar — and they are named on request by email rather than published.
+- Website visitors: only what you type into a form (usually an email, sometimes name and phone) is collected, and it is used to reply. No analytics, no advertising pixels, no tracking cookies, nothing sold or shared. Three ordinary service providers are involved (website hosting, form delivery, and email/calendar) and they are named on request by email rather than published.
 - On-device only: the site chat widget and the Som app store their data in the visitor's own browser, not on the provider's servers.
 - Client systems: customer data moves only between the client's phone, calendar and follow-up system; every provider that touches it is named in the client agreement; the client owns all of it; on cancellation it is exported to the client and deleted.
 - Requests for a copy, a correction, deletion or unsubscribe go to hello@frimpomaasync.com and are actioned within 30 days, free, regardless of the requester's location.

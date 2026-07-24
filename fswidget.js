@@ -5,21 +5,21 @@
 var BOOK="https://calendar.app.google/DkRJFRA3G6W6d8E48";
 
 var P={
-  name:"NaNa's Assistant", email:"hello@frimpomaasync.com", booking:BOOK,
-  greeting:"Hey — welcome! I'm NaNa's AI assistant. I can tell you about the Client Catcher, point you to the free tools, or get you booked for a free 15-min call. What are you here for?",
+  name:"NaNa Frimpomaa's Assistant", email:"hello@frimpomaasync.com", booking:BOOK,
+  greeting:"Hey, welcome! I'm NaNa Frimpomaa's AI assistant. I can tell you about the Client Catcher, point you to the free tools, or get you booked for a free 15-min call. What are you here for?",
   services:[
-    {name:"The Client Catcher — never lose a lead",price:"$1,500 · live in 7 days · optional $99/mo care"},
+    {name:"The Client Catcher · never lose a lead",price:"$1,500 · live in 7 days · optional $99/mo care"},
     {name:"Founding Client build (first 3 only)",price:"$750"},
     {name:"Som (capture tool)",price:"free app"}
   ],
   faqs:[
-    {keys:["build","make","offer","services","service","create","do you do"],a:"I make one-person businesses feel fully staffed. The main offer is the Client Catcher — calls answered, follow-ups sent, jobs booked while your hands stay on the work. $1,500, live in 7 days, or $750 for the first 3 founding clients. The free tool is Som — it catches thoughts before they slip. You can also watch the wiring run for free at frimpomaasync.com/client-catcher#soma."},
-    {keys:["soma"],a:"Soma is the free live demo of what I install — type one customer in and watch them land in four tools at once. Nothing saved, nothing to sign up for. It now lives on the Client Catcher page: frimpomaasync.com/client-catcher#soma."},
-    {keys:["som"],a:"Som is free — it catches the things you'd normally lose: ideas, links, follow-ups. One field, no login, yours forever. It installs on your phone in two taps — no App Store, nothing to unzip: frimpomaasync.com/som."},
-    {keys:["catcher","client","lead","missed","follow"],a:"The Client Catcher is the flagship: every call answered, every lead chased, every job on your calendar — without you touching any of it. Live and working in 7 days — or you don't pay. Want a free 15-min mapping call?"},
-    {keys:["guarantee","refund","risk","pay"],a:"The guarantee, in writing: live and working in 7 days — or you don't pay."},
-    {keys:["receptionist","chatbot","assistant","answer","widget"],a:"You're talking to it — this same assistant gets built for your business, answering your customers 24/7 in your voice. It's part of what a Client Catcher install can include. Want a free call to see it on your business?"},
-    {keys:["who","nana","frimpomaa","yourself"],a:"NaNa Frimpomaa — a solo founder who makes one-person businesses feel fully staffed. Everything on this site is real and live. What can I help you with?"}
+    {keys:["build","make","offer","services","service","create","do you do"],a:"I make one-person businesses feel fully staffed. The main offer is the Client Catcher: calls answered, follow-ups sent, jobs booked while your hands stay on the work. $1,500, live in 7 days, or $750 for the first 3 founding clients. The free tool is Som. It catches thoughts before they slip. You can also watch the wiring run for free at frimpomaasync.com/client-catcher#soma."},
+    {keys:["soma"],a:"Soma is the free live demo of what I install. Type one customer in and watch them land in four tools at once. Nothing saved, nothing to sign up for. It now lives on the Client Catcher page: frimpomaasync.com/client-catcher#soma."},
+    {keys:["som"],a:"Som is free. It catches the things you'd normally lose: ideas, links, follow-ups. One field, no login, yours forever. It installs on your phone in two taps. No App Store, nothing to unzip: frimpomaasync.com/som."},
+    {keys:["catcher","client","lead","missed","follow"],a:"The Client Catcher is the flagship: every call answered, every lead chased, every job on your calendar, without you touching any of it. Live and working in 7 days, or you don't pay. Want a free 15-min mapping call?"},
+    {keys:["guarantee","refund","risk","pay"],a:"The guarantee, in writing: live and working in 7 days, or you don't pay."},
+    {keys:["receptionist","chatbot","assistant","answer","widget"],a:"You're talking to it. This same assistant gets built for your business, answering your customers 24/7 in your voice. It's part of what a Client Catcher install can include. Want a free call to see it on your business?"},
+    {keys:["who","nana","frimpomaa","yourself"],a:"NaNa Frimpomaa. A solo founder who makes one-person businesses feel fully staffed. Everything on this site is real and live. What can I help you with?"}
   ],
   quick:[
     {label:"What do you build?",msg:"What do you build?"},
@@ -76,7 +76,7 @@ var css=''
 +'.sk-foot a{color:#A8763B;text-decoration:none;font-weight:600}';
 
 var html=''
-+'<div id="sk-panel" role="dialog" aria-label="Chat with NaNa\'s assistant">'
++'<div id="sk-panel" role="dialog" aria-label="Chat with NaNa Frimpomaa\'s assistant">'
 +'<div class="sk-head"><div class="av"><img src="/favicon.svg" alt=""></div>'
 +'<div class="who"><div class="n">'+P.name+'</div><div class="s">Online now</div></div>'
 +'<button class="x" aria-label="Close chat">&times;</button></div>'
@@ -86,7 +86,7 @@ var html=''
 +'<button id="sk-send" aria-label="Send">&rarr;</button></div>'
 +'<div class="sk-foot">Powered by <a href="/synkasa">SynKasa</a> &middot; Built by <a href="https://frimpomaasync.com">frimpomaasync.com</a></div>'
 +'</div>'
-+'<button id="sk-bubble" aria-label="Chat with NaNa\'s assistant"><img src="/favicon.svg" alt=""><span class="badge">1</span></button>';
++'<button id="sk-bubble" aria-label="Chat with NaNa Frimpomaa\'s assistant"><img src="/favicon.svg" alt=""><span class="badge">1</span></button>';
 
 var st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
 var wrap=document.createElement('div');wrap.innerHTML=html;
@@ -105,7 +105,7 @@ function greet(){renderQuick();bubble(P.greeting,'bot');}
 
 function norm(s){return (' '+s.toLowerCase()+' ').replace(/[^a-z0-9\s]/g,' ');}
 function has(t){for(var i=1;i<arguments.length;i++){var a=arguments[i];var hit=a.indexOf(' ')>-1?(t.indexOf(a)>-1):(t.indexOf(' '+a+' ')>-1);if(hit)return true;}return false;}
-function servicesReply(){var lines=P.services.map(function(s){return '• '+s.name+' — '+s.price;}).join('\n');return lines+'\n\nWant me to book you a free 15-min call?';}
+function servicesReply(){var lines=P.services.map(function(s){return '• '+s.name+' · '+s.price;}).join('\n');return lines+'\n\nWant me to book you a free 15-min call?';}
 
 function handle(text){
   bubble(text.replace(/</g,'&lt;'),'me');
@@ -114,21 +114,21 @@ function handle(text){
   if(convo.mode==='lead-name'){convo.lead.name=text.trim();convo.mode='lead-contact';say("Lovely to meet you, "+convo.lead.name+"! What's the best email or phone to reach you?");return;}
   if(convo.mode==='lead-contact'){convo.lead.contact=text.trim();convo.mode='idle';
     try{var L=JSON.parse(localStorage.getItem('sk_leads')||'[]');L.push({biz:'frimpomaasync.com',name:convo.lead.name,contact:convo.lead.contact,at:new Date().toISOString()});localStorage.setItem('sk_leads',JSON.stringify(L));}catch(e){}
-    say("Perfect — got it, "+convo.lead.name+". I've passed your details along and NaNa will reach out shortly. Want to grab a time now so you don't wait?\n\n→ <a href='"+P.booking+"' target='_blank' rel='noopener'>Pick a time</a>");
+    say("Perfect, got it, "+convo.lead.name+". I've passed your details along and NaNa Frimpomaa will reach out shortly. Want to grab a time now so you don't wait?\n\n→ <a href='"+P.booking+"' target='_blank' rel='noopener'>Pick a time</a>");
     return;}
   if(has(t,'book','appointment','schedule','get started','sign up','start','reserve','slot','call')){
     convo.mode='lead-name';
-    say("Love it! I can set that up. First — what's your name?");
+    say("Love it! I can set that up. First, what's your name?");
     return;}
   if(has(t,'price','pricing','cost','how much','rate','fee','charge','$')){say(servicesReply());return;}
-  if(has(t,'free','tool','tools','download')){say("Som is the free tool — it catches the thought before it's gone, and it's yours to keep (frimpomaasync.com/som). There's also a free live demo where you watch one entry land in four tools at once: frimpomaasync.com/client-catcher#soma.");return;}
-  if(has(t,'email','phone','reach','contact','number')){say("You can reach NaNa at "+P.email+", or I can take your details right here — want to do that? Just say 'book me'.");return;}
+  if(has(t,'free','tool','tools','download')){say("Som is the free tool. It catches the thought before it's gone, and it's yours to keep (frimpomaasync.com/som). There's also a free live demo where you watch one entry land in four tools at once: frimpomaasync.com/client-catcher#soma.");return;}
+  if(has(t,'email','phone','reach','contact','number')){say("You can reach NaNa Frimpomaa at "+P.email+", or I can take your details right here. Want to do that? Just say 'book me'.");return;}
   if(has(t,'hi','hello','hey','yo','good morning','good evening')&&text.trim().length<14){say(P.greeting);return;}
   if(has(t,'thank','thanks','appreciate')){say("Anytime! Want me to get you booked before you go?");return;}
   var best=null,bestScore=0;
   P.faqs.forEach(function(f){var sc=0;f.keys.forEach(function(k){if(t.indexOf(k)>-1)sc++;});if(sc>bestScore){bestScore=sc;best=f;}});
   if(best&&bestScore>0){say(best.a);return;}
-  say("Great question — I can help with what NaNa builds, pricing, the free tools, or booking you a free 15-min call. Which would you like?\n\nOr reach her directly at "+P.email+".");
+  say("Great question. I can help with what NaNa Frimpomaa builds, pricing, the free tools, or booking you a free 15-min call. Which would you like?\n\nOr reach her directly at "+P.email+".");
 }
 
 el('sk-bubble').addEventListener('click',skToggle);
