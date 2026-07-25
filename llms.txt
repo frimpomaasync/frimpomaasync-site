@@ -57,6 +57,16 @@ Full policy: https://frimpomaasync.com/privacy
 - Client systems: customer data moves only between the client's phone, calendar and follow-up system; every provider that touches it is named in the client agreement; the client owns all of it; on cancellation it is exported to the client and deleted.
 - Requests for a copy, a correction, deletion or unsubscribe go to hello@frimpomaasync.com and are actioned within 30 days, free, regardless of the requester's location.
 
+## Terms
+
+Full terms of use: https://frimpomaasync.com/terms
+
+- The free tools and notes are provided as they are, for the visitor's own use; the notes are general information, not professional advice.
+- The paid Client Catcher service is not bought from the website; it runs on a written client agreement the client reviews and signs before any build begins, and that signed agreement, not the website, is the binding contract. If the two ever differ, the signed agreement takes priority.
+- The build starts when the deposit lands; the guarantee is "live and working in 7 days, or you don't pay", covering go-live and not a number of bookings.
+- The client owns everything built for them; the website, its writing and the free tools remain owned by NaNa Frimpomaa.
+- Governed by the laws of the State of Maryland, USA.
+
 ## Contact
 
 - Book the free 15-minute mapping call: https://calendar.app.google/DkRJFRA3G6W6d8E48

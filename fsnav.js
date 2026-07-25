@@ -128,7 +128,7 @@ var footHTML=''
 +'<a href="/blog/">notes</a></div>'
 +'</div>'
 +'<div class="fs-base"><span>© 2026 NaNa Frimpomaa · frimpomaasync.com</span>'
-+'<span><a href="/privacy" style="color:inherit;text-decoration:none;border-bottom:1px solid #E8E5E0">Privacy</a> · Watch it work before you pay.</span></div>';
++'<span><a href="/privacy" style="color:inherit;text-decoration:none;border-bottom:1px solid #E8E5E0">Privacy</a> · <a href="/terms" style="color:inherit;text-decoration:none;border-bottom:1px solid #E8E5E0">Terms</a> · Watch it work before you pay.</span></div>';
 
 var bandCSS=""
 +"#fscta{background:linear-gradient(160deg,#1E2A45,#16203A);color:#F4F1EC;padding:72px 24px;text-align:center;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',Roboto,Arial,sans-serif}"
