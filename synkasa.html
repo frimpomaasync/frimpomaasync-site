@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>SynKasa · the AI receptionist that answers everything | frimpomaasync.com</title>
 <meta name="description" content="SynKasa answers your calls, texts and DMs in your voice, day or night, and books the good ones straight into your calendar. From $555, live in 48 hours, or you don't pay. Built in your own accounts and owned by you.">
+<meta name="theme-color" content="#FFFFFF">
 <link rel="canonical" href="https://frimpomaasync.com/synkasa">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://frimpomaasync.com/synkasa">
@@ -16,8 +17,8 @@
 <link rel="icon" href="/favicon.ico">
 <style>
 :root{
-  --ink:#1A1A1A; --ink2:#33302B; --muted:#6E6A62; --faint:#9A948A;
-  --line:#E3E0DA; --line-strong:#CFC9BF; --copper:#C9975B; --copper-deep:#A97B3F;
+  --ink:#1A1A1A; --ink2:#33302B; --muted:#6E6A62; --faint:#6F6A5E;
+  --line:#E3E0DA; --line-strong:#CFC9BF; --copper:#C9975B; --copper-deep:#8F6329;
   --bg:#FFFFFF; --panel:#F6F5F3; --panel2:#FAFAF8;
   --navy:#1E2A45; --navy-deep:#16203A; --navy-line:#2A3554;
   --red:#A63A2B; --red-deep:#8C2F23;
@@ -179,7 +180,7 @@ h1,h2,h3{color:var(--ink)}
 .tier .found{font-size:.78rem;color:var(--copper-deep);font-weight:700;margin-top:5px}
 .tier ul{list-style:none;margin-top:16px;flex:1}
 .tier li{padding:9px 0;border-top:1px solid var(--line);font-size:.88rem;color:var(--ink2);display:flex;gap:10px}
-.tier li .chk{flex:0 0 auto;width:17px;height:17px;border-radius:50%;background:var(--copper);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;margin-top:2px;font-weight:700}
+.tier li .chk{flex:0 0 auto;width:17px;height:17px;border-radius:50%;background:var(--copper-deep);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;margin-top:2px;font-weight:700}
 .tier li b{color:var(--ink);display:block}
 .tier li span.d{display:block;font-size:.76rem;color:var(--muted);margin-top:1px}
 .tier .for{margin-top:14px;font-family:var(--mono);font-size:.62rem;color:var(--faint);text-transform:uppercase;letter-spacing:.12em;font-weight:700}
@@ -854,7 +855,7 @@ async function skFpSend(){
     typ.remove();
     const bm = document.createElement('div');
     bm.className = 'sk-fp-bot';
-    bm.textContent = "Happy to help! Book a free demo at synkasa.com and we'll answer every question live.";
+    bm.textContent = "Happy to help. Book a free call at frimpomaasync.com/synkasa and I will walk you through it live.";
     msgs.appendChild(bm); msgs.scrollTop = msgs.scrollHeight;
   }
 

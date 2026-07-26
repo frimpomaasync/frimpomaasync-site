@@ -6,6 +6,8 @@
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <title>The Client Catcher · Done-For-You AI Back Office · NaNa Frimpomaa</title>
 <meta name="description" content="Never lose a lead. The Client Catcher, my flagship done-for-you system for real estate agents and home-services owners: every missed call caught, followed up in your voice, booked. Live and working in 7 days, or you don't pay.">
+<link rel="canonical" href="https://frimpomaasync.com/client-catcher">
+<meta name="theme-color" content="#FFFFFF">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://frimpomaasync.com/client-catcher">
 <meta property="og:title" content="The Client Catcher · Never lose a lead again">
@@ -15,7 +17,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="The Client Catcher · Never lose a lead again">
-<meta name="twitter:description" content="The Client Catcher — for real estate & home services. Live and working in 7 days, or you don't pay.">
+<meta name="twitter:description" content="The Client Catcher, for real estate and home services. Live and working in 7 days, or you don't pay.">
 <meta name="twitter:image" content="https://frimpomaasync.com/og-client-catcher.png">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
@@ -29,8 +31,9 @@
 </script>
 <style>
 :root{
-  --ink:#1A1A1A; --ink2:#33302B; --muted:#6E6A62; --faint:#9A948A;
-  --line:#E3E0DA; --line-strong:#CFC9BF; --copper:#C9975B; --copper-deep:#A97B3F;
+  --ink:#1A1A1A; --ink2:#33302B; --muted:#6E6A62; --faint:#6F6A5E;
+  --line:#E3E0DA; --line-strong:#CFC9BF; --copper:#C9975B; --copper-deep:#8F6329;
+  /* AA pass 2026-07-26. --faint was #9A948A (3.0:1). --copper-deep was 4 different values across the site (3.4-4.0:1). Both failed WCAG AA. Now #6F6A5E and #8F6329: 4.9:1 and 4.8:1 measured on the #F6F5F3 panel, higher on white. */
   --bg:#FFFFFF; --panel:#F6F5F3; --panel2:#FAFAF8;
   --navy:#1E2A45; --navy-deep:#16203A; --navy-line:#2A3554;
   --red:#A63A2B; --red-deep:#8C2F23;
@@ -179,7 +182,7 @@ h1,h2,h3{color:var(--ink)}
 .looptext p{margin-top:8px;font-size:.94rem}
 .looptext .mono{font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--copper-deep);font-weight:700}
 
-.tiers{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
 .tier{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px 20px;display:flex;flex-direction:column;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}
 .tier:hover{transform:translateY(-6px);box-shadow:0 24px 48px -24px rgba(26,26,26,.25);border-color:var(--line-strong)}
 .tier.flag{background:var(--panel2);border-color:var(--copper)}
@@ -192,7 +195,7 @@ h1,h2,h3{color:var(--ink)}
 .tier .found{font-size:.78rem;color:var(--copper-deep);font-weight:700;margin-top:5px}
 .tier ul{list-style:none;margin-top:16px;flex:1}
 .tier li{padding:9px 0;border-top:1px solid var(--line);font-size:.88rem;color:var(--ink2);display:flex;gap:10px}
-.tier li .chk{flex:0 0 auto;width:17px;height:17px;border-radius:50%;background:var(--copper);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;margin-top:2px;font-weight:700}
+.tier li .chk{flex:0 0 auto;width:17px;height:17px;border-radius:50%;background:var(--copper-deep);color:#fff;font-size:10px;display:flex;align-items:center;justify-content:center;margin-top:2px;font-weight:700}
 .tier li b{color:var(--ink);display:block}
 .tier li span.d{display:block;font-size:.76rem;color:var(--muted);margin-top:1px}
 .tier .for{margin-top:14px;font-family:var(--mono);font-size:.62rem;color:var(--faint);text-transform:uppercase;letter-spacing:.12em;font-weight:700}
@@ -344,7 +347,7 @@ h1,h2,h3{color:var(--ink)}
     <button type="button" id="nicheRE">Real Estate</button>
   </div>
   <h1 id="heroH1">Never lose a lead.</h1>
-  <div class="deck" id="deckTxt">Every call you can't answer is a job someone else books. I install a system that catches the call, follows up in your voice, and puts the appointment on your calendar — while your hands stay on the work. Live in 7 days.</div>
+  <div class="deck" id="deckTxt">Every call you can't answer is a job someone else books. I install a system that catches the call, follows up in your voice, and puts the appointment on your calendar, while your hands stay on the work. Live in 7 days.</div>
   <div class="ed-ctas">
     <a class="btn" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Book my free 15-min mapping call</a>
     <a class="btn dark" href="/client-catcher-demo/">Try the live demo yourself →</a>
@@ -426,7 +429,7 @@ h1,h2,h3{color:var(--ink)}
           </g>
           <!-- the open slot = the hole -->
           <rect id="slot" x="730" y="398" width="222" height="40" rx="6" fill="#FAFAF8" stroke="#C9975B" stroke-width="2.5" stroke-dasharray="6 6"/>
-          <text id="slotLabel" x="841" y="424" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="16" font-weight="700" fill="#A97B3F">4:30 · OPEN</text>
+          <text id="slotLabel" x="841" y="424" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="16" font-weight="700" fill="#8F6329">4:30 · OPEN</text>
           <!-- booked overlay -->
           <g id="bookedG" opacity="0">
             <rect x="730" y="398" width="222" height="40" rx="6" fill="#2E7D4F"/>
@@ -442,7 +445,7 @@ h1,h2,h3{color:var(--ink)}
         <!-- THE LEAD (a $6K job ticket flying to your calendar) -->
         <g id="ticketTrailG" opacity="0.35"><rect x="-48" y="-18" width="96" height="36" rx="18" fill="#C9975B"/></g>
         <g id="ticketG">
-          <rect id="ticketRect" x="-54" y="-21" width="108" height="42" rx="21" fill="#C9975B" stroke="#A97B3F" stroke-width="2.5"/>
+          <rect id="ticketRect" x="-54" y="-21" width="108" height="42" rx="21" fill="#C9975B" stroke="#8F6329" stroke-width="2.5"/>
           <text id="ticketTxt" x="0" y="6" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="17" font-weight="700" fill="#FFFFFF">$6K JOB</text>
         </g>
       </svg>
@@ -499,8 +502,8 @@ h1,h2,h3{color:var(--ink)}
   <div class="sec" id="leak">
     <div class="shead rv"><span class="no">/01</span><h2>The leak in your business</h2></div>
     <div class="subh rv">You're not losing to a better competitor. You're losing to a faster one.</div>
-    <div class="prob rv"><div class="n">30–40%</div><div>of inbound calls to home-services businesses go unanswered in peak season — you're on a roof, under a sink, or with a client.<span class="src">source: call-tracking industry reports on home-services answer rates. The number that actually matters is yours: on the free mapping call we count YOUR missed calls, straight from your phone log</span></div></div>
-    <div class="prob rv d1"><div class="n">$3k–$10k</div><div>is what a single missed call can cost in HVAC or plumbing — a replacement system, a repipe, a listing. <b>Miss two calls a week and that's a six-figure leak per year.</b><span class="src">source: published cost guides for HVAC replacement and repiping (Angi and similar). Check your own average ticket against it</span></div></div>
+    <div class="prob rv"><div class="n">30–40%</div><div>of inbound calls to home-services businesses go unanswered in peak season. You're on a roof, under a sink, or with a client.<span class="src">source: call-tracking industry reports on home-services answer rates. The number that actually matters is yours: on the free mapping call we count YOUR missed calls, straight from your phone log</span></div></div>
+    <div class="prob rv d1"><div class="n">$3k–$10k</div><div>is what a single missed call can cost in HVAC or plumbing: a replacement system, a repipe, a listing. <b>Miss two calls a week and that's a six-figure leak per year.</b><span class="src">source: published cost guides for HVAC replacement and repiping (Angi and similar). Check your own average ticket against it</span></div></div>
     <div class="prob rv d2"><div class="n">78%</div><div>of customers buy from the business that responds <b>first</b>. Not the best one. Not the cheapest one. The first one.<span class="src">source: Lead Connect follow-up study, widely cited in sales-response research</span></div></div>
   </div>
 
@@ -527,7 +530,7 @@ h1,h2,h3{color:var(--ink)}
         </div>
       </div>
     </div>
-    <div class="retain rv"><b>The honest catch:</b> this works — when you remember, every time, on a roof, at dinner, on a Saturday. The system below is just this playbook running automatically, so no lead ever waits on your memory.</div>
+    <div class="retain rv"><b>The honest catch:</b> this works, as long as you remember, every time, on a roof, at dinner, on a Saturday. The system below is just this playbook running automatically, so no lead ever waits on your memory.</div>
   </div>
 
   <!-- 03 SYSTEM -->
@@ -551,7 +554,7 @@ h1,h2,h3{color:var(--ink)}
           <!-- REMIND: bell + red notification badge -->
           <g><circle cx="49" cy="208" r="11" fill="#33302B"/><path d="M49 201.5 c-3.4 0 -5 2.6 -5 5.6 l-1.6 3.4 h13.2 l-1.6 -3.4 c0 -3 -1.6 -5.6 -5 -5.6 z" fill="#FFFFFF"/><circle cx="49" cy="213" r="1.6" fill="#FFFFFF"/><g><circle cx="57" cy="200" r="5.5" fill="#A63A2B"><animate attributeName="r" values="5.5;6.5;5.5" dur="1.6s" repeatCount="indefinite"/></circle><text x="57" y="203.4" font-size="7.5" fill="#FFFFFF">1</text></g><text x="42" y="232">REMIND</text></g>
           <!-- REVIEW: gold star -->
-          <g><circle cx="49" cy="92" r="11" fill="#A97B3F"/><path d="M49 85.5 l1.9 3.9 4.3 .6 -3.1 3 .7 4.3 -3.8 -2 -3.8 2 .7 -4.3 -3.1 -3 4.3 -.6 z" fill="#FFFFFF"/><text x="38" y="76">REVIEW</text></g>
+          <g><circle cx="49" cy="92" r="11" fill="#8F6329"/><path d="M49 85.5 l1.9 3.9 4.3 .6 -3.1 3 .7 4.3 -3.8 -2 -3.8 2 .7 -4.3 -3.1 -3 4.3 -.6 z" fill="#FFFFFF"/><text x="38" y="76">REVIEW</text></g>
         </g>
         <text x="150" y="144" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#1A1A1A">One loop.</text>
         <text x="150" y="166" text-anchor="middle" font-family="-apple-system,Arial,sans-serif" font-size="10.5" fill="#6E6A62">Running while you work.</text>
@@ -598,7 +601,7 @@ h1,h2,h3{color:var(--ink)}
     <div class="shead rv"><span class="no">/04</span><h2>How it works · 3 steps, hands-off</h2></div>
     <div class="steps rv" id="steps">
       <div class="step"><div class="n">1</div><h3>Map</h3><p>One free 15-minute call. We walk through where leads, bookings, and callbacks slip through your cracks today.</p></div>
-      <div class="step"><div class="n">2</div><h3>Build · on my stack</h3><p>I build and run your system on <b>my</b> accounts. You don't buy software, manage a subscription, or learn a tool. Zero tech on your plate, and you still own everything: <a href="#faq" style="color:inherit;text-decoration:underline">what that means, exactly</a>.</p></div>
+      <div class="step"><div class="n">2</div><h3>Build · in your name</h3><p>I set the whole thing up inside <b>your own accounts</b>, on your own keys. Nothing to buy, nothing to learn. Zero tech on your plate during the build, and it's yours the moment it goes live: <a href="#faq" style="color:inherit;text-decoration:underline">what that means, exactly</a>.</p></div>
       <div class="step"><div class="n">3</div><h3>Live in 7 days</h3><p>Your system is catching leads and chasing follow-ups within a week. I monitor and tune it. That's the care plan.</p></div>
     </div>
 
@@ -789,7 +792,7 @@ h1,h2,h3{color:var(--ink)}
       function paint(){
         var n=name.value.trim()||'New customer';
         var first=n.split(/\s+/)[0];
-        var p=phone.value.trim()||'—';
+        var p=phone.value.trim()||'not given';
         var s=svc.value.trim()||'Consultation';
         var d=new Date(); var ds=(d.getMonth()+1)+'/'+d.getDate();
         function set(sel,v){ [].forEach.call(root.querySelectorAll(sel), function(e){ e.textContent=v; }); }
@@ -849,9 +852,9 @@ h1,h2,h3{color:var(--ink)}
       <div class="pcard rv"><div class="pn">Proof 1 · See it first</div><h3>A live demo on your own leads.</h3><p>Before you pay a dollar, I'll show you the system triaging and drafting follow-ups for real inquiries from your business, on a screen-share, in front of you.</p></div>
       <div class="pcard rv d1"><div class="pn">Proof 2 · Watch it work first</div><h3>Every build on this site is real.</h3><p>The demos and videos here aren't mockups. They're working systems I built and shipped, on camera. You can watch them run before we ever talk.</p></div>
       <div class="pcard rv d2"><div class="pn">Proof 3 · Client zero</div><h3>I run this exact system on my own business.</h3><p>frimpomaasync.com runs on the same skills I'll install for you: lead handling, follow-up, and reporting included. I'm client zero.</p></div>
-      <div class="pcard rv d3"><div class="pn">Proof 4 · Risk reversal</div><h3>The guarantee carries the risk — not you.</h3><p>If it isn't live and working in 7 days, you get every dollar back. That's stronger than any borrowed review.</p></div>
+      <div class="pcard rv d3"><div class="pn">Proof 4 · Risk reversal</div><h3>The guarantee carries the risk, not you.</h3><p>If it isn't live and working in 7 days, you get every dollar back. That's stronger than any borrowed review.</p></div>
     </div>
-    <div class="honest rv">I'm early — you'd be one of my first three clients, and I won't pretend otherwise. What I won't do is rent fake reviews to look bigger than I am. What I will do is prove it works on your leads before you commit, and put my fee on the line after. <b>· NaNa Frimpomaa</b></div>
+    <div class="honest rv">I'm early. You'd be one of my first three clients, and I won't pretend otherwise. What I won't do is rent fake reviews to look bigger than I am. What I will do is prove it works on your leads before you commit, and put my fee on the line after. <b>· NaNa Frimpomaa</b></div>
   </div>
 
   <!-- 05 GUARANTEE -->
@@ -1044,7 +1047,7 @@ function setBall(p){
     var pt2=flight.getPointAtLength(L*Math.max(0,f-0.05));
     trail.setAttribute("transform","translate("+pt2.x+","+pt2.y+") scale("+mobScale+")");
     ticket.setAttribute("opacity",1);trail.setAttribute("opacity",0.35);
-    ticketRect.setAttribute("fill","#C9975B");ticketRect.setAttribute("stroke","#A97B3F");
+    ticketRect.setAttribute("fill","#C9975B");ticketRect.setAttribute("stroke","#8F6329");
   }else{
     var d=(p-0.86)/0.14;                 /* settle-into-slot phase */
     var end=flight.getPointAtLength(L);
@@ -1122,7 +1125,7 @@ onScroll();
 /* ---------- niche toggle ---------- */
 var NICHE={
   hs:{
-    deck:"Every call you can't answer is a job someone else books. I install a system that catches the call, follows up in your voice, and puts the appointment on your calendar — while your hands stay on the work. Live in 7 days.",
+    deck:"Every call you can't answer is a job someone else books. I install a system that catches the call, follows up in your voice, and puts the appointment on your calendar, while your hands stay on the work. Live in 7 days.",
     foot:"you were under a sink the whole time.",
     ticket:"$6K JOB",
     caps:["A $6,000 job calls. You're under a sink. It rings out.",
@@ -1138,7 +1141,7 @@ var NICHE={
     ]
   },
   re:{
-    deck:"Every buyer call you miss tours with another agent by the weekend. I install a system that catches the inquiry, follows up in your voice, and puts the showing on your calendar — while you're mid-showing with someone else. Live in 7 days.",
+    deck:"Every buyer call you miss tours with another agent by the weekend. I install a system that catches the inquiry, follows up in your voice, and puts the showing on your calendar, while you're mid-showing with someone else. Live in 7 days.",
     foot:"you were mid-showing the whole time.",
     ticket:"$12K LEAD",
     caps:["A buyer calls about your listing. You're mid-showing. It rings out.",
