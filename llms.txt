@@ -42,7 +42,16 @@ Written by NaNa Frimpomaa for one-person businesses. Each one hands over the usa
 - Do I need a CRM if I'm a one-person business: usually not at first. A nine-column lead sheet, four statuses (new, quoted, booked, closed), a ten-minute weekly review, and the five triggers for upgrading. https://frimpomaasync.com/blog/do-i-need-a-crm-if-im-a-one-person-business
 - Your website doesn't have to be Squarespace or Shopify: why a one-person business often doesn't need a website platform. https://frimpomaasync.com/blog/your-website-doesnt-have-to-be-squarespace
 
-## Other products
+## The other two paid products
+
+Both sit under the same brand as the Client Catcher, are built inside the client's own accounts, and are owned outright by the client.
+
+- SynKasa, the AI receptionist: https://frimpomaasync.com/synkasa
+  Answers calls, texts and direct messages in the owner's voice, qualifies the caller, and books into the owner's calendar. Three tiers: Start $555 one time plus $99/mo optional care; Grow $999 plus $222/mo; Full $2,222 plus $444/mo. Guarantee: answering within 48 hours or the client does not pay. No guarantee is made about the number of bookings.
+- the Siesie System, the AI Operating System: https://frimpomaasync.com/siesie
+  The whole operation rather than one workflow. Five roles: front desk, coordinator, invoice chaser, account manager, and a weekly chief-of-staff report. $25,000 one time, optional $99/mo care, and the client owns it outright with no subscription to the provider and no lock-in. Guarantee: running within 30 days of deposit or the full fee is refunded and the client keeps everything built. Every process is documented in plain English and handed over. Intended for businesses past roughly $1M in revenue; smaller and solo businesses are directed to the Client Catcher instead.
+
+## Free products
 
 - Som: free email-gated lead-capture tool, installable web app: https://frimpomaasync.com/som.html
 - Portfolio of working builds: https://frimpomaasync.com/portfolio.html

@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>SynKasa · the AI receptionist that answers everything | frimpomaasync.com</title>
-<meta name="description" content="SynKasa answers your calls, texts and DMs in your voice, day or night, and books the good ones straight into your calendar. From $555, live in 48 hours, or you don't pay. Built in your own accounts and owned by you.">
-<link rel="canonical" href="https://frimpomaasync.com/synkasa">
+<title>Siesie System · your whole operation, running itself | frimpomaasync.com</title>
+<meta name="description" content="Five jobs you would otherwise hire for, running inside your own accounts, owned outright for one payment of $25,000. Running in 30 days or you don't pay. No subscription, no lock-in, every process handed over in writing.">
+<link rel="canonical" href="https://frimpomaasync.com/siesie">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://frimpomaasync.com/synkasa">
-<meta property="og:title" content="SynKasa · nobody reaches voicemail">
-<meta property="og:description" content="SynKasa answers your calls, texts and DMs in your voice, day or night, and books the good ones straight into your calendar. From $555, live in 48 hours, or you don't pay. Built in your own accounts and owned by you.">
+<meta property="og:url" content="https://frimpomaasync.com/siesie">
+<meta property="og:title" content="Siesie System · your whole operation, running itself">
+<meta property="og:description" content="Five jobs you would otherwise hire for, running inside your own accounts, owned outright for one payment of $25,000. Running in 30 days or you don't pay. No subscription, no lock-in, every process handed over in writing.">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="SynKasa · nobody reaches voicemail">
-<meta name="twitter:description" content="SynKasa answers your calls, texts and DMs in your voice, day or night, and books the good ones straight into your calendar. From $555, live in 48 hours, or you don't pay. Built in your own accounts and owned by you.">
+<meta name="twitter:title" content="Siesie System · your whole operation, running itself">
+<meta name="twitter:description" content="Five jobs you would otherwise hire for, running inside your own accounts, owned outright for one payment of $25,000. Running in 30 days or you don't pay. No subscription, no lock-in, every process handed over in writing.">
 <link rel="icon" href="/favicon.ico">
 <style>
 :root{
@@ -319,16 +319,6 @@ h1,h2,h3{color:var(--ink)}
   .laptop{box-shadow:none}
   *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 }
-  
-/* ---- demo preset chips (rewritten 726b; the ported fragment had unclosed rules) ---- */
-.chips{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
-.chip{appearance:none;cursor:pointer;font-family:var(--sans);font-size:.78rem;font-weight:700;
-  color:var(--ink2);background:#fff;border:1px solid var(--line);border-radius:999px;
-  padding:9px 15px;transition:border-color .2s ease,color .2s ease,transform .2s ease}
-.chip:hover{border-color:var(--copper);color:var(--ink);transform:translateY(-1px)}
-.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.preset-note{font-size:.84rem;color:var(--muted);margin-top:13px;line-height:1.55}
-.preset-note b{color:var(--copper-deep);font-weight:700}
 
 /* ============ 726b additions: readable guarantees, dashboards, photo grid ============ */
 
@@ -384,6 +374,15 @@ h1,h2,h3{color:var(--ink)}
 .role .rlive{margin-top:12px;display:inline-flex;align-items:center;gap:6px;font-family:var(--mono);font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--green);font-weight:700}
 .role .rlive i{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2.2s ease-in-out infinite}
 
+/* --- category photo grid --- */
+.cats{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:14px;margin-top:22px}
+.cat{position:relative;border-radius:12px;overflow:hidden;border:1px solid var(--line);aspect-ratio:3/4;background:var(--panel)}
+.cat img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease}
+.cat:hover img{transform:scale(1.05)}
+.cat figcaption{position:absolute;left:0;right:0;bottom:0;padding:26px 14px 13px;background:linear-gradient(to top,rgba(16,16,16,.88),rgba(16,16,16,.55) 45%,transparent);color:#fff}
+.cat .cname{font-family:var(--serif);font-size:.95rem;font-weight:700;line-height:1.2}
+.cat .cline{font-size:.74rem;color:#DAD5CC;margin-top:4px;line-height:1.4}
+
 /* --- counter strip --- */
 .counts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-top:22px}
 .count{background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:20px}
@@ -401,285 +400,157 @@ h1,h2,h3{color:var(--ink)}
   .cat img,.role,.gcard{transition:none}
 }
 
-
-/* ---- SynKasa floating widget, ported from synkasa.com ---- */
-
-/* ── Floating bubble ── */
-#sk-float-btn{
-  position:fixed;bottom:88px;right:24px;
-  width:54px;height:54px;border-radius:50%;
-  background:linear-gradient(135deg,#C9975B,#9E7340);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;z-index:2147483640;
-  box-shadow:0 4px 20px rgba(201,151,91,.45),0 2px 8px rgba(0,0,0,.3);
-  transition:transform .25s cubic-bezier(.34,1.56,.64,1),box-shadow .2s;
-  -webkit-tap-highlight-color:transparent;
-  user-select:none;
-}
-#sk-float-btn:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(201,151,91,.55),0 2px 12px rgba(0,0,0,.35)}
-#sk-float-btn:active{transform:scale(.94)}
-/* Unread badge */
-#sk-unread{
-  position:absolute;top:-2px;right:-2px;
-  min-width:18px;height:18px;border-radius:9px;
-  background:#FF5A5A;color:#fff;
-  font-size:10px;font-weight:700;
-  display:flex;align-items:center;justify-content:center;
-  padding:0 4px;border:2px solid #0A1628;
-}
-/* ── Floating panel ── */
-#sk-float-panel{
-  position:fixed;bottom:156px;right:24px;
-  width:320px;
-  background:#0A1628;
-  border-radius:20px;
-  border:1px solid rgba(201,151,91,.2);
-  box-shadow:0 24px 64px rgba(0,0,0,.6),0 0 0 1px rgba(255,255,255,.04);
-  display:none;flex-direction:column;
-  overflow:hidden;
-  z-index:2147483639;
-  transform:scale(.94) translateY(8px);opacity:0;
-  transition:transform .3s cubic-bezier(.34,1.2,.64,1),opacity .25s ease;
-}
-#sk-float-panel.sk-open{
-  display:flex;transform:scale(1) translateY(0);opacity:1;
-}
-.sk-fp-hdr{
-  background:#0F1D32;
-  padding:12px 14px;
-  border-bottom:1px solid rgba(255,255,255,.07);
-  display:flex;align-items:center;justify-content:space-between;
-  flex-shrink:0;
-}
-.sk-fp-msgs{
-  flex:1;min-height:0;
-  height:280px;
-  overflow-y:auto;overflow-x:hidden;
-  padding:14px 12px 8px;
-  display:flex;flex-direction:column;gap:8px;
-  scroll-behavior:smooth;
-  scrollbar-width:none;-ms-overflow-style:none;
-}
-.sk-fp-msgs::-webkit-scrollbar{display:none}
-.sk-fp-bot,.sk-fp-user{
-  font-family:'Cardo',Georgia,serif;
-  font-size:13.5px;line-height:1.56;
-  padding:9px 12px;border-radius:16px;
-  max-width:88%;word-wrap:break-word;
-  animation:msgIn .24s cubic-bezier(.22,1,.36,1);
-}
-.sk-fp-bot{background:#162440;color:rgba(250,246,241,.9);border-bottom-left-radius:3px;border:1px solid rgba(255,255,255,.05);align-self:flex-start;}
-.sk-fp-user{background:#C9975B;color:#0A1628;font-weight:600;border-bottom-right-radius:3px;align-self:flex-end;}
-.sk-fp-typing{display:flex;gap:4px;align-items:center;padding:9px 12px;background:#162440;border:1px solid rgba(255,255,255,.05);border-radius:16px;border-bottom-left-radius:3px;width:fit-content;align-self:flex-start;}
-.sk-fp-typing span{width:5px;height:5px;border-radius:50%;background:rgba(250,246,241,.4);animation:sk-bounce 1.4s ease infinite;}
-.sk-fp-typing span:nth-child(2){animation-delay:.2s}.sk-fp-typing span:nth-child(3){animation-delay:.4s}
-.sk-fp-input-row{
-  display:flex;gap:7px;padding:9px 12px;
-  border-top:1px solid rgba(255,255,255,.07);
-  background:#0F1D32;flex-shrink:0;align-items:center;
-}
-#sk-fp-inp{
-  flex:1;min-width:0;
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.1);
-  border-radius:20px;padding:8px 14px;
-  font-family:'Cardo',Georgia,serif;font-size:14px;
-  color:#FAF6F1;outline:none;
-  -webkit-appearance:none;
-}
-#sk-fp-inp::placeholder{color:rgba(250,246,241,.28)}
-#sk-fp-inp:focus{border-color:rgba(201,151,91,.45)}
-#sk-fp-send{
-  width:34px;height:34px;border-radius:50%;
-  background:#C9975B;border:none;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;
-  flex-shrink:0;min-width:34px;
-  transition:opacity .2s,transform .15s;
-  -webkit-tap-highlight-color:transparent;
-}
-#sk-fp-send:disabled{opacity:.28;cursor:default}
-#sk-fp-send:not(:disabled):active{transform:scale(.88)}
-/* Mobile: move above sticky CTA bar */
-@media(max-width:640px){
-  #sk-float-btn{bottom:76px;right:16px}
-  #sk-float-panel{bottom:144px;right:12px;width:calc(100vw - 24px);max-width:340px}
-}
-
 </style>
 </head>
 <body>
 <div class="ed-hero">
-  <div class="label rv">SynKasa · the AI receptionist</div>
-  <h1 class="rv d1">Nobody reaches<br>voicemail<span style="color:var(--copper)">.</span></h1>
-  <p class="sub rv d2">Calls, texts and DMs get answered in your voice, day or night, and the ones worth having land on your calendar. You find out about it later, over coffee.</p>
+  <div class="label rv">The Siesie System &middot; the AI Operating System</div>
+  <h1 class="rv d1">The work<br>runs itself<span style="color:var(--copper)">.</span></h1>
+  <p class="sub rv d2">The Siesie System is five jobs you would otherwise be hiring for, running inside your own accounts, owned outright for one payment. You close up at five and nothing is waiting for you in the morning.</p>
   <div class="ed-ctas rv d3">
-    <a class="btn dark" href="#tiers">see the three ways in <span class="arr">&rarr;</span></a>
-    <button class="btn" type="button" onclick="skToggle()">talk to it right now <span class="arr">&rarr;</span></button>
+    <a class="btn dark" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">book a scoping call <span class="arr">&rarr;</span></a>
+    <a class="btn" href="#roles">see the five roles <span class="arr">&rarr;</span></a>
   </div>
-  <div class="micro rv d3">Live in 48 hours &middot; answering in 48 hours or you don't pay</div>
+  <div class="micro rv d3">$25,000 one time &middot; yours to keep &middot; running in 30 days or you don't pay</div>
 </div>
 
 <div class="wrap">
 
-  <div class="sec" id="cost">
-    <div class="shead rv"><span class="no">/01</span><h2>The quiet way money leaves</h2></div>
-    <div class="subh rv">A missed call is not a missed call. It is a customer deciding you are closed.</div>
-    <p class="rv d1" style="max-width:44em">You already know this one. The call comes while you are under a sink, on a ladder, mid-appointment, driving. By the time you are free enough to listen to the voicemail, they have booked with somebody who picked up. Nothing broke. Nobody complained. The money just went somewhere else.</p>
-    <p class="rv d2" style="margin-top:18px;max-width:44em">The part that stings is that you never see it. A lost customer does not send you a message explaining they went elsewhere. They are simply a call you meant to return, sitting in your phone, going quietly cold.</p>
-    <div class="honest rv d2" style="margin-top:26px">
-      <p><strong>The one number worth knowing.</strong> Harvard Business Review studied thousands of sales leads and found that firms responding within an hour were around seven times more likely to have a meaningful conversation than those waiting even two hours. Under five minutes, the effect was larger still.</p>
-      <p style="font-size:.86rem;color:var(--muted)">Source: <a href="https://hbr.org/2011/03/the-short-life-of-online-sales-leads" target="_blank" rel="noopener">The Short Life of Online Sales Leads</a>, Harvard Business Review, 2011. It is the only response-time number I quote, because it is the only one I can point you at.</p>
+  <div class="sec" id="lastime">
+    <div class="shead rv"><span class="no">/01</span><h2>What you probably bought last time</h2></div>
+    <div class="subh rv">If you have already spent five figures on this and regret it, I want to start there rather than pretend it did not happen.</div>
+    <div class="honest rv d1">
+      <p>There is a post that has been sitting on Reddit for a while now, from the owner of a fourteen-year-old agency. They took quotes from six firms to customise one of the big work-management platforms. The cheapest was fourteen thousand dollars. They went mid-range and paid twenty thousand.</p>
+      <p>It was quoted at one to two months. It took six. The links between the pieces kept silently breaking, which meant, in their words, that jobs got lost and forgotten. The fix their supplier offered was to migrate to a fresh account, which cost them about a month of data they then had to reconstruct by hand to work out what they were owed.</p>
+      <p style="font-size:.86rem;color:var(--muted)">Source: <a href="https://www.reddit.com/r/productivity/comments/t2n12k/mondaycom_review_its_almost_ruined_my_business/" target="_blank" rel="noopener">r/productivity, 1,061 upvotes, 172 comments</a>. I am not linking it to score a point off a competitor. I am linking it because it is the single most useful description of how these builds fail, and everything below is shaped around not doing that.</p>
+    </div>
+    <p class="rv d2" style="margin-top:24px;max-width:44em">Underneath that story is the thing almost nobody selling automation will say out loud. Buying the system is the easy half. Somebody has to keep it running afterwards, and when that somebody is you, it quietly becomes another job you did not want. As one owner put it this year, tools and systems can help organise things, but someone still has to maintain them, or everything ends up back in your head again.</p>
+  </div>
+
+  <div class="sec" id="steal">
+    <div class="shead rv"><span class="no">/02</span><h2>Steal this first &middot; free, no call needed</h2></div>
+    <div class="subh rv">Before you spend anything with anyone, including me, run this on your own business. It takes an afternoon and it will tell you whether you need this at all.</div>
+    <div class="stealcard rv d1">
+      <div class="cn">The four-column audit</div>
+      <p>Open a blank sheet. Four columns: <em>what happens</em>, <em>who touches it</em>, <em>where it is written down</em>, <em>what breaks if they leave</em>. Now walk one customer from first contact to final payment and fill in a row for every single step, including the ones that only live in your head.</p>
+      <p>Two things fall out of this every time. First, you will find steps where the same information gets typed in twice, into two different systems, by two different people. That is where errors come from and it is almost always fixable in a day. Second, you will find rows where the fourth column just says one person's name. That is not an automation problem. That is a risk, and you should write those steps down this week whether or not you ever speak to me.</p>
+      <p>If the sheet comes back short and tidy, you do not need a twenty-five thousand dollar anything. Buy the <a href="/client-catcher">Client Catcher</a> instead, or nothing at all.</p>
     </div>
   </div>
 
+  <div class="sec" id="roles">
+    <div class="shead rv"><span class="no">/03</span><h2>The five roles</h2></div>
+    <div class="subh rv">Not five apps. Five jobs, each one covering work you are currently doing at night or paying somebody to do badly.</div>
 
-  <div class="sec" id="board">
-    <div class="shead rv"><span class="no">/02</span><h2>A Tuesday, as it happens</h2></div>
-    <div class="subh rv">This is the view you never get today: everything that came in, and what happened to it, without you touching your phone once.</div>
-    <div class="board rv d1">
-      <div class="board-top">
-        <div class="board-ttl">Tuesday &middot; front desk</div>
-        <div class="board-live"><i></i>answering now</div>
-      </div>
-      <div class="brow" style="animation-delay:.05s"><div class="btime">07:12</div><div class="bwhat"><b>Missed call, unknown number</b><span>Texted back in 9 seconds, asked what they needed</span></div><div class="bstat ok">answered</div></div>
-      <div class="brow" style="animation-delay:.20s"><div class="btime">07:14</div><div class="bwhat"><b>"Do you cover Bowie?"</b><span>Yes, quoted the callout, offered Thursday or Friday</span></div><div class="bstat ok">answered</div></div>
-      <div class="brow" style="animation-delay:.35s"><div class="btime">07:19</div><div class="bwhat"><b>Thursday 10:30 booked</b><span>Confirmation sent, reminder queued for Wednesday night</span></div><div class="bstat ok">booked</div></div>
-      <div class="brow" style="animation-delay:.50s"><div class="btime">11:48</div><div class="bwhat"><b>Instagram message, pricing question</b><span>Answered from your real price list, not a guess</span></div><div class="bstat ok">answered</div></div>
-      <div class="brow" style="animation-delay:.65s"><div class="btime">14:02</div><div class="bwhat"><b>Wants a discount you have not approved</b><span>Handed to you with a one-line summary and a suggestion</span></div><div class="bstat act">needs you</div></div>
-      <div class="brow" style="animation-delay:.80s"><div class="btime">19:36</div><div class="bwhat"><b>After-hours call, boiler out</b><span>Triaged as urgent, your emergency line rang</span></div><div class="bstat ok">escalated</div></div>
-      <div class="board-foot">
-        <div class="bfig"><b>6</b><span>handled</span></div>
-        <div class="bfig"><b>1</b><span>needed you</span></div>
-        <div class="bfig"><b>0</b><span>went to voicemail</span></div>
-        <div class="bfig"><b>9s</b><span>slowest reply</span></div>
-      </div>
+    <div class="roles rv d1">
+      <div class="role"><div class="ricon"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.9.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div><div class="rname">The front desk</div><div class="rjob">Answers, qualifies, books. This is the Client Catcher, included whole.</div><div class="rlive"><i></i>always on</div></div>
+      <div class="role"><div class="ricon"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div><div class="rname">The coordinator</div><div class="rjob">Quotes out, schedules built, reminders sent, no-shows chased.</div><div class="rlive"><i></i>always on</div></div>
+      <div class="role"><div class="ricon"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="rname">The invoice chaser</div><div class="rjob">Raises it, reminds them, files the receipt, builds month end.</div><div class="rlive"><i></i>always on</div></div>
+      <div class="role"><div class="ricon"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div><div class="rname">The account manager</div><div class="rjob">Follows up after the job, asks for the review, wakes old customers.</div><div class="rlive"><i></i>always on</div></div>
+      <div class="role"><div class="ricon"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8"/></svg></div><div class="rname">The chief of staff</div><div class="rjob">One report a week. What came in, what is stuck, what needs you.</div><div class="rlive"><i></i>Mondays, 7am</div></div>
     </div>
-    <p class="rv d2" style="margin-top:18px;font-size:.88rem;color:var(--muted);max-width:44em">An illustration of the shape of a day, not a screenshot of a real customer's account. The live thing is one section down, and you can talk to it yourself.</p>
-  </div>
-
-  <div class="sec" id="demo">
-    <div class="shead rv"><span class="no">/03</span><h2>Watch it work before you pay</h2></div>
-    <div class="subh rv">Pick a business. The live chat becomes that receptionist on the spot, so you can hear how it would sound answering for you.</div>
-    <div class="chips rv d1" id="sk-presets"></div>
-    <div class="preset-note rv d1" id="sk-preset-note"></div>
-    <p class="rv d2" style="margin-top:20px;font-size:.9rem;color:var(--muted)">This is the real thing, not a video of it. Ask it something awkward. There is also a chat bubble in the bottom corner of this page that answers questions about SynKasa itself.</p>
-    <div class="stealcard rv d2" style="margin-top:22px">
-      <div class="cn">The full sandbox</div>
-      <p>The longer demo, where you can switch between five different businesses and watch the receptionist change with them, lives on the SynKasa site. It opens in a new tab.</p>
-      <a class="btn dark" href="https://synkasa.com/demo" target="_blank" rel="noopener">open the full live demo <span class="arr">&rarr;</span></a>
-    </div>
-  </div>
-
-
-
-  <div class="sec" id="does">
-    <div class="shead rv"><span class="no">/04</span><h2>What it actually does</h2></div>
-    <div class="subh rv">Everything a good front desk does, minus the desk, the wages and the sick days.</div>
-    <div class="steps rv d1">
-      <div class="step"><div class="sn">01</div><div class="st">It picks up</div><p>Calls, texts, website chat and social messages all land in one place and get answered in seconds, in your tone, using your real prices and hours.</p></div>
-      <div class="step"><div class="sn">02</div><div class="st">It qualifies</div><p>It finds out what they need, whether you cover their area, and how urgent it is, before anyone wastes anyone's time.</p></div>
-      <div class="step"><div class="sn">03</div><div class="st">It books</div><p>Straight into your calendar, in a slot you actually have free, with a confirmation sent and a reminder queued.</p></div>
-      <div class="step"><div class="sn">04</div><div class="st">It hands over</div><p>Anything it should not decide comes to you as a short summary with a recommendation, not a wall of transcript.</p></div>
-    </div>
-  </div>
-
-  <div class="sec" id="tiers">
-    <div class="shead rv"><span class="no">/05</span><h2>Three ways in</h2></div>
-    <div class="subh rv">Same receptionist underneath. The difference is how much of the front of your business it runs.</div>
-    <div class="tiers rv d1">
-
-      <div class="tier">
-        <h3>Start</h3>
-        <div class="price">$555 <small>one time</small></div>
-        <div class="micro" style="margin-top:4px">then $99/mo care</div>
-        <ul>
-          <li><span class="chk">&#10003;</span><span>Answers calls, texts and DMs<span class="d">One number, one inbox, one voice</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Knows your hours, prices and services<span class="d">Answers from your real information, never invented</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Takes a proper message<span class="d">Name, number, what they want, how urgent</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Books into one calendar<span class="d">Confirmation sent automatically</span></span></li>
-        </ul>
-        <a class="btn dark" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">start here <span class="arr">&rarr;</span></a>
-      </div>
-
-      <div class="tier flag">
-        <div class="tag">most owners pick this</div>
-        <h3>Grow</h3>
-        <div class="price">$999 <small>one time</small></div>
-        <div class="micro" style="margin-top:4px">then $222/mo care</div>
-        <ul>
-          <li><span class="chk">&#10003;</span><span>Everything in Start<span class="d">Plus the parts that stop jobs slipping</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Quotes and pricing questions<span class="d">Answers the money question without you on the phone</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Reminders and reschedules<span class="d">Fewer no-shows, handled without you chasing</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Review request after the job<span class="d">Asked at the moment they are happiest</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Two numbers or two locations<span class="d">Routed to the right calendar</span></span></li>
-        </ul>
-        <a class="btn dark" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">start here <span class="arr">&rarr;</span></a>
-      </div>
-
-      <div class="tier">
-        <h3>Full</h3>
-        <div class="price">$2,222 <small>one time</small></div>
-        <div class="micro" style="margin-top:4px">then $444/mo care</div>
-        <ul>
-          <li><span class="chk">&#10003;</span><span>Everything in Grow<span class="d">For a front desk that never closes</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Intake forms that fill themselves<span class="d">From the conversation, not a form nobody completes</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Deposits collected at booking<span class="d">The slot is held because it is paid for</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Multi-location routing<span class="d">Right team, right diary, right area</span></span></li>
-          <li><span class="chk">&#10003;</span><span>Weekly report of everything handled<span class="d">Proof it earned its keep, in one page</span></span></li>
-        </ul>
-        <a class="btn dark" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">start here <span class="arr">&rarr;</span></a>
-      </div>
-
-    </div>
-    <p class="rv d2" style="margin-top:22px;font-size:.9rem;color:var(--muted);max-width:44em">The care plan is optional and you can stop it whenever you like. It covers monitoring, fixes, and one improvement a month. If you cancel it, your receptionist keeps answering. It just stops getting looked after by me.</p>
   </div>
 
   <div class="sec" id="own">
-    <div class="shead rv"><span class="no">/06</span><h2>It is yours, not rented</h2></div>
-    <div class="subh rv">Built inside your own accounts, on your own keys.</div>
+    <div class="shead rv"><span class="no">/04</span><h2>You own it. That is the whole difference.</h2></div>
+    <div class="subh rv">One payment, built inside your accounts, on your keys, with the instructions handed to you in writing.</div>
     <div class="honest rv d1">
-      <p>The whole thing lives in accounts with your name on them. Your phone number, your calendar, your customer records. I build it there, hand you the keys, and write down how every piece works.</p>
-      <p>That means there is no month where I can put the price up and leave you stuck. If you walked away from me tomorrow, it would carry on answering your phone. That is the point. You are buying something you own, not a seat in somebody else's software.</p>
-      <p>It also means your customer data stays with your customers and you. I do not hold it, sell it, or move it anywhere you have not agreed to.</p>
+      <p>Every piece of this is built in accounts with your name on them. Your phone number, your calendar, your customer records, your billing. Nothing routes through a platform I control, so there is no month where I raise a price and you have nowhere to go.</p>
+      <p>The running cost afterwards is metered usage on your own card, and for a business this size it lands in the tens of dollars a month, not the hundreds. There is no seat fee, no per-user charge, and no annual increase, because you are not renting anything from me.</p>
+      <p>I know this is the part that sounds too good, so here is the trade honestly. It means I make money once, on the build. It also means that if I want to eat next year, the work has to be good enough that you tell somebody. That arrangement suits me. It should reassure you.</p>
+      <p><strong>And every workflow is documented in plain English and handed over.</strong> Not because you will read it, but because when someone leaves, or you sell, or I get hit by a bus, the knowledge is in the business rather than in a person.</p>
     </div>
+  </div>
+
+  <div class="sec" id="price">
+    <div class="shead rv"><span class="no">/05</span><h2>What it costs</h2></div>
+    <div class="tiers rv d1" style="grid-template-columns:1fr">
+      <div class="tier flag">
+        <div class="tag">one payment, then it's yours</div>
+        <h3>The Siesie System</h3>
+        <div class="price">$25,000 <small>one time</small></div>
+        <div class="micro" style="margin-top:4px">optional $99/mo care &middot; cancel whenever</div>
+        <ul>
+          <li><span class="chk">&#10003;</span><span>All five roles, built and running<span class="d">Front desk, coordinator, invoice chaser, account manager, chief of staff</span></span></li>
+          <li><span class="chk">&#10003;</span><span>Built in your accounts, on your keys<span class="d">Nothing rented from me, nothing I can switch off</span></span></li>
+          <li><span class="chk">&#10003;</span><span>Every process written down and handed over<span class="d">In plain English, yours to keep</span></span></li>
+          <li><span class="chk">&#10003;</span><span>Thirty days from deposit to running<span class="d">A fixed date, agreed in writing before you pay</span></span></li>
+          <li><span class="chk">&#10003;</span><span>Two weeks of me on call afterwards<span class="d">For the things that only surface in real use</span></span></li>
+          <li><span class="chk">&#10003;</span><span>A weekly proof-of-life report<span class="d">So you find out something stopped from me, not from a customer</span></span></li>
+        </ul>
+        <a class="btn dark" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">book a scoping call <span class="arr">&rarr;</span></a>
+        <p class="micro" style="margin-top:14px">The call is free and it is genuinely a scoping call, not a pitch. If the four-column audit above shows you do not need this, I will tell you so and point you at the cheaper thing.</p>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="sec" id="monday">
+    <div class="shead rv"><span class="no">/06</span><h2>What lands in your inbox on Monday</h2></div>
+    <div class="subh rv">The whole point of paying this much is that you stop checking. So once a week, the system reports to you instead.</div>
+    <div class="board rv d1">
+      <div class="board-top">
+        <div class="board-ttl">Week to Sunday &middot; the chief of staff report</div>
+        <div class="board-live"><i></i>all five running</div>
+      </div>
+      <div class="brow" style="animation-delay:.05s"><div class="btime">Mon</div><div class="bwhat"><b>41 enquiries in, 38 answered inside a minute</b><span>Three came in while you were on a job and were handled without you</span></div><div class="bstat ok">front desk</div></div>
+      <div class="brow" style="animation-delay:.20s"><div class="btime">Tue</div><div class="bwhat"><b>19 jobs scheduled, 4 reschedules absorbed</b><span>No double bookings, no gaps left sitting empty</span></div><div class="bstat ok">coordinator</div></div>
+      <div class="brow" style="animation-delay:.35s"><div class="btime">Wed</div><div class="bwhat"><b>$14,200 invoiced, $9,800 collected</b><span>Two invoices past 14 days were chased on their own</span></div><div class="bstat ok">invoices</div></div>
+      <div class="brow" style="animation-delay:.50s"><div class="btime">Thu</div><div class="bwhat"><b>11 review requests sent, 4 reviews left</b><span>Asked the day after the job, when they were happiest</span></div><div class="bstat ok">accounts</div></div>
+      <div class="brow" style="animation-delay:.65s"><div class="btime">Fri</div><div class="bwhat"><b>One quote over your approval limit is waiting</b><span>Everything else went out without you reading it</span></div><div class="bstat act">needs you</div></div>
+      <div class="board-foot">
+        <div class="bfig"><b>1</b><span>decision for you</span></div>
+        <div class="bfig"><b>4 min</b><span>to read this</span></div>
+        <div class="bfig"><b>0</b><span>things you chased</span></div>
+        <div class="bfig"><b>0</b><span>silent failures</span></div>
+      </div>
+    </div>
+    <p class="rv d2" style="margin-top:18px;font-size:.88rem;color:var(--muted);max-width:44em">An illustration of the shape of a week, not a real client's numbers. I do not have five named testimonials yet, and I am not going to invent one to fill this space.</p>
   </div>
 
   <div class="sec" id="guarantee">
-    <div class="shead rv"><span class="no">/07</span><h2>The guarantee</h2></div>
+    <div class="shead rv"><span class="no">/07</span><h2>Four promises, written into the agreement</h2></div>
+    <div class="subh rv">Each one exists because of a specific way these builds go wrong.</div>
     <div class="gband rv d1">
-      <div class="gtag">the guarantee</div>
-      <div class="ghead">Answering in 48 hours,<br>or you don't pay.</div>
-      <div class="gsub">Not answering a demo. Answering your real number, for your real customers, with your real prices.</div>
+      <div class="gtag">four promises, written into the agreement</div>
+      <div class="ghead">Running in 30 days,<br>or you don't pay.</div>
+      <div class="gsub">Each promise below exists because of a specific, documented way builds like this go wrong. None of them are decoration.</div>
     </div>
     <div class="gcards rv d2">
       <div class="gcard">
-        <div class="gnum">01 &middot; what answering means</div>
-        <div class="gt">A stranger can ring you and get a real answer</div>
-        <p>They ask a real question, get the right answer, and end up either booked in your calendar or handed to you. If that is not happening, it is not live, and I do not get paid.</p>
+        <div class="gnum">01 &middot; the date is fixed first</div>
+        <div class="gt">Scope and date agreed in writing before you pay</div>
+        <p>If day thirty arrives and it is not running on your real customers, you get the whole fee back and keep everything built. This is the answer to a quote of one to two months quietly becoming six.</p>
       </div>
       <div class="gcard">
-        <div class="gnum">02 &middot; when the clock starts</div>
-        <div class="gt">When you hand me your hours and prices</div>
-        <p>Not when you pay. The 48 hours begins the moment I have what I need from you, so a slow week on your end never eats your guarantee.</p>
+        <div class="gnum">02 &middot; nothing breaks silently</div>
+        <div class="gt">Every workflow checks itself and reports</div>
+        <p>If a connection drops, it is in that week's report. Nothing gets to stop working quietly while jobs pile up behind it and nobody notices for a month.</p>
       </div>
       <div class="gcard">
-        <div class="gnum">03 &middot; if I miss it</div>
-        <div class="gt">Your money back, and you keep the build</div>
-        <p>Whatever is already working stays yours. I would rather refund you and keep the relationship than argue about whether day three counts.</p>
+        <div class="gnum">03 &middot; you can always leave</div>
+        <div class="gt">It is in your accounts, so there is nothing to escape</div>
+        <p>Cancel the care plan and it keeps running. No exit fee, no data held back, no migration project, no month where the price goes up and you are stuck.</p>
+      </div>
+      <div class="gcard">
+        <div class="gnum">04 &middot; the proof is real or there is none</div>
+        <div class="gt">No invented testimonials, ever</div>
+        <p>Faking case studies is so normal in this field that people admit it openly. I am not doing it. What you get instead is the thing running, live, in front of you, before you pay.</p>
       </div>
     </div>
-    <p class="gnote rv d2">I will never guarantee you a number of bookings. That depends on how many people call you, and that is not mine to promise. What I can promise is that the ones who do call get answered.</p>
+    <p class="gnote rv d2">What I will not promise is a revenue number. Anyone guaranteeing you extra sales from an automation is guessing with your money. I guarantee the system works, by a date, or you keep your money.</p>
   </div>
 
   <div class="sec" id="faq">
-    <div class="shead rv"><span class="no">/08</span><h2>Questions owners actually ask</h2></div>
+    <div class="shead rv"><span class="no">/08</span><h2>Questions worth asking before you spend this much</h2></div>
     <div class="faq rv d1">
-      <details><summary>Will it sound like a robot?</summary><p>Go and try it at the top of this page before you decide. It uses your words, your prices and your hours. Most callers ask their question, get the answer, and book. If someone asks for you specifically, it says so and passes them over rather than pretending.</p></details>
-      <details><summary>What happens when it does not know something?</summary><p>It says it does not know and gets you. It is built to hand over rather than guess, because a confident wrong answer about your pricing costs you more than a pause.</p></details>
-      <details><summary>Do I need to be technical?</summary><p>No. You give me your hours, your prices, your calendar and how you like to talk to people. I build it and hand it over. If you can send a voice note, you can do your side of this.</p></details>
-      <details><summary>Does this replace my receptionist?</summary><p>If you have one, no. It takes the after-hours calls, the overflow, and the same eight questions they answer forty times a week, so they can do the work only a person can do. Most owners buying this do not have a receptionist and are not going to hire one.</p></details>
-      <details><summary>What is the difference between this and the Client Catcher?</summary><p>SynKasa answers. The Client Catcher runs the whole loop: catches the lead, follows up in your voice over days, books the job, asks for the review. If your problem is a ringing phone nobody picks up, start here. If it is leads going cold after the first hello, that is the Client Catcher.</p></details>
-      <details><summary>Can I move up a tier later?</summary><p>Yes, and you only pay the difference. Nothing gets rebuilt from scratch.</p></details>
+      <details><summary>Who is this actually for?</summary><p>A business doing enough volume that admin has become a real cost, usually somewhere past a million in revenue, with a handful of staff and four or five systems that do not talk to each other. If you are a solo owner with a quiet phone, this is the wrong product and the Client Catcher at fifteen hundred is the right one.</p></details>
+      <details><summary>Why is it twenty-five thousand and not a monthly fee?</summary><p>Because a monthly fee makes you my tenant. Small steady subscriptions are exactly what owners tell me they are sick of. You buy it once, you own it, and the ongoing cost is your own metered usage rather than rent to me.</p></details>
+      <details><summary>How is this different from hiring somebody?</summary><p>An office manager covering this work costs more than this in the first year, then again every year after, and takes the knowledge with them when they leave. This does not resign. It also does not have judgement, so it hands the genuinely hard calls to you rather than guessing.</p></details>
+      <details><summary>What happens if my business changes?</summary><p>It is built from parts and documented, so changing a step is editing a step. That is the point of handing over the instructions rather than keeping them. The care plan exists for owners who would rather I did the editing, but it is optional and always will be.</p></details>
+      <details><summary>What do you need from me?</summary><p>Roughly a day of your time in total, spread over the month. Access to your accounts, honest answers about how things really work rather than how they are supposed to, and one decision-maker who can approve things. That is it.</p></details>
+      <details><summary>Do I have to buy the Client Catcher first?</summary><p>No, but most people should. It is fifteen hundred, it is live in seven days, and it proves whether we work well together before you spend this much. If you then buy this, the fifteen hundred comes off the price.</p></details>
+      <details><summary>Can I see it working before I pay?</summary><p>Yes, and you should insist on it with anybody you are considering. Watch it work before you pay is not a slogan I put on the site to sound good. Book the call and I will show you the live one.</p></details>
     </div>
   </div>
 
@@ -689,179 +560,17 @@ h1,h2,h3{color:var(--ink)}
 (function(){
   var rm=window.matchMedia&&window.matchMedia("(prefers-reduced-motion:reduce)").matches;
   var els=document.querySelectorAll(".rv");
-  if(rm||!("IntersectionObserver" in window)){[].forEach.call(els,function(e){e.classList.add("in")});return;}
+  if(rm||!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in")});return;}
   var io=new IntersectionObserver(function(es){
     es.forEach(function(e){if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target);}});
   },{rootMargin:"0px 0px -8% 0px",threshold:.08});
-  [].forEach.call(els,function(e){io.observe(e)});
+  els.forEach(function(e){io.observe(e)});
   window.addEventListener("beforeprint",function(){
     document.querySelectorAll(".faq details").forEach(function(d){d.setAttribute("open","")});
   });
 })();
-
-/* ---- business switcher, wired to the SynKasa widget (rebuilt 726b) ---- */
-(function(){
-  var BASE = "You are SynKasa, a done-for-you AI receptionist. Answer warmly and briefly, 2 to 3 sentences, never bullet points. Never name any software vendor or AI company. If asked to book, offer two concrete times.";
-  var BIZ = [
-    ["NaNa Frimpomaa","my own business", BASE+" You answer for frimpomaasync.com, run by NaNa Frimpomaa, who builds booking and follow-up systems for small businesses. SynKasa is $555 Start, $999 Grow, $2,222 Full, one-time, with optional care plans at $99, $222 and $444 a month. Live in 48 hours, and the guarantee is answering in 48 hours or the customer does not pay. Never guarantee a number of bookings. To book, send them to frimpomaasync.com."],
-    ["Auto detailing","mobile detailing, 2 vans", BASE+" You answer for a mobile auto detailing business. Full detail is $180 and takes about 3 hours, interior only is $95, exterior only is $75. They come to the customer within 20 miles. Open Monday to Saturday, 8 to 6."],
-    ["Hair and braids","solo stylist, home studio", BASE+" You answer for a solo hair stylist working from a home studio. Knotless braids from $220 and take 5 hours, cornrows from $90, silk press $75. A $40 deposit holds the slot. Hair is not included unless asked for. Open Tuesday to Saturday."],
-    ["Cleaning","2-person residential team", BASE+" You answer for a residential cleaning company. Standard clean is $140 for up to 3 bedrooms, deep clean is $260, move-out is $320. Weekly and fortnightly customers get 15 percent off. They bring their own supplies."],
-    ["Catering","events and drop-off", BASE+" You answer for a catering business doing events and drop-off trays. Drop-off starts at $14 a head with a 20 person minimum, full service from $38 a head. Two weeks notice preferred. They handle dietary requirements if told in advance."],
-    ["Nail salon","3 chairs, walk-ins welcome", BASE+" You answer for a nail salon with 3 chairs. Gel manicure $45, acrylic full set $65, pedicure $50, fills $40. Walk-ins welcome but appointments come first. Open 9 to 7, closed Sundays."]
-  ];
-  window.DEMO_SYSTEMS = window.DEMO_SYSTEMS || {};
-  var wrap=document.getElementById('sk-presets'), note=document.getElementById('sk-preset-note');
-  if(!wrap||!note) return;
-  function pick(i){
-    var b=BIZ[i];
-    window.DEMO_SYSTEMS['synkasa']=b[2];
-    note.innerHTML='Now answering as <b>'+b[0]+'</b> ('+b[1]+'). Open the chat in the corner and ask it anything.';
-    [].forEach.call(wrap.children,function(el,n){
-      el.className='chip'+(n===i?' on':'');
-      el.setAttribute('aria-pressed', n===i?'true':'false');
-    });
-    if(window.skFpReset) window.skFpReset();
-  }
-  BIZ.forEach(function(b,i){
-    var btn=document.createElement('button');
-    btn.type='button'; btn.className='chip'; btn.textContent=b[0];
-    btn.addEventListener('click',function(){ pick(i); });
-    wrap.appendChild(btn);
-  });
-  pick(0);
-})();
 </script>
 <script src="fsnav.js?v=726a" defer></script>
-<div id="sk-float-btn" onclick="skToggleFloat()" aria-label="Chat with SynKasa" role="button" tabindex="0">
-  <svg id="sk-icon-chat" width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-  <svg id="sk-icon-close" width="20" height="20" viewBox="0 0 24 24" fill="none" style="display:none"><path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2.5" stroke-linecap="round"/></svg>
-  <span id="sk-unread" style="display:none"></span>
-</div>
-
-<!-- Floating chat panel -->
-<div id="sk-float-panel">
-  <div class="sk-fp-hdr">
-    <div style="display:flex;align-items:center;gap:9px">
-      <span style="display:flex;align-items:center">
-        <svg width="18" height="20" viewBox="0 0 26 28" fill="none"><rect x="0" y="0" width="22" height="22" rx="5" fill="#C9975B"/><polygon points="5,22 15,22 10,28" fill="#0A1628" opacity="0.65"/></svg>
-      </span>
-      <div>
-        <div style="font-family:'Cardo',Georgia,serif;font-style:italic;font-size:15px;font-weight:700;color:#D4A86B;line-height:1">SynKasa</div>
-        <div style="font-size:10px;color:rgba(250,246,241,.4);display:flex;align-items:center;gap:4px;margin-top:2px"><span style="width:6px;height:6px;border-radius:50%;background:#4ADE80;display:inline-block;flex-shrink:0"></span>Online · Replies instantly</div>
-      </div>
-    </div>
-    <button onclick="skToggleFloat()" style="background:none;border:none;cursor:pointer;color:rgba(250,246,241,.4);padding:4px;line-height:1" aria-label="Close chat">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
-    </button>
-  </div>
-  <div class="sk-fp-msgs" id="sk-fp-msgs">
-    <div class="sk-fp-bot">Hi! I'm the SynKasa AI. Ask me anything about pricing, how it works, or getting started.</div>
-  </div>
-  <div class="sk-fp-input-row">
-    <input id="sk-fp-inp" type="text" placeholder="Type a message…" maxlength="200" autocomplete="off"
-      oninput="document.getElementById('sk-fp-send').disabled=!this.value.trim()"
-      onkeydown="if(event.key==='Enter'&&this.value.trim())skFpSend()">
-    <button id="sk-fp-send" disabled onclick="skFpSend()" aria-label="Send">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 19V5M5 12l7-7 7 7" stroke="#0A1628" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
-  </div>
-  <div style="text-align:center;font-size:9px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:rgba(250,246,241,.12);padding:5px 0 7px;background:#0F1D32">Powered by SynKasa</div>
-</div>
-<script>
-
-// ── Floating bubble JS ──────────────────────────────────────────
-let skFpOpen = false;
-let skFpHistory = [];
-let skFpTyping = false;
-
-window.skFpReset=function(){ skFpHistory=[]; var m=document.getElementById('sk-fp-msgs'); if(m) m.innerHTML=''; };
-function skToggleFloat(){
-  skFpOpen = !skFpOpen;
-  const panel = document.getElementById('sk-float-panel');
-  const iconChat = document.getElementById('sk-icon-chat');
-  const iconClose = document.getElementById('sk-icon-close');
-  const unread = document.getElementById('sk-unread');
-  if(skFpOpen){
-    panel.style.display = 'flex';
-    requestAnimationFrame(()=>{ panel.classList.add('sk-open'); });
-    iconChat.style.display = 'none';
-    iconClose.style.display = 'block';
-    unread.style.display = 'none';
-    setTimeout(()=>{ document.getElementById('sk-fp-inp').focus(); }, 320);
-  } else {
-    panel.classList.remove('sk-open');
-    iconChat.style.display = 'block';
-    iconClose.style.display = 'none';
-    setTimeout(()=>{ panel.style.display = 'none'; }, 300);
-  }
-}
-
-async function skFpSend(){
-  const inp = document.getElementById('sk-fp-inp');
-  const text = inp.value.trim();
-  if(!text || skFpTyping) return;
-  skFpTyping = true;
-  inp.value = '';
-  document.getElementById('sk-fp-send').disabled = true;
-
-  const msgs = document.getElementById('sk-fp-msgs');
-
-  // User bubble
-  const um = document.createElement('div');
-  um.className = 'sk-fp-user'; um.textContent = text;
-  msgs.appendChild(um);
-  msgs.scrollTop = msgs.scrollHeight;
-
-  // Typing indicator
-  const typ = document.createElement('div');
-  typ.className = 'sk-fp-typing';
-  typ.innerHTML = '<span></span><span></span><span></span>';
-  setTimeout(()=>{ msgs.appendChild(typ); msgs.scrollTop = msgs.scrollHeight; }, 250);
-
-  skFpHistory.push({role:'user', content:text});
-
-  // Use the same DEMO_SYSTEMS synkasa prompt from the page
-  const systemPrompt = typeof DEMO_SYSTEMS !== 'undefined' ? DEMO_SYSTEMS['synkasa'] :
-    `You are SynKasa, a done-for-you AI receptionist for small businesses. Answer questions about SynKasa warmly and briefly. Pricing: $555 Start, $999 Grow, $2,222 Full, one-time setup, with optional care plans at $99, $222 and $444 a month. Live in 48 hours, and the guarantee is answering in 48 hours or the customer does not pay. Never guarantee a number of bookings. It is built inside the owner's own accounts so they own it outright. To book, send them to frimpomaasync.com/synkasa. Never name any software vendor or AI company. Never use bullet points. 2 to 3 sentences max.`;
-
-  try{
-    const resp = await fetch('https://synkasa-api.dawn-boat-ec20.workers.dev/chat',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        clientId:'demo',
-        systemPrompt: systemPrompt,
-        messages: skFpHistory.slice(-10)
-      })
-    });
-    const data = await resp.json();
-    const reply = (data.reply && data.reply.trim()) ? data.reply.trim() : "Happy to help. Book a free call at frimpomaasync.com/synkasa and I will walk you through it live.";
-    skFpHistory.push({role:'assistant', content:reply});
-    typ.remove();
-    const bm = document.createElement('div');
-    bm.className = 'sk-fp-bot'; bm.textContent = reply;
-    msgs.appendChild(bm); msgs.scrollTop = msgs.scrollHeight;
-  } catch(e){
-    typ.remove();
-    const bm = document.createElement('div');
-    bm.className = 'sk-fp-bot';
-    bm.textContent = "Happy to help! Book a free demo at synkasa.com and we'll answer every question live.";
-    msgs.appendChild(bm); msgs.scrollTop = msgs.scrollHeight;
-  }
-
-  skFpTyping = false;
-  document.getElementById('sk-fp-send').disabled = !document.getElementById('sk-fp-inp').value.trim();
-
-  // Show unread badge if panel is closed
-  if(!skFpOpen){
-    const u = document.getElementById('sk-unread');
-    u.style.display = 'flex'; u.textContent = '1';
-  }
-}
-// Keyboard: open panel on Enter
-document.getElementById('sk-float-btn').addEventListener('keydown', e=>{ if(e.key==='Enter'||e.key===' ') skToggleFloat(); });
-
-</script>
+<script src="fswidget.js?v=726a" defer></script>
 </body>
 </html>

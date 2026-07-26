@@ -72,7 +72,11 @@ function mark(href){
   return (h===here || (h!=="/" && here.indexOf(h+"/")===0)) ? ' class="fs-here"' : "";
 }
 
-var SUB={"/client-catcher":[
+var SUB={"/services":[
+  ["/client-catcher","the Client Catcher","$1,500 \u00b7 booking, leads and follow-up, live in 7 days"],
+  ["/synkasa","SynKasa","from $555 \u00b7 the AI receptionist, answering in 48 hours"],
+  ["/siesie","Siesie System","$25,000 \u00b7 the whole operation, owned outright"]
+],"/client-catcher":[
   ["/client-catcher-demo/","try the live demo","press play, watch a lead get booked"],
   ["/client-catcher#demo-video","the 40-second run","screen recording of a full save"],
   ["/client-catcher#soma","watch the wiring run","one entry lands in four tools at once"]
@@ -111,6 +115,8 @@ var footHTML=''
 +'<div class="fs-brand">NaNa Frimpomaa<span class="fs-dot">.</span><p>I make one-person businesses feel fully staffed. Done for you, owned by you.</p></div>'
 +'<div class="fs-col"><div class="fs-h">Work with me</div>'
 +'<a href="/client-catcher">the Client Catcher · the flagship</a>'
++'<a href="/synkasa">SynKasa &middot; AI receptionist</a>'
++'<a href="/siesie">The Siesie System &middot; the AI Operating System</a>'
 +'<a href="/services">services &amp; pricing</a>'
 +'<a href="/portfolio">portfolio</a>'
 +'<a href="/ugc">UGC for brands</a>'
