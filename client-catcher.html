@@ -70,6 +70,15 @@ h1,h2,h3{color:var(--ink)}
 .btn:focus-visible{outline:3px solid var(--cred-deep);outline-offset:2px}
 .btn.dark{background:var(--navy)}
 .btn.dark:hover{background:var(--navy-deep);box-shadow:0 10px 24px -10px rgba(22,32,58,.5)}
+/* one filled CTA only. the second action is an outline, the third is a text link,
+   so the paid call is the single loudest thing in the hero */
+.btn.quiet{background:#fff;color:var(--ink);border:1px solid var(--line-strong);box-shadow:none}
+.btn.quiet:hover{background:#fff;border-color:var(--copper);box-shadow:none}
+.ed-jump{display:inline-block;margin-top:14px;font-family:var(--mono);font-size:.72rem;
+  letter-spacing:.08em;text-transform:uppercase;color:var(--copper-deep);
+  text-decoration:underline;text-underline-offset:4px;transition:color .2s ease;
+  max-width:30ch;text-wrap:balance}
+.ed-jump:hover{color:var(--ink)}
 .micro{margin-top:14px;font-family:var(--mono);font-size:.68rem;letter-spacing:.04em;color:var(--faint);text-align:center}
 
 /* ---------- niche toggle ---------- */
@@ -350,10 +359,10 @@ h1,h2,h3{color:var(--ink)}
   <div class="deck" id="deckTxt">Every call you can't answer is a job someone else books. I install a system that catches the call, follows up in your voice, and puts the appointment on your calendar, while your hands stay on the work. Live in 7 days.</div>
   <div class="ed-ctas">
     <a class="btn" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Book my free 15-min mapping call</a>
-    <a class="btn dark" href="/client-catcher-demo/">Try the live demo yourself →</a>
-    <a class="btn dark" href="#story">Watch a lead get caught</a>
+    <a class="btn quiet" href="/client-catcher-demo/">Try the live demo yourself →</a>
   </div>
   <div class="micro">Free call · no credit card · no tech on your plate · covered by the 7-day guarantee</div>
+  <a class="ed-jump" href="#story">or watch a lead get caught, start to finish ↓</a>
 </header>
 
 <!-- SHOWCASE: laptop over navy block -->
