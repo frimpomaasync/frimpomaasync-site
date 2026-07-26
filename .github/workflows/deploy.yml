@@ -20,15 +20,19 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Upload via FTPS
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           server-dir: ./
+          # Hostinger's control socket drops on bigger batches; the default
+          # 30s timeout is what produced "Error: Timeout (control socket)"
+          # on runs #50 and #51 (2026-07-26). 3 minutes gives it room.
+          timeout: 180000
           exclude: |
             **/.git*
             **/.git*/**
