@@ -16,12 +16,25 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# FLAKINESS, not breakage (measured 2026-07-27): across 57 runs this workflow
+# succeeded 49 times and failed 8. The recent failures (#50, #51, #53, #56) are
+# all Hostinger's FTP endpoint timing out, and every one of them succeeded on a
+# manual re-run minutes later with no code change. Raising `timeout` fixed the
+# control-socket variant but not ETIMEDOUT-before-connect, because that one is
+# Hostinger refusing the connection rather than a slow transfer.
+#
+# So: retry instead of re-triggering by hand. Three attempts with a pause
+# between. This is what stops the "Re-trigger deploy" commits, and it means a
+# single blip no longer looks like a broken site in the morning inbox.
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
       - name: Upload via FTPS
+        id: ftp1
+        continue-on-error: true
         uses: SamKirkland/FTP-Deploy-Action@v4.4.0
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -38,3 +51,62 @@ jobs:
             **/.git*/**
             **/.github/**
             **/*.bak
+
+      - name: Wait, then retry (attempt 2)
+        if: steps.ftp1.outcome == 'failure'
+        run: sleep 45
+
+      - name: Upload via FTPS, attempt 2
+        id: ftp2
+        continue-on-error: true
+        if: steps.ftp1.outcome == 'failure'
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          server-dir: ./
+          timeout: 180000
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/*.bak
+
+      - name: Wait, then retry (attempt 3)
+        if: steps.ftp1.outcome == 'failure' && steps.ftp2.outcome == 'failure'
+        run: sleep 120
+
+      - name: Upload via FTPS, attempt 3
+        id: ftp3
+        if: steps.ftp1.outcome == 'failure' && steps.ftp2.outcome == 'failure'
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          server-dir: ./
+          timeout: 180000
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/*.bak
+
+      # Attempts 1 and 2 swallow their own failure, so the job would otherwise
+      # report success even when nothing uploaded. Fail loudly if all three lost.
+      - name: Report
+        if: always()
+        run: |
+          if [ "${{ steps.ftp1.outcome }}" = "success" ]; then
+            echo "Deployed on the first attempt."
+          elif [ "${{ steps.ftp2.outcome }}" = "success" ]; then
+            echo "::warning::Hostinger FTP failed once, second attempt deployed."
+          elif [ "${{ steps.ftp3.outcome }}" = "success" ]; then
+            echo "::warning::Hostinger FTP failed twice, third attempt deployed."
+          else
+            echo "::error::All three FTP attempts failed. This is not the usual blip."
+            exit 1
+          fi
