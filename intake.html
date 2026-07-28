@@ -163,9 +163,9 @@
       <div class="field">
         <label>Which build is this? <span class="req">*</span></label>
         <div class="chips">
-          <span class="chip"><input type="radio" name="tier" id="t-founding" value="Founding Client · $750" required><label for="t-founding">Founding Client · $750</label></span>
-          <span class="chip"><input type="radio" name="tier" id="t-system" value="The Client Catcher · $1,500"><label for="t-system">The Client Catcher · $1,500</label></span>
-          <span class="chip"><input type="radio" name="tier" id="t-custom" value="Custom / not sure"><label for="t-custom">Custom / not sure</label></span>
+          <span class="chip"><input type="radio" name="tier" id="t-founding" value="Founding on Grow · $750" required><label for="t-founding">Founding on Grow · $750</label></span>
+          <span class="chip"><input type="radio" name="tier" id="t-system" value="SynKasa Grow · $1,500"><label for="t-system">SynKasa Grow · $1,500</label></span>
+          <span class="chip"><input type="radio" name="tier" id="t-custom" value="Start $555 / Full $2,222 / not sure"><label for="t-custom">Start, Full, or not sure</label></span>
         </div>
       </div>
 
@@ -306,7 +306,7 @@
     add("References","references"); add("Timeline","timeline");
     add("Anything else","anything");
 
-    var subject = "New Build Brief: " + (data.get('name') || 'Client Catcher');
+    var subject = "New Build Brief: " + (data.get('name') || 'SynKasa');
     var body = "MY BUILD BRIEF\n\n" + lines.join("\n\n");
     var href = "mailto:" + YOUR_EMAIL + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
 
@@ -319,6 +319,6 @@
     return false;
   }
 </script>
-<script src="fswidget.js?v=726a" defer></script>
+<script src="fswidget.js?v=800" defer></script>
 </body>
 </html>
