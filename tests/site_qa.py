@@ -609,9 +609,21 @@ def assert_siesie_cinematic_contract(browser) -> None:
         "(node) => getComputedStyle(node).position"
     ) == "sticky"
     for index in range(5):
-        card = cards.nth(index)
-        card.scroll_into_view_if_needed()
-        page.wait_for_timeout(160)
+        page.evaluate(
+            """(index) => {
+                const card = document.querySelectorAll(
+                    '.sticky-story .role-card',
+                )[index];
+                window.scrollTo(0, card.offsetTop - (innerHeight * .42));
+            }""",
+            index,
+        )
+        page.wait_for_function(
+            """(index) => document.querySelectorAll(
+                '.sticky-story .role-card',
+            )[index].classList.contains('is-active')""",
+            index,
+        )
         active = story.locator(".role-card.is-active")
         assert active.count() == 1
         assert active.nth(0).evaluate(

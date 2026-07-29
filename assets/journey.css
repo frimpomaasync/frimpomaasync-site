@@ -261,6 +261,7 @@ a {
 }
 
 .siesie-story .role-card {
+  min-height: max(440px, 66svh);
   display: flex;
   flex-direction: column;
   justify-content: center;
