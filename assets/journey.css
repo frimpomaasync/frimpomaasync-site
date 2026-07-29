@@ -1291,6 +1291,14 @@ noscript {
     padding: 58px 0 72px;
   }
 
+  /* The photograph carries its own labels. On a narrow crop they land
+     behind the headline, so the scrim gets heavier here. */
+  .cinematic-scrim {
+    background:
+      linear-gradient(180deg, rgba(8, 11, 24, .82) 0%, rgba(8, 11, 24, .68) 46%, rgba(8, 11, 24, .78) 100%),
+      linear-gradient(90deg, rgba(8, 11, 24, .58) 0%, rgba(8, 11, 24, .34) 100%);
+  }
+
   .hero h1 {
     font-size: clamp(48px, 16vw, 72px);
   }

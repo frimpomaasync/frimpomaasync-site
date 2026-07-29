@@ -158,9 +158,9 @@ def assert_cinematic_nav_overlay(page) -> None:
             const navRect = nav.getBoundingClientRect();
             const heroRect = hero.getBoundingClientRect();
             const mediaRect = media.getBoundingClientRect();
-            const controls = Array.from(
-                nav.querySelectorAll("a, button"),
-                (control) => {
+            const controls = Array.from(nav.querySelectorAll("a, button"))
+                .filter((control) => control.getClientRects().length)
+                .map((control) => {
                     const style = getComputedStyle(control);
                     const rect = control.getBoundingClientRect();
                     return {
@@ -169,18 +169,27 @@ def assert_cinematic_nav_overlay(page) -> None:
                         backingAlpha: colorValue(style.backgroundColor).alpha,
                         contrast: contrast(style.color, style.backgroundColor),
                     };
-                },
-            );
+                });
+            const clipped = Array.from(nav.querySelectorAll("a, button"))
+                .filter((control) => control.getClientRects().length)
+                .filter((control) => control.scrollWidth > control.clientWidth + 1)
+                .map((control) => ({
+                    text: control.textContent.trim().slice(0, 40),
+                    scrollWidth: control.scrollWidth,
+                    clientWidth: control.clientWidth,
+                }));
             return {
                 overlapsHero: navRect.top < heroRect.bottom && navRect.bottom > heroRect.top,
                 overlapsMedia: navRect.top < mediaRect.bottom && navRect.bottom > mediaRect.top,
                 controls,
+                clipped,
             };
         }"""
     )
     assert state["overlapsHero"], state
     assert state["overlapsMedia"], state
     assert state["controls"], state
+    assert not state["clipped"], state["clipped"]
     assert all(control["width"] >= 44 for control in state["controls"]), state
     assert all(control["height"] >= 44 for control in state["controls"]), state
     assert all(control["backingAlpha"] == 1 for control in state["controls"]), state
@@ -896,6 +905,48 @@ def run_foundation() -> None:
         browser.close()
 
 
+RESPONSIVE_ROUTES = [
+    "/",
+    "/synkasa",
+    "/siesie",
+    "/portfolio",
+    "/free",
+    "/fit",
+    "/synkasa-fit",
+    "/siesie-application",
+    "/fit-thanks?source=siesie",
+    "/privacy",
+    "/terms",
+    "/blog/",
+]
+RESPONSIVE_WIDTHS = [390, 768, 1024, 1280, 1440]
+
+
+def assert_responsive_routes(browser) -> None:
+    """Every public route survives every supported width without overflow."""
+    for width in RESPONSIVE_WIDTHS:
+        page = browser.new_page(
+            viewport={"width": width, "height": 844 if width == 390 else 900}
+        )
+        for route in RESPONSIVE_ROUTES:
+            page.goto(f"{BASE}{route}", wait_until="networkidle")
+            assert_no_overflow(page, width)
+            if width == 390:
+                controls = page.locator(
+                    "main a.button, main button.button"
+                ).evaluate_all(
+                    """(nodes) => nodes
+                        .filter((node) => node.getClientRects().length)
+                        .map((node) => ({
+                            height: node.getBoundingClientRect().height,
+                            label: node.textContent.trim().slice(0, 40),
+                        }))"""
+                )
+                for control in controls:
+                    assert control["height"] >= 44, f"{route}: {control}"
+        page.close()
+
+
 def run() -> None:
     from playwright.sync_api import sync_playwright
 
@@ -1006,11 +1057,7 @@ def run() -> None:
         page.goto(f"{BASE}/fit-thanks.html?source=siesie", wait_until="networkidle")
         assert "back office" in page.locator("[data-confirm-heading]").inner_text()
 
-        mobile = browser.new_page(viewport={"width": 390, "height": 844})
-        for path in ("index.html", "synkasa.html", "siesie.html", "fit.html"):
-            mobile.goto(f"{BASE}/{path}", wait_until="networkidle")
-            assert_no_overflow(mobile, 390)
-        mobile.close()
+        assert_responsive_routes(browser)
 
         for filename in PUBLIC_PAGES:
             page.goto(f"{BASE}/{filename}", wait_until="networkidle")
