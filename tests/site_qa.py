@@ -468,8 +468,12 @@ def assert_synkasa_cinematic_contract(browser) -> None:
     assert page.get_by_text("Live in 7 days, or you don't pay", exact=False).count() >= 1
     fit_link = page.locator("a[href='/synkasa-fit']").first
     assert fit_link.is_visible()
-    fit_link.click()
-    assert page.locator("form[name='synkasa-fit']").is_visible()
+    fit_path = fit_link.get_attribute("href")
+    assert fit_path == "/synkasa-fit"
+    page.goto(f"{BASE}{fit_path}", wait_until="networkidle")
+    fit_form = page.locator("form[name='synkasa-fit']")
+    assert fit_form.is_visible()
+    assert fit_form.locator("button[type='submit']").is_enabled()
     page.close()
 
     mobile = browser.new_page(viewport={"width": 390, "height": 844})
