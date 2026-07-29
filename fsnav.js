@@ -25,13 +25,8 @@
   css.textContent = [
     "@keyframes skcDot{0%,100%{transform:translateY(0);opacity:.3}50%{transform:translateY(-3px);opacity:1}}",
     "#fs-nav a{text-decoration:none}",
-    "#fs-nav [data-navlink]:hover{color:#101426!important}",
-    "#fs-nav [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}",
-    "#fs-bar [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}",
-    "#fs-bar [data-navlink]:hover{color:#101426!important}",
+    "@media (hover:hover){#fs-nav [data-navlink]:hover{color:#101426!important}#fs-nav [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}#fs-bar [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}#fs-bar [data-navlink]:hover{color:#101426!important}#fs-foot a:hover{color:#FFFFFF}#fs-chat-fab:hover{background:#C2501C!important}}",
     "#fs-foot a{text-decoration:none;color:rgba(242,244,249,.72)}",
-    "#fs-foot a:hover{color:#FFFFFF}",
-    "#fs-chat-fab:hover{background:#C2501C!important}",
     "@media (max-width:1360px){#fs-rail{display:none!important}}",
     "@media (max-width:700px){#fs-nav .fs-grid{grid-template-columns:1fr auto!important}#fs-nav .fs-grid nav{order:3;grid-column:1 / -1}}",
     "@media (prefers-reduced-motion: reduce){#fs-veil{display:none!important}}"
@@ -69,6 +64,54 @@
       '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">Book a call</a>' +
       "</div></div>";
     body.insertBefore(nav, body.firstChild);
+  }
+
+  /* ---------- cinematic state ---------- */
+  function setActiveStoryStep(step, group) {
+    group.forEach(function (item) {
+      item.classList.toggle("is-active", item === step);
+    });
+  }
+  if (body.hasAttribute("data-cinematic")) {
+    var cinematicHero = document.querySelector("[data-cinematic-hero]");
+    var storySteps = Array.prototype.slice.call(document.querySelectorAll("[data-story-step]"));
+    var cinematicNav = document.getElementById("fs-nav");
+
+    if (reduce || !("IntersectionObserver" in window)) {
+      storySteps.forEach(function (step) {
+        step.style.opacity = "1";
+        step.style.transform = "none";
+        step.style.transition = "none";
+      });
+    } else {
+      if (cinematicHero && cinematicNav) {
+        var heroBoundary = document.createElement("span");
+        heroBoundary.setAttribute("aria-hidden", "true");
+        heroBoundary.style.cssText = "position:absolute;top:0;left:0;width:1px;height:1px;pointer-events:none";
+        cinematicHero.appendChild(heroBoundary);
+        var heroObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) cinematicNav.classList.remove("is-past-hero");
+          });
+        });
+        heroObserver.observe(cinematicHero);
+        var heroBoundaryObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            cinematicNav.classList.toggle("is-past-hero", !entry.isIntersecting);
+          });
+        });
+        heroBoundaryObserver.observe(heroBoundary);
+      }
+
+      if (storySteps.length) {
+        var storyObserver = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) setActiveStoryStep(entry.target, storySteps);
+          });
+        }, { rootMargin: "-38% 0px -48% 0px" });
+        storySteps.forEach(function (step) { storyObserver.observe(step); });
+      }
+    }
   }
 
   /* ---------- footer ---------- */
@@ -170,13 +213,14 @@
     els.forEach(function (el) {
       el.style.opacity = "0";
       el.style.transform = "translateY(18px)";
-      el.style.transition = "opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1)";
+      el.style.transition = "opacity var(--motion-section) var(--ease-out), transform var(--motion-section) var(--ease-out)";
       if (el.hasAttribute("data-stagger")) {
-        var step = parseInt(el.getAttribute("data-stagger-step") || "90", 10);
+        var step = parseInt(el.getAttribute("data-stagger-step") || "50", 10);
+        step = isNaN(step) ? 50 : Math.min(step, 50);
         Array.prototype.forEach.call(el.children, function (c, i) {
           c.style.opacity = "0";
           c.style.transform = "translateY(22px)";
-          c.style.transition = "opacity .65s cubic-bezier(.2,.7,.2,1) " + (i * step) + "ms, transform .65s cubic-bezier(.2,.7,.2,1) " + (i * step) + "ms";
+          c.style.transition = "opacity var(--motion-section) var(--ease-out) " + (i * step) + "ms, transform var(--motion-section) var(--ease-out) " + (i * step) + "ms";
         });
       }
     });

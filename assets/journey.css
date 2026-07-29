@@ -11,6 +11,16 @@
   --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
     sans-serif;
   --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --motion-fast: 180ms;
+  --motion-panel: 280ms;
+  --motion-section: 480ms;
+  --ease-out: cubic-bezier(.22, 1, .36, 1);
+  --ease-state: cubic-bezier(.65, 0, .35, 1);
+  --nav-height: 76px;
+  --layer-base: 0;
+  --layer-hero: 10;
+  --layer-nav: 40;
+  --layer-overlay: 60;
 }
 
 * {
@@ -48,8 +58,10 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  color: var(--ink);
+@media (hover: hover) {
+  a:hover {
+    color: var(--ink);
+  }
 }
 
 :focus-visible {
@@ -69,6 +81,106 @@ a:hover {
 .wrap {
   width: min(1180px, calc(100% - 48px));
   margin-inline: auto;
+}
+
+.cinematic-hero {
+  position: relative;
+  min-height: min(860px, 100svh);
+  overflow: clip;
+  isolation: isolate;
+  padding: clamp(96px, 12vw, 164px) 0 clamp(118px, 14vw, 190px);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.cinematic-media,
+.cinematic-scrim {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.cinematic-media {
+  z-index: -3;
+  object-fit: cover;
+  object-position: center;
+  transform: scale(1.025);
+  animation: cinematic-settle 800ms var(--ease-out) both;
+}
+
+.cinematic-scrim {
+  z-index: -2;
+  background:
+    linear-gradient(90deg, rgba(8, 11, 24, .9) 0%, rgba(8, 11, 24, .58) 47%, rgba(8, 11, 24, .18) 74%),
+    linear-gradient(0deg, rgba(8, 11, 24, .68) 0%, transparent 46%);
+}
+
+.cinematic-content {
+  position: relative;
+  z-index: var(--layer-hero);
+}
+
+.hero-product {
+  display: block;
+  width: 100%;
+}
+
+.paper-rise {
+  position: relative;
+  z-index: 12;
+  margin-top: clamp(-72px, -6vw, -44px);
+  border-radius: clamp(28px, 4vw, 58px) clamp(28px, 4vw, 58px) 0 0;
+  background: var(--paper);
+}
+
+.compact-hero {
+  min-height: min(680px, 82svh);
+}
+
+.sticky-story {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(300px, .7fr);
+  gap: clamp(32px, 7vw, 92px);
+  align-items: start;
+}
+
+.story-visual {
+  position: sticky;
+  top: calc(var(--nav-height) + 28px);
+}
+
+.story-steps {
+  display: grid;
+  gap: clamp(24px, 4vw, 48px);
+}
+
+.story-step {
+  min-height: 58vh;
+  opacity: .42;
+  transform: translateY(18px);
+  transition:
+    opacity var(--motion-panel) var(--ease-out),
+    transform var(--motion-panel) var(--ease-out);
+}
+
+.story-step.is-active {
+  opacity: 1;
+  transform: none;
+}
+
+body[data-cinematic] #fs-nav {
+  transition: box-shadow var(--motion-fast) var(--ease-state);
+}
+
+body[data-cinematic] #fs-nav.is-past-hero {
+  box-shadow: 0 10px 26px -20px rgba(16, 20, 38, .46);
+}
+
+@keyframes cinematic-settle {
+  to {
+    transform: none;
+  }
 }
 
 .hero {
@@ -191,13 +303,6 @@ button.button {
     transform 180ms ease;
 }
 
-.button:hover,
-button.button:hover {
-  background: var(--copper);
-  color: var(--paper);
-  transform: translateY(-1px);
-}
-
 .button.secondary,
 button.button.secondary {
   border-color: var(--line);
@@ -205,23 +310,32 @@ button.button.secondary {
   color: var(--ink);
 }
 
-.button.secondary:hover,
-button.button.secondary:hover {
-  border-color: var(--ink);
-  background: var(--paper);
-  color: var(--ink);
+@media (hover: hover) {
+  .button:hover,
+  button.button:hover {
+    background: var(--copper);
+    color: var(--paper);
+    transform: translateY(-1px);
+  }
+
+  .button.secondary:hover,
+  button.button.secondary:hover {
+    border-color: var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  .dark .button.secondary:hover,
+  .site-close .button.secondary:hover {
+    border-color: var(--paper);
+    color: var(--paper);
+  }
 }
 
 .dark .button.secondary,
 .site-close .button.secondary {
   border-color: rgba(255, 255, 255, 0.25);
   background: transparent;
-  color: var(--paper);
-}
-
-.dark .button.secondary:hover,
-.site-close .button.secondary:hover {
-  border-color: var(--paper);
   color: var(--paper);
 }
 
@@ -938,6 +1052,10 @@ noscript {
   .journey-strip {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+
+  .sticky-story {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 620px) {
@@ -994,11 +1112,22 @@ noscript {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    scroll-behavior: auto !important;
-    animation: none !important;
-    transition: none !important;
+  html {
+    scroll-behavior: auto;
+  }
+
+  .cinematic-media {
+    animation: none;
+    transform: none;
+  }
+
+  .story-visual {
+    position: static;
+  }
+
+  .story-step {
+    opacity: 1;
+    transform: none;
+    transition: none;
   }
 }
