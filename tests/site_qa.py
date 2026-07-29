@@ -614,7 +614,8 @@ def assert_siesie_cinematic_contract(browser) -> None:
                 const card = document.querySelectorAll(
                     '.sticky-story .role-card',
                 )[index];
-                window.scrollTo(0, card.offsetTop - (innerHeight * .42));
+                const top = card.getBoundingClientRect().top + scrollY;
+                window.scrollTo({ top: top - (innerHeight * .42), behavior: 'instant' });
             }""",
             index,
         )
@@ -622,7 +623,7 @@ def assert_siesie_cinematic_contract(browser) -> None:
             """(index) => document.querySelectorAll(
                 '.sticky-story .role-card',
             )[index].classList.contains('is-active')""",
-            index,
+            arg=index,
         )
         active = story.locator(".role-card.is-active")
         assert active.count() == 1
@@ -642,7 +643,8 @@ def assert_siesie_cinematic_contract(browser) -> None:
     for index in range(1, 4):
         checks.nth(index).click()
     page.get_by_role("button", name="Show my first fix").click()
-    assert page.locator("#audit-label").inner_text().startswith("4 of 5")
+    audit_label = (page.locator("#audit-label").text_content() or "").strip()
+    assert audit_label.startswith("4 of 5"), audit_label
     assert page.locator("#audit-link").get_attribute("href") == "/siesie-application"
 
     workflow = page.locator(".workflow-step")
@@ -746,7 +748,8 @@ def assert_siesie_reduced_motion_contract(page) -> None:
     page.keyboard.press("Space")
     assert checks.nth(0).is_checked()
     page.get_by_role("button", name="Show my first fix").click()
-    assert page.locator("#audit-label").inner_text().startswith("1 of 5")
+    audit_label = (page.locator("#audit-label").text_content() or "").strip()
+    assert audit_label.startswith("1 of 5"), audit_label
 
 
 def run_foundation() -> None:
@@ -808,11 +811,22 @@ def run_foundation() -> None:
         ) == "12px"
 
         second = page.locator("[data-story-step]").nth(1)
-        second.scroll_into_view_if_needed()
-        page.wait_for_timeout(100)
+        page.evaluate(
+            """() => {
+                const step = document.querySelectorAll('[data-story-step]')[1];
+                const top = step.getBoundingClientRect().top + scrollY;
+                window.scrollTo({ top: top - (innerHeight * .42), behavior: 'instant' });
+            }"""
+        )
+        page.wait_for_function(
+            """() => document.querySelectorAll(
+                '[data-story-step]',
+            )[1].classList.contains('is-active')"""
+        )
         assert second.evaluate(
             "(node) => node.classList.contains('is-active')"
         )
+        assert page.locator("[data-story-step].is-active").count() == 1
         mobile = browser.new_page(viewport={"width": 390, "height": 844})
         mobile.goto(f"{BASE}/tests/fixtures/cinematic.html", wait_until="networkidle")
         assert_cinematic_nav_overlay(mobile)
@@ -888,6 +902,15 @@ def run() -> None:
     console_errors: list[str] = []
     page_errors: list[str] = []
 
+    def record_console(message) -> None:
+        """Record console errors except the stubbed form-delivery failure."""
+        if message.type != "error":
+            return
+        source = (message.location or {}).get("url", "")
+        if "formspree.io" in source and "Failed to load resource" in message.text:
+            return
+        console_errors.append(f"{message.text} ({source})")
+
     with sync_playwright() as playwright:
         launch_options = {
             "headless": True,
@@ -903,12 +926,7 @@ def run() -> None:
             launch_options["executable_path"] = PLAYWRIGHT_EXECUTABLE
         browser = playwright.chromium.launch(**launch_options)
         page = browser.new_page(viewport={"width": 1280, "height": 900})
-        page.on(
-            "console",
-            lambda message: console_errors.append(message.text)
-            if message.type == "error"
-            else None,
-        )
+        page.on("console", record_console)
         page.on("pageerror", lambda error: page_errors.append(str(error)))
 
         page.goto(f"{BASE}/index.html", wait_until="networkidle")
@@ -944,7 +962,8 @@ def run() -> None:
         for index in range(4):
             checks.nth(index).check()
         page.get_by_role("button", name="Show my first fix").click()
-        assert page.locator("#audit-label").inner_text().startswith("4 of 5")
+        audit_label = (page.locator("#audit-label").text_content() or "").strip()
+        assert audit_label.startswith("4 of 5"), audit_label
         assert (
             page.locator("#audit-link").get_attribute("href")
             == "/siesie-application"
