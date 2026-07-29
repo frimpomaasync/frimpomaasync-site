@@ -130,6 +130,86 @@ def assert_no_overflow(page, width: int) -> None:
     assert size["scroll"] <= size["inner"], size
 
 
+def run_foundation() -> None:
+    from playwright.sync_api import sync_playwright
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch(
+            headless=True,
+            args=[
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-breakpad",
+                "--disable-crash-reporter",
+                "--no-first-run",
+            ],
+            executable_path=PLAYWRIGHT_EXECUTABLE,
+        ) if PLAYWRIGHT_EXECUTABLE else playwright.chromium.launch(
+            headless=True,
+            args=[
+                "--no-sandbox",
+                "--disable-dev-shm-usage",
+                "--disable-breakpad",
+                "--disable-crash-reporter",
+                "--no-first-run",
+            ],
+        )
+
+        page = browser.new_page(viewport={"width": 1280, "height": 900})
+        page.goto(f"{BASE}/tests/fixtures/cinematic.html", wait_until="networkidle")
+
+        assert page.locator(".cinematic-media").evaluate(
+            "(node) => getComputedStyle(node).animationName"
+        ) == "cinematic-settle"
+        assert page.locator(".story-visual").evaluate(
+            "(node) => getComputedStyle(node).position"
+        ) == "sticky"
+        assert float(page.locator(".story-step").nth(1).evaluate(
+            "(node) => getComputedStyle(node).opacity"
+        )) < 1
+
+        page.locator(".paper-rise").scroll_into_view_if_needed()
+        page.wait_for_timeout(100)
+        assert page.locator("#fs-nav").evaluate(
+            "(node) => node.classList.contains('is-past-hero')"
+        )
+
+        second = page.locator("[data-story-step]").nth(1)
+        second.scroll_into_view_if_needed()
+        page.wait_for_timeout(100)
+        assert second.evaluate(
+            "(node) => node.classList.contains('is-active')"
+        )
+        browser.close()
+
+    with sync_playwright() as playwright:
+        browser = playwright.chromium.launch(
+            headless=True,
+            args=["--no-sandbox", "--disable-dev-shm-usage"],
+            executable_path=PLAYWRIGHT_EXECUTABLE,
+        ) if PLAYWRIGHT_EXECUTABLE else playwright.chromium.launch(
+            headless=True,
+            args=["--no-sandbox", "--disable-dev-shm-usage"],
+        )
+        reduced = browser.new_context(
+            viewport={"width": 1280, "height": 900},
+            reduced_motion="reduce",
+        )
+        page = reduced.new_page()
+        page.goto(f"{BASE}/tests/fixtures/cinematic.html", wait_until="networkidle")
+        assert page.locator(".cinematic-media").evaluate(
+            "(node) => getComputedStyle(node).animationName"
+        ) == "none"
+        assert page.locator(".story-visual").evaluate(
+            "(node) => getComputedStyle(node).position"
+        ) == "static"
+        assert page.locator(".story-step").nth(1).evaluate(
+            "(node) => getComputedStyle(node).opacity"
+        ) == "1"
+        reduced.close()
+        browser.close()
+
+
 def run() -> None:
     from playwright.sync_api import sync_playwright
 
@@ -259,6 +339,9 @@ def run() -> None:
 if __name__ == "__main__":
     if "--static" in sys.argv:
         run_static()
+    elif "--foundation" in sys.argv:
+        run_foundation()
+        print("cinematic foundation browser QA passed")
     else:
         run()
         print("site browser QA passed")

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Cinematic foundation fixture</title>
+    <link rel="stylesheet" href="/assets/journey.css">
+    <style>
+      .fixture-hero-copy,
+      .fixture-story-copy,
+      .story-visual {
+        padding: 32px;
+      }
+
+      .fixture-story-copy {
+        display: grid;
+        gap: 32px;
+      }
+
+      .story-visual {
+        min-height: 240px;
+        background: #f8f8f9;
+      }
+    </style>
+  </head>
+  <body data-cinematic>
+    <main>
+      <section class="cinematic-hero" data-cinematic-hero>
+        <img class="cinematic-media" src="/assets/hero-scene-wide.jpg" alt="">
+        <div class="cinematic-scrim"></div>
+        <div class="cinematic-content fixture-hero-copy">Hero fixture</div>
+      </section>
+
+      <section class="paper-rise">
+        <div class="sticky-story">
+          <div class="story-visual">Story visual fixture</div>
+          <div class="fixture-story-copy">
+            <article class="story-step" data-story-step>First story step</article>
+            <article class="story-step" data-story-step>Second story step</article>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="/fsnav.js"></script>
+  </body>
+</html>
