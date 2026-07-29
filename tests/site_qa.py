@@ -398,6 +398,148 @@ def assert_homepage_reduced_motion_contract(page) -> None:
     choose_homepage_leak_with_mouse_and_keyboard(page)
 
 
+def assert_synkasa_cinematic_contract(browser) -> None:
+    page = browser.new_page(viewport={"width": 1280, "height": 900})
+    page.goto(f"{BASE}/synkasa.html", wait_until="networkidle")
+
+    hero = page.locator("[data-cinematic-hero]")
+    media = hero.locator(".cinematic-media")
+    stage = page.locator("#synkasa-demo-stage")
+    story = page.locator(".sticky-story")
+    story_visual = story.locator(".story-visual")
+    story_steps = story.locator("[data-story-step]")
+
+    assert page.locator("body[data-cinematic]").count() == 1
+    assert hero.is_visible()
+    assert media.is_visible()
+    assert media.get_attribute("src") == "/assets/hero-scene-wide.jpg"
+    assert media.evaluate("(node) => getComputedStyle(node).objectPosition") in {
+        "58% 50%",
+        "58% center",
+    }
+
+    assert stage.is_visible()
+    status_rows = stage.locator(".product-status-list > div")
+    assert status_rows.count() == 4
+    assert status_rows.all_inner_texts() == [
+        "01Inquiry received",
+        "02Question answered",
+        "03Two times offered",
+        "04Follow-up ready",
+    ]
+    chat_control = stage.locator("[data-fs-chat]")
+    assert chat_control.is_visible()
+    assert chat_control.is_enabled()
+    assert chat_control.evaluate(
+        "(node) => getComputedStyle(node).pointerEvents"
+    ) != "none"
+    chat_control.click()
+    assert page.locator("#fs-chat-panel").is_visible()
+    page.locator("#fs-chat-x").click()
+
+    assert story.is_visible()
+    assert story_steps.count() == 4
+    assert story_steps.locator("h3").all_inner_texts() == [
+        "Answer",
+        "Qualify",
+        "Book",
+        "Follow up",
+    ]
+    assert story_visual.evaluate(
+        "(node) => getComputedStyle(node).position"
+    ) == "sticky"
+    assert story_visual.locator("video").is_visible()
+    for index in range(4):
+        step = story_steps.nth(index)
+        step.scroll_into_view_if_needed()
+        page.wait_for_timeout(160)
+        active = story.locator("[data-story-step].is-active")
+        assert active.count() == 1
+        assert active.nth(0).evaluate(
+            "(node, index) => node === document.querySelectorAll('[data-story-step]')[index]",
+            index,
+        )
+
+    assert page.locator("#opportunity-form").is_visible()
+    assert page.locator("#calc-output").is_visible()
+    assert page.locator("#synkasa-script").is_visible()
+    for label in ("Soma", "Tiers", "Fit", "Ownership", "FAQ"):
+        assert page.locator(f"[data-screen-label='{label}']").is_visible()
+    assert page.get_by_text("Live in 7 days, or you don't pay", exact=False).count() >= 1
+    fit_link = page.locator("a[href='/synkasa-fit']").first
+    assert fit_link.is_visible()
+    fit_link.click()
+    assert page.locator("form[name='synkasa-fit']").is_visible()
+    page.close()
+
+    mobile = browser.new_page(viewport={"width": 390, "height": 844})
+    mobile.goto(f"{BASE}/synkasa.html", wait_until="networkidle")
+    mobile_state = mobile.evaluate(
+        """() => {
+            const box = (node) => {
+                const rect = node.getBoundingClientRect();
+                return { top: rect.top, bottom: rect.bottom };
+            };
+            const nav = document.getElementById('fs-nav');
+            const content = document.querySelector('.cinematic-content');
+            const visual = document.querySelector('.sticky-story .story-visual');
+            const video = visual.querySelector('video');
+            const steps = Array.from(document.querySelectorAll('[data-story-step]'));
+            const controls = Array.from(
+                document.querySelectorAll(
+                    '[data-cinematic-hero] .button, #synkasa-demo-stage [data-fs-chat]',
+                ),
+                (control) => control.getBoundingClientRect().height,
+            );
+            return {
+                nav: box(nav),
+                content: box(content),
+                visualPosition: getComputedStyle(visual).position,
+                video: box(video),
+                steps: steps.map(box),
+                controls,
+            };
+        }"""
+    )
+    assert mobile_state["content"]["top"] - mobile_state["nav"]["bottom"] >= 24
+    assert mobile_state["visualPosition"] != "sticky"
+    assert mobile_state["video"]["bottom"] <= mobile_state["steps"][0]["top"]
+    assert all(
+        mobile_state["steps"][index]["bottom"]
+        <= mobile_state["steps"][index + 1]["top"]
+        for index in range(3)
+    )
+    assert mobile_state["controls"]
+    assert all(height >= 44 for height in mobile_state["controls"])
+    assert_no_overflow(mobile, 390)
+    mobile.close()
+
+
+def assert_synkasa_reduced_motion_contract(page) -> None:
+    page.goto(f"{BASE}/synkasa.html", wait_until="networkidle")
+    stage = page.locator("#synkasa-demo-stage")
+    story = page.locator(".sticky-story")
+    media = page.locator("[data-cinematic-hero] .cinematic-media")
+
+    assert stage.is_visible()
+    assert story.locator("[data-story-step]").count() == 4
+    assert media.evaluate("(node) => getComputedStyle(node).animationName") == "none"
+    assert story.locator(".story-visual").evaluate(
+        "(node) => getComputedStyle(node).position"
+    ) != "sticky"
+    assert all(
+        float(opacity) == 1
+        for opacity in story.locator("[data-story-step]").evaluate_all(
+            "(steps) => steps.map((step) => getComputedStyle(step).opacity)"
+        )
+    )
+    chat_control = stage.locator("[data-fs-chat]")
+    assert chat_control.is_enabled()
+    chat_control.click()
+    assert page.locator("#fs-chat-panel").is_visible()
+    page.locator("#fs-chat-x").click()
+
+
 def run_foundation() -> None:
     from playwright.sync_api import sync_playwright
 
@@ -468,6 +610,7 @@ def run_foundation() -> None:
         assert_cinematic_mobile_clearance(mobile)
         mobile.close()
         assert_homepage_cinematic_contract(browser)
+        assert_synkasa_cinematic_contract(browser)
         browser.close()
 
     with sync_playwright() as playwright:
@@ -523,6 +666,7 @@ def run_foundation() -> None:
         )
         assert typing_animation_names == ["none", "none", "none"]
         assert_homepage_reduced_motion_contract(page)
+        assert_synkasa_reduced_motion_contract(page)
         reduced.close()
         browser.close()
 
