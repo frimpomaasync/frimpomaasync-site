@@ -167,12 +167,25 @@ def run_foundation() -> None:
         assert float(page.locator(".story-step").nth(1).evaluate(
             "(node) => getComputedStyle(node).opacity"
         )) < 1
+        nav = page.locator("#fs-nav")
+        assert nav.evaluate(
+            "(node) => getComputedStyle(node).backgroundColor"
+        ) == "rgba(0, 0, 0, 0)"
+        assert nav.evaluate(
+            "(node) => getComputedStyle(node).transitionDuration"
+        ) == "0s"
 
         page.locator(".paper-rise").scroll_into_view_if_needed()
         page.wait_for_timeout(100)
-        assert page.locator("#fs-nav").evaluate(
+        assert nav.evaluate(
             "(node) => node.classList.contains('is-past-hero')"
         )
+        assert nav.evaluate(
+            "(node) => getComputedStyle(node).backgroundColor"
+        ) == "rgb(255, 255, 255)"
+        assert page.locator("#fs-nav .fs-grid").evaluate(
+            "(node) => getComputedStyle(node).paddingTop"
+        ) == "12px"
 
         second = page.locator("[data-story-step]").nth(1)
         second.scroll_into_view_if_needed()
@@ -206,6 +219,12 @@ def run_foundation() -> None:
         assert page.locator(".story-step").nth(1).evaluate(
             "(node) => getComputedStyle(node).opacity"
         ) == "1"
+        assert page.locator("#fs-bar").evaluate(
+            "(node) => getComputedStyle(node).transitionDuration"
+        ) == "0s"
+        assert page.locator("#fs-chat-panel span[style*='skcDot']").first.evaluate(
+            "(node) => getComputedStyle(node).animationName"
+        ) == "none"
         reduced.close()
         browser.close()
 

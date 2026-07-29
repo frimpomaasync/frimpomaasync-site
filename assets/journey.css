@@ -170,11 +170,26 @@ a {
 }
 
 body[data-cinematic] #fs-nav {
-  transition: box-shadow var(--motion-fast) var(--ease-state);
+  border-bottom-color: transparent !important;
+  background: transparent !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
 }
 
 body[data-cinematic] #fs-nav.is-past-hero {
-  box-shadow: 0 10px 26px -20px rgba(16, 20, 38, .46);
+  border-bottom-color: rgba(16, 20, 38, .08) !important;
+  background: var(--paper) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  backdrop-filter: blur(12px) !important;
+}
+
+body[data-cinematic] #fs-nav.is-past-hero .fs-grid {
+  padding: 12px 24px 10px !important;
+}
+
+body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navlink],
+body[data-cinematic] #fs-nav:not(.is-past-hero) .fs-grid > a:not([data-navcta]) {
+  color: rgba(255, 255, 255, .82) !important;
 }
 
 @keyframes cinematic-settle {

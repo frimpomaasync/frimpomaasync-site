@@ -29,7 +29,7 @@
     "#fs-foot a{text-decoration:none;color:rgba(242,244,249,.72)}",
     "@media (max-width:1360px){#fs-rail{display:none!important}}",
     "@media (max-width:700px){#fs-nav .fs-grid{grid-template-columns:1fr auto!important}#fs-nav .fs-grid nav{order:3;grid-column:1 / -1}}",
-    "@media (prefers-reduced-motion: reduce){#fs-veil{display:none!important}}"
+    "@media (prefers-reduced-motion: reduce){#fs-veil{display:none!important}#fs-bar{transition:none!important}#fs-chat-panel span[style*='skcDot']{animation:none!important}}"
   ].join("\n");
   document.head.appendChild(css);
 
