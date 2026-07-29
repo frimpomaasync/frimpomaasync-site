@@ -421,11 +421,11 @@ def assert_synkasa_cinematic_contract(browser) -> None:
     assert stage.is_visible()
     status_rows = stage.locator(".product-status-list > div")
     assert status_rows.count() == 4
-    assert status_rows.all_inner_texts() == [
-        "01Inquiry received",
-        "02Question answered",
-        "03Two times offered",
-        "04Follow-up ready",
+    assert [" ".join(row.split()) for row in status_rows.all_inner_texts()] == [
+        "01 Inquiry received",
+        "02 Question answered",
+        "03 Two times offered",
+        "04 Follow-up ready",
     ]
     chat_control = stage.locator("[data-fs-chat]")
     assert chat_control.is_visible()
