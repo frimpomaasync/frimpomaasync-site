@@ -1,12 +1,12 @@
-/* fsnav.js v800 · site chrome for the 2026-07 redesign.
+/* fsnav.js v810 · site chrome for the 2026-07 customer path.
    Ships the sticky nav, footer, sticky CTA bar, section rail, chat widget,
    page cross-fade veil, and the motion engine (data-reveal / data-stagger / data-count).
    Every page includes this once before </body>. Design source: design_handoff_frimpomaasync_site.
    Per-page config via <body> attributes: data-sk-sections, data-sk-bar, data-sk-biz, data-sk-nochrome. */
 (function () {
   "use strict";
-  if (window.__fsnav800) return;
-  window.__fsnav800 = true;
+  if (window.__fsnav810) return;
+  window.__fsnav810 = true;
 
   var BOOK = "https://calendar.app.google/DkRJFRA3G6W6d8E48";
   var CHAT_API = "https://synkasa-api.dawn-boat-ec20.workers.dev/chat";
@@ -81,7 +81,7 @@
       '<div><div style="font-family:' + SERIF + ';font-size:19px;color:#F2F4F9">frimpomaasync</div>' +
       '<div style="margin-top:10px;font-size:13.5px;line-height:1.6">Built, wired, and cared for by NaNa Frimpomaa.</div></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/synkasa">SynKasa</a><a href="/siesie">Siesie</a><a href="/portfolio">Proof</a></div>' +
-      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/free">Free</a><a href="/som">Som</a><a href="/blog/">Blog</a></div>' +
+      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/free">Free</a><a href="/som">Som</a><a href="/blog/">Blog</a><a href="/fit">Find your fit</a></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="' + BOOK + '">Book a call</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>' +
       '<div style="margin-top:14px;font-family:' + MONO + ';font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,244,249,.34)">Watch it work before you pay</div></div>' +
       "</div>";
