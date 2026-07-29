@@ -1,0 +1,41 @@
+name: Test cinematic foundation
+
+on:
+  push:
+    branches:
+      - codex/full-customer-path
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install browser test dependencies
+        run: |
+          python -m pip install --upgrade pip playwright
+          playwright install --with-deps chromium
+
+      - name: Start preview server
+        run: |
+          python3 scripts/preview_server.py --bind 127.0.0.1 --port 4173 > /tmp/preview-server.log 2>&1 &
+          for attempt in $(seq 1 20); do
+            if curl --fail --silent http://127.0.0.1:4173/index.html > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/preview-server.log
+          exit 1
+
+      - name: Run cinematic checks
+        run: |
+          node --test tests/journey.test.mjs
+          python3 -m unittest tests/test_preview_server.py
+          python3 tests/site_qa.py --static
+          python3 tests/site_qa.py --foundation
