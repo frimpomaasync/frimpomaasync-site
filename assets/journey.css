@@ -144,6 +144,10 @@ a {
   color: rgba(255, 255, 255, .8);
 }
 
+.cinematic-hero .small-note {
+  color: rgba(255, 255, 255, .72);
+}
+
 .cinematic-hero .hero-product {
   max-width: 470px;
   justify-self: end;
@@ -159,6 +163,72 @@ a {
 
 .cinematic-hero .result-actions a {
   color: #f0a17b;
+}
+
+.synkasa-hero .cinematic-media {
+  object-position: 58% center;
+}
+
+.synkasa-stage {
+  animation: synkasa-stage-settle var(--motion-panel) var(--ease-out) both;
+}
+
+.product-status-list {
+  display: grid;
+  gap: 10px;
+}
+
+.product-status-list > div {
+  display: grid;
+  grid-template-columns: 32px minmax(0, 1fr);
+  min-height: 52px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--paper-soft);
+  color: var(--ink);
+}
+
+.product-status-list > div span {
+  color: var(--copper);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+}
+
+.product-status-list > div strong {
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.synkasa-story .story-visual {
+  overflow: hidden;
+  border-radius: 22px;
+}
+
+.synkasa-story .story-step {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.synkasa-story .story-step h3 {
+  margin: 18px 0 12px;
+  font-family: var(--serif);
+  font-size: clamp(34px, 4vw, 52px);
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1;
+}
+
+.synkasa-story .story-step p {
+  max-width: 32em;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 17px;
+  line-height: 1.65;
 }
 
 .hero-trust {
@@ -261,6 +331,16 @@ body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navcta] {
 }
 
 @keyframes cinematic-settle {
+  to {
+    transform: none;
+  }
+}
+
+@keyframes synkasa-stage-settle {
+  from {
+    transform: perspective(900px) rotateY(-2deg) rotate(-1deg);
+  }
+
   to {
     transform: none;
   }
@@ -1140,6 +1220,16 @@ noscript {
     grid-template-columns: 1fr;
   }
 
+  .synkasa-story .story-visual {
+    position: static;
+  }
+
+  .synkasa-story .story-step {
+    min-height: 0;
+    opacity: 1;
+    transform: none;
+  }
+
   .cinematic-hero .hero-product {
     justify-self: start;
   }
@@ -1202,6 +1292,10 @@ noscript {
     transform: scale(1.01);
   }
 
+  .synkasa-hero .cinematic-media {
+    object-position: 58% center;
+  }
+
   .hero-trust {
     gap: 8px 14px;
   }
@@ -1224,6 +1318,11 @@ noscript {
 
   .cinematic-media,
   .cinematic-hero .cinematic-media {
+    animation: none;
+    transform: none;
+  }
+
+  .synkasa-stage {
     animation: none;
     transform: none;
   }

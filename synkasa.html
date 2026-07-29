@@ -32,11 +32,13 @@
     }
   </script>
 </head>
-<body data-sk-sections="Hero,Proof,Calculator,Response,Workflow,Soma,Tiers,Fit,Ownership,FAQ,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
+<body data-cinematic data-sk-sections="Hero,Proof,Calculator,Response,Workflow,Soma,Tiers,Fit,Ownership,FAQ,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
   <main>
-    <section class="hero" data-screen-label="Hero">
-      <div class="wrap hero-grid">
-        <div>
+    <section class="hero cinematic-hero synkasa-hero" data-cinematic-hero data-screen-label="Hero">
+      <img class="cinematic-media" src="/assets/hero-scene-wide.jpg" width="2400" height="1024" alt="" fetchpriority="high" decoding="async">
+      <div class="cinematic-scrim" aria-hidden="true"></div>
+      <div class="wrap hero-grid cinematic-content">
+        <div class="hero-message">
           <div class="eyebrow">SynKasa · your business, always open</div>
           <h1>Your front desk. <em>Never sleeps.</em></h1>
           <p class="hero-copy">SynKasa answers in your voice, qualifies the job, books the right time, and follows up when a lead goes quiet.</p>
@@ -46,25 +48,52 @@
           </div>
           <p class="small-note">Formerly the Client Catcher · live in 7 days · built in your accounts · yours to keep</p>
         </div>
-        <div class="open-sign" aria-hidden="true">
-          <div class="open-board">OPEN</div>
+        <div class="screen hero-product synkasa-stage" id="synkasa-demo-stage">
+          <div class="screen-top">
+            <span>Front desk status</span>
+            <span class="status">Working</span>
+          </div>
+          <div class="screen-body product-status-list">
+            <div><span>01</span><strong>Inquiry received</strong></div>
+            <div><span>02</span><strong>Question answered</strong></div>
+            <div><span>03</span><strong>Two times offered</strong></div>
+            <div><span>04</span><strong>Follow-up ready</strong></div>
+            <button class="button" type="button" data-fs-chat>Watch it answer now →</button>
+          </div>
         </div>
+      </div>
+      <div class="hero-trust wrap" aria-label="SynKasa price and guarantee">
+        <span>From $555</span>
+        <span>Live in 7 days, or you don't pay</span>
       </div>
     </section>
 
     <section class="section soft" data-screen-label="Proof">
-      <div class="wrap split">
-        <div class="proof-media" style="border-radius:22px;overflow:hidden">
+      <div class="wrap sticky-story synkasa-story" data-story>
+        <div class="proof-media story-visual">
           <video src="/videos/01-receptionist.mp4#t=2.5" controls preload="metadata" playsinline aria-label="SynKasa answering a customer inquiry"></video>
         </div>
-        <div>
-          <div class="eyebrow">Working proof</div>
-          <h2 class="section-title">The call is handled before you put the tool down.</h2>
-          <p class="section-intro" style="margin-top:22px">Watch the front desk answer, qualify the job, offer two times, and book one. Then open the live demo and ask it something awkward.</p>
-          <div class="actions">
-            <button class="button" type="button" data-fs-chat>Talk to the front desk →</button>
-            <a class="button secondary" href="/portfolio#synkasa-proof">See the full proof card →</a>
-          </div>
+        <div class="story-steps">
+          <article class="story-step is-active" data-story-step>
+            <span class="pill">01</span>
+            <h3>Answer</h3>
+            <p>The inquiry gets a fast first response in the business's voice.</p>
+          </article>
+          <article class="story-step" data-story-step>
+            <span class="pill">02</span>
+            <h3>Qualify</h3>
+            <p>The front desk asks what the customer needs, where they are, and how soon they need it.</p>
+          </article>
+          <article class="story-step" data-story-step>
+            <span class="pill">03</span>
+            <h3>Book</h3>
+            <p>The customer gets two real times and the chosen time reaches the calendar.</p>
+          </article>
+          <article class="story-step" data-story-step>
+            <span class="pill">04</span>
+            <h3>Follow up</h3>
+            <p>A quiet lead keeps a dated next action until it books, needs the owner, or reaches a clear stop.</p>
+          </article>
         </div>
       </div>
     </section>
