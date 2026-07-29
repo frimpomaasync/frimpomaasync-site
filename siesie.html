@@ -28,12 +28,14 @@
     }
   </script>
 </head>
-<body data-sk-sections="Hero,Five roles,Owner check,Workflow,Fit,Build path,Ownership,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="established service business">
+<body data-cinematic data-sk-sections="Hero,Five roles,Owner check,Workflow,Fit,Build path,Ownership,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="established service business">
   <main>
-    <section class="hero dark" data-screen-label="Hero">
-      <div class="wrap hero-grid">
-        <div>
-          <div class="eyebrow">Siesie · the back office</div>
+    <section class="hero cinematic-hero siesie-hero" data-cinematic-hero data-screen-label="Hero">
+      <img class="cinematic-media" src="/assets/siesie-hero.jpg" width="1536" height="1024" alt="" fetchpriority="high" decoding="async">
+      <div class="cinematic-scrim" aria-hidden="true"></div>
+      <div class="wrap hero-grid cinematic-content">
+        <div class="hero-message">
+          <div class="eyebrow">Siesie · the back office · $25,000, once</div>
           <h1>The business <em>behind the business.</em></h1>
           <p class="hero-copy">Five roles stop waiting for you: scheduling, money, coordination, account management, and reporting.</p>
           <div class="actions">
@@ -58,32 +60,37 @@
           <h2 class="section-title"><span>Five roles.</span> One back office that keeps moving.</h2>
           <p class="section-intro">Siesie is for an established business where four or five of these roles still come back to the owner.</p>
         </div>
-        <div class="role-grid">
-          <article class="role-card">
-            <span class="pill">01</span>
-            <h3>Scheduling</h3>
-            <p>Jobs, crews, and calendars stay in sync without the same details being typed twice.</p>
-          </article>
-          <article class="role-card">
-            <span class="pill">02</span>
-            <h3>Money</h3>
-            <p>Invoices go out, due dates stay visible, and unpaid work has a next action.</p>
-          </article>
-          <article class="role-card">
-            <span class="pill">03</span>
-            <h3>Coordination</h3>
-            <p>Customers, crew, and suppliers get the update meant for them.</p>
-          </article>
-          <article class="role-card">
-            <span class="pill">04</span>
-            <h3>Account management</h3>
-            <p>Every client has one place for history, status, ownership, and a dated next move.</p>
-          </article>
-          <article class="role-card">
-            <span class="pill">05</span>
-            <h3>Reporting</h3>
-            <p>See what is waiting, paid, late, or slipping before someone has to ask.</p>
-          </article>
+        <div class="sticky-story siesie-story" data-story>
+          <div class="story-visual">
+            <img src="/assets/siesie-hero.jpg" width="1536" height="1024" alt="" decoding="async">
+          </div>
+          <div class="story-steps">
+            <article class="role-card story-step is-active" data-story-step>
+              <span class="pill">01</span>
+              <h3>Scheduling</h3>
+              <p>Jobs, crews, and calendars stay in sync without the same details being typed twice.</p>
+            </article>
+            <article class="role-card story-step" data-story-step>
+              <span class="pill">02</span>
+              <h3>Money</h3>
+              <p>Invoices go out, due dates stay visible, and unpaid work has a next action.</p>
+            </article>
+            <article class="role-card story-step" data-story-step>
+              <span class="pill">03</span>
+              <h3>Coordination</h3>
+              <p>Customers, crew, and suppliers get the update meant for them.</p>
+            </article>
+            <article class="role-card story-step" data-story-step>
+              <span class="pill">04</span>
+              <h3>Account management</h3>
+              <p>Every client has one place for history, status, ownership, and a dated next move.</p>
+            </article>
+            <article class="role-card story-step" data-story-step>
+              <span class="pill">05</span>
+              <h3>Reporting</h3>
+              <p>See what is waiting, paid, late, or slipping before someone has to ask.</p>
+            </article>
+          </div>
         </div>
       </div>
     </section>
