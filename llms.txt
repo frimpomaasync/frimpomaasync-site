@@ -1,84 +1,119 @@
 # frimpomaasync.com
 
-> Done-for-you AI systems for owner-run small businesses, built and cared for by NaNa Frimpomaa. Flagship offer: SynKasa, the AI front desk (formerly sold as the Client Catcher). It answers every call, text and DM in the owner's voice, qualifies the lead, and books the job onto the owner's real calendar. Built for solo owners and small crews who answer their own phone: trades, salons, detailers, cleaners, home services, real estate.
+frimpomaasync.com builds practical business systems for owner-run service businesses. SynKasa handles the front desk. Siesie handles the repeating work behind it. Every build lives in the client's accounts and stays theirs.
 
-## The offer: SynKasa, the AI front desk
+Primary slogan: "Watch it work before you pay."
 
-One product, three tiers. Same front desk underneath; the difference is how much of the business it runs. Every tier is a one-time build in the client's own accounts, owned outright by the client.
+Guarantee: "Live in 7 days, or you don't pay."
 
-- Start, "It answers.", $555 one time plus optional $99/month care plan. Every call, text and DM answered in the owner's voice, leads qualified before they reach the owner, booked straight into the calendar, after-hours covered. For: "I just need my phone answered."
-- Grow, "It answers and chases.", $1,500 one time plus optional $222/month care plan. Everything in Start plus follow-up sequences that run themselves, reminders that stop no-shows, review requests sent automatically, quotes chased until they're answered, and a dashboard showing every lead and what happened to it. Most owners start here. For: "I lose money in the follow-up."
-- Full, "It answers, chases, and closes.", $2,222 one time plus optional $444/month care plan. Everything in Grow plus proposals sent and tracked, deposits and payments collected, and every channel the business actually uses, including WhatsApp. For: "Run the whole front desk."
-- Founding rate: the first 3 owners on Grow pay $750 instead of $1,500, in exchange for a named testimonial once the system has been running a month.
-- Care plans are optional on every tier, cancellable anytime, and cover monitoring, fixes, and one improvement a month. If cancelled, the front desk keeps answering; the build is the client's either way.
-- Naming: "the Client Catcher" was the previous name for what is now the Grow tier. Old links redirect to https://frimpomaasync.com/synkasa
-- Details: https://frimpomaasync.com/synkasa
+The guarantee covers the agreed system going live. It never promises a number of bookings, because bookings depend on the inquiries the business receives.
 
-## Guarantee (defined terms, written into the client agreement)
+## Visitor path
 
-"Live in 7 days, or you don't pay."
+1. Name the business leak on the homepage.
+2. Take one same-day fix.
+3. Watch the relevant working build.
+4. Use the SynKasa fit form or Siesie application.
+5. Book the confirmed 15-minute call.
+6. Receive a recommendation.
+7. Review the proposal and agreement.
+8. Pay before onboarding begins.
+9. Complete onboarding, build, testing, and approval.
+10. Launch, train, and hand over.
+11. Follow up on performance.
+12. Request approved proof, a referral, care, or the next useful system.
 
-- "Live" = a stranger can ring the client's real number and get a real answer: their question answered and the job either booked into the client's calendar or handed to the client.
-- The clock starts when the client hands over their hours and prices, not when they pay, so a slow week on the client's end never eats the guarantee.
-- If missed: the build fee comes back in full and the client keeps whatever is already working. Not a credit.
-- A number of bookings is never guaranteed: bookings depend on the client's lead flow. The system answers and follows up every inquiry it receives.
+The local leak finder, calculator, and Siesie check do not store or transmit visitor inputs.
 
-## Above the ladder: Siesie, the back office
+## SynKasa
 
-- https://frimpomaasync.com/siesie
-- SynKasa runs the front of the business; Siesie runs everything behind it. Five roles built once and handed over: scheduling, invoices and chasing, coordination, account management, and reporting. $25,000 one time. Built into the client's own accounts like everything else, owned outright, no lock-in. No guarantee is made about a number of bookings. Intended for established businesses; solo owners starting out are directed to SynKasa.
+Page: https://frimpomaasync.com/synkasa
 
-## Ownership and hosting model
+Fit form: https://frimpomaasync.com/synkasa-fit
 
-Every system is built in the client's own accounts, in the client's name, so the client owns everything from day one: the accounts, workflows, scripts and messages in their voice, setup documentation, and all customer data. There are no software subscriptions to the provider; the only running cost is a few dollars a month of metered usage billed to the client's own card, never marked up. Nothing about the client's business depends on the provider being reachable. If the client and provider never speak again, the system keeps answering the phone.
+SynKasa is the flagship front desk, formerly sold as the Client Catcher. It answers calls, texts, and direct messages in the owner's voice, qualifies the inquiry, books the right time, and follows up.
 
-## Customer data
+Current tiers:
 
-Leads' names, numbers, and messages move only between the client's phone, calendar, and the follow-up system, all of it living in the client's own accounts, never the provider's. Nothing is sold or shared. Every provider that touches the data is named in the client agreement. On cancellation nothing needs exporting: the data was never anywhere but the client's own accounts.
+- Start: $555 once. Calls, texts, and direct messages are answered, qualified, and booked. Optional care is $99 a month.
+- Grow: $1,500 once. Adds follow-up, reminders, review requests, quote chasing, and one dashboard. Optional care is $222 a month. Most owners start here.
+- Full: $2,222 once. Adds proposals, deposit collection, and every customer channel the business uses. Optional care is $444 a month.
+- Founding Grow: $750 for the first three owners, with a named testimonial required after the front desk has been running.
 
-## Proof status (honest)
+Care is optional. The front desk stays in the client's accounts if care ends. A later tier can be added to the existing build.
 
-This is an early-stage offer: no client testimonials yet, and the site says so plainly. Instead of borrowed reviews it offers: (1) a live demo anyone can talk to on the site right now, (2) real build videos at https://frimpomaasync.com/portfolio showing working systems, not mockups, (3) the provider runs the same systems on her own business, and (4) the money-back guarantee above. Slogan: watch it work before you pay.
+Soma is part of SynKasa. It carries one customer entry into the CRM, calendar, text thread, and working list.
+
+The SynKasa fit form asks for contact details, business type, contact channels, weekly inquiry volume, current booking method, main problem, desired result, and implementation timing. A website or social page is optional.
+
+## Siesie
+
+Page: https://frimpomaasync.com/siesie
+
+Application: https://frimpomaasync.com/siesie-application
+
+Siesie is the back office above the SynKasa ladder. It covers five roles:
+
+1. Scheduling
+2. Money
+3. Coordination
+4. Account management
+5. Reporting
+
+Siesie is $25,000 once. It is for an established business where four or five of those roles still return to the owner.
+
+The representative path is: work received, scheduled, coordinated, invoiced, and reported.
+
+The implementation path is: map, build, test, approve, launch, train, and hand over.
+
+The owner supplies the current process, working rules, account access, and timely approvals. Judgment calls, exceptions, approvals, and sensitive conversations stay human.
+
+The Siesie application asks for contact details, business type, team size, monthly job or client volume, current scheduling and invoicing processes, people being coordinated, owner-dependent work, the main bottleneck, implementation timing, and investment readiness. Website, current tools, and additional context are optional.
+
+## Proof
+
+Page: https://frimpomaasync.com/portfolio
+
+The page shows working local videos for SynKasa, Soma, Som, and an operations tracker. Each card states the problem, shows what the build does, and gives one part of the flow a visitor can use.
+
+Client results appear only after the client approves the wording and result. No customer name, testimonial, number, or result is invented.
 
 ## Free
 
-- Index: https://frimpomaasync.com/free (the missed-call teardown, the front-desk script, the live demo, the Blueprint, and Som)
-- Som: free thought-capture app, installable from the browser, works offline: https://frimpomaasync.com/som
-- The Automated Small Business Blueprint: https://frimpomaasync.com/planner
-- Portfolio of working builds: https://frimpomaasync.com/portfolio
-- Live interactive demo: https://frimpomaasync.com/client-catcher-demo/
+Page: https://frimpomaasync.com/free
 
-## Notes: free, ungated answer pages
+Free starting points:
 
-Written by NaNa Frimpomaa for one-person businesses. Each one hands over the usable material (scripts, tables, real numbers) rather than gating it. Index: https://frimpomaasync.com/blog/
+- Missed inquiries: the four-message response script and follow-up cadence.
+- Unsure what comes first: the Automated Small Business Blueprint.
+- Ideas disappear: Som, the free capture app that works offline.
+- Need proof: the working SynKasa demo.
+- Need a human diagnosis: the 15-minute call.
 
-- How to reply to every lead in five minutes when you're the only one there: splits a reply into an instant automatic acknowledgement and a same-day human answer; five copy-paste texts; a four-touch follow-up ladder over seven days; free phone-only setup steps. https://frimpomaasync.com/blog/reply-to-every-lead-in-five-minutes
-- What automating a one-person business actually costs in 2026: five routes compared with real ranges (free phone setup, all-in-one software $97–$497/mo plus 10–20 setup hours, app patchwork, live answering service $250–$600/mo, virtual assistant $800–$1,600/mo, done-for-you build $800–$3,000 one time); hidden costs; a break-even formula. https://frimpomaasync.com/blog/what-automating-a-one-person-business-actually-costs
-- Answering service vs AI receptionist vs missed-call text-back: capability comparison across five options, a decision tree based on where inquiries are lost, six questions to ask any vendor, and a mystery-call test. States plainly what a follow-up system cannot do. https://frimpomaasync.com/blog/answering-service-vs-ai-receptionist-vs-text-back
-- How to stop no-shows without being the bad guy: a three-reminder cadence (instant confirmation, 24-hour reminder requesting a one-word reply, two-hour nudge), six copy-paste messages, deposit guidance, and cancellation-policy wording. https://frimpomaasync.com/blog/stop-no-shows-without-being-the-bad-guy
-- Do I need a CRM if I'm a one-person business: usually not at first. A nine-column lead sheet, four statuses (new, quoted, booked, closed), a ten-minute weekly review, and the five triggers for upgrading. https://frimpomaasync.com/blog/do-i-need-a-crm-if-im-a-one-person-business
-- Your website doesn't have to be Squarespace or Shopify: why a one-person business often doesn't need a website platform. https://frimpomaasync.com/blog/your-website-doesnt-have-to-be-squarespace
+Som: https://frimpomaasync.com/som
+
+Blueprint: https://frimpomaasync.com/automated-small-business-blueprint.pdf
+
+Live demo: https://frimpomaasync.com/client-catcher-demo/
 
 ## Privacy
 
-Full policy: https://frimpomaasync.com/privacy
+Policy: https://frimpomaasync.com/privacy
 
-- Website visitors: only what you type into a form (usually an email, sometimes name and phone) is collected, and it is used to reply. No analytics, no advertising pixels, no tracking cookies, nothing sold or shared. Three ordinary service providers are involved (website hosting, form delivery, and email/calendar) and they are named on request by email rather than published.
-- On-device only: the Som app stores its data in the visitor's own browser, not on the provider's servers. The site chat demo sends messages to the provider's chat service to generate replies and stores nothing about the visitor.
-- Client systems: customer data moves only between the client's phone, calendar and follow-up system; every provider that touches it is named in the client agreement; the client owns all of it; on cancellation it is exported to the client and deleted.
-- Requests for a copy, a correction, deletion or unsubscribe go to hello@frimpomaasync.com and are actioned within 30 days, free, regardless of the requester's location.
+Qualification forms collect only the business context a visitor chooses to submit. Public forms do not ask for passwords, payment details, customer records, private files, or account access.
 
-## Terms
+Form submissions may include business type, inquiry or job volume, current process, desired result, timing, and investment readiness. They are used to review fit and prepare for the call.
 
-Full terms of use: https://frimpomaasync.com/terms
+Client systems are built in client-owned accounts. The signed agreement names every provider that handles client or customer data.
 
-- The free tools and notes are provided as they are, for the visitor's own use; the notes are general information, not professional advice.
-- The paid services are not bought from the website; they run on a written client agreement the client reviews and signs before any build begins, and that signed agreement, not the website, is the binding contract. If the two ever differ, the signed agreement takes priority.
-- The build starts when the deposit lands; the guarantee is "live in 7 days, or you don't pay", covering go-live and not a number of bookings.
-- The client owns everything built for them; the website, its writing and the free tools remain owned by NaNa Frimpomaa.
-- Governed by the laws of the State of Maryland, USA.
+## Retired routes
+
+The Client Catcher name is retired except for the "formerly" note. `/client-catcher`, `/services`, `/products`, `/solo-business-system`, and `/ai-products` redirect to `/synkasa`. `/soma` redirects to `/synkasa#soma`.
 
 ## Contact
 
-- Book the free 15-minute call: https://calendar.app.google/DkRJFRA3G6W6d8E48
-- Site: https://frimpomaasync.com
+Site: https://frimpomaasync.com
+
+Email: hello@frimpomaasync.com
+
+Booking: https://calendar.app.google/DkRJFRA3G6W6d8E48

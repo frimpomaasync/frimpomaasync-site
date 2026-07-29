@@ -176,6 +176,8 @@ function bindCalculator() {
   const atRisk = document.querySelector("#calc-at-risk");
   const formula = document.querySelector("#calc-formula");
   const error = document.querySelector("#calc-error");
+  const button = document.querySelector("#calc-button");
+  const inputs = [inquiries, missed, value, booking];
 
   const render = () => {
     const result = calculateMonthlyOpportunity({
@@ -190,7 +192,7 @@ function bindCalculator() {
     error.textContent = "";
   };
 
-  form.addEventListener("submit", (event) => {
+  const calculateFromForm = (event) => {
     event.preventDefault();
     if (!form.checkValidity()) {
       error.textContent =
@@ -199,6 +201,20 @@ function bindCalculator() {
       return;
     }
     render();
+  };
+
+  form.addEventListener("submit", calculateFromForm);
+  button.addEventListener("click", calculateFromForm);
+
+  inputs.forEach((input) => {
+    input.addEventListener("input", () => {
+      if (inputs.some((field) => field.value === "")) {
+        error.textContent =
+          "Add all four numbers so the formula can use your scenario.";
+        return;
+      }
+      error.textContent = "";
+    });
   });
 
   render();
