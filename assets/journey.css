@@ -127,6 +127,61 @@ a {
   width: 100%;
 }
 
+.cinematic-hero .hero-grid {
+  align-items: center;
+}
+
+.cinematic-hero .hero-message {
+  color: var(--paper);
+}
+
+.cinematic-hero .eyebrow,
+.cinematic-hero h1 em {
+  color: #f0a17b;
+}
+
+.cinematic-hero .hero-copy {
+  color: rgba(255, 255, 255, .8);
+}
+
+.cinematic-hero .hero-product {
+  max-width: 470px;
+  justify-self: end;
+}
+
+.cinematic-hero .screen-top {
+  color: rgba(16, 20, 38, .72);
+}
+
+.cinematic-hero .screen-top .status {
+  color: #247447;
+}
+
+.cinematic-hero .result-actions a {
+  color: #f0a17b;
+}
+
+.hero-trust {
+  position: relative;
+  z-index: var(--layer-hero);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  margin-top: clamp(38px, 6vw, 76px);
+  color: rgba(255, 255, 255, .86);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: .08em;
+  line-height: 1.5;
+  text-transform: uppercase;
+}
+
+.hero-trust span {
+  display: inline-flex;
+  min-height: 24px;
+  align-items: center;
+}
+
 .paper-rise {
   position: relative;
   z-index: 12;
@@ -1084,6 +1139,10 @@ noscript {
   .sticky-story {
     grid-template-columns: 1fr;
   }
+
+  .cinematic-hero .hero-product {
+    justify-self: start;
+  }
 }
 
 @media (max-width: 620px) {
@@ -1137,6 +1196,15 @@ noscript {
   .open-sign {
     min-height: 330px;
   }
+
+  .cinematic-hero .cinematic-media {
+    object-position: 62% center;
+    transform: scale(1.01);
+  }
+
+  .hero-trust {
+    gap: 8px 14px;
+  }
 }
 
 @media (max-width: 700px) {
@@ -1150,7 +1218,8 @@ noscript {
     scroll-behavior: auto;
   }
 
-  .cinematic-media {
+  .cinematic-media,
+  .cinematic-hero .cinematic-media {
     animation: none;
     transform: none;
   }

@@ -29,11 +29,13 @@
     }
   </script>
 </head>
-<body data-sk-sections="Hero,First fix,Proof,Choose the path,Guarantee,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
+<body data-cinematic data-sk-sections="Hero,First fix,Proof,Choose the path,Guarantee,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
   <main>
-    <section class="hero" data-screen-label="Hero">
-      <div class="wrap hero-grid">
-        <div>
+    <section class="hero cinematic-hero" data-cinematic-hero data-screen-label="Hero">
+      <img class="cinematic-media" src="/assets/hero-scene-wide.jpg" width="2400" height="1024" alt="" fetchpriority="high" decoding="async">
+      <div class="cinematic-scrim" aria-hidden="true"></div>
+      <div class="wrap hero-grid cinematic-content">
+        <div class="hero-message">
           <div class="eyebrow">One owner · a business that keeps moving</div>
           <h1>Stop being <em>the system.</em></h1>
           <p class="hero-copy">SynKasa handles the front desk. Siesie handles the work behind it. You close up knowing the business kept moving.</p>
@@ -43,7 +45,7 @@
           </div>
         </div>
 
-        <div class="screen" id="page-leak-tool">
+        <div class="screen hero-product" id="page-leak-tool">
           <div class="screen-top mono">
             <span>Where does work wait on you?</span>
             <span class="status">Local only</span>
@@ -68,9 +70,14 @@
           </div>
         </div>
       </div>
+      <div class="hero-trust wrap" aria-label="Service distinction">
+        <span>SynKasa · front desk</span>
+        <span>Siesie · back office</span>
+        <span>Live in 7 days, or you don't pay</span>
+      </div>
     </section>
 
-    <section class="section soft" data-screen-label="First fix">
+    <section class="section soft paper-rise" data-screen-label="First fix">
       <div class="wrap">
         <div class="section-head">
           <h2 class="section-title"><span>Pick the leak.</span> Take the first fix.</h2>

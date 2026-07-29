@@ -207,15 +207,22 @@ def assert_cinematic_mobile_clearance(page) -> None:
 
 
 def contrast_ratio(foreground: str, background: str) -> float:
-    def channels(color: str) -> list[float]:
+    def channels(color: str) -> tuple[list[float], float]:
         values = re.findall(r"[\d.]+", color)
         assert len(values) >= 3, color
-        return [float(value) / 255 for value in values[:3]]
+        return [float(value) / 255 for value in values[:3]], (
+            float(values[3]) if len(values) > 3 else 1
+        )
 
     def luminance(color: str) -> float:
+        rgb, alpha = channels(color)
+        backdrop, _ = channels(background)
         linear = [
             value / 12.92 if value <= .04045 else ((value + .055) / 1.055) ** 2.4
-            for value in channels(color)
+            for value in [
+                channel * alpha + backdrop[index] * (1 - alpha)
+                for index, channel in enumerate(rgb)
+            ]
         ]
         return .2126 * linear[0] + .7152 * linear[1] + .0722 * linear[2]
 
@@ -248,7 +255,7 @@ def choose_homepage_leak_with_mouse_and_keyboard(page) -> None:
     box = followup.bounding_box()
     assert box, "The follow-up leak choice needs a visible pointer target"
     page.mouse.click(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
-    assert "follow-up" in page.locator("#leak-heading").inner_text().lower()
+    assert "lead goes quiet" in page.locator("#leak-heading").inner_text().lower()
 
 
 def assert_homepage_cinematic_contract(browser) -> None:
@@ -267,7 +274,10 @@ def assert_homepage_cinematic_contract(browser) -> None:
     assert media.get_attribute("width") == "2400"
     assert media.get_attribute("height") == "1024"
     assert media.get_attribute("fetchpriority") == "high"
-    assert media.evaluate("(image) => image.complete && image.naturalWidth > 0")
+    choose_homepage_leak_with_mouse_and_keyboard(page)
+    page.wait_for_function(
+        "() => { const image = document.querySelector('.cinematic-media'); return image.complete && image.naturalWidth > 0; }"
+    )
     assert paper_rise.is_visible()
     assert hero.evaluate(
         "(node) => node.nextElementSibling.classList.contains('paper-rise')"
@@ -294,6 +304,16 @@ def assert_homepage_cinematic_contract(browser) -> None:
                 document.querySelectorAll('[data-cinematic-hero] .hero-message .eyebrow, [data-cinematic-hero] h1, [data-cinematic-hero] .hero-copy'),
                 (item) => getComputedStyle(item).color,
             );
+            const toolText = [
+                ...Array.from(document.querySelectorAll('#page-leak-tool .screen-top, #page-leak-tool .screen-top .status, #page-leak-tool .choice'), (item) => ({
+                    color: getComputedStyle(item).color,
+                    background: 'rgb(255, 255, 255)',
+                })),
+                ...Array.from(document.querySelectorAll('#page-leak-tool .result .mono, #page-leak-tool .result h3, #page-leak-tool .result p, #page-leak-tool .result a'), (item) => ({
+                    color: getComputedStyle(item).color,
+                    background: getComputedStyle(document.querySelector('#leak-output')).backgroundColor,
+                })),
+            ];
             return {
                 hero: rect('[data-cinematic-hero]'),
                 image: rect('.cinematic-media'),
@@ -302,6 +322,7 @@ def assert_homepage_cinematic_contract(browser) -> None:
                 objectFit: getComputedStyle(image).objectFit,
                 text,
                 actions,
+                toolText,
             };
         }"""
     )
@@ -320,7 +341,10 @@ def assert_homepage_cinematic_contract(browser) -> None:
         contrast_ratio(action["color"], action["background"]) >= 4.5
         for action in geometry["actions"]
     ), geometry
-    choose_homepage_leak_with_mouse_and_keyboard(page)
+    assert all(
+        contrast_ratio(item["color"], item["background"]) >= 4.5
+        for item in geometry["toolText"]
+    ), geometry
     assert_no_overflow(page, 1280)
     page.close()
 
