@@ -17,6 +17,7 @@
   --ease-out: cubic-bezier(.22, 1, .36, 1);
   --ease-state: cubic-bezier(.65, 0, .35, 1);
   --nav-height: 76px;
+  --cinematic-nav-height: var(--nav-height);
   --layer-base: 0;
   --layer-hero: 10;
   --layer-nav: 40;
@@ -88,7 +89,7 @@ a {
   min-height: min(860px, 100svh);
   overflow: clip;
   isolation: isolate;
-  padding: clamp(96px, 12vw, 164px) 0 clamp(118px, 14vw, 190px);
+  padding: max(clamp(96px, 12vw, 164px), calc(var(--cinematic-nav-height) + 24px)) 0 clamp(118px, 14vw, 190px);
   background: var(--ink);
   color: var(--paper);
 }
@@ -1135,6 +1136,12 @@ noscript {
 
   .open-sign {
     min-height: 330px;
+  }
+}
+
+@media (max-width: 700px) {
+  :root {
+    --cinematic-nav-height: 142px;
   }
 }
 

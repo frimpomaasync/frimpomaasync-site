@@ -187,6 +187,25 @@ def assert_cinematic_nav_overlay(page) -> None:
     assert all(control["contrast"] >= 4.5 for control in state["controls"]), state
 
 
+def assert_cinematic_mobile_clearance(page) -> None:
+    state = page.evaluate(
+        """() => {
+            const nav = document.getElementById("fs-nav").getBoundingClientRect();
+            const hero = document.querySelector("[data-cinematic-hero]").getBoundingClientRect();
+            const media = document.querySelector(".cinematic-media").getBoundingClientRect();
+            const content = document.querySelector(".cinematic-content").getBoundingClientRect();
+            return {
+                overlapsHero: nav.top < hero.bottom && nav.bottom > hero.top,
+                overlapsMedia: nav.top < media.bottom && nav.bottom > media.top,
+                clearance: content.top - nav.bottom,
+            };
+        }"""
+    )
+    assert state["overlapsHero"], state
+    assert state["overlapsMedia"], state
+    assert state["clearance"] >= 24, state
+
+
 def run_foundation() -> None:
     from playwright.sync_api import sync_playwright
 
@@ -251,6 +270,11 @@ def run_foundation() -> None:
         assert second.evaluate(
             "(node) => node.classList.contains('is-active')"
         )
+        mobile = browser.new_page(viewport={"width": 390, "height": 844})
+        mobile.goto(f"{BASE}/tests/fixtures/cinematic.html", wait_until="networkidle")
+        assert_cinematic_nav_overlay(mobile)
+        assert_cinematic_mobile_clearance(mobile)
+        mobile.close()
         browser.close()
 
     with sync_playwright() as playwright:

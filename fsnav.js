@@ -67,6 +67,17 @@
       '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">Book a call</a>' +
       "</div></div>";
     body.insertBefore(nav, body.firstChild);
+    if (body.hasAttribute("data-cinematic")) {
+      var syncCinematicNavHeight = function () {
+        var height = nav.offsetHeight + "px";
+        document.documentElement.style.setProperty("--nav-height", height);
+        document.documentElement.style.setProperty("--cinematic-nav-height", height);
+      };
+      syncCinematicNavHeight();
+      if ("ResizeObserver" in window) {
+        new ResizeObserver(syncCinematicNavHeight).observe(nav);
+      }
+    }
   }
 
   /* ---------- cinematic state ---------- */
