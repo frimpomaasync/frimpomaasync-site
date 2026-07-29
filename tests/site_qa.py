@@ -130,6 +130,58 @@ def assert_no_overflow(page, width: int) -> None:
     assert size["scroll"] <= size["inner"], size
 
 
+def assert_cinematic_nav_overlay(page) -> None:
+    state = page.evaluate(
+        """() => {
+            const nav = document.getElementById("fs-nav");
+            const hero = document.querySelector("[data-cinematic-hero]");
+            const media = document.querySelector(".cinematic-media");
+            const link = nav.querySelector("[data-navlink]");
+            const cta = nav.querySelector("[data-navcta]");
+            const luminance = (color) => {
+                const channels = color.match(/\\d+/g).slice(0, 3).map(Number);
+                const normalized = channels.map((channel) => {
+                    const value = channel / 255;
+                    return value <= .04045
+                        ? value / 12.92
+                        : ((value + .055) / 1.055) ** 2.4;
+                });
+                return .2126 * normalized[0] + .7152 * normalized[1] + .0722 * normalized[2];
+            };
+            const contrast = (foreground, background) => {
+                const high = Math.max(luminance(foreground), luminance(background));
+                const low = Math.min(luminance(foreground), luminance(background));
+                return (high + .05) / (low + .05);
+            };
+            const navRect = nav.getBoundingClientRect();
+            const heroRect = hero.getBoundingClientRect();
+            const mediaRect = media.getBoundingClientRect();
+            const controls = Array.from(
+                nav.querySelectorAll("[data-navlink], [data-navcta]"),
+                (control) => control.getBoundingClientRect().height,
+            );
+            return {
+                overlapsHero: navRect.top < heroRect.bottom && navRect.bottom > heroRect.top,
+                overlapsMedia: navRect.top < mediaRect.bottom && navRect.bottom > mediaRect.top,
+                linkContrast: contrast(
+                    getComputedStyle(link).color,
+                    getComputedStyle(hero).backgroundColor,
+                ),
+                ctaContrast: contrast(
+                    getComputedStyle(cta).color,
+                    getComputedStyle(cta).backgroundColor,
+                ),
+                minimumControlHeight: Math.min(...controls),
+            };
+        }"""
+    )
+    assert state["overlapsHero"], state
+    assert state["overlapsMedia"], state
+    assert state["linkContrast"] >= 4.5, state
+    assert state["ctaContrast"] >= 4.5, state
+    assert state["minimumControlHeight"] >= 44, state
+
+
 def run_foundation() -> None:
     from playwright.sync_api import sync_playwright
 
@@ -174,6 +226,7 @@ def run_foundation() -> None:
         assert nav.evaluate(
             "(node) => getComputedStyle(node).transitionDuration"
         ) == "0s"
+        assert_cinematic_nav_overlay(page)
 
         page.locator(".paper-rise").scroll_into_view_if_needed()
         page.wait_for_timeout(100)
@@ -213,6 +266,7 @@ def run_foundation() -> None:
         assert page.locator(".cinematic-media").evaluate(
             "(node) => getComputedStyle(node).animationName"
         ) == "none"
+        assert_cinematic_nav_overlay(page)
         assert page.locator(".story-visual").evaluate(
             "(node) => getComputedStyle(node).position"
         ) == "static"
@@ -222,6 +276,14 @@ def run_foundation() -> None:
         assert page.locator("#fs-bar").evaluate(
             "(node) => getComputedStyle(node).transitionDuration"
         ) == "0s"
+        page.locator(".paper-rise").scroll_into_view_if_needed()
+        page.wait_for_timeout(100)
+        assert page.locator("#fs-nav").evaluate(
+            "(node) => node.classList.contains('is-past-hero')"
+        )
+        assert page.locator("#fs-nav").evaluate(
+            "(node) => getComputedStyle(node).backgroundColor"
+        ) == "rgb(255, 255, 255)"
         typing_animation_names = page.evaluate(
             """() => {
                 const input = document.getElementById("fs-chat-inp");

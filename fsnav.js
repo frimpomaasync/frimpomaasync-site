@@ -49,7 +49,10 @@
     var on = activeKey();
     var nav = document.createElement("header");
     nav.id = "fs-nav";
-    nav.style.cssText = "position:sticky;top:0;z-index:40;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(16,20,38,.08)";
+    nav.style.cssText = (body.hasAttribute("data-cinematic")
+      ? "position:fixed;top:0;left:0;right:0;"
+      : "position:sticky;top:0;") +
+      "z-index:40;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(16,20,38,.08)";
     nav.innerHTML =
       '<div class="fs-grid" style="max-width:1180px;margin:0 auto;padding:18px 24px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">' +
       '<nav style="display:flex;gap:clamp(14px,1.8vw,26px);flex-wrap:wrap;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase">' +
@@ -77,7 +80,7 @@
     var storySteps = Array.prototype.slice.call(document.querySelectorAll("[data-story-step]"));
     var cinematicNav = document.getElementById("fs-nav");
 
-    if (reduce || !("IntersectionObserver" in window)) {
+    if (!("IntersectionObserver" in window)) {
       storySteps.forEach(function (step) {
         step.style.opacity = "1";
         step.style.transform = "none";
@@ -103,7 +106,13 @@
         heroBoundaryObserver.observe(heroBoundary);
       }
 
-      if (storySteps.length) {
+      if (reduce) {
+        storySteps.forEach(function (step) {
+          step.style.opacity = "1";
+          step.style.transform = "none";
+          step.style.transition = "none";
+        });
+      } else if (storySteps.length) {
         var storyObserver = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
             if (entry.isIntersecting) setActiveStoryStep(entry.target, storySteps);

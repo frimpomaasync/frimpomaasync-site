@@ -187,9 +187,17 @@ body[data-cinematic] #fs-nav.is-past-hero .fs-grid {
   padding: 12px 24px 10px !important;
 }
 
+body[data-cinematic] #fs-nav [data-navlink],
+body[data-cinematic] #fs-nav [data-navcta] {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+}
+
 body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navlink],
 body[data-cinematic] #fs-nav:not(.is-past-hero) .fs-grid > a:not([data-navcta]) {
-  color: rgba(255, 255, 255, .82) !important;
+  color: var(--paper) !important;
 }
 
 @keyframes cinematic-settle {
