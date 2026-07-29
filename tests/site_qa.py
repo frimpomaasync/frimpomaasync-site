@@ -136,10 +136,12 @@ def assert_cinematic_nav_overlay(page) -> None:
             const nav = document.getElementById("fs-nav");
             const hero = document.querySelector("[data-cinematic-hero]");
             const media = document.querySelector(".cinematic-media");
-            const link = nav.querySelector("[data-navlink]");
-            const cta = nav.querySelector("[data-navcta]");
+            const colorValue = (color) => {
+                const values = color.match(/[\\d.]+/g).map(Number);
+                return { channels: values.slice(0, 3), alpha: values[3] ?? 1 };
+            };
             const luminance = (color) => {
-                const channels = color.match(/\\d+/g).slice(0, 3).map(Number);
+                const channels = colorValue(color).channels;
                 const normalized = channels.map((channel) => {
                     const value = channel / 255;
                     return value <= .04045
@@ -157,29 +159,32 @@ def assert_cinematic_nav_overlay(page) -> None:
             const heroRect = hero.getBoundingClientRect();
             const mediaRect = media.getBoundingClientRect();
             const controls = Array.from(
-                nav.querySelectorAll("[data-navlink], [data-navcta]"),
-                (control) => control.getBoundingClientRect().height,
+                nav.querySelectorAll("a, button"),
+                (control) => {
+                    const style = getComputedStyle(control);
+                    const rect = control.getBoundingClientRect();
+                    return {
+                        width: rect.width,
+                        height: rect.height,
+                        backingAlpha: colorValue(style.backgroundColor).alpha,
+                        contrast: contrast(style.color, style.backgroundColor),
+                    };
+                },
             );
             return {
                 overlapsHero: navRect.top < heroRect.bottom && navRect.bottom > heroRect.top,
                 overlapsMedia: navRect.top < mediaRect.bottom && navRect.bottom > mediaRect.top,
-                linkContrast: contrast(
-                    getComputedStyle(link).color,
-                    getComputedStyle(hero).backgroundColor,
-                ),
-                ctaContrast: contrast(
-                    getComputedStyle(cta).color,
-                    getComputedStyle(cta).backgroundColor,
-                ),
-                minimumControlHeight: Math.min(...controls),
+                controls,
             };
         }"""
     )
     assert state["overlapsHero"], state
     assert state["overlapsMedia"], state
-    assert state["linkContrast"] >= 4.5, state
-    assert state["ctaContrast"] >= 4.5, state
-    assert state["minimumControlHeight"] >= 44, state
+    assert state["controls"], state
+    assert all(control["width"] >= 44 for control in state["controls"]), state
+    assert all(control["height"] >= 44 for control in state["controls"]), state
+    assert all(control["backingAlpha"] == 1 for control in state["controls"]), state
+    assert all(control["contrast"] >= 4.5 for control in state["controls"]), state
 
 
 def run_foundation() -> None:

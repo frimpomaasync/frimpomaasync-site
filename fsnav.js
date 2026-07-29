@@ -61,7 +61,7 @@
       navLink("Proof", "/portfolio", "proof", on) +
       navLink("Free", "/free", "free", on) +
       "</nav>" +
-      '<a href="/" style="font-family:' + SERIF + ';font-size:clamp(14px,1.5vw,18px);letter-spacing:.2em;text-transform:uppercase;color:#101426;white-space:nowrap">frimpomaasync</a>' +
+      '<a data-navlink href="/" style="font-family:' + SERIF + ';font-size:clamp(14px,1.5vw,18px);letter-spacing:.2em;text-transform:uppercase;color:#101426;white-space:nowrap">frimpomaasync</a>' +
       '<div style="display:flex;align-items:center;gap:clamp(14px,1.8vw,22px);justify-content:flex-end;flex-wrap:wrap">' +
       '<button type="button" data-navlink data-fs-chat style="background:none;border:0;padding:0;font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);cursor:pointer;transition:color .25s ease">See it answer</button>' +
       '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">Book a call</a>' +

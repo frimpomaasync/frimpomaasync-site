@@ -190,13 +190,17 @@ body[data-cinematic] #fs-nav.is-past-hero .fs-grid {
 body[data-cinematic] #fs-nav [data-navlink],
 body[data-cinematic] #fs-nav [data-navcta] {
   display: inline-flex;
+  min-width: 44px;
   min-height: 44px;
   align-items: center;
   justify-content: center;
 }
 
 body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navlink],
-body[data-cinematic] #fs-nav:not(.is-past-hero) .fs-grid > a:not([data-navcta]) {
+body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navcta] {
+  padding-inline: 12px !important;
+  border-radius: 5px;
+  background: var(--ink) !important;
   color: var(--paper) !important;
 }
 
