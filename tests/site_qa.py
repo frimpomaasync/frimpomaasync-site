@@ -206,6 +206,174 @@ def assert_cinematic_mobile_clearance(page) -> None:
     assert state["clearance"] >= 24, state
 
 
+def contrast_ratio(foreground: str, background: str) -> float:
+    def channels(color: str) -> list[float]:
+        values = re.findall(r"[\d.]+", color)
+        assert len(values) >= 3, color
+        return [float(value) / 255 for value in values[:3]]
+
+    def luminance(color: str) -> float:
+        linear = [
+            value / 12.92 if value <= .04045 else ((value + .055) / 1.055) ** 2.4
+            for value in channels(color)
+        ]
+        return .2126 * linear[0] + .7152 * linear[1] + .0722 * linear[2]
+
+    high, low = sorted((luminance(foreground), luminance(background)), reverse=True)
+    return (high + .05) / (low + .05)
+
+
+def assert_non_overlapping(rectangles: list[dict]) -> None:
+    for index, current in enumerate(rectangles):
+        for other in rectangles[index + 1 :]:
+            overlaps = (
+                current["left"] < other["right"]
+                and current["right"] > other["left"]
+                and current["top"] < other["bottom"]
+                and current["bottom"] > other["top"]
+            )
+            assert not overlaps, (current, other)
+
+
+def choose_homepage_leak_with_mouse_and_keyboard(page) -> None:
+    missed = page.locator("[data-leak='missed']")
+    assert missed.is_visible()
+    assert missed.is_enabled()
+    assert missed.evaluate("(node) => getComputedStyle(node).pointerEvents") != "none"
+    missed.focus()
+    page.keyboard.press("Enter")
+    assert "front desk" in page.locator("#leak-heading").inner_text().lower()
+
+    followup = page.locator("[data-leak='followup']")
+    box = followup.bounding_box()
+    assert box, "The follow-up leak choice needs a visible pointer target"
+    page.mouse.click(box["x"] + box["width"] / 2, box["y"] + box["height"] / 2)
+    assert "follow-up" in page.locator("#leak-heading").inner_text().lower()
+
+
+def assert_homepage_cinematic_contract(browser) -> None:
+    page = browser.new_page(viewport={"width": 1280, "height": 900})
+    page.goto(f"{BASE}/index.html", wait_until="domcontentloaded")
+
+    hero = page.locator("[data-cinematic-hero]")
+    media = page.locator(".cinematic-media")
+    tool = page.locator("#page-leak-tool")
+    paper_rise = page.locator(".paper-rise").first
+    assert page.locator("body[data-cinematic]").count() == 1
+    assert hero.is_visible()
+    assert media.is_visible()
+    assert tool.is_visible()
+    assert media.get_attribute("src") == "/assets/hero-scene-wide.jpg"
+    assert media.get_attribute("width") == "2400"
+    assert media.get_attribute("height") == "1024"
+    assert media.get_attribute("fetchpriority") == "high"
+    assert media.evaluate("(image) => image.complete && image.naturalWidth > 0")
+    assert paper_rise.is_visible()
+    assert hero.evaluate(
+        "(node) => node.nextElementSibling.classList.contains('paper-rise')"
+    )
+
+    geometry = page.evaluate(
+        """() => {
+            const rect = (selector) => {
+                const value = document.querySelector(selector).getBoundingClientRect();
+                return { left: value.left, right: value.right, top: value.top,
+                    bottom: value.bottom, width: value.width, height: value.height };
+            };
+            const image = document.querySelector('.cinematic-media');
+            const tool = document.querySelector('#page-leak-tool');
+            const message = document.querySelector('.hero-message');
+            const actions = Array.from(
+                document.querySelectorAll('[data-cinematic-hero] .actions a, [data-cinematic-hero] .actions button'),
+                (action) => {
+                    const style = getComputedStyle(action);
+                    return { color: style.color, background: style.backgroundColor };
+                },
+            );
+            const text = Array.from(
+                document.querySelectorAll('[data-cinematic-hero] .hero-message .eyebrow, [data-cinematic-hero] h1, [data-cinematic-hero] .hero-copy'),
+                (item) => getComputedStyle(item).color,
+            );
+            return {
+                hero: rect('[data-cinematic-hero]'),
+                image: rect('.cinematic-media'),
+                message: rect('.hero-message'),
+                tool: rect('#page-leak-tool'),
+                objectFit: getComputedStyle(image).objectFit,
+                text,
+                actions,
+            };
+        }"""
+    )
+    assert geometry["image"]["left"] <= geometry["hero"]["left"]
+    assert geometry["image"]["right"] >= geometry["hero"]["right"]
+    assert geometry["image"]["top"] <= geometry["hero"]["top"]
+    assert geometry["image"]["bottom"] >= geometry["hero"]["bottom"]
+    assert geometry["objectFit"] == "cover"
+    assert geometry["message"]["left"] < geometry["tool"]["left"]
+    assert geometry["tool"]["width"] <= 470
+    assert all(
+        contrast_ratio(color, "rgb(8, 11, 24)") >= 4.5
+        for color in geometry["text"]
+    ), geometry
+    assert all(
+        contrast_ratio(action["color"], action["background"]) >= 4.5
+        for action in geometry["actions"]
+    ), geometry
+    choose_homepage_leak_with_mouse_and_keyboard(page)
+    assert_no_overflow(page, 1280)
+    page.close()
+
+    mobile = browser.new_page(viewport={"width": 390, "height": 844})
+    mobile.goto(f"{BASE}/index.html", wait_until="domcontentloaded")
+    mobile_state = mobile.evaluate(
+        """() => {
+            const box = (selector) => {
+                const rect = document.querySelector(selector).getBoundingClientRect();
+                return { left: rect.left, right: rect.right, top: rect.top,
+                    bottom: rect.bottom, width: rect.width, height: rect.height };
+            };
+            const trust = document.querySelector('.hero-trust');
+            return {
+                nav: box('#fs-nav'),
+                message: box('.hero-message'),
+                tool: box('#page-leak-tool'),
+                toolPosition: getComputedStyle(document.querySelector('#page-leak-tool')).position,
+                objectPosition: getComputedStyle(document.querySelector('.cinematic-media')).objectPosition,
+                trust: box('.hero-trust'),
+                trustItems: Array.from(trust.children, (item) => {
+                    const rect = item.getBoundingClientRect();
+                    return { left: rect.left, right: rect.right, top: rect.top, bottom: rect.bottom };
+                }),
+            };
+        }"""
+    )
+    assert mobile_state["message"]["top"] - mobile_state["nav"]["bottom"] >= 24
+    assert mobile_state["tool"]["top"] >= mobile_state["message"]["bottom"]
+    assert mobile_state["toolPosition"] != "absolute"
+    assert mobile_state["objectPosition"] in {"62% 50%", "62% center"}
+    assert len({item["top"] for item in mobile_state["trustItems"]}) >= 2
+    assert all(
+        item["left"] >= mobile_state["trust"]["left"]
+        and item["right"] <= mobile_state["trust"]["right"]
+        for item in mobile_state["trustItems"]
+    ), mobile_state
+    assert_non_overlapping(mobile_state["trustItems"])
+    choose_homepage_leak_with_mouse_and_keyboard(mobile)
+    assert_no_overflow(mobile, 390)
+    mobile.close()
+
+
+def assert_homepage_reduced_motion_contract(page) -> None:
+    page.goto(f"{BASE}/index.html", wait_until="domcontentloaded")
+    media = page.locator(".cinematic-media")
+    assert page.locator("[data-cinematic-hero]").is_visible()
+    assert page.locator("#page-leak-tool").is_visible()
+    assert media.evaluate("(node) => getComputedStyle(node).animationName") == "none"
+    assert media.evaluate("(node) => getComputedStyle(node).transform") == "none"
+    choose_homepage_leak_with_mouse_and_keyboard(page)
+
+
 def run_foundation() -> None:
     from playwright.sync_api import sync_playwright
 
@@ -275,6 +443,7 @@ def run_foundation() -> None:
         assert_cinematic_nav_overlay(mobile)
         assert_cinematic_mobile_clearance(mobile)
         mobile.close()
+        assert_homepage_cinematic_contract(browser)
         browser.close()
 
     with sync_playwright() as playwright:
@@ -329,6 +498,7 @@ def run_foundation() -> None:
             }"""
         )
         assert typing_animation_names == ["none", "none", "none"]
+        assert_homepage_reduced_motion_contract(page)
         reduced.close()
         browser.close()
 
