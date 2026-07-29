@@ -222,9 +222,22 @@ def run_foundation() -> None:
         assert page.locator("#fs-bar").evaluate(
             "(node) => getComputedStyle(node).transitionDuration"
         ) == "0s"
-        assert page.locator("#fs-chat-panel span[style*='skcDot']").first.evaluate(
-            "(node) => getComputedStyle(node).animationName"
-        ) == "none"
+        typing_animation_names = page.evaluate(
+            """() => {
+                const input = document.getElementById("fs-chat-inp");
+                const send = document.getElementById("fs-chat-send");
+                const messages = document.getElementById("fs-chat-msgs");
+                input.value = "I need an appointment.";
+                send.click();
+                const typing = messages.lastElementChild;
+                if (!typing || typing.children.length !== 3) return [];
+                return Array.from(
+                    typing.children,
+                    (dot) => getComputedStyle(dot).animationName,
+                );
+            }"""
+        )
+        assert typing_animation_names == ["none", "none", "none"]
         reduced.close()
         browser.close()
 
