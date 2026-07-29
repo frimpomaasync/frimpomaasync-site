@@ -1211,6 +1211,10 @@ noscript {
   :root {
     --cinematic-nav-height: 142px;
   }
+
+  .hero.cinematic-hero {
+    padding-top: calc(var(--cinematic-nav-height) + 24px);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
