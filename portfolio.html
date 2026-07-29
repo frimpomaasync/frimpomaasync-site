@@ -1,149 +1,115 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<title>Proof · real builds, on camera | frimpomaasync.com</title>
-<meta name="description" content="Every video here is a real tool NaNa Frimpomaa built and shipped, not a mockup. Watch the front desk answer, the wiring run, and the apps work before you ever pay anything.">
-<meta name="theme-color" content="#FFFFFF">
-<link rel="canonical" href="https://frimpomaasync.com/portfolio">
-<meta property="og:type" content="website">
-<meta property="og:url" content="https://frimpomaasync.com/portfolio">
-<meta property="og:title" content="Proof · real builds, not screenshots of ideas">
-<meta property="og:description" content="Every video here is a real tool, built and shipped, on camera. Watch it work before you pay.">
-<meta name="twitter:card" content="summary_large_image">
-<link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<!-- Self-contained. No external resources. System fonts only. Videos are local /videos/*.mp4. -->
-<style>
-  html, body { margin:0; padding:0; background:#FFFFFF; }
-  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; color:#101426; -webkit-font-smoothing:antialiased; overflow-x:clip; }
-  * { box-sizing:border-box; }
-  a { color:#C2501C; text-decoration:none; }
-  a:hover { color:#101426; }
-  .serif { font-family:'Iowan Old Style','Palatino Linotype',Palatino,'Hoefler Text',Garamond,serif; font-weight:400; }
-  .mono { font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace; }
-  .btn-primary, .btn-invert {
-    display:inline-flex; align-items:center; gap:11px; padding:13px 19px; border-radius:5px;
-    font-size:12.5px; letter-spacing:.02em; font-family:inherit; cursor:pointer;
-    transition:gap .25s ease, background .25s ease, color .25s ease;
-  }
-  .btn-primary { background:#101426; color:#FFFFFF; border:none; box-shadow:0 12px 26px -18px rgba(16,20,38,.6); }
-  .btn-primary:hover { background:#C2501C; color:#FFF; gap:15px; }
-  .btn-invert { background:#FFFFFF; color:#101426; border:none; }
-  .btn-invert:hover { background:#C2501C; color:#FFF; gap:15px; }
-  .bcard { transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease; }
-  .bcard:hover { transform:translateY(-5px); box-shadow:0 26px 52px -36px rgba(12,22,60,.45); }
-  .bcard video { width:100%; aspect-ratio:4 / 3; object-fit:cover; display:block; background:#101426; }
-  @keyframes hpRise { from { opacity:0; transform:translateY(26px) } to { opacity:1; transform:none } }
-  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important } }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Proof · watch the builds work | frimpomaasync.com</title>
+  <meta name="description" content="Watch SynKasa, Soma, Som, and an operations tracker run. Each build gives you one useful flow to take into your own business.">
+  <link rel="canonical" href="https://frimpomaasync.com/portfolio">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=1">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="Proof · watch the work happen">
+  <meta property="og:description" content="Working builds, useful flows, and clear links to the product carrying each one.">
+  <meta property="og:url" content="https://frimpomaasync.com/portfolio">
+  <meta property="og:image" content="https://frimpomaasync.com/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
 </head>
-<body data-sk-sections="Hero,Builds,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="plumber">
-<div style="background:#FFFFFF; overflow-x:clip">
-
-  <!-- HERO -->
-  <section data-screen-label="Hero" style="background:#FFFFFF">
-    <div style="max-width:1180px; margin:0 auto; padding:clamp(64px,8vw,120px) 24px clamp(60px,7vw,104px)">
-      <div style="display:flex; align-items:center; gap:14px; margin-bottom:22px; animation:hpRise .8s cubic-bezier(.2,.7,.2,1) both">
-        <span style="width:46px; height:1px; background:#C2501C"></span>
-        <span class="mono" style="font-size:11.5px; letter-spacing:.18em; text-transform:uppercase; color:#C2501C">Proof</span>
+<body data-sk-sections="Hero,Builds,Client proof,Close" data-sk-bar="Watch it work before you pay." data-sk-biz="service business">
+  <main>
+    <section class="hero" data-screen-label="Hero">
+      <div class="wrap">
+        <div class="eyebrow">Proof · watch it work before you pay</div>
+        <h1>Watch the work <em>happen.</em></h1>
+        <p class="hero-copy">Every video is a working build. Each card shows the problem, the flow, and one move you can use today.</p>
       </div>
-      <h1 class="serif" style="font-size:clamp(48px,7.8vw,118px); line-height:1.0; letter-spacing:-.025em; margin:0 0 clamp(20px,2.4vw,30px); max-width:15em"><span style="display:block; animation:hpRise .85s cubic-bezier(.2,.7,.2,1) .06s both">Real builds,</span><em style="display:block; font-style:italic; color:#C2501C; animation:hpRise .85s cubic-bezier(.2,.7,.2,1) .18s both">not screenshots of ideas.</em></h1>
-      <p class="serif" style="margin:0; max-width:26em; font-style:italic; font-size:clamp(19px,1.9vw,26px); line-height:1.45; color:rgba(16,20,38,.6); animation:hpRise .85s cubic-bezier(.2,.7,.2,1) .3s both">Every video below is a real tool I built and shipped, not a mockup.</p>
-    </div>
-  </section>
+    </section>
 
-  <!-- BUILDS -->
-  <section data-screen-label="Builds" style="background:#F8F8F9; border-bottom:1px solid rgba(16,20,38,.07)">
-    <div style="max-width:1180px; margin:0 auto; padding:clamp(80px,9vw,124px) 24px">
-      <h2 data-reveal class="serif" style="font-size:clamp(34px,4.4vw,56px); line-height:1.06; letter-spacing:-.018em; margin:0 0 clamp(34px,4vw,52px); max-width:24em"><span style="color:rgba(16,20,38,.4)">Watch them run,</span> one card each.</h2>
-      <div data-reveal data-stagger style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px">
+    <section class="section soft" data-screen-label="Builds">
+      <div class="wrap">
+        <div class="proof-grid">
+          <article class="proof-card" id="synkasa-proof">
+            <div class="proof-media">
+              <video src="/videos/01-receptionist.mp4#t=2.5" controls preload="metadata" playsinline aria-label="SynKasa front desk demonstration"></video>
+            </div>
+            <div class="proof-copy">
+              <span class="pill">SynKasa · front desk</span>
+              <h3>The call is handled before you put the tool down.</h3>
+              <p>Watch SynKasa answer, qualify the job, offer two times, and book one.</p>
+              <div class="steal-flow"><strong>Steal this flow:</strong> acknowledge the inquiry, ask one qualifying question, then offer two times.</div>
+              <a class="card-link" href="/synkasa">See the SynKasa tiers →</a>
+            </div>
+          </article>
 
-        <div class="bcard" style="background:#FFFFFF; border:1px solid rgba(16,20,38,.1); border-radius:20px; padding:14px">
-          <div style="position:relative; border-radius:14px; overflow:hidden">
-            <video src="videos/00-sizzle-reel.mp4#t=2.5" controls preload="metadata" playsinline></video>
-          </div>
-          <div style="padding:16px 8px 8px">
-            <div class="mono" style="font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:#C2501C">Build 00</div>
-            <div class="serif" style="font-size:22px; line-height:1.25; margin:10px 0 8px">Every build, in one minute</div>
-            <p style="margin:0; font-size:14px; line-height:1.55; color:rgba(16,20,38,.6)">The whole portfolio at speed. Start here.</p>
-          </div>
+          <article class="proof-card" id="soma-proof">
+            <div class="proof-media">
+              <video src="/videos/03-soma.mp4#t=2.5" controls preload="metadata" playsinline aria-label="Soma customer handoff demonstration"></video>
+            </div>
+            <div class="proof-copy">
+              <span class="pill">Soma · inside SynKasa</span>
+              <h3>One customer entry reaches four places.</h3>
+              <p>See Soma update the CRM, calendar, text thread, and list from one entry.</p>
+              <div class="steal-flow"><strong>Steal this flow:</strong> choose one source of truth, then push every update outward.</div>
+              <a class="card-link" href="/synkasa#soma">See Soma inside SynKasa →</a>
+            </div>
+          </article>
+
+          <article class="proof-card" id="som-proof">
+            <div class="proof-media">
+              <video src="/videos/04-som.mp4#t=2.5" controls preload="metadata" playsinline aria-label="Som capture app demonstration"></video>
+            </div>
+            <div class="proof-copy">
+              <span class="pill">Som · free</span>
+              <h3>The thought lands before the next interruption.</h3>
+              <p>See Som installed on a real phone and working offline.</p>
+              <div class="steal-flow"><strong>Steal this flow:</strong> use one capture point and one review time. Sort after capture.</div>
+              <a class="card-link" href="/som">Install Som →</a>
+            </div>
+          </article>
+
+          <article class="proof-card" id="operations-proof">
+            <div class="proof-media">
+              <video src="/videos/05-tracker.mp4#t=2.5" controls preload="metadata" playsinline aria-label="Operations tracker demonstration"></video>
+            </div>
+            <div class="proof-copy">
+              <span class="pill">Operations · Siesie path</span>
+              <h3>Every open item has a dated next move.</h3>
+              <p>See one screen hold the status, owner, notes, and next action for work that used to live in memory.</p>
+              <div class="steal-flow"><strong>Steal this flow:</strong> give every open item an owner and a next-action date before the day ends.</div>
+              <a class="card-link" href="/siesie">Check the five Siesie roles →</a>
+            </div>
+          </article>
         </div>
-
-        <div class="bcard" style="background:#FFFFFF; border:1px solid rgba(16,20,38,.1); border-radius:20px; padding:14px">
-          <div style="position:relative; border-radius:14px; overflow:hidden">
-            <video src="videos/01-receptionist.mp4#t=2.5" controls preload="metadata" playsinline></video>
-          </div>
-          <div style="padding:16px 8px 8px">
-            <div class="mono" style="font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:#C2501C">Build 01</div>
-            <div class="serif" style="font-size:22px; line-height:1.25; margin:10px 0 8px">The front desk, answering live</div>
-            <p style="margin:0; font-size:14px; line-height:1.55; color:rgba(16,20,38,.6)">SynKasa takes a call, qualifies the job, and books it. <a href="/synkasa">This is the product &#8594;</a></p>
-          </div>
-        </div>
-
-        <div class="bcard" style="background:#FFFFFF; border:1px solid rgba(16,20,38,.1); border-radius:20px; padding:14px">
-          <div style="position:relative; border-radius:14px; overflow:hidden">
-            <video src="videos/03-soma.mp4#t=2.5" controls preload="metadata" playsinline></video>
-          </div>
-          <div style="padding:16px 8px 8px">
-            <div class="mono" style="font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:#C2501C">Build 02</div>
-            <div class="serif" style="font-size:22px; line-height:1.25; margin:10px 0 8px">One entry, four tools</div>
-            <p style="margin:0; font-size:14px; line-height:1.55; color:rgba(16,20,38,.6)">Soma relays a customer into the CRM, calendar, text thread and list at once. <a href="/synkasa#soma">Try it yourself &#8594;</a></p>
-          </div>
-        </div>
-
-        <div class="bcard" style="background:#FFFFFF; border:1px solid rgba(16,20,38,.1); border-radius:20px; padding:14px">
-          <div style="position:relative; border-radius:14px; overflow:hidden">
-            <video src="videos/04-som.mp4#t=2.5" controls preload="metadata" playsinline></video>
-          </div>
-          <div style="padding:16px 8px 8px">
-            <div class="mono" style="font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:#C2501C">Build 03</div>
-            <div class="serif" style="font-size:22px; line-height:1.25; margin:10px 0 8px">Som, on a real phone</div>
-            <p style="margin:0; font-size:14px; line-height:1.55; color:rgba(16,20,38,.6)">The free capture app, installed and working offline. <a href="/som">Get it free &#8594;</a></p>
-          </div>
-        </div>
-
-        <div class="bcard" style="background:#FFFFFF; border:1px solid rgba(16,20,38,.1); border-radius:20px; padding:14px">
-          <div style="position:relative; border-radius:14px; overflow:hidden">
-            <video src="videos/05-tracker.mp4#t=2.5" controls preload="metadata" playsinline></video>
-          </div>
-          <div style="padding:16px 8px 8px">
-            <div class="mono" style="font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:#C2501C">Build 04</div>
-            <div class="serif" style="font-size:22px; line-height:1.25; margin:10px 0 8px">The outreach tracker</div>
-            <p style="margin:0; font-size:14px; line-height:1.55; color:rgba(16,20,38,.6)">A one-screen CRM: who's warm, who's waiting, what's next. It even drafts the outreach.</p>
-          </div>
-        </div>
-
-        <div class="bcard" style="background:#FFFFFF; border:1px solid rgba(16,20,38,.1); border-radius:20px; padding:14px">
-          <div style="position:relative; border-radius:14px; overflow:hidden">
-            <video src="videos/06-platformnative.mp4#t=2.5" controls preload="metadata" playsinline></video>
-          </div>
-          <div style="padding:16px 8px 8px">
-            <div class="mono" style="font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:#C2501C">Build 05</div>
-            <div class="serif" style="font-size:22px; line-height:1.25; margin:10px 0 8px">Platform Native, the content desk</div>
-            <p style="margin:0; font-size:14px; line-height:1.55; color:rgba(16,20,38,.6)">Turns one idea into per-platform posts instead of five rewrites.</p>
-          </div>
-        </div>
-
       </div>
-      <p style="margin:22px 2px 0; font-size:13.5px; line-height:1.55; font-style:italic; color:rgba(16,20,38,.46); max-width:42em">Nothing here claims a result until there's a real one to show. Client builds get their own cards, with names, once the founding three are live.</p>
-      <p style="margin:14px 2px 0; font-size:13.5px; color:rgba(16,20,38,.5)">Making software for software companies? <a href="/ugc">For software brands &#8594;</a></p>
-    </div>
-  </section>
+    </section>
 
-  <!-- CLOSE -->
-  <section data-screen-label="Close" style="position:relative; background:linear-gradient(168deg,#182042 0%,#101426 48%,#060915 100%); overflow:hidden">
-    <div style="position:absolute; inset:0; background:radial-gradient(64% 52% at 76% 24%, rgba(194,80,28,.24) 0%, rgba(0,0,0,0) 64%); pointer-events:none"></div>
-    <div style="position:relative; max-width:1180px; margin:0 auto; padding:clamp(88px,10vw,140px) 24px">
-      <div data-reveal style="max-width:34em">
-        <h2 class="serif" style="font-size:clamp(34px,4.4vw,56px); line-height:1.06; letter-spacing:-.018em; margin:0; color:#F7F5F1">Want to be the next one on this page?</h2>
-        <p style="margin:20px 0 0; font-size:17px; line-height:1.62; color:rgba(247,245,241,.72); max-width:34em; text-wrap:pretty">The founding three on Grow pay half in exchange for a named testimonial once it's been running a month. Same guarantee, same build, no lock-in.</p>
-        <a class="btn-invert" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener" style="margin-top:30px">Book a free 15-min call <span style="font-size:13px">&#8594;</span></a>
+    <section class="section" data-screen-label="Client proof">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Client results</div>
+          <h2 class="section-title">Proof gets a name when the client approves it.</h2>
+        </div>
+        <div>
+          <p class="section-intro">Client results appear here only after the client approves the wording and the result. Until then, the working builds above are the proof you can inspect yourself.</p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-</div>
-<script src="fsnav.js?v=800" defer></script>
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <div class="eyebrow">The next step</div>
+        <h2>Take the flow or ask me to wire it.</h2>
+        <p>Use the part that helps today. If the same work keeps landing back on you, the fit path will show whether SynKasa or Siesie carries it.</p>
+        <div class="actions">
+          <a class="button secondary" href="/fit">Find the right fit →</a>
+          <a class="button secondary" href="/free">Take a free fix →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="/fsnav.js?v=800" defer></script>
 </body>
 </html>

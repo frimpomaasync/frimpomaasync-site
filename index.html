@@ -1,180 +1,175 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta name="p:domain_verify" content="412c9b9348caa29530d297c82eca992a"/>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
-<title>NaNa Frimpomaa · Stop being the system</title>
-<meta name="description" content="I build the one connected system that takes booking, follow-up, and the after-hours inbox off your hands. Done for you. Live in 7 days, or you don't pay. Yours forever.">
-<link rel="canonical" href="https://frimpomaasync.com/">
-<meta name="theme-color" content="#FFFFFF">
-<meta property="og:type" content="website">
-<meta property="og:site_name" content="NaNa Frimpomaa">
-<meta property="og:title" content="Stop being the system · NaNa Frimpomaa">
-<meta property="og:description" content="I build the one connected system that takes booking, follow-up, and the after-hours inbox off your hands. Live in 7 days, or you don't pay. Yours forever.">
-<meta property="og:url" content="https://frimpomaasync.com/">
-<meta property="og:image" content="https://frimpomaasync.com/og-cover.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Stop being the system · NaNa Frimpomaa">
-<meta name="twitter:description" content="Booking, follow-up, and the after-hours inbox handled while your hands stay on the work. Live in 7 days.">
-<meta name="twitter:image" content="https://frimpomaasync.com/og-cover.png">
-<script type="application/ld+json">
-{"@context":"https://schema.org","@type":"ProfessionalService","name":"NaNa Frimpomaa · frimpomaasync.com","url":"https://frimpomaasync.com","description":"Done-for-you AI systems for owner-run small businesses. SynKasa, the AI front desk, answers every call, text and DM, qualifies the lead, and books the job. Siesie runs the back office. Live in 7 days, or the client does not pay.","founder":{"@type":"Person","name":"NaNa Frimpomaa"},"slogan":"Watch it work before you pay","sameAs":["https://www.facebook.com/frimpomaasync/","https://www.pinterest.com/frimpomaasync/","https://www.instagram.com/frimpomaasync"],"makesOffer":[
-{"@type":"Offer","name":"SynKasa · the AI front desk (formerly the Client Catcher)","price":"555","priceCurrency":"USD","url":"https://frimpomaasync.com/synkasa","description":"Three tiers: Start $555, Grow $1,500 (founding $750 for the first 3 owners), Full $2,222. Optional care plans. Live in 7 days, or the client does not pay.","availability":"https://schema.org/InStock"},
-{"@type":"Offer","name":"Siesie · the back office, five roles","price":"25000","priceCurrency":"USD","url":"https://frimpomaasync.com/siesie","description":"Scheduling, invoices, chasing, coordination and reporting, built into the owner's own accounts and handed over."}]}
-</script>
-<!-- Self-contained. No external resources. System fonts only. -->
-<style>
-  html, body { margin:0; padding:0; background:#FFFFFF; }
-  body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; color:#101426; -webkit-font-smoothing:antialiased; overflow-x:clip; }
-  * { box-sizing:border-box; }
-  a { color:#C2501C; text-decoration:none; }
-  a:hover { color:#101426; }
-  .serif { font-family:'Iowan Old Style','Palatino Linotype',Palatino,'Hoefler Text',Garamond,serif; font-weight:400; }
-  .mono { font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace; }
-  .btn-primary, .btn-ghost, .btn-invert, .btn-ondark {
-    display:inline-flex; align-items:center; gap:11px; padding:13px 19px; border-radius:5px;
-    font-size:12.5px; letter-spacing:.02em; font-family:inherit; cursor:pointer;
-    transition:gap .25s ease, background .25s ease, border-color .25s ease, color .25s ease;
-  }
-  .btn-primary { background:#101426; color:#FFFFFF; border:none; box-shadow:0 14px 30px -18px rgba(6,10,22,.9); }
-  .btn-primary:hover { background:#C2501C; color:#FFFFFF; gap:15px; }
-  .btn-ghost { background:#FFFFFF; border:1px solid rgba(16,20,38,.16); color:#101426; padding:13px 18px; }
-  .btn-ghost:hover { border-color:#101426; color:#101426; gap:15px; }
-  .btn-invert { background:#FFFFFF; color:#101426; border:none; }
-  .btn-invert:hover { background:#C2501C; color:#FFF; gap:15px; }
-  .btn-ondark { background:transparent; border:1px solid rgba(242,244,249,.28); color:#F2F4F9; padding:13px 18px; }
-  .btn-ondark:hover { border-color:#F2F4F9; color:#FFFFFF; gap:15px; }
-  .syscard { transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease, border-color .35s ease; }
-  .syscard:hover { transform:translateY(-6px); box-shadow:0 30px 60px -40px rgba(12,22,60,.45); border-color:rgba(16,20,38,.22); color:#101426; }
-  @keyframes hpRise { from { opacity:0; transform:translateY(26px) } to { opacity:1; transform:none } }
-  @keyframes hpZoom { from { transform:scale(1.08) } to { transform:scale(1) } }
-  @media (max-width:1120px) { #hp-hero-row > div:first-child { width:100% !important; max-width:100% !important } }
-  @media (max-width:660px) { #hp-bg { background-position:74% 50% !important } }
-  @media (prefers-reduced-motion: reduce) { * { animation:none !important; transition:none !important } }
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="p:domain_verify" content="412c9b9348caa29530d297c82eca992a">
+  <title>Stop being the system | frimpomaasync.com</title>
+  <meta name="description" content="Find where work is slipping, take one useful fix, and see whether SynKasa or Siesie is the right next step. Live in 7 days, or you don't pay.">
+  <link rel="canonical" href="https://frimpomaasync.com/">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=1">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="Stop being the system">
+  <meta property="og:description" content="Find the first leak, take one useful fix, and watch the right system work before you pay.">
+  <meta property="og:url" content="https://frimpomaasync.com/">
+  <meta property="og:image" content="https://frimpomaasync.com/og-cover.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfessionalService",
+      "name": "frimpomaasync.com",
+      "url": "https://frimpomaasync.com",
+      "founder": {"@type": "Person", "name": "NaNa Frimpomaa"},
+      "slogan": "Watch it work before you pay",
+      "description": "SynKasa handles the front desk. Siesie handles the work behind it. Both are built in the owner's accounts and handed over."
+    }
+  </script>
 </head>
-<body data-sk-sections="Hero,Approach,Systems,Guarantee,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="plumber">
-<div style="background:#FFFFFF; overflow-x:clip">
-
-  <!-- HERO -->
-  <section data-screen-label="Hero" style="position:relative; overflow:hidden; background:#0B1120">
-    <div id="hp-bg" style="position:absolute; inset:0; background-image:url('/assets/hero-scene-wide.jpg'); background-size:cover; background-position:71% 46%; animation:hpZoom 2.6s cubic-bezier(.2,.7,.2,1); will-change:transform"></div>
-    <div style="position:absolute; inset:0; background:linear-gradient(96deg, rgba(6,10,20,.6) 0%, rgba(6,10,20,.4) 40%, rgba(6,10,20,.16) 62%, rgba(6,10,20,0) 82%)"></div>
-    <div style="position:absolute; inset:0; background:linear-gradient(180deg, rgba(6,10,20,.3) 0%, rgba(0,0,0,0) 20%, rgba(0,0,0,0) 58%, rgba(6,10,20,.22) 82%, rgba(6,10,20,.32) 100%)"></div>
-    <div style="position:absolute; left:0; bottom:0; width:min(72%,900px); height:72%; background:linear-gradient(102deg, rgba(6,10,20,.9) 0%, rgba(6,10,20,.76) 40%, rgba(6,10,20,.44) 66%, rgba(6,10,20,.12) 86%, rgba(6,10,20,0) 97%); -webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,0) 2%, rgba(0,0,0,1) 34%); mask-image:linear-gradient(180deg, rgba(0,0,0,0) 2%, rgba(0,0,0,1) 34%); pointer-events:none"></div>
-
-    <div id="hp-hero-row" style="position:relative; max-width:1180px; margin:0 auto; padding:clamp(60px,8vw,140px) 24px clamp(38px,4.6vw,72px); min-height:min(700px, calc(100svh - 68px)); display:flex; align-items:flex-end">
-      <div style="position:relative; z-index:7; width:min(780px,64%); max-width:100%">
-        <h1 class="serif" style="font-size:clamp(48px,7.8vw,118px); line-height:1.0; letter-spacing:-.025em; color:#FCFAF6; margin:0 0 clamp(20px,2.4vw,30px); text-shadow:0 4px 40px rgba(6,10,22,.6)"><span style="display:block; animation:hpRise .85s cubic-bezier(.2,.7,.2,1) .05s both"><span style="color:#C2501C">Stop</span> being</span><em style="display:block; font-style:italic; animation:hpRise .85s cubic-bezier(.2,.7,.2,1) .18s both">the system<span style="color:#C2501C">.</span></em></h1>
-        <p class="serif" style="margin:0 0 clamp(26px,3vw,36px); max-width:26em; font-style:italic; font-size:clamp(19px,1.9vw,26px); line-height:1.45; color:rgba(252,250,246,.78); text-shadow:0 1px 18px rgba(6,10,22,.8), 0 0 3px rgba(6,10,22,.55); animation:hpRise .85s cubic-bezier(.2,.7,.2,1) .32s both; text-wrap:pretty">You are the booking desk, the follow-up team, and the after-hours inbox, all at once. <strong style="font-weight:400; color:#FFFFFF">I build the one connected system that takes all three off your hands.</strong> Done for you. Live in 7 days. Yours forever.</p>
-        <div style="display:flex; gap:10px; flex-wrap:wrap; animation:hpRise .85s cubic-bezier(.2,.7,.2,1) .44s both">
-          <a class="btn-primary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener">Book a free 15-min call <span style="font-size:13px">&#8594;</span></a>
-          <a class="btn-ghost" href="/portfolio">Watch real builds <span style="font-size:13px">&#8594;</span></a>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- APPROACH -->
-  <section data-screen-label="Approach" style="background:#F8F8F9; border-bottom:1px solid rgba(16,20,38,.07)">
-    <div style="max-width:1180px; margin:0 auto; padding:clamp(88px,10vw,140px) 24px">
-      <p data-reveal data-stagger data-stagger-step="26" class="serif" style="display:flex; flex-wrap:wrap; gap:0 .28em; margin:0; font-size:clamp(28px,4.4vw,62px); line-height:1.14; letter-spacing:-.014em; color:#101426; max-width:27em"><span>You</span><span>don't</span><span>need</span><span>more</span><span>software</span><span>to</span><span>log</span><span>into.</span><span>You</span><span>need</span><span>the</span><span>work</span><span>to</span><span>happen</span><span>while</span><span>your</span><span>hands</span><span>are</span><span>full,</span><span>inside</span><span>the</span><span>accounts</span><span>you</span><span>already</span><span>own.</span></p>
-      <div data-reveal style="margin-top:clamp(36px,4vw,56px); display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:44px; max-width:960px">
-        <p style="margin:0; font-size:16.5px; line-height:1.62; color:rgba(16,20,38,.66); text-wrap:pretty">Everything here gets built into your own tools, wired to your hours, your prices and the way you already talk to customers.</p>
-        <p style="margin:0; font-size:16.5px; line-height:1.62; color:rgba(16,20,38,.66); text-wrap:pretty">Seven days from the call it's running. If it isn't, you don't pay. The build is yours either way, with or without me.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SYSTEMS -->
-  <section data-screen-label="Systems" style="max-width:1180px; margin:0 auto; padding:clamp(88px,10vw,120px) 24px">
-    <h2 data-reveal class="serif" style="font-size:clamp(34px,4.4vw,56px); line-height:1.06; letter-spacing:-.018em; margin:0 0 clamp(38px,4vw,56px); max-width:24em"><span style="color:rgba(16,20,38,.4)">Three ways in,</span> depending on what's breaking.</h2>
-
-    <div data-reveal data-stagger style="display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:20px">
-      <a class="syscard" href="/synkasa" style="display:flex; flex-direction:column; gap:14px; background:#FFFFFF; border:1px solid rgba(16,20,38,.1); border-radius:22px; padding:30px 26px 28px; color:#101426">
-        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px">
-          <span class="mono" style="font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:#C2501C">SynKasa</span>
-          <span style="font-size:12.5px; color:rgba(16,20,38,.45)">from $555</span>
-        </div>
-        <div class="serif" style="font-size:27px; line-height:1.2">The front desk</div>
-        <p style="margin:0; font-size:15px; line-height:1.6; color:rgba(16,20,38,.64)">Every call, text and DM answered in your voice, qualified and booked, at any hour.</p>
-        <span style="display:inline-flex; align-items:center; gap:9px; margin-top:6px; font-size:13.5px; color:#C2501C">See SynKasa <span>&#8594;</span></span>
-      </a>
-      <a class="syscard" href="/siesie" style="display:flex; flex-direction:column; gap:14px; background:#FFFFFF; border:1px solid rgba(16,20,38,.1); border-radius:22px; padding:30px 26px 28px; color:#101426">
-        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px">
-          <span class="mono" style="font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:#C2501C">Siesie</span>
-          <span style="font-size:12.5px; color:rgba(16,20,38,.45)">$25,000</span>
-        </div>
-        <div class="serif" style="font-size:27px; line-height:1.2">The business behind it</div>
-        <p style="margin:0; font-size:15px; line-height:1.6; color:rgba(16,20,38,.64)">Five roles built and handed over: scheduling, invoices, chasing, coordination, reporting.</p>
-        <span style="display:inline-flex; align-items:center; gap:9px; margin-top:6px; font-size:13.5px; color:#C2501C">See Siesie <span>&#8594;</span></span>
-      </a>
-      <a class="syscard" href="/free" style="display:flex; flex-direction:column; gap:14px; background:#FFFFFF; border:1px solid rgba(16,20,38,.1); border-radius:22px; padding:30px 26px 28px; color:#101426">
-        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:12px">
-          <span class="mono" style="font-size:10.5px; letter-spacing:.15em; text-transform:uppercase; color:#C2501C">Free</span>
-          <span style="font-size:12.5px; color:rgba(16,20,38,.45)">no charge</span>
-        </div>
-        <div class="serif" style="font-size:27px; line-height:1.2">Start with the small stuff</div>
-        <p style="margin:0; font-size:15px; line-height:1.6; color:rgba(16,20,38,.64)">Tools and teardowns you can use before you ever pay me anything.</p>
-        <span style="display:inline-flex; align-items:center; gap:9px; margin-top:6px; font-size:13.5px; color:#C2501C">See what's free <span>&#8594;</span></span>
-      </a>
-    </div>
-  </section>
-
-  <!-- GUARANTEE -->
-  <section data-screen-label="Guarantee" style="position:relative; background:linear-gradient(168deg,#182042 0%,#101426 48%,#060915 100%); overflow:hidden">
-    <div style="position:absolute; inset:0; background:radial-gradient(64% 52% at 76% 24%, rgba(194,80,28,.26) 0%, rgba(0,0,0,0) 64%), radial-gradient(50% 40% at 10% 86%, rgba(155,182,255,.12) 0%, rgba(0,0,0,0) 70%); pointer-events:none"></div>
-    <div style="position:relative; max-width:1180px; margin:0 auto; padding:clamp(92px,10vw,140px) 24px">
-      <div data-reveal style="display:grid; grid-template-columns:1px 1fr; gap:clamp(22px,3vw,40px); max-width:30em">
-        <div style="background:rgba(242,244,249,.28)"></div>
+<body data-sk-sections="Hero,First fix,Proof,Choose the path,Guarantee,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
+  <main>
+    <section class="hero" data-screen-label="Hero">
+      <div class="wrap hero-grid">
         <div>
-          <h2 class="serif" style="font-size:clamp(38px,5.4vw,72px); line-height:1.02; letter-spacing:-.022em; margin:0 0 24px; color:#F7F5F1">Live in 7 days, or you don't pay.</h2>
-          <p style="margin:0; font-size:17px; line-height:1.6; color:rgba(247,245,241,.72); text-wrap:pretty">Seven days from our call it's answering. If it isn't, you owe me nothing. I won't promise you a number of bookings. That depends on how many people call you. I promise the ones who do get answered.</p>
+          <div class="eyebrow">One owner · a business that keeps moving</div>
+          <h1>Stop being <em>the system.</em></h1>
+          <p class="hero-copy">SynKasa handles the front desk. Siesie handles the work behind it. You close up knowing the business kept moving.</p>
+          <div class="actions">
+            <a class="button" href="#page-leak-tool">Find the first leak →</a>
+            <button class="button secondary" type="button" data-fs-chat>Watch SynKasa answer →</button>
+          </div>
+        </div>
+
+        <div class="screen" id="page-leak-tool">
+          <div class="screen-top mono">
+            <span>Where does work wait on you?</span>
+            <span class="status">Local only</span>
+          </div>
+          <div class="screen-body">
+            <div class="choice-list" aria-label="Choose the main business leak">
+              <button class="choice" type="button" data-leak="missed" aria-pressed="false">Missed inquiries</button>
+              <button class="choice" type="button" data-leak="followup" aria-pressed="false">Slow follow-up</button>
+              <button class="choice" type="button" data-leak="noshow" aria-pressed="false">No-shows or unconfirmed bookings</button>
+              <button class="choice" type="button" data-leak="backoffice" aria-pressed="false">The back office depends on me</button>
+            </div>
+            <div class="result" id="leak-output" aria-live="polite">
+              <span class="mono">Your first fix</span>
+              <h3 id="leak-heading">Pick the leak above.</h3>
+              <p id="leak-action">Your answer and one same-day action will appear here.</p>
+              <div class="result-actions">
+                <a id="leak-proof" href="/portfolio">See the working build →</a>
+                <a id="leak-path" href="/free">Take a free fix →</a>
+              </div>
+            </div>
+            <noscript>Start with the <a href="/free#response-script">free response script</a>, or use the <a href="https://calendar.app.google/DkRJFRA3G6W6d8E48">15-minute call</a> to map the leak.</noscript>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- CLOSE -->
-  <section data-screen-label="Close" style="background:#101426; color:#F2F4F9">
-    <div style="max-width:1180px; margin:0 auto; padding:clamp(92px,10vw,128px) 24px; text-align:center">
-      <h2 data-reveal class="serif" style="font-size:clamp(38px,5.2vw,68px); line-height:1.03; letter-spacing:-.022em; margin:0 0 22px">One call. Fifteen minutes.</h2>
-      <p data-reveal style="margin:0 auto 34px; max-width:32em; font-size:17px; line-height:1.6; color:rgba(242,244,249,.7); text-wrap:pretty">Tell me how the work comes in and where it falls through. I'll tell you exactly what I'd build and what it costs. If it's not a fit, I'll say so.</p>
-      <div style="display:flex; gap:12px; justify-content:center; flex-wrap:wrap">
-        <a class="btn-invert" href="https://calendar.app.google/DkRJFRA3G6W6d8E48" target="_blank" rel="noopener" style="padding:14px 20px">Book a free 15-min call <span style="font-size:13px">&#8594;</span></a>
-        <a class="btn-ondark" href="/synkasa">See SynKasa <span style="font-size:13px">&#8594;</span></a>
+    <section class="section soft" data-screen-label="First fix">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title"><span>Pick the leak.</span> Take the first fix.</h2>
+          <p class="section-intro">You get something useful before I ask for a call. If one fix will do, take it. If the same problem keeps coming back, the right build is one click away.</p>
+        </div>
+        <div class="workflow" aria-label="Visitor to next action">
+          <div class="workflow-step"><span class="pill">01</span><strong>Name the leak</strong></div>
+          <div class="workflow-step"><span class="pill">02</span><strong>Use one fix</strong></div>
+          <div class="workflow-step"><span class="pill">03</span><strong>Watch the proof</strong></div>
+          <div class="workflow-step"><span class="pill">04</span><strong>Check the fit</strong></div>
+          <div class="workflow-step"><span class="pill">05</span><strong>Book the call</strong></div>
+        </div>
       </div>
-      <div style="margin-top:20px; font-size:13.5px; color:rgba(242,244,249,.5)">Built, wired and cared for by NaNa Frimpomaa.</div>
-    </div>
-  </section>
+    </section>
 
-</div>
+    <section class="section" data-screen-label="Proof">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title"><span>Watch it work</span> before you pay.</h2>
+          <p class="section-intro">The proof page shows real builds running. Every card also gives you one part of the flow to use in your own business.</p>
+        </div>
+        <div class="card-grid">
+          <article class="path-card">
+            <span class="pill">SynKasa</span>
+            <h3>Missed call → qualified job → booked time</h3>
+            <p>See the front desk answer, ask the right question, and offer two times.</p>
+            <a class="card-link" href="/portfolio#synkasa-proof">Watch the front desk →</a>
+          </article>
+          <article class="path-card">
+            <span class="pill">Soma</span>
+            <h3>One customer entry reaches four places.</h3>
+            <p>See one update reach the CRM, calendar, text thread, and list.</p>
+            <a class="card-link" href="/portfolio#soma-proof">Watch the handoff →</a>
+          </article>
+          <article class="path-card">
+            <span class="pill">Som · free</span>
+            <h3>The thought lands before the next interruption.</h3>
+            <p>See Som installed on a real phone and working offline.</p>
+            <a class="card-link" href="/portfolio#som-proof">Watch Som work →</a>
+          </article>
+        </div>
+      </div>
+    </section>
 
-<script>
-(function () {
-  "use strict";
-  if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  var bg = document.getElementById("hp-bg");
-  if (!bg) return;
-  var queued = false, cur = -1;
-  function paint() {
-    var y = Math.min(window.scrollY || 0, 900);
-    var next = Math.round(y * 0.12);
-    if (next === cur) return;
-    cur = next;
-    var scale = (1 + Math.min(next, 110) * 0.0009).toFixed(4);
-    bg.style.transform = "translateY(" + next + "px) scale(" + scale + ")";
-  }
-  window.addEventListener("scroll", function () {
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(function () { queued = false; paint(); });
-  }, { passive: true });
-  paint();
-})();
-</script>
-<script src="fsnav.js?v=800" defer></script>
+    <section class="section soft" data-screen-label="Choose the path">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title"><span>Choose the problem,</span> then take the shortest path.</h2>
+          <p class="section-intro">SynKasa is the front desk. Siesie is for established businesses carrying the back office in the owner's head. Free is where you start when one small fix may be enough.</p>
+        </div>
+        <div class="card-grid">
+          <article class="path-card featured">
+            <span class="pill">SynKasa · from $555</span>
+            <h3>Keep working while the phone gets answered.</h3>
+            <p>SynKasa answers, qualifies, books, and remembers who still needs a reply.</p>
+            <a class="card-link" href="/synkasa">Watch SynKasa work →</a>
+          </article>
+          <article class="path-card">
+            <span class="pill">Siesie · $25,000</span>
+            <h3>The business moves without asking you first.</h3>
+            <p>Five back-office roles move into accounts you own, with a clear handoff for the work that repeats.</p>
+            <a class="card-link" href="/siesie">Check all five roles →</a>
+          </article>
+          <article class="path-card">
+            <span class="pill">Free · use it today</span>
+            <h3>Take one fix before you hire me.</h3>
+            <p>Copy the response script, open the Blueprint, install Som, or test the live front desk.</p>
+            <a class="card-link" href="/free">Choose a free fix →</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Guarantee">
+      <div class="wrap">
+        <div class="eyebrow">The guarantee</div>
+        <h2>Live in 7 days, or you don't pay.</h2>
+        <p>Watch it work before you pay. The build lives in your accounts and stays yours, with or without a care plan.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Close">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">One clear next move</div>
+          <h2 class="section-title">Bring the real process and leave with the next move.</h2>
+        </div>
+        <div>
+          <p class="section-intro">Use the short fit path first. It routes an inquiry problem to SynKasa and an owner-dependent operations problem to Siesie. The confirmed 15-minute booking link comes after the form.</p>
+          <div class="actions">
+            <a class="button" href="/fit">Find the right fit →</a>
+            <a class="button secondary" href="/portfolio">See the proof →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="/assets/journey.js?v=1"></script>
+  <script src="/fsnav.js?v=800" defer></script>
 </body>
 </html>
