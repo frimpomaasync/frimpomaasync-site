@@ -867,6 +867,48 @@ noscript {
   color: #f0a17b;
 }
 
+.faq-list {
+  border-top: 1px solid var(--line);
+}
+
+.faq-list details {
+  border-bottom: 1px solid var(--line);
+}
+
+.faq-list summary {
+  position: relative;
+  padding: 20px 42px 20px 0;
+  cursor: pointer;
+  font-family: var(--serif);
+  font-size: 22px;
+  list-style: none;
+}
+
+.faq-list summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq-list summary::after {
+  position: absolute;
+  top: 18px;
+  right: 4px;
+  color: var(--copper);
+  content: "+";
+  font-family: var(--sans);
+  font-size: 26px;
+}
+
+.faq-list details[open] summary::after {
+  content: "−";
+}
+
+.faq-list details p {
+  margin: 0;
+  padding: 0 40px 22px 0;
+  color: var(--ink-soft);
+  line-height: 1.62;
+}
+
 @media (max-width: 900px) {
   .hero-grid,
   .split,
