@@ -544,6 +544,199 @@ def assert_synkasa_reduced_motion_contract(page) -> None:
     page.locator("#fs-chat-x").click()
 
 
+def assert_siesie_cinematic_contract(browser) -> None:
+    page = browser.new_page(viewport={"width": 1280, "height": 900})
+    page.goto(f"{BASE}/siesie.html", wait_until="networkidle")
+
+    hero = page.locator("[data-cinematic-hero]")
+    media = hero.locator(".cinematic-media")
+    role_panel = hero.locator(".role-list")
+    role_rows = role_panel.locator(".role-row")
+    expected_roles = [
+        "Scheduling",
+        "Money",
+        "Coordination",
+        "Account management",
+        "Reporting",
+    ]
+
+    assert page.locator("body[data-cinematic]").count() == 1
+    assert hero.is_visible()
+    assert media.is_visible()
+    assert media.get_attribute("src") == "/assets/siesie-hero.jpg"
+    assert media.get_attribute("width") == "1536"
+    assert media.get_attribute("height") == "1024"
+    assert media.get_attribute("fetchpriority") == "high"
+    page.wait_for_function(
+        """() => {
+            const image = document.querySelector(
+                '[data-cinematic-hero] .cinematic-media',
+            );
+            return image.complete
+                && image.naturalWidth === 1536
+                && image.naturalHeight === 1024;
+        }"""
+    )
+    assert media.evaluate("(node) => getComputedStyle(node).objectPosition") in {
+        "50% 50%",
+        "center center",
+    }
+
+    assert role_panel.is_visible()
+    assert role_rows.count() == 5
+    assert all(row.is_visible() for row in role_rows.all())
+    assert role_rows.locator("strong").all_inner_texts() == expected_roles
+    panel_state = role_panel.evaluate(
+        """(panel) => ({
+            background: getComputedStyle(panel).backgroundColor,
+            text: Array.from(panel.querySelectorAll('strong, p'),
+                (item) => getComputedStyle(item).color),
+        })"""
+    )
+    assert panel_state["background"] == "rgb(16, 20, 38)"
+    assert all(
+        contrast_ratio(color, panel_state["background"]) >= 4.5
+        for color in panel_state["text"]
+    ), panel_state
+
+    story = page.locator(".sticky-story")
+    story_visual = story.locator(".story-visual")
+    cards = story.locator(".role-card")
+    assert story.is_visible()
+    assert cards.count() == 5
+    assert cards.locator("h3").all_inner_texts() == expected_roles
+    assert story_visual.evaluate(
+        "(node) => getComputedStyle(node).position"
+    ) == "sticky"
+    for index in range(5):
+        card = cards.nth(index)
+        card.scroll_into_view_if_needed()
+        page.wait_for_timeout(160)
+        active = story.locator(".role-card.is-active")
+        assert active.count() == 1
+        assert active.nth(0).evaluate(
+            "(node, index) => node === document.querySelectorAll(" \
+            "'.sticky-story .role-card')[index]",
+            index,
+        )
+    assert role_rows.locator("strong").all_inner_texts() == expected_roles
+
+    checks = page.locator(".audit-check")
+    assert checks.count() == 5
+    assert all(check.is_visible() for check in checks.all())
+    checks.nth(0).focus()
+    page.keyboard.press("Space")
+    assert checks.nth(0).is_checked()
+    for index in range(1, 4):
+        checks.nth(index).click()
+    page.get_by_role("button", name="Show my first fix").click()
+    assert page.locator("#audit-label").inner_text().startswith("4 of 5")
+    assert page.locator("#audit-link").get_attribute("href") == "/siesie-application"
+
+    workflow = page.locator(".workflow-step")
+    assert workflow.count() == 5
+    assert workflow.locator("strong").all_inner_texts() == [
+        "Work received",
+        "Scheduled",
+        "Coordinated",
+        "Invoiced",
+        "Reported",
+    ]
+    assert page.locator("[data-screen-label='Ownership']").is_visible()
+    assert page.locator("[data-screen-label='Build path']").is_visible()
+    assert page.get_by_text("Live in 7 days, or you don't pay", exact=False).count() >= 1
+    application_link = page.locator("a[href='/siesie-application']").first
+    assert application_link.is_visible()
+    page.goto(f"{BASE}/siesie-application", wait_until="networkidle")
+    application = page.locator("form[name='siesie-application']")
+    assert application.is_visible()
+    assert application.locator("button[type='submit']").is_enabled()
+    page.close()
+
+    tablet = browser.new_page(viewport={"width": 900, "height": 900})
+    tablet.goto(f"{BASE}/siesie.html", wait_until="networkidle")
+    tablet_story = tablet.locator(".sticky-story")
+    assert tablet_story.locator(".story-visual").evaluate(
+        "(node) => getComputedStyle(node).position"
+    ) != "sticky"
+    tablet_grid = tablet_story.evaluate(
+        """(story) => {
+            const cards = Array.from(story.querySelectorAll('.role-card'));
+            return {
+                columns: getComputedStyle(story.querySelector('.story-steps')).gridTemplateColumns,
+                tops: cards.map((card) => card.getBoundingClientRect().top),
+            };
+        }"""
+    )
+    assert len(tablet_grid["columns"].split(" ")) == 2, tablet_grid
+    assert tablet_grid["tops"][0] == tablet_grid["tops"][1], tablet_grid
+    tablet.close()
+
+    mobile = browser.new_page(viewport={"width": 390, "height": 844})
+    mobile.goto(f"{BASE}/siesie.html", wait_until="networkidle")
+    mobile_state = mobile.evaluate(
+        """() => {
+            const box = (node) => {
+                const rect = node.getBoundingClientRect();
+                return { top: rect.top, bottom: rect.bottom, height: rect.height };
+            };
+            const nav = document.getElementById('fs-nav');
+            const content = document.querySelector('.cinematic-content');
+            const cards = Array.from(
+                document.querySelectorAll('.sticky-story .role-card'),
+            );
+            const controls = Array.from(
+                document.querySelectorAll('[data-cinematic-hero] .button, #siesie-check .button'),
+                (control) => control.getBoundingClientRect().height,
+            );
+            return {
+                nav: box(nav),
+                content: box(content),
+                columns: getComputedStyle(
+                    document.querySelector('.sticky-story .story-steps'),
+                ).gridTemplateColumns,
+                tops: cards.map((card) => box(card).top),
+                controls,
+            };
+        }"""
+    )
+    assert mobile_state["content"]["top"] - mobile_state["nav"]["bottom"] >= 24
+    assert len(mobile_state["columns"].split(" ")) == 1, mobile_state
+    assert all(
+        mobile_state["tops"][index] < mobile_state["tops"][index + 1]
+        for index in range(4)
+    ), mobile_state
+    assert mobile_state["controls"]
+    assert all(height >= 44 for height in mobile_state["controls"])
+    assert_no_overflow(mobile, 390)
+    mobile.close()
+
+
+def assert_siesie_reduced_motion_contract(page) -> None:
+    page.goto(f"{BASE}/siesie.html", wait_until="networkidle")
+    media = page.locator("[data-cinematic-hero] .cinematic-media")
+    story = page.locator(".sticky-story")
+    checks = page.locator(".audit-check")
+
+    assert page.locator("[data-cinematic-hero]").is_visible()
+    assert media.evaluate("(node) => getComputedStyle(node).animationName") == "none"
+    assert media.evaluate("(node) => getComputedStyle(node).transform") == "none"
+    assert story.locator(".story-visual").evaluate(
+        "(node) => getComputedStyle(node).position"
+    ) != "sticky"
+    assert all(
+        float(opacity) == 1
+        for opacity in story.locator(".role-card").evaluate_all(
+            "(cards) => cards.map((card) => getComputedStyle(card).opacity)"
+        )
+    )
+    checks.nth(0).focus()
+    page.keyboard.press("Space")
+    assert checks.nth(0).is_checked()
+    page.get_by_role("button", name="Show my first fix").click()
+    assert page.locator("#audit-label").inner_text().startswith("1 of 5")
+
+
 def run_foundation() -> None:
     from playwright.sync_api import sync_playwright
 
@@ -615,6 +808,7 @@ def run_foundation() -> None:
         mobile.close()
         assert_homepage_cinematic_contract(browser)
         assert_synkasa_cinematic_contract(browser)
+        assert_siesie_cinematic_contract(browser)
         browser.close()
 
     with sync_playwright() as playwright:
@@ -671,6 +865,7 @@ def run_foundation() -> None:
         assert typing_animation_names == ["none", "none", "none"]
         assert_homepage_reduced_motion_contract(page)
         assert_synkasa_reduced_motion_contract(page)
+        assert_siesie_reduced_motion_contract(page)
         reduced.close()
         browser.close()
 
