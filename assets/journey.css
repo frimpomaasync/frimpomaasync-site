@@ -2315,3 +2315,47 @@ button.button.secondary {
     padding: 4px 0;
   }
 }
+
+/* ---------- 5. the SynKasa scene has to fit the phone ---------- */
+
+/* Her iPhone, 30 July: "the open image did not come through". The scene is
+   2400x1024, and on a 390px phone the hero column is 1163px tall, so
+   object-fit: cover scaled the photograph to fill that height and left 14%
+   of its width on screen. What survived was a vertical strip of dark trees.
+   The OPEN sign sits at 74 to 80 percent across and 67 to 78 percent down,
+   which is precisely where the status card lands, so no crop could rescue it.
+
+   Below 900px the photograph becomes a band across the top of the hero
+   instead of a full-height cover. The band is wide enough to hold its own
+   aspect, so the phone, the lit path and the sign all read, and it sinks into
+   the ink before the buttons and the card start. */
+@media (max-width: 900px) {
+  .synkasa-hero .cinematic-media {
+    bottom: auto;
+    height: clamp(460px, 130vw, 580px);
+    object-position: 80% 64%;
+  }
+
+  .synkasa-hero .cinematic-scrim {
+    background:
+      linear-gradient(
+        180deg,
+        rgba(8, 11, 24, .62) 0%,
+        rgba(8, 11, 24, .44) 30%,
+        rgba(8, 11, 24, .86) 74%,
+        rgb(8, 11, 24) 100%
+      ),
+      linear-gradient(90deg, rgba(8, 11, 24, .52) 0%, rgba(8, 11, 24, .22) 100%);
+  }
+}
+
+/* Between 901 and 1120 the hero is 860px tall against a window that is not yet
+   wide, so cover shows 45 to 53 percent of the scene and the right edge lands
+   at 77 to 79 percent across. The sign ends at 80.3, so it was being sliced in
+   half on an iPad in landscape and on a small laptop. Move the window right far
+   enough to clear it. Above 1120 the default crop already holds the sign. */
+@media (min-width: 901px) and (max-width: 1120px) {
+  .synkasa-hero .cinematic-media {
+    object-position: 68% center;
+  }
+}
