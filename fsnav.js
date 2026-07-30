@@ -234,6 +234,7 @@
       '<div style="margin-top:10px;font-size:13.5px;line-height:1.6">Built, wired, and cared for by NaNa Frimpomaa.</div></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/synkasa">SynKasa</a><a href="/siesie">Siesie</a><a href="/portfolio">Proof</a></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/free">Free</a><a href="/som">Som</a><a href="/blog/">Blog</a><a href="/fit">Find your fit</a></div>' +
+      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/operations-map">Operations Map</a><a href="/method">The method</a><a href="/results">Evidence</a><a href="/comparison">Compare</a><a href="/about">About</a><a href="/data">Your data</a></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="' + BOOK + '">Book a call</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>' +
       '<div style="margin-top:14px;font-family:' + MONO + ';font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,244,249,.34)">Watch it work before you pay</div></div>' +
       "</div>";

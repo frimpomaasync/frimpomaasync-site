@@ -62,6 +62,10 @@ Siesie is the back office above the SynKasa ladder. It covers five roles:
 
 Siesie is $25,000 once. It is for an established business where four or five of those roles still return to the owner.
 
+Before a Siesie build there is a paid diagnostic, the Operations Map: https://frimpomaasync.com/operations-map
+
+The Operations Map is $2,500 and takes two weeks. It is credited in full against a Siesie build. It delivers six documents: the current-state map, the owner-dependency register, the cost of waiting, the future-state map, the sequenced and priced build plan, and a ninety-minute walkthrough. It costs the owner under four hours of their own time. If the map concludes a Siesie build is not right for the business, the fee is refunded and the owner keeps all six documents.
+
 The representative path is: work received, scheduled, coordinated, invoiced, and reported.
 
 The implementation path is: map, build, test, approve, launch, train, and hand over.
@@ -95,6 +99,42 @@ Som: https://frimpomaasync.com/som
 Blueprint: https://frimpomaasync.com/automated-small-business-blueprint.pdf
 
 Live demo: https://frimpomaasync.com/client-catcher-demo/
+
+## The method
+
+Page: https://frimpomaasync.com/method
+
+Every engagement runs the same twelve steps: useful diagnosis, fit form, 15-minute call, recommendation, proposal and agreement, payment, onboarding, build and test, approval, launch and training, follow-up, and proof, referral, or care.
+
+Inside the build there are seven phases, each producing a document the client keeps: map, build, test, approve, launch, train, and hand over. The seven documents are the Operations Map, the build shown as it stands up, the Test Record, written approvals, the Launch Log, the Operating Manual, and the Ownership Pack.
+
+The testing standard is published in full on that page. Six checks must pass before launch: the normal path, the exception path, the failure path, the follow-up path, the data, and ownership. If a check cannot be ticked, the build does not launch and the date moves.
+
+## Comparison
+
+Page: https://frimpomaasync.com/comparison
+
+Siesie compared against hiring an operations person, buying software and configuring it yourself, and doing nothing. Salary figures are cited from ZipRecruiter, July 2026, and benefits from the US Bureau of Labor Statistics, March 2026. The page also states when not to choose Siesie.
+
+## Evidence
+
+Page: https://frimpomaasync.com/results
+
+There is no named client result yet, and the page says so. It offers four things a buyer can check instead: working builds they can test, the published testing standard, the paperwork they would receive, and the systems run on frimpomaasync.com itself. It also states what gets published the day a result exists: a named business, numbers the client gave, wording approved in writing, asked at day thirty.
+
+## About
+
+Page: https://frimpomaasync.com/about
+
+frimpomaasync is one person, NaNa Frimpomaa. Background: hospital front desk and patient check-in, human resources, building hospital forms, performance improvement for a healthcare system, and SQL, data management and Epic go-lives. Weekday response inside four hours, a written update every Friday, two builds at a time, no subscription to frimpomaasync.
+
+The page also lists what is not taken on: guaranteed bookings, websites, ads, ongoing content, answering customers on the owner's behalf, selling a larger build than needed, and automating a process nobody has written down.
+
+## Your data during a build
+
+Page: https://frimpomaasync.com/data
+
+Covers a client engagement, not website visitors. Nothing is copied to a system frimpomaasync controls, and no database of the client's customers is held. Access is granted by the client to their own accounts, named in the scope, used only to configure, test and document, listed at handover, and revoked by the client. The page lists what each of the five Siesie roles touches and never touches. Card numbers, bank credentials and the client's money are never touched. Engagement records are kept for seven years; exports of client data are not retained. Anything held is deleted within 30 days on request. Unauthorised access is reported in writing within 72 hours.
 
 ## Privacy
 

@@ -8,7 +8,7 @@
   <link rel="canonical" href="https://frimpomaasync.com/siesie">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=22">
-  <link rel="stylesheet" href="/assets/modules.css?v=2">
+  <link rel="stylesheet" href="/assets/modules.css?v=4">
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
@@ -29,7 +29,7 @@
     }
   </script>
 </head>
-<body data-cinematic data-sk-sections="Hero,Five roles,Owner check,Workflow,Fit,Build path,Ownership,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="established service business">
+<body data-cinematic data-sk-sections="Hero,Five roles,Owner check,Workflow,Fit,Start with the map,Build path,Ownership,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="established service business">
   <main>
     <section class="photo-hero siesie-photo-hero" data-photo-hero data-screen-label="Hero">
       <div class="photo-hero-parallax" data-hero-parallax aria-hidden="true">
@@ -56,12 +56,22 @@
 
     <section class="section soft" data-screen-label="Five roles at a glance">
       <div class="wrap">
-        <div class="role-list on-light" aria-label="The five Siesie roles">
-          <div class="role-row"><span class="role-number">01</span><strong>Scheduling</strong><p>Jobs, crews, calendars</p></div>
-          <div class="role-row"><span class="role-number">02</span><strong>Money</strong><p>Invoices, due dates, chasing</p></div>
-          <div class="role-row"><span class="role-number">03</span><strong>Coordination</strong><p>Customers, crew, suppliers</p></div>
-          <div class="role-row"><span class="role-number">04</span><strong>Account management</strong><p>History, status, owner, next move</p></div>
-          <div class="role-row"><span class="role-number">05</span><strong>Reporting</strong><p>What is waiting and what is done</p></div>
+        <div class="board" data-reveal>
+          <div class="board-top">
+            <div class="ttl">Five roles that stop <em>waiting on you.</em></div>
+            <div class="mark">The back office · Siesie</div>
+          </div>
+          <div class="board-rows" data-reveal data-stagger data-stagger-step="45">
+            <div class="brow"><span class="idx">01</span><span class="nm">Scheduling</span><span class="ds">Jobs, crews and calendars stay in sync without the same detail typed twice</span></div>
+            <div class="brow"><span class="idx">02</span><span class="nm">Money</span><span class="ds">Invoices go out, due dates stay visible, and unpaid work carries a next action</span></div>
+            <div class="brow"><span class="idx">03</span><span class="nm">Coordination</span><span class="ds">Customers, crew and suppliers each get the update meant for them</span></div>
+            <div class="brow"><span class="idx">04</span><span class="nm">Account management</span><span class="ds">One place for history, status, ownership and a dated next move</span></div>
+            <div class="brow"><span class="idx">05</span><span class="nm">Reporting</span><span class="ds">See what is waiting, paid, late or slipping before someone has to ask</span></div>
+          </div>
+          <div class="board-foot">
+            <div class="price">$25,000<span>once, and you own it</span></div>
+            <div class="gtee">Live in 7 days, or you don't pay</div>
+          </div>
         </div>
         <div class="actions">
           <a class="button secondary" href="#five-roles">See all five roles <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
@@ -200,6 +210,34 @@
       </div>
     </section>
 
+
+    <section class="section" data-screen-label="Start with the map">
+      <div class="wrap">
+        <a class="bridge" href="/operations-map" data-reveal>
+          <div class="bridge-in">
+            <div>
+              <div class="eb">The step in between</div>
+              <h2>Nobody signs twenty-five thousand <em>off a fifteen minute call.</em></h2>
+              <p class="sub">Two weeks. Every handoff drawn, every task that still waits on you named and costed, and the exact build that removes them, priced. The map is yours whatever you decide next.</p>
+              <div class="bridge-facts">
+                <div class="bridge-fact"><div class="v">$2,500</div><div class="k">Once</div></div>
+                <div class="bridge-fact"><div class="v">Two weeks</div><div class="k">Under 4h of your time</div></div>
+                <div class="bridge-fact"><div class="v">Credited</div><div class="k">In full, if we build</div></div>
+              </div>
+              <span class="bridge-go">See what the map gives you <span class="ar" aria-hidden="true">&#8594;</span></span>
+            </div>
+            <div class="ladder" aria-hidden="true">
+              <div class="rung"><span class="amt">Free</span><span class="nm">The five-role check<small>One minute, on this page</small></span></div>
+              <div class="lgap"></div>
+              <div class="rung mid"><span class="amt">$2,500</span><span class="nm">The Operations Map<small>Two weeks · credited against the build</small></span></div>
+              <div class="lgap"></div>
+              <div class="rung"><span class="amt">$25,000</span><span class="nm">Siesie<small>Five roles, built and handed over</small></span></div>
+            </div>
+          </div>
+        </a>
+      </div>
+    </section>
+
     <section class="section soft" data-screen-label="Build path">
       <div class="wrap">
         <div class="section-head">
@@ -258,6 +296,6 @@
   </main>
 
   <script type="module" src="/assets/journey.js?v=6"></script>
-  <script src="/fsnav.js?v=830" defer></script>
+  <script src="/fsnav.js?v=831" defer></script>
 </body>
 </html>
