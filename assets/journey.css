@@ -272,6 +272,11 @@ a {
   justify-content: center;
 }
 
+/* A column flex parent stretched the number into a full-width bar. */
+.role-card .pill {
+  align-self: flex-start;
+}
+
 .hero-trust {
   position: relative;
   z-index: var(--layer-hero);
@@ -1239,6 +1244,21 @@ noscript {
 }
 
 @media (max-width: 900px) {
+  /* 16px is the threshold under which iOS zooms the page on focus. Every
+     control was 13px, so one tap on a form field shifted the whole layout. */
+  .field input,
+  .field select,
+  .field textarea,
+  label.field input,
+  label.field select,
+  label.field textarea {
+    font-size: 16px;
+  }
+
+  .section {
+    padding: clamp(56px, 8vw, 84px) 0;
+  }
+
   .hero-grid,
   .split,
   .section-head,
@@ -1319,8 +1339,16 @@ noscript {
     font-size: clamp(48px, 16vw, 72px);
   }
 
+  /* Phone density. Desktop spacing put 140px to 250px of empty page between
+     every section here, and the numbered strips gave one short line its own
+     120px box. */
   .section {
-    padding: 70px 0;
+    padding: 42px 0;
+  }
+
+  .section-head {
+    gap: 14px;
+    margin-bottom: 24px;
   }
 
   .card-grid,
@@ -1338,12 +1366,68 @@ noscript {
   .free-card,
   .form-card,
   .role-card {
-    padding: 22px;
+    padding: 18px;
+  }
+
+  /* One row per step: number and label side by side, no empty box. */
+  .workflow-step,
+  .journey-step {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 0;
+    padding: 13px 16px;
+  }
+
+  .workflow-step strong,
+  .journey-step strong {
+    margin-top: 0;
+    font-size: 19px;
+    line-height: 1.25;
+  }
+
+  .workflow-step p,
+  .journey-step p {
+    flex-basis: 100%;
   }
 
   .proof-media,
   .proof-media video {
-    min-height: 250px;
+    min-height: 210px;
+    max-height: 56vh;
+  }
+
+  .proof-media video {
+    object-fit: cover;
+  }
+
+  .calc-result,
+  .audit-output {
+    padding: 20px;
+  }
+
+  /* Desktop min-heights that equalise side-by-side cards leave dead space
+     once the cards stack. */
+  .form-card,
+  .path-card,
+  .free-card {
+    min-height: 0;
+  }
+
+  /* 28px between a label and the line under it reads as a hole on a phone. */
+  .path-card h3,
+  .free-card h3,
+  .form-card h3,
+  .role-card h3 {
+    margin: 14px 0 8px;
+  }
+
+  .role-row {
+    min-height: 0;
+  }
+
+  .site-close {
+    padding: 48px 0;
   }
 
   .role-row {
