@@ -19,9 +19,9 @@
 <!-- Self-contained. No external resources. System fonts only. Saves to your device. -->
 <style>
   :root{
-    --paper:#FFFFFF; --panel:#F6F5F3; --panel2:#FAFAF8; --card:#FFFFFF;
-    --ink:#1A1A1A; --ink-soft:#3D3A35; --muted:#8A8479; --hairline:#E8E4DD;
-    --copper:#C9975B; --copper-deep:#A87938; --red:#D64425;
+    --paper:#FFFFFF; --panel:#F8F8F9; --panel2:#F8F8F9; --card:#FFFFFF;
+    --ink:#101426; --ink-soft:#4A4E5E; --muted:#6E7280; --hairline:#E1E2E6;
+    --copper:#C2501C; --copper-deep:#9D3F16; --red:#D64425;
     --thought:#5E7A5C; --task:#3F6FA8; --reminder:#B0563F;
     --radius:22px;
     --serif:ui-serif,"New York","Iowan Old Style",Georgia,"Times New Roman",serif;
@@ -57,14 +57,14 @@
     color:var(--muted);flex:none;padding-top:12px}
 
   /* ---------- install banner ---------- */
-  .install{display:none;align-items:center;gap:13px;background:var(--ink);color:#F5F3EF;
+  .install{display:none;align-items:center;gap:13px;background:var(--ink);color:#F8F8F9;
     border-radius:18px;padding:15px 17px;margin-bottom:16px;animation:rise .35s ease}
   .install.on{display:flex}
   .install .it{flex:1;min-width:0;font-size:13px;line-height:1.45}
   .install .it b{color:var(--copper);font-weight:600}
-  .install .ib{background:#F5F3EF;color:var(--ink);border-radius:999px;padding:9px 16px;
+  .install .ib{background:#F8F8F9;color:var(--ink);border-radius:999px;padding:9px 16px;
     font-size:12px;font-weight:600;white-space:nowrap;flex:none}
-  .install .ix{color:#9B968A;font-size:19px;line-height:1;padding:2px 4px;flex:none}
+  .install .ix{color:#6E7280;font-size:19px;line-height:1;padding:2px 4px;flex:none}
 
   /* ---------- hero / today ---------- */
   .hero{background:var(--panel);border:1px solid var(--hairline);border-radius:var(--radius);
@@ -88,12 +88,12 @@
   .cap-hint{font-size:11px;color:var(--muted)}
   .cap-hint kbd{font-family:var(--mono);background:var(--panel);border:1px solid var(--hairline);
     border-radius:5px;padding:1px 5px;font-size:10px}
-  .save{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#F5F3EF;
+  .save{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:#F8F8F9;
     border-radius:999px;padding:13px 22px;font-size:14px;font-weight:600;
     transition:transform .18s ease,box-shadow .18s ease,opacity .18s ease}
   .save .dot{width:8px;height:8px;border-radius:50%;background:var(--copper);flex:none}
   .save .arr{transition:transform .18s ease}
-  .save:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,26,26,.22)}
+  .save:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 28px rgba(16,20,38,.22)}
   .save:hover:not(:disabled) .arr{transform:translateX(4px)}
   .save:disabled{opacity:.4;cursor:default;transform:none;box-shadow:none}
 
@@ -184,9 +184,9 @@
   .toasts{position:fixed;left:50%;transform:translateX(-50%);
     bottom:calc(96px + env(safe-area-inset-bottom));z-index:60;
     width:max-content;max-width:calc(100vw - 36px);pointer-events:none}
-  .toast{display:flex;align-items:center;gap:11px;background:var(--ink);color:#F5F3EF;
+  .toast{display:flex;align-items:center;gap:11px;background:var(--ink);color:#F8F8F9;
     border-radius:999px;padding:13px 20px;font-size:13.5px;
-    box-shadow:0 14px 34px rgba(26,26,26,.3);
+    box-shadow:0 14px 34px rgba(16,20,38,.3);
     animation:toastin .45s cubic-bezier(.2,.8,.25,1)}
   .toast.bye{opacity:0;transform:translateY(10px);transition:all .4s ease}
   .toast b{color:var(--copper);font-weight:600}
@@ -202,10 +202,10 @@
   .tabbar{display:flex;position:fixed;bottom:0;left:0;right:0;z-index:50;background:var(--ink);
     padding:10px 8px calc(10px + env(safe-area-inset-bottom));justify-content:space-around;
     border-radius:22px 22px 0 0}
-  .tabbar .tb{display:flex;flex-direction:column;align-items:center;gap:4px;color:#9B968A;
+  .tabbar .tb{display:flex;flex-direction:column;align-items:center;gap:4px;color:#6E7280;
     font-size:10px;letter-spacing:.04em;padding:7px 18px;border-radius:14px;
     transition:background .18s ease,color .18s ease}
-  .tabbar .tb.on{color:var(--ink);background:#F5F3EF;font-weight:600}
+  .tabbar .tb.on{color:var(--ink);background:#F8F8F9;font-weight:600}
   .tabbar svg{width:19px;height:19px}
   .tabbar .badge{position:absolute;transform:translate(15px,-4px);background:var(--copper);
     color:#fff;font-size:9px;font-weight:700;border-radius:999px;padding:1px 5px;line-height:1.5}

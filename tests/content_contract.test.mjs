@@ -112,13 +112,20 @@ test("active pages do not publish retired image assets", () => {
 });
 
 test("journey and reference pages share one palette", () => {
-  const retiredPalette =
-    /#(?:C9975B|c9975b|1A1A1A|1a1a1a|8A8479|8a8479|A87938|a87938|8F6329|8f6329|E8E4DD|e8e4dd|F6F5F3|f6f5f3|FAFAF8|fafaf8|3D3A35|3d3a35|6F6A5E|6f6a5e)\b/;
+  const retiredPalette = new RegExp(
+    "#(?:C9975B|1A1A1A|8A8479|A87938|8F6329|E8E4DD|F6F5F3|FAFAF8|3D3A35|6F6A5E|" +
+      "DED8CE|C7BFB1|F5F3EF|F5F0E8|F4F1EC|F7F5F1|33302B|16140F|1E2A45|B4552D|" +
+      "9A4522|A63A2B|E4C79A|E8CBA2|E0A38C|FF9C8A|9B968A|B8AE9C|CBC4B5|C9BEA8|" +
+      "B9B4A6|E4DDD0|6B6458|6E6A62|13203A)\\b",
+    "i",
+  );
   const onCurrentTokens = [
-    "privacy.html",
-    "terms.html",
-    "404.html",
+    ...readdirSync(ROOT).filter((name) => name.endsWith(".html")),
+    "favicon.svg",
     "blog/post.css",
+    "som-app/index.html",
+    "som-app/icon.svg",
+    "client-catcher-demo/index.html",
     ...readdirSync(`${ROOT}/blog`)
       .filter((name) => name.endsWith(".html"))
       .map((name) => `blog/${name}`),

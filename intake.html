@@ -12,16 +12,16 @@
      SETUP: see the SETUP NOTE near the </form> tag to connect this form to your email/inbox. -->
 <style>
   :root{
-    --bg:#FFFFFF; --panel-2:#FAFAF8; --ink:#1A1A1A;
-    --copper:#C9975B; --copper-soft:#E4C79A; --copper-deep:#8F6329;
-    --card:#FFFFFF; --muted:#6B6458; --hairline:#E4DDD0; --line:#B8AE9C;
-    --cred:#B4552D; --cred-deep:#9A4522;  /* the site CTA colour. white on it = 4.9:1, white on --copper = 2.6:1 */
+    --bg:#FFFFFF; --panel-2:#F8F8F9; --ink:#101426;
+    --copper:#C2501C; --copper-soft:#F0A17B; --copper-deep:#9D3F16;
+    --card:#FFFFFF; --muted:#6E7280; --hairline:#E1E2E6; --line:#8C8F9B;
+    --cred:#C2501C; --cred-deep:#9D3F16;  /* the site CTA colour. white on it = 4.9:1, white on --copper = 2.6:1 */
   }
   *{margin:0;padding:0;box-sizing:border-box;}
   html,body{height:100%;}
   body{
     background-color:#FFFFFF;
-    background-image:radial-gradient(circle at 50% -6%, #FAFAF8 0%, #FFFFFF 60%);
+    background-image:radial-gradient(circle at 50% -6%, #F8F8F9 0%, #FFFFFF 60%);
     color:var(--ink);
     font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;
     -webkit-font-smoothing:antialiased; min-height:100vh; overflow-x:hidden;
@@ -33,7 +33,7 @@
 
   .chrome{ display:flex; align-items:center; gap:8px; padding:0 2px 16px; }
   .dot{width:11px;height:11px;border-radius:50%;}
-  .dot.r{background:#E0A38C;}.dot.y{background:var(--copper-soft);}.dot.g{background:#B9C7A6;}
+  .dot.r{background:#F0A17B;}.dot.y{background:var(--copper-soft);}.dot.g{background:#B9C7A6;}
   .chrome-label{ margin-left:10px; font-size:12px; letter-spacing:0.04em; color:var(--muted); }
 
   .hero{ padding:4px 2px 2px; margin-bottom:8px; }
@@ -69,7 +69,7 @@
     width:100%; padding:14px 16px; border:1.5px solid var(--hairline); border-radius:12px;
     font-family:inherit; font-size:15px; background:#fff; color:var(--ink); transition:border-color .18s ease, box-shadow .18s ease;
   }
-  input:focus, textarea:focus, select:focus{ outline:none; border-color:var(--copper); box-shadow:0 0 0 3px rgba(201,151,91,0.15); }
+  input:focus, textarea:focus, select:focus{ outline:none; border-color:var(--copper); box-shadow:0 0 0 3px rgba(194,80,28,0.15); }
   textarea{ resize:vertical; min-height:110px; line-height:1.5; }
   select{ appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%23C9975B' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; padding-right:42px; }
 
@@ -83,15 +83,15 @@
     background:var(--panel-2); transition:all .16s ease; user-select:none;
   }
   .chip input:checked + label{ background:var(--copper); border-color:var(--copper); color:#fff; }
-  .chip input:focus-visible + label{ box-shadow:0 0 0 3px rgba(201,151,91,0.3); }
+  .chip input:focus-visible + label{ box-shadow:0 0 0 3px rgba(194,80,28,0.3); }
 
   .submit{
     margin-top:36px; width:100%; padding:17px; border:none; border-radius:14px;
     background:var(--cred); color:#fff; font-family:inherit; font-size:14px; font-weight:600;
     letter-spacing:0.06em; text-transform:uppercase; cursor:pointer;
-    box-shadow:0 14px 36px rgba(201,151,91,0.3); transition:transform .2s ease, box-shadow .2s ease;
+    box-shadow:0 14px 36px rgba(194,80,28,0.3); transition:transform .2s ease, box-shadow .2s ease;
   }
-  .submit:hover{ transform:translateY(-2px); box-shadow:0 20px 46px rgba(201,151,91,0.42); }
+  .submit:hover{ transform:translateY(-2px); box-shadow:0 20px 46px rgba(194,80,28,0.42); }
   .privacy{ margin-top:14px; text-align:center; font-size:12px; color:var(--muted); line-height:1.5; }
 
   /* success state */

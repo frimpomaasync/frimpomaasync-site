@@ -31,14 +31,14 @@
 </script>
 <style>
 :root{
-  --ink:#1A1A1A; --ink2:#33302B; --muted:#6E6A62; --faint:#6F6A5E;
-  --line:#E3E0DA; --line-strong:#CFC9BF; --copper:#C9975B; --copper-deep:#8F6329;
-  /* AA pass 2026-07-26. --faint was #9A948A (3.0:1). --copper-deep was 4 different values across the site (3.4-4.0:1). Both failed WCAG AA. Now #6F6A5E and #8F6329: 4.9:1 and 4.8:1 measured on the #F6F5F3 panel, higher on white. */
-  --bg:#FFFFFF; --panel:#F6F5F3; --panel2:#FAFAF8;
-  --navy:#1E2A45; --navy-deep:#16203A; --navy-line:#2A3554;
-  --red:#A63A2B; --red-deep:#8C2F23;
+  --ink:#101426; --ink2:#4A4E5E; --muted:#6E7280; --faint:#6E7280;
+  --line:#E3E0DA; --line-strong:#CFC9BF; --copper:#C2501C; --copper-deep:#9D3F16;
+  /* AA pass 2026-07-26. --faint was #9A948A (3.0:1). --copper-deep was 4 different values across the site (3.4-4.0:1). Both failed WCAG AA. Now #6E7280 and #9D3F16: 4.9:1 and 4.8:1 measured on the #F8F8F9 panel, higher on white. */
+  --bg:#FFFFFF; --panel:#F8F8F9; --panel2:#F8F8F9;
+  --navy:#101426; --navy-deep:#16203A; --navy-line:#2A3554;
+  --red:#9D3F16; --red-deep:#8C2F23;
   --green:#2E7D4F; --green-deep:#256B42;
-  --cred:#B4552D; --cred-deep:#9A4522;
+  --cred:#C2501C; --cred-deep:#9D3F16;
   --sans:-apple-system,'SF Pro Text','Helvetica Neue',Arial,sans-serif;
   --serif:Georgia,'Palatino Linotype','Iowan Old Style','Times New Roman',serif;
   --mono:ui-monospace,'SF Mono',Menlo,Monaco,monospace;
@@ -193,9 +193,9 @@ h1,h2,h3{color:var(--ink)}
 
 .tiers{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
 .tier{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:22px 20px;display:flex;flex-direction:column;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}
-.tier:hover{transform:translateY(-6px);box-shadow:0 24px 48px -24px rgba(26,26,26,.25);border-color:var(--line-strong)}
+.tier:hover{transform:translateY(-6px);box-shadow:0 24px 48px -24px rgba(16,20,38,.25);border-color:var(--line-strong)}
 .tier.flag{background:var(--panel2);border-color:var(--copper)}
-.tier.flag::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0;background:linear-gradient(90deg,var(--copper),#E8CBA2,var(--copper));background-size:200% 100%;animation:shimmer 3.5s linear infinite}
+.tier.flag::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0;background:linear-gradient(90deg,var(--copper),#F0A17B,var(--copper));background-size:200% 100%;animation:shimmer 3.5s linear infinite}
 @keyframes shimmer{to{background-position:200% 0}}
 .tier .tag{font-family:var(--mono);font-size:.6rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:10px}
 .tier h3{font-family:var(--serif);font-size:1.16rem;line-height:1.2}
@@ -217,7 +217,7 @@ h1,h2,h3{color:var(--ink)}
 .steps::after{content:"";position:absolute;top:44px;left:8%;width:0;height:2px;background:var(--copper);transition:width 1.4s cubic-bezier(.2,.7,.2,1)}
 .steps.in::after{width:84%}
 .step{position:relative;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:20px 18px;transition:transform .3s ease,box-shadow .3s ease}
-.step:hover{transform:translateY(-4px);box-shadow:0 18px 36px -20px rgba(26,26,26,.22)}
+.step:hover{transform:translateY(-4px);box-shadow:0 18px 36px -20px rgba(16,20,38,.22)}
 .step .n{width:48px;height:48px;border-radius:50%;background:var(--panel2);border:2px solid var(--copper);color:var(--copper-deep);font-family:var(--serif);font-weight:700;font-size:1.3rem;display:flex;align-items:center;justify-content:center}
 .step h3{font-family:var(--serif);font-size:1.05rem;margin-top:12px}
 .step p{font-size:.87rem;color:var(--ink2);margin-top:6px}
@@ -225,7 +225,7 @@ h1,h2,h3{color:var(--ink)}
 
 .proofgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
 .pcard{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:20px 20px;transition:transform .3s ease,box-shadow .3s ease}
-.pcard:hover{transform:translateY(-4px);box-shadow:0 18px 36px -20px rgba(26,26,26,.2)}
+.pcard:hover{transform:translateY(-4px);box-shadow:0 18px 36px -20px rgba(16,20,38,.2)}
 .pcard .pn{font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.16em;color:var(--copper-deep);text-transform:uppercase}
 .pcard h3{font-family:var(--serif);font-size:1.05rem;margin-top:8px}
 .pcard p{font-size:.88rem;margin-top:6px}
@@ -233,8 +233,8 @@ h1,h2,h3{color:var(--ink)}
 .honest::before{content:"“";position:absolute;top:-18px;left:14px;font-family:var(--serif);font-size:4rem;color:var(--copper);line-height:1}
 .honest b{font-style:normal;color:var(--ink)}
 
-.guarantee{position:relative;background:linear-gradient(160deg,var(--navy),var(--navy-deep));color:#F4F1EC;border-radius:12px;padding:40px 30px;text-align:center;overflow:hidden}
-.guarantee::before{content:"";position:absolute;inset:-40%;background:radial-gradient(closest-side,rgba(201,151,91,.22),transparent 70%);animation:drift 9s ease-in-out infinite alternate}
+.guarantee{position:relative;background:linear-gradient(160deg,var(--navy),var(--navy-deep));color:#F8F8F9;border-radius:12px;padding:40px 30px;text-align:center;overflow:hidden}
+.guarantee::before{content:"";position:absolute;inset:-40%;background:radial-gradient(closest-side,rgba(194,80,28,.22),transparent 70%);animation:drift 9s ease-in-out infinite alternate}
 @keyframes drift{from{transform:translate(-12%,-8%)}to{transform:translate(12%,8%)}}
 .guarantee>*{position:relative}
 .guarantee .gl{font-family:var(--mono);font-size:.62rem;letter-spacing:.26em;text-transform:uppercase;color:var(--copper);font-weight:700}
@@ -257,7 +257,7 @@ h1,h2,h3{color:var(--ink)}
 .spotdots{display:flex;gap:6px;justify-content:center;margin-top:10px}
 .spotdots i{width:12px;height:12px;border-radius:50%;border:2px solid var(--copper);display:block;animation:pulse 2s ease-in-out infinite}
 .spotdots i:nth-child(2){animation-delay:.3s}.spotdots i:nth-child(3){animation-delay:.6s}
-@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,151,91,.45)}55%{box-shadow:0 0 0 7px rgba(201,151,91,0)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(194,80,28,.45)}55%{box-shadow:0 0 0 7px rgba(194,80,28,0)}}
 
 .fbonus{margin-top:18px;background:var(--panel2);border:1px solid var(--line);border-left:3px solid var(--copper);border-radius:0 10px 10px 0;padding:20px 22px}
 .fbonus .fb-h{font-family:var(--mono);font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--copper-deep);margin-bottom:10px}
@@ -285,7 +285,7 @@ h1,h2,h3{color:var(--ink)}
 
 .foot{margin-top:40px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-size:.78rem;color:var(--muted)}
 
-.sticky{position:fixed;left:0;right:0;bottom:0;background:var(--navy);color:#F4F1EC;display:flex;align-items:center;justify-content:center;gap:16px;padding:11px 16px;transform:translateY(110%);transition:transform .45s cubic-bezier(.2,.7,.2,1);z-index:50;box-shadow:0 -8px 30px rgba(22,32,58,.35)}
+.sticky{position:fixed;left:0;right:0;bottom:0;background:var(--navy);color:#F8F8F9;display:flex;align-items:center;justify-content:center;gap:16px;padding:11px 16px;transform:translateY(110%);transition:transform .45s cubic-bezier(.2,.7,.2,1);z-index:50;box-shadow:0 -8px 30px rgba(22,32,58,.35)}
 .sticky.show{transform:none}
 .sticky .st{font-size:.84rem}
 .sticky .st b{color:var(--copper)}
@@ -372,7 +372,7 @@ h1,h2,h3{color:var(--ink)}
     <div class="feedbar"><i></i><i></i><i></i><span>Client Catcher · live view</span></div>
     <div class="feed" id="feed">
       <div class="fr"><span class="t">2:14 PM</span><span class="tag2 miss">Missed call</span><span>(404) 555-0132 · no answer, you're on a job</span></div>
-      <div class="fr"><span class="t">2:14 PM</span><span class="tag2">Lead Triager</span><span>Scored <b style="color:#E8CBA2">HOT</b> · "AC out, 92° today, needs someone now"</span></div>
+      <div class="fr"><span class="t">2:14 PM</span><span class="tag2">Lead Triager</span><span>Scored <b style="color:#F0A17B">HOT</b> · "AC out, 92° today, needs someone now"</span></div>
       <div class="fr"><span class="t">2:15 PM</span><span class="tag2">Follow-up</span><span>Text sent: "Hi Marcus, sorry we missed you. Want today's 4:30?"</span></div>
       <div class="fr"><span class="t">2:19 PM</span><span class="tag2">Reply</span><span>"Yes, 4:30 works."</span></div>
       <div class="fr win"><span class="t">2:20 PM</span><span class="tag2">Booked ✓</span><span>4:30 PM on your calendar · logged to CRM · reminder set</span></div>
@@ -396,55 +396,55 @@ h1,h2,h3{color:var(--ink)}
         <line x1="40" y1="505" x2="960" y2="505" stroke="#E3E0DA" stroke-width="2"/>
         <!-- PHONE (left) -->
         <g id="phoneG">
-          <rect x="55" y="240" width="175" height="265" rx="24" fill="#1E2A45"/>
+          <rect x="55" y="240" width="175" height="265" rx="24" fill="#101426"/>
           <rect x="72" y="272" width="141" height="200" rx="9" fill="#16203A"/>
           <circle cx="142" cy="489" r="7" fill="#3A4666"/>
-          <g id="ringWaves" stroke="#A63A2B" stroke-width="4" fill="none">
+          <g id="ringWaves" stroke="#9D3F16" stroke-width="4" fill="none">
             <path d="M248 276 q20 22 0 44"/>
             <path d="M271 258 q34 40 0 80"/>
           </g>
           <g id="missBadge">
-            <rect x="82" y="345" width="121" height="38" rx="7" fill="#A63A2B"/>
+            <rect x="82" y="345" width="121" height="38" rx="7" fill="#9D3F16"/>
             <text x="142" y="370" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="17" font-weight="700" fill="#FFFFFF">MISSED</text>
           </g>
-          <text x="142" y="548" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="19" font-weight="700" fill="#6E6A62">YOUR PHONE</text>
+          <text x="142" y="548" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="19" font-weight="700" fill="#6E7280">YOUR PHONE</text>
         </g>
         <!-- flight path -->
         <path id="flight" d="M 232 300 C 400 70, 640 70, 838 280" fill="none" stroke="#CFC9BF" stroke-width="2.5" stroke-dasharray="4 9"/>
         <!-- TRIAGE chip (mid-left of arc) -->
         <g id="chipTriage" opacity="0">
           <rect x="248" y="42" width="212" height="66" rx="11" fill="#FFFFFF" stroke="#D5DBE8" stroke-width="1.5"/>
-          <circle cx="279" cy="75" r="10" fill="#1E2A45"/>
-          <text x="298" y="70" font-family="ui-monospace,Menlo,monospace" font-size="15.5" font-weight="700" fill="#1E2A45">LEAD TRIAGER</text>
-          <text x="298" y="92" font-family="-apple-system,Arial,sans-serif" font-size="15" fill="#6E6A62">scored HOT · routed</text>
+          <circle cx="279" cy="75" r="10" fill="#101426"/>
+          <text x="298" y="70" font-family="ui-monospace,Menlo,monospace" font-size="15.5" font-weight="700" fill="#101426">LEAD TRIAGER</text>
+          <text x="298" y="92" font-family="-apple-system,Arial,sans-serif" font-size="15" fill="#6E7280">scored HOT · routed</text>
         </g>
         <!-- FOLLOW-UP bubble (mid-right of arc) -->
         <g id="chipFollow" opacity="0">
-          <rect x="535" y="14" width="258" height="78" rx="14" fill="#1E2A45"/>
-          <path d="M577 92 l14 17 6-17 z" fill="#1E2A45"/>
+          <rect x="535" y="14" width="258" height="78" rx="14" fill="#101426"/>
+          <path d="M577 92 l14 17 6-17 z" fill="#101426"/>
           <text x="556" y="46" font-family="-apple-system,Arial,sans-serif" font-size="15.5" fill="#FFFFFF">"Sorry we missed you, </text>
           <text x="556" y="70" font-family="-apple-system,Arial,sans-serif" font-size="15.5" fill="#FFFFFF">want today's 4:30?"</text>
         </g>
         <!-- CALENDAR (right) = the hole -->
         <g id="calG">
           <rect x="712" y="252" width="258" height="253" rx="16" fill="#FFFFFF" stroke="#CFC9BF" stroke-width="2.5"/>
-          <rect x="712" y="252" width="258" height="48" rx="16" fill="#1E2A45"/>
-          <rect x="712" y="280" width="258" height="20" fill="#1E2A45"/>
+          <rect x="712" y="252" width="258" height="48" rx="16" fill="#101426"/>
+          <rect x="712" y="280" width="258" height="20" fill="#101426"/>
           <text x="841" y="284" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="19" font-weight="700" fill="#FFFFFF">TODAY</text>
-          <g fill="#F6F5F3">
+          <g fill="#F8F8F9">
             <rect x="730" y="318" width="222" height="32" rx="6"/>
             <rect x="730" y="358" width="222" height="32" rx="6"/>
             <rect x="730" y="462" width="222" height="26" rx="6"/>
           </g>
           <!-- the open slot = the hole -->
-          <rect id="slot" x="730" y="398" width="222" height="40" rx="6" fill="#FAFAF8" stroke="#C9975B" stroke-width="2.5" stroke-dasharray="6 6"/>
-          <text id="slotLabel" x="841" y="424" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="16" font-weight="700" fill="#8F6329">4:30 · OPEN</text>
+          <rect id="slot" x="730" y="398" width="222" height="40" rx="6" fill="#F8F8F9" stroke="#C2501C" stroke-width="2.5" stroke-dasharray="6 6"/>
+          <text id="slotLabel" x="841" y="424" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="16" font-weight="700" fill="#9D3F16">4:30 · OPEN</text>
           <!-- booked overlay -->
           <g id="bookedG" opacity="0">
             <rect x="730" y="398" width="222" height="40" rx="6" fill="#2E7D4F"/>
             <text x="841" y="424" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="16" font-weight="700" fill="#FFFFFF">4:30 · BOOKED ✓</text>
           </g>
-          <text x="841" y="548" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="19" font-weight="700" fill="#6E6A62">YOUR CALENDAR</text>
+          <text x="841" y="548" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="19" font-weight="700" fill="#6E7280">YOUR CALENDAR</text>
           <!-- win flag pops when booked -->
           <g id="flagG" opacity="0">
             <line x1="948" y1="252" x2="948" y2="176" stroke="#256B42" stroke-width="5"/>
@@ -452,9 +452,9 @@ h1,h2,h3{color:var(--ink)}
           </g>
         </g>
         <!-- THE LEAD (a $6K job ticket flying to your calendar) -->
-        <g id="ticketTrailG" opacity="0.35"><rect x="-48" y="-18" width="96" height="36" rx="18" fill="#C9975B"/></g>
+        <g id="ticketTrailG" opacity="0.35"><rect x="-48" y="-18" width="96" height="36" rx="18" fill="#C2501C"/></g>
         <g id="ticketG">
-          <rect id="ticketRect" x="-54" y="-21" width="108" height="42" rx="21" fill="#C9975B" stroke="#8F6329" stroke-width="2.5"/>
+          <rect id="ticketRect" x="-54" y="-21" width="108" height="42" rx="21" fill="#C2501C" stroke="#9D3F16" stroke-width="2.5"/>
           <text id="ticketTxt" x="0" y="6" text-anchor="middle" font-family="ui-monospace,Menlo,monospace" font-size="17" font-weight="700" fill="#FFFFFF">$6K JOB</text>
         </g>
       </svg>
@@ -497,7 +497,7 @@ h1,h2,h3{color:var(--ink)}
         <p style="font-size:.88rem;color:#55514A;margin-top:8px;line-height:1.6">No AI pack books the job for you. I connect a live booking page to the conversation, so your customer picks their own slot and it lands straight on your real calendar.</p>
       </div>
     </div>
-    <p style="font-size:.9rem;color:#1A1A1A;margin-top:18px;font-weight:600">Done for you. Owned by you. No monthly ransom to keep your own phone working.</p>
+    <p style="font-size:.9rem;color:#101426;margin-top:18px;font-weight:600">Done for you. Owned by you. No monthly ransom to keep your own phone working.</p>
   </section>
 
   <div class="stats rv" style="margin-top:56px">
@@ -550,23 +550,23 @@ h1,h2,h3{color:var(--ink)}
     <div class="loopwrap rv">
       <svg class="loopsvg" viewBox="0 0 300 300" role="img" aria-label="The one loop: capture, triage, follow up, book, remind, review">
         <circle cx="150" cy="150" r="104" fill="none" stroke="#E3E0DA" stroke-width="2"/>
-        <g class="ringspin"><circle cx="150" cy="150" r="104" fill="none" stroke="#C9975B" stroke-width="2.5" stroke-dasharray="40 613" stroke-linecap="round"/></g>
-        <g font-family="ui-monospace,Menlo,monospace" font-size="10.5" font-weight="700" fill="#6E6A62" text-anchor="middle">
+        <g class="ringspin"><circle cx="150" cy="150" r="104" fill="none" stroke="#C2501C" stroke-width="2.5" stroke-dasharray="40 613" stroke-linecap="round"/></g>
+        <g font-family="ui-monospace,Menlo,monospace" font-size="10.5" font-weight="700" fill="#6E7280" text-anchor="middle">
           <!-- CAPTURE: ringing phone -->
-          <g><circle cx="150" cy="34" r="11" fill="#C9975B"/><rect x="146" y="28" width="8" height="13" rx="2" fill="#FFFFFF"/><text x="150" y="14">CAPTURE</text></g>
+          <g><circle cx="150" cy="34" r="11" fill="#C2501C"/><rect x="146" y="28" width="8" height="13" rx="2" fill="#FFFFFF"/><text x="150" y="14">CAPTURE</text></g>
           <!-- TRIAGE: navy list/score card -->
-          <g><circle cx="251" cy="92" r="11" fill="#1E2A45"/><rect x="245" y="87" width="12" height="2.5" rx="1" fill="#FFFFFF"/><rect x="245" y="92" width="9" height="2.5" rx="1" fill="#C9975B"/><rect x="245" y="97" width="6" height="2.5" rx="1" fill="#FFFFFF"/><text x="268" y="78">TRIAGE</text></g>
+          <g><circle cx="251" cy="92" r="11" fill="#101426"/><rect x="245" y="87" width="12" height="2.5" rx="1" fill="#FFFFFF"/><rect x="245" y="92" width="9" height="2.5" rx="1" fill="#C2501C"/><rect x="245" y="97" width="6" height="2.5" rx="1" fill="#FFFFFF"/><text x="268" y="78">TRIAGE</text></g>
           <!-- FOLLOW-UP: copper chat bubble -->
-          <g><circle cx="251" cy="208" r="11" fill="#C9975B"/><rect x="244.5" y="202.5" width="13" height="8.5" rx="3" fill="#FFFFFF"/><path d="M248 211 l-1.5 3.5 4-2.5 z" fill="#FFFFFF"/><text x="260" y="232">FOLLOW-UP</text></g>
+          <g><circle cx="251" cy="208" r="11" fill="#C2501C"/><rect x="244.5" y="202.5" width="13" height="8.5" rx="3" fill="#FFFFFF"/><path d="M248 211 l-1.5 3.5 4-2.5 z" fill="#FFFFFF"/><text x="260" y="232">FOLLOW-UP</text></g>
           <!-- BOOK: green check -->
           <g><circle cx="150" cy="266" r="11" fill="#2E7D4F"/><path d="M144.5 266.5 l4 4 7-8" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><text x="150" y="292">BOOK</text></g>
           <!-- REMIND: bell + red notification badge -->
-          <g><circle cx="49" cy="208" r="11" fill="#33302B"/><path d="M49 201.5 c-3.4 0 -5 2.6 -5 5.6 l-1.6 3.4 h13.2 l-1.6 -3.4 c0 -3 -1.6 -5.6 -5 -5.6 z" fill="#FFFFFF"/><circle cx="49" cy="213" r="1.6" fill="#FFFFFF"/><g><circle cx="57" cy="200" r="5.5" fill="#A63A2B"><animate attributeName="r" values="5.5;6.5;5.5" dur="1.6s" repeatCount="indefinite"/></circle><text x="57" y="203.4" font-size="7.5" fill="#FFFFFF">1</text></g><text x="42" y="232">REMIND</text></g>
+          <g><circle cx="49" cy="208" r="11" fill="#4A4E5E"/><path d="M49 201.5 c-3.4 0 -5 2.6 -5 5.6 l-1.6 3.4 h13.2 l-1.6 -3.4 c0 -3 -1.6 -5.6 -5 -5.6 z" fill="#FFFFFF"/><circle cx="49" cy="213" r="1.6" fill="#FFFFFF"/><g><circle cx="57" cy="200" r="5.5" fill="#9D3F16"><animate attributeName="r" values="5.5;6.5;5.5" dur="1.6s" repeatCount="indefinite"/></circle><text x="57" y="203.4" font-size="7.5" fill="#FFFFFF">1</text></g><text x="42" y="232">REMIND</text></g>
           <!-- REVIEW: gold star -->
-          <g><circle cx="49" cy="92" r="11" fill="#8F6329"/><path d="M49 85.5 l1.9 3.9 4.3 .6 -3.1 3 .7 4.3 -3.8 -2 -3.8 2 .7 -4.3 -3.1 -3 4.3 -.6 z" fill="#FFFFFF"/><text x="38" y="76">REVIEW</text></g>
+          <g><circle cx="49" cy="92" r="11" fill="#9D3F16"/><path d="M49 85.5 l1.9 3.9 4.3 .6 -3.1 3 .7 4.3 -3.8 -2 -3.8 2 .7 -4.3 -3.1 -3 4.3 -.6 z" fill="#FFFFFF"/><text x="38" y="76">REVIEW</text></g>
         </g>
-        <text x="150" y="144" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#1A1A1A">One loop.</text>
-        <text x="150" y="166" text-anchor="middle" font-family="-apple-system,Arial,sans-serif" font-size="10.5" fill="#6E6A62">Running while you work.</text>
+        <text x="150" y="144" text-anchor="middle" font-family="Georgia,serif" font-size="17" font-weight="700" fill="#101426">One loop.</text>
+        <text x="150" y="166" text-anchor="middle" font-family="-apple-system,Arial,sans-serif" font-size="10.5" fill="#6E7280">Running while you work.</text>
       </svg>
       <div class="looptext">
         <div class="mono">How the machine thinks</div>
@@ -637,12 +637,12 @@ h1,h2,h3{color:var(--ink)}
         font-family:inherit;outline:none;transition:border-color .18s ease}
       #soma .soma-f input:focus{outline:2px solid var(--copper);outline-offset:0;border-color:var(--copper)}
       #soma .soma-send{display:inline-flex;align-items:center;gap:12px;margin-top:18px;
-        background:var(--ink);color:#F5F3EF;border:none;border-radius:999px;padding:15px 26px;
+        background:var(--ink);color:#F8F8F9;border:none;border-radius:999px;padding:15px 26px;
         font-family:inherit;font-size:14.5px;font-weight:600;cursor:pointer;min-height:48px;
         transition:transform .18s ease,box-shadow .18s ease,opacity .18s ease}
       #soma .soma-send .dot{width:9px;height:9px;border-radius:50%;background:var(--copper);flex:none}
       #soma .soma-send .arr{transition:transform .18s ease}
-      #soma .soma-send:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 28px rgba(26,26,26,.22)}
+      #soma .soma-send:hover:not(:disabled){transform:translateY(-2px);box-shadow:0 12px 28px rgba(16,20,38,.22)}
       #soma .soma-send:hover:not(:disabled) .arr{transform:translateX(4px)}
       #soma .soma-send:disabled{opacity:.45;cursor:default;transform:none;box-shadow:none}
 
@@ -684,14 +684,14 @@ h1,h2,h3{color:var(--ink)}
       #soma .soma-pc{background:var(--panel2);border:1px solid var(--line);border-radius:14px;
         padding:12px 14px;font-size:13.5px;line-height:1.55;color:var(--ink)}
       #soma .soma-pc .pk{color:var(--muted)}
-      #soma .soma-pc.msg{background:var(--ink);border-color:var(--ink);color:#F5F3EF;
+      #soma .soma-pc.msg{background:var(--ink);border-color:var(--ink);color:#F8F8F9;
         border-bottom-left-radius:6px}
 
       #soma .soma-done{max-height:0;overflow:hidden;opacity:0;margin-top:0;
         transition:max-height .4s ease,opacity .35s ease,margin .4s ease}
       #soma .soma-done.show{max-height:130px;opacity:1;margin-top:16px}
       #soma .soma-done-in{display:flex;align-items:center;gap:13px;background:var(--ink);
-        color:#F5F3EF;border-radius:18px;padding:17px 20px}
+        color:#F8F8F9;border-radius:18px;padding:17px 20px}
       #soma .soma-done-in .ck{width:26px;height:26px;border-radius:50%;background:var(--copper);
         display:grid;place-items:center;flex:none}
       #soma .soma-done-in .ck svg{width:14px;height:14px}
@@ -1056,7 +1056,7 @@ function setBall(p){
     var pt2=flight.getPointAtLength(L*Math.max(0,f-0.05));
     trail.setAttribute("transform","translate("+pt2.x+","+pt2.y+") scale("+mobScale+")");
     ticket.setAttribute("opacity",1);trail.setAttribute("opacity",0.35);
-    ticketRect.setAttribute("fill","#C9975B");ticketRect.setAttribute("stroke","#8F6329");
+    ticketRect.setAttribute("fill","#C2501C");ticketRect.setAttribute("stroke","#9D3F16");
   }else{
     var d=(p-0.86)/0.14;                 /* settle-into-slot phase */
     var end=flight.getPointAtLength(L);
@@ -1143,7 +1143,7 @@ var NICHE={
           "Booked. 4:30 PM. Logged to CRM. You never touched your phone."],
     feed:[
       {t:"2:14 PM",tag:"Missed call",cls:"miss",txt:"(404) 555-0132 · no answer, you're on a job"},
-      {t:"2:14 PM",tag:"Lead Triager",txt:"Scored <b style=\"color:#E8CBA2\">HOT</b> · \"AC out, 92° today, needs someone now\""},
+      {t:"2:14 PM",tag:"Lead Triager",txt:"Scored <b style=\"color:#F0A17B\">HOT</b> · \"AC out, 92° today, needs someone now\""},
       {t:"2:15 PM",tag:"Follow-up",txt:"Text sent: \"Hi Marcus, sorry we missed you. Want today's 4:30?\""},
       {t:"2:19 PM",tag:"Reply",txt:"\"Yes, 4:30 works.\""},
       {t:"2:20 PM",tag:"Booked ✓",win:true,txt:"4:30 PM on your calendar · logged to CRM · reminder set"}
@@ -1159,7 +1159,7 @@ var NICHE={
           "Showing booked. 4:30 PM. Logged to CRM. You never touched your phone."],
     feed:[
       {t:"2:14 PM",tag:"Missed call",cls:"miss",txt:"(404) 555-0132 · no answer, you're mid-showing"},
-      {t:"2:14 PM",tag:"Lead Triager",txt:"Scored <b style=\"color:#E8CBA2\">HOT</b> · \"Is the Maple St listing still available?\""},
+      {t:"2:14 PM",tag:"Lead Triager",txt:"Scored <b style=\"color:#F0A17B\">HOT</b> · \"Is the Maple St listing still available?\""},
       {t:"2:15 PM",tag:"Follow-up",txt:"Text sent: \"Hi Dana, sorry we missed you. Want a 4:30 showing today?\""},
       {t:"2:19 PM",tag:"Reply",txt:"\"Yes, 4:30 works.\""},
       {t:"2:20 PM",tag:"Booked ✓",win:true,txt:"4:30 PM showing on your calendar · logged to CRM · reminder set"}
