@@ -133,7 +133,9 @@ a {
   min-height: 620px;
   min-height: min(860px, 100svh);
   overflow: hidden;
-  padding: max(clamp(96px, 12vw, 164px), calc(var(--cinematic-nav-height) + 24px)) 0 clamp(118px, 14vw, 190px);
+  /* 190px of empty photograph sat under the trust line at 1440, 118px on a
+     phone. The hero ends when the content ends now. */
+  padding: max(clamp(88px, 11vw, 148px), calc(var(--cinematic-nav-height) + 28px)) 0 clamp(64px, 7vw, 104px);
   background: var(--ink);
   color: var(--paper);
 }
@@ -196,6 +198,16 @@ a {
 .cinematic-hero .hero-product {
   max-width: 470px;
   justify-self: end;
+}
+
+/* The homepage wears the wide phone-thread scene from the design handoff. That
+   file is 2400x1024 with the canvas extended leftward on purpose, so the phone
+   lands near 60% and the OPEN sign near 77%, leaving the left third dark enough
+   to carry the headline. 71% 46% is the crop the handoff specifies.
+   Before this, the homepage was showing the annotated back-office scene, which
+   is Siesie's photograph, so the two pages opened with the same picture. */
+.home-hero .cinematic-media {
+  object-position: 71% 46%;
 }
 
 .cinematic-hero .screen-top {
@@ -323,7 +335,7 @@ a {
   display: flex;
   flex-wrap: wrap;
   gap: 10px 20px;
-  margin-top: clamp(38px, 6vw, 76px);
+  margin-top: clamp(22px, 3vw, 40px);
   color: rgba(255, 255, 255, .86);
   font-family: var(--mono);
   font-size: 11px;
@@ -381,7 +393,10 @@ a {
   transform: none;
 }
 
-body[data-cinematic] #fs-nav {
+/* Pages built on the handoff hero keep the solid sticky bar: the hero starts
+   below it, so there is nothing to see through. Only the older full-bleed
+   cinematic pages still float a transparent bar over their photograph. */
+body[data-cinematic]:not(:has([data-photo-hero])) #fs-nav {
   border-bottom-color: transparent !important;
   background: transparent !important;
   -webkit-backdrop-filter: none !important;
@@ -408,12 +423,141 @@ body[data-cinematic] #fs-nav [data-navcta] {
   justify-content: center;
 }
 
-body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navlink],
-body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navcta] {
+body[data-cinematic]:not(:has([data-photo-hero])) #fs-nav:not(.is-past-hero) [data-navlink],
+body[data-cinematic]:not(:has([data-photo-hero])) #fs-nav:not(.is-past-hero) [data-navcta] {
   padding-inline: 12px !important;
   border-radius: 5px;
   background: var(--ink) !important;
   color: var(--paper) !important;
+}
+
+/* Her iPad, 30 July: over the hero every nav item wears its own ink chip, and on
+   a touch width the four links, the wordmark and the two actions wrapped into
+   three rows of loose pills that landed on top of the headline and the eyebrow.
+   One scrim behind the whole bar instead of seven separate chips, a row that is
+   not allowed to wrap, and the bar reads as a bar again. */
+@media (max-width: 960px) {
+  #fs-nav .fs-grid > div {
+    flex-wrap: nowrap !important;
+  }
+
+  body[data-cinematic]:not(:has([data-photo-hero])) #fs-nav:not(.is-past-hero) {
+    background: linear-gradient(
+      180deg,
+      rgba(8, 11, 24, .94) 0%,
+      rgba(8, 11, 24, .82) 58%,
+      rgba(8, 11, 24, 0) 100%
+    ) !important;
+  }
+
+  body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navlink] {
+    padding-inline: 4px !important;
+    border-radius: 0;
+    background: transparent !important;
+    color: rgba(255, 255, 255, .84) !important;
+  }
+
+  body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navcta] {
+    background: var(--copper) !important;
+  }
+
+  body[data-cinematic] #fs-nav [data-navlink],
+  body[data-cinematic] #fs-nav [data-navcta] {
+    min-height: 40px;
+  }
+}
+
+/* ---------- the interaction layer ----------
+   Nothing on the page answered a finger or a cursor. Press feedback is the one
+   state a touch device can actually show, so it goes on every pressable thing.
+   Hover sits behind hover and fine pointer, because a tap on a phone fires hover
+   and leaves the card stuck in its lifted state. */
+.button,
+button.button,
+.choice,
+.card-link,
+.path-card,
+.free-card,
+.role-card {
+  transition:
+    background var(--motion-fast) var(--ease-out),
+    border-color var(--motion-fast) var(--ease-out),
+    color var(--motion-fast) var(--ease-out),
+    box-shadow var(--motion-panel) var(--ease-out),
+    transform var(--motion-fast) var(--ease-out);
+}
+
+.button:active,
+button.button:active,
+.choice:active,
+.card-link:active {
+  transform: scale(.975);
+}
+
+.path-card:active,
+.free-card:active,
+.role-card:active {
+  transform: scale(.995);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .path-card:hover,
+  .free-card:hover,
+  .role-card:hover {
+    border-color: rgba(194, 80, 28, .38);
+    box-shadow: 0 18px 40px -28px rgba(16, 20, 38, .45);
+    transform: translateY(-2px);
+  }
+
+  .path-card.featured:hover,
+  .form-card.dark:hover {
+    border-color: rgba(240, 161, 123, .5);
+  }
+
+  .card-link:hover {
+    color: var(--ink);
+  }
+
+  .path-card.featured:hover .card-link {
+    color: var(--paper);
+  }
+}
+
+/* One authored entrance, driven by the scroll position itself rather than by a
+   script. A browser that does not support view timelines never applies the
+   animation at all and simply paints the content, so there is no state in which
+   a reader can be left looking at an empty page. Only opacity and transform
+   move, so it stays on the compositor. */
+/* Deliberately no opacity in this keyframe. A fade needs a hidden starting
+   state, and any starting state can strand content invisible when a browser
+   reports scroll progress differently than expected, which is exactly what a
+   full-height capture does. A settle that only moves can fail in one direction:
+   the element sits fifteen pixels low and is perfectly readable. */
+@keyframes settle-in {
+  from {
+    transform: translateY(15px);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .section-head,
+    .card-grid > *,
+    .free-grid > *,
+    .role-grid > *,
+    .workflow,
+    .journey-strip,
+    .proof-card,
+    .site-close .wrap > * {
+      animation: settle-in linear both;
+      animation-timeline: view();
+      animation-range: entry 4% entry 34%;
+    }
+  }
 }
 
 @keyframes cinematic-settle {
@@ -466,15 +610,32 @@ body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navcta] {
 .split {
   display: grid;
   grid-template-columns: minmax(0, 1.05fr) minmax(340px, 0.95fr);
-  gap: clamp(40px, 7vw, 96px);
+  gap: clamp(32px, 5vw, 72px);
+  align-items: start;
+}
+
+/* The hero is the one place centring earns its keep: the message and the panel
+   are close in height, and the photograph reads better with both centred. */
+.hero-grid {
   align-items: center;
+}
+
+/* Centring a 245px column beside a 528px one left 283px of white above and
+   below the short side. free.html and portfolio.html both showed it at 1440.
+   Aligning to the top removes the float, and the short column then travels with
+   the long one instead of stranding a hole beside it. */
+@media (min-width: 901px) {
+  .split > :first-child {
+    position: sticky;
+    top: calc(var(--nav-height, 76px) + 28px);
+  }
 }
 
 .eyebrow {
   display: flex;
   align-items: center;
   gap: 14px;
-  margin: 0 0 22px;
+  margin: 0 0 14px;
   color: var(--copper);
   font-family: var(--mono);
   font-size: 11px;
@@ -507,6 +668,7 @@ p {
 .hero h1 {
   max-width: 9.5em;
   margin: 0;
+  text-wrap: balance;
   font-family: var(--serif);
   font-size: clamp(54px, 8vw, 116px);
   font-weight: 400;
@@ -521,8 +683,8 @@ p {
 }
 
 .hero-copy {
-  max-width: 34em;
-  margin: 28px 0 0;
+  max-width: 46ch;
+  margin: 18px 0 0;
   color: var(--ink-soft);
   font-size: clamp(17px, 1.7vw, 21px);
   line-height: 1.58;
@@ -538,7 +700,7 @@ p {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 32px;
+  margin-top: 22px;
 }
 
 .button,
@@ -605,8 +767,11 @@ button.button.secondary {
   transform: none;
 }
 
+/* 126px above and 126px below every section put a quarter of a laptop screen of
+   nothing between one idea and the next. Sections still separate clearly at 92,
+   and the page loses roughly 400px of empty scroll. */
 .section {
-  padding: clamp(80px, 9vw, 126px) 0;
+  padding: clamp(56px, 6.5vw, 92px) 0;
 }
 
 .section.soft {
@@ -614,16 +779,24 @@ button.button.secondary {
   background: var(--paper-soft);
 }
 
+/* Stacked, not split. The two-column head pinned a 53px paragraph to the bottom
+   of a 198px headline, so every section on every page opened with about 145px of
+   white in the right column. Measured at 1024, 1180 and 1440 on 30 July. One
+   column, headline then intro, closes that hole everywhere at once. */
 .section-head {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
-  gap: 40px;
-  align-items: end;
-  margin-bottom: clamp(38px, 5vw, 58px);
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
+  margin-bottom: clamp(24px, 3vw, 38px);
 }
 
+/* Left on "pretty" on purpose. Section titles carry a grey opening phrase inside
+   a span, and "balance" evened the line lengths by breaking that phrase across
+   two lines, which reads worse than a slightly ragged right edge. The hero
+   headline has no span and does take "balance". */
 .section-title {
-  max-width: 16em;
+  max-width: 19ch;
   margin: 0;
   font-family: var(--serif);
   font-size: clamp(38px, 5vw, 66px);
@@ -637,7 +810,7 @@ button.button.secondary {
 }
 
 .section-intro {
-  max-width: 35em;
+  max-width: 64ch;
   margin: 0;
   color: var(--ink-soft);
   font-size: 16px;
@@ -679,7 +852,7 @@ button.button.secondary {
 .free-card h3,
 .form-card h3,
 .role-card h3 {
-  margin: 28px 0 12px;
+  margin: 16px 0 10px;
   font-family: var(--serif);
   font-size: clamp(25px, 2.5vw, 34px);
   font-weight: 400;
@@ -704,7 +877,7 @@ button.button.secondary {
 
 .card-link {
   display: inline-flex;
-  margin-top: 24px;
+  margin-top: 16px;
   align-items: center;
   border: 0;
   background: none;
@@ -1304,7 +1477,7 @@ noscript {
   }
 
   .section {
-    padding: clamp(56px, 8vw, 84px) 0;
+    padding: clamp(44px, 5.5vw, 64px) 0;
   }
 
   .hero-grid,
@@ -1501,6 +1674,12 @@ noscript {
     transform: scale(1.01);
   }
 
+  /* Narrow crop for the wide scene: the handoff moves it to 74% 50% under 660px
+     so the phone stays in frame instead of sliding off the right edge. */
+  .home-hero .cinematic-media {
+    object-position: 74% 50%;
+  }
+
   .synkasa-hero .cinematic-media {
     object-position: 58% center;
   }
@@ -1566,6 +1745,17 @@ noscript {
   }
 }
 
+/* Three cards on two tracks left the third card alone with a whole empty cell
+   beside it. An odd last card takes the full row instead, so the grid always has
+   exactly as many cells as there are cards. */
+@media (min-width: 720px) and (max-width: 1023px) {
+  .card-grid > :last-child:nth-child(odd),
+  .free-grid > :last-child:nth-child(odd),
+  .role-grid > :last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+}
+
 /* The free page lays its five cards on six tracks so the short last row sits
    centred. Any override of that track count has to release the placements too,
    or cards four and five keep their old column numbers and collapse to 34px. */
@@ -1609,6 +1799,491 @@ noscript {
   .story-step {
     opacity: 1;
     transform: none;
+    transition: none;
+  }
+}
+
+/* ============================================================
+   DESIGN HANDOFF BUILD - 30 July 2026
+   Three pieces built to the pasted spec: the button shape, the
+   photographic hero, and the nine-seconds proof replay.
+   Values here are literal from the spec. Do not round them.
+   ============================================================ */
+
+/* ---------- 1. one button shape ---------- */
+
+.button,
+button.button {
+  display: inline-flex;
+  min-height: 0;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 19px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: var(--ink);
+  color: var(--paper);
+  cursor: pointer;
+  font-size: 12.5px;
+  letter-spacing: .02em;
+  line-height: 1.2;
+  transition:
+    gap .25s ease,
+    background .25s ease,
+    border-color .25s ease,
+    color .25s ease,
+    transform var(--motion-fast) var(--ease-out);
+}
+
+/* The arrow is its own element so the gap can open on hover. A glyph sitting
+   inside the label is a text node, and gap does nothing to a text node. */
+.button-arrow {
+  font-size: 13px;
+  line-height: 1;
+}
+
+.button.secondary,
+button.button.secondary {
+  border-color: rgba(16, 20, 38, .16);
+  background: var(--paper);
+  color: var(--ink);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover,
+  button.button:hover {
+    gap: 15px;
+    background: var(--copper);
+    color: var(--paper);
+    transform: none;
+  }
+
+  .button.secondary:hover,
+  button.button.secondary:hover {
+    gap: 15px;
+    border-color: var(--ink);
+    background: var(--paper);
+    color: var(--ink);
+  }
+}
+
+/* ---------- 2. the photographic hero ---------- */
+
+.photo-hero {
+  position: relative;
+  overflow: hidden;
+  background: #0b1120;
+}
+
+.photo-hero-parallax,
+.photo-hero-media,
+.photo-hero-angle,
+.photo-hero-vert {
+  position: absolute;
+  inset: 0;
+}
+
+/* The parallax wrapper carries the scroll transform and the media carries the
+   entrance zoom. They are separate elements on purpose: a CSS animation beats an
+   inline style, so one element cannot hold both without the zoom freezing the
+   parallax for the life of the page. */
+.photo-hero-parallax {
+  will-change: transform;
+}
+
+.photo-hero-media {
+  background-position: 71% 46%;
+  background-repeat: no-repeat;
+  background-size: cover;
+  animation: photo-hero-zoom 2.6s cubic-bezier(.2, .7, .2, 1) both;
+}
+
+.photo-hero-angle {
+  background: linear-gradient(
+    96deg,
+    rgba(6, 10, 20, .6) 0%,
+    rgba(6, 10, 20, .4) 40%,
+    rgba(6, 10, 20, .16) 62%,
+    rgba(6, 10, 20, 0) 82%
+  );
+}
+
+.photo-hero-vert {
+  background: linear-gradient(
+    180deg,
+    rgba(6, 10, 20, .32) 0%,
+    rgba(0, 0, 0, 0) 20%,
+    rgba(0, 0, 0, 0) 58%,
+    rgba(6, 10, 20, .24) 82%,
+    rgba(6, 10, 20, .34) 100%
+  );
+}
+
+/* Bounded, not full bleed. It ends before the right edge so the bright part of
+   the photograph stays clean, and the top edge is masked so no band shows
+   across the sky. */
+.photo-hero-plate {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: min(72%, 900px);
+  height: 72%;
+  background: linear-gradient(
+    102deg,
+    rgba(6, 10, 20, .9) 0%,
+    rgba(6, 10, 20, .76) 40%,
+    rgba(6, 10, 20, .44) 66%,
+    rgba(6, 10, 20, .12) 86%,
+    rgba(6, 10, 20, 0) 97%
+  );
+  -webkit-mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 2%, rgba(0, 0, 0, 1) 34%);
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0) 2%, rgba(0, 0, 0, 1) 34%);
+  pointer-events: none;
+}
+
+.photo-hero-well {
+  position: relative;
+  z-index: 6;
+  display: flex;
+  max-width: 1180px;
+  min-height: min(700px, calc(100svh - 68px));
+  margin: 0 auto;
+  padding: clamp(60px, 8vw, 140px) 24px clamp(38px, 4.6vw, 72px);
+  align-items: flex-end;
+}
+
+.photo-hero-copy {
+  position: relative;
+  z-index: 7;
+  width: min(780px, 64%);
+}
+
+.photo-hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 0 0 20px;
+  color: var(--copper-light, #e9a178);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
+
+.photo-hero-eyebrow::before {
+  width: 46px;
+  height: 1px;
+  flex: 0 0 auto;
+  background: var(--copper);
+  content: "";
+}
+
+.photo-hero h1 {
+  max-width: none;
+  margin: 0 0 clamp(20px, 2.4vw, 30px);
+  color: #fcfaf6;
+  font-family: var(--serif);
+  font-size: clamp(48px, 7.8vw, 118px);
+  font-weight: 400;
+  letter-spacing: -.025em;
+  line-height: 1;
+  text-shadow: 0 4px 40px rgba(6, 10, 22, .6);
+  text-wrap: normal;
+}
+
+.photo-hero h1 .hero-line {
+  display: block;
+}
+
+.photo-hero h1 em {
+  display: block;
+  color: inherit;
+  font-style: italic;
+  font-weight: 400;
+}
+
+.photo-hero .copper {
+  color: var(--copper);
+}
+
+.photo-hero-sub {
+  max-width: 26em;
+  margin: 0 0 clamp(26px, 3vw, 36px);
+  color: rgba(252, 250, 246, .8);
+  font-family: var(--serif);
+  font-size: clamp(19px, 1.9vw, 26px);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 1.45;
+  text-shadow:
+    0 1px 18px rgba(6, 10, 22, .8),
+    0 0 3px rgba(6, 10, 22, .55);
+}
+
+/* Brighter, not bolder: the weight stays at 400 and only the colour lifts. */
+.photo-hero-sub .solid {
+  color: #ffffff;
+  font-weight: 400;
+}
+
+.photo-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+}
+
+.photo-hero-actions .button {
+  box-shadow: 0 14px 30px -18px rgba(6, 10, 22, .9);
+}
+
+.siesie-photo-hero .photo-hero-media {
+  background-position: 56% 46%;
+}
+
+@media (max-width: 1120px) {
+  .photo-hero-copy {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 660px) {
+  .home-photo-hero .photo-hero-media {
+    background-position: 74% 50%;
+  }
+
+  .siesie-photo-hero .photo-hero-media {
+    background-position: 64% 46%;
+  }
+}
+
+@keyframes photo-hero-zoom {
+  from {
+    transform: scale(1.08);
+  }
+
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes photo-hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .photo-hero [data-rise] {
+    animation: photo-hero-rise .85s cubic-bezier(.2, .7, .2, 1) both;
+  }
+
+  .photo-hero [data-rise="0"] { animation-delay: 0s; }
+  .photo-hero [data-rise="1"] { animation-delay: .06s; }
+  .photo-hero [data-rise="2"] { animation-delay: .18s; }
+  .photo-hero [data-rise="3"] { animation-delay: .3s; }
+  .photo-hero [data-rise="4"] { animation-delay: .42s; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .photo-hero-media {
+    animation: none;
+  }
+}
+
+/* ---------- 3. the nine seconds proof replay ---------- */
+
+.proof-replay {
+  border-top: 1px solid rgba(16, 20, 38, .07);
+  background: var(--paper);
+}
+
+.proof-replay-inner {
+  display: grid;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 88px 24px 92px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 56px;
+  align-items: center;
+}
+
+.proof-replay-eyebrow {
+  margin: 0 0 16px;
+  color: var(--copper);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+}
+
+.proof-replay h2 {
+  margin: 0 0 20px;
+  font-family: var(--serif);
+  font-size: clamp(34px, 4.4vw, 56px);
+  font-weight: 400;
+  letter-spacing: -.02em;
+  line-height: 1.06;
+}
+
+.proof-replay-body {
+  max-width: 34em;
+  margin: 0 0 26px;
+  color: rgba(16, 20, 38, .68);
+  font-size: 17px;
+  line-height: 1.62;
+  text-wrap: pretty;
+}
+
+.proof-replay-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+}
+
+.proof-replay-controls .button {
+  padding: 13px 18px;
+}
+
+/* Holds its space from the start, so the row does not jump when the thread
+   finishes and the line arrives. */
+.proof-replay-note {
+  color: rgba(16, 20, 38, .44);
+  font-size: 13.5px;
+  opacity: 0;
+  transition: opacity .5s ease;
+}
+
+.proof-replay.is-done .proof-replay-note {
+  opacity: 1;
+}
+
+.proof-phone {
+  justify-self: center;
+  width: min(360px, 100%);
+}
+
+.proof-phone-card {
+  padding: 12px 10px 16px;
+  border: 1px solid rgba(16, 20, 38, .14);
+  border-radius: 34px;
+  background: var(--paper);
+  box-shadow: 0 44px 90px -54px rgba(12, 22, 60, .6);
+}
+
+.proof-phone-head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 8px 14px 14px;
+  border-bottom: 1px solid rgba(16, 20, 38, .07);
+  color: rgba(16, 20, 38, .46);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
+
+.proof-phone-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: #2f8f5b;
+}
+
+/* The fixed floor stops the card growing as each message lands. */
+.proof-thread {
+  display: flex;
+  flex-direction: column;
+  min-height: 392px;
+  gap: 10px;
+  padding: 16px 8px 6px;
+}
+
+.proof-msg {
+  max-width: 86%;
+  opacity: 0;
+  transform: translateY(10px);
+  transition:
+    opacity .45s cubic-bezier(.2, .7, .2, 1),
+    transform .45s cubic-bezier(.2, .7, .2, 1);
+}
+
+.proof-msg.is-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.proof-msg .bubble {
+  border-radius: 16px;
+  padding: 11px 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.proof-msg .tag {
+  margin-top: 5px;
+  color: rgba(16, 20, 38, .4);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+.proof-msg[data-role="sys"] {
+  align-self: center;
+  text-align: center;
+}
+
+.proof-msg[data-role="sys"] .bubble {
+  background: transparent;
+  color: rgba(16, 20, 38, .42);
+}
+
+.proof-msg[data-role="shop"] {
+  align-self: flex-end;
+  text-align: right;
+}
+
+.proof-msg[data-role="shop"] .bubble {
+  background: var(--ink);
+  color: #f2f4f9;
+  text-align: left;
+}
+
+.proof-msg[data-role="cust"] {
+  align-self: flex-start;
+}
+
+.proof-msg[data-role="cust"] .bubble {
+  background: rgba(16, 20, 38, .055);
+  color: var(--ink);
+}
+
+.proof-phone-caption {
+  margin: 14px 0 0;
+  color: rgba(16, 20, 38, .4);
+  font-size: 12.5px;
+  text-align: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proof-msg {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .proof-replay-note {
     transition: none;
   }
 }

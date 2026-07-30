@@ -32,7 +32,11 @@
     "#fs-nav a{text-decoration:none}",
     "@media (hover:hover){#fs-nav [data-navlink]:hover{color:#101426!important}#fs-nav [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}#fs-bar [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}#fs-bar [data-navlink]:hover{color:#101426!important}#fs-foot a:hover{color:#FFFFFF}#fs-chat-fab:hover{background:#C2501C!important}}",
     "#fs-foot a{text-decoration:none;color:rgba(242,244,249,.72)}",
-    "@media (max-width:1360px){#fs-rail{display:none!important}}",
+    /* The rail needs the 1180px column plus about 170px of clear margin on each
+       side. At 1360 it had 90px and its labels ran under the hero copy, which is
+       what "RESPONSE SCRIPT" was doing across the first paragraph of free.html
+       at 1440 on 30 July. Below the width where it fits cleanly, it is gone. */
+    "@media (max-width:1520px){#fs-rail{display:none!important}}",
     /* Tablets. The three-column bar needs about 910px of room: the outer columns are
        both 1fr, so the links get half of what is left once the wordmark is placed,
        and 339px of links need 960px of window to win that half. Below
@@ -71,7 +75,13 @@
     var on = activeKey();
     var nav = document.createElement("header");
     nav.id = "fs-nav";
-    nav.style.cssText = (body.hasAttribute("data-cinematic")
+    /* Sticky, in flow, on every page. The handoff spec puts the bar above the
+       hero rather than floating over it, and the hero reserves 68px for it. That
+       also removes the whole class of collisions the fixed transparent bar
+       caused: on a touch width its seven chips wrapped into three rows and
+       landed on the headline. A bar in normal flow cannot overlap anything. */
+    var heroIsPhotographic = !!document.querySelector("[data-photo-hero]");
+    nav.style.cssText = (body.hasAttribute("data-cinematic") && !heroIsPhotographic
       ? "position:fixed;top:0;left:0;right:0;"
       : "position:sticky;top:0;") +
       "z-index:40;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(16,20,38,.08)";
@@ -492,6 +502,90 @@
   }
   panel.querySelector("#fs-chat-send").addEventListener("click", send);
   inp.addEventListener("keydown", function (e) { if (e.key === "Enter") send(); });
+
+  /* ---------- photographic hero parallax ----------
+     translateY(scrollY x 0.12) with scrollY capped at 900, plus a slow scale to
+     about 1.099. rAF-throttled and registered passive so it never blocks the
+     scroll thread. The entrance zoom lives on the inner element, because a CSS
+     animation outranks an inline style and would otherwise freeze this. */
+  var heroParallax = document.querySelector("[data-hero-parallax]");
+  if (heroParallax && !reduce) {
+    var parallaxTicking = false;
+    var paintParallax = function () {
+      var shift = Math.min(window.pageYOffset || 0, 900) * 0.12;
+      var scale = 1 + Math.min(shift, 110) * 0.0009;
+      heroParallax.style.transform = "translateY(" + shift + "px) scale(" + scale + ")";
+      parallaxTicking = false;
+    };
+    window.addEventListener("scroll", function () {
+      if (parallaxTicking) return;
+      parallaxTicking = true;
+      requestAnimationFrame(paintParallax);
+    }, { passive: true });
+    paintParallax();
+  }
+
+  /* ---------- the nine seconds replay ----------
+     Cumulative schedule: 300, 700, 1600, 3100, 4200, 5500, 6400ms. The 1500ms
+     gap before the shop's first reply is the beat the section is named after,
+     so it is a real pause, not a rounding artefact. */
+  var replaySection = document.querySelector("[data-proof-replay]");
+  if (replaySection) {
+    var thread = replaySection.querySelector("[data-proof-thread]");
+    var msgs = thread ? Array.prototype.slice.call(thread.querySelectorAll(".proof-msg")) : [];
+    var againBtn = replaySection.querySelector("[data-proof-replay-again]");
+    var timers = [];
+    var GAPS = [300, 400, 900, 1500, 1100, 1300, 900, 1200];
+
+    var clearTimers = function () {
+      timers.forEach(clearTimeout);
+      timers = [];
+    };
+    var showAll = function () {
+      msgs.forEach(function (m) { m.classList.add("is-in"); });
+      replaySection.classList.add("is-done");
+    };
+    var runReplay = function () {
+      clearTimers();
+      replaySection.classList.remove("is-done");
+      msgs.forEach(function (m) { m.classList.remove("is-in"); });
+      if (reduce) { showAll(); return; }
+      var at = 0;
+      msgs.forEach(function (m, i) {
+        at += GAPS[i];
+        timers.push(setTimeout(function () {
+          m.classList.add("is-in");
+          if (i === msgs.length - 1) {
+            timers.push(setTimeout(function () {
+              replaySection.classList.add("is-done");
+            }, 500));
+          }
+        }, at));
+      });
+    };
+
+    if (againBtn) againBtn.addEventListener("click", runReplay);
+
+    if (reduce || !("IntersectionObserver" in window)) {
+      showAll();
+    } else {
+      var replayObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          replayObserver.unobserve(entry.target);
+          runReplay();
+        });
+      }, { rootMargin: "-15% 0px -25% 0px" });
+      replayObserver.observe(replaySection);
+      /* If the section is already past the observer band on load, or the
+         observer never fires, the thread still ends up readable. */
+      setTimeout(function () {
+        var anyIn = msgs.some(function (m) { return m.classList.contains("is-in"); });
+        var box = replaySection.getBoundingClientRect();
+        if (!anyIn && box.top < 0 && box.bottom < window.innerHeight) showAll();
+      }, 1200);
+    }
+  }
 
   /* ---------- FAQ deep links ---------- */
   var hash = (location.hash || "").slice(1);
