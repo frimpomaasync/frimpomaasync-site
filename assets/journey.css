@@ -1381,36 +1381,66 @@ noscript {
   text-transform: uppercase;
 }
 
+/* The rig is drawn in percentages of this box, so the box holds a fixed
+   square and the cords, the pegs and the board keep their relationship at
+   every column width. Change the ratio and the pegs slide off the corners. */
 .open-sign {
   position: relative;
-  min-height: 440px;
+  aspect-ratio: 1 / 1;
+  min-height: 340px;
 }
 
-.open-sign::before,
-.open-sign::after {
+/* The rig hangs from one point. Each cord is a bar pinned at the apex and
+   swung 45 degrees, and its peg is a child pinned to the far end, so the peg
+   travels with the cord instead of being placed by a second set of numbers
+   that drift the moment the column changes width. */
+.open-cord {
   position: absolute;
-  top: 7%;
-  width: 48%;
-  height: 4px;
+  top: 4%;
+  left: 50%;
+  z-index: 2;
+  width: 60%;
+  height: 3px;
   border-radius: 99px;
   background: var(--ink);
+  transform-origin: 0 50%;
+}
+
+.open-cord.right {
+  transform: rotate(45deg);
+}
+
+.open-cord.left {
+  transform: rotate(135deg);
+}
+
+.open-cord::after {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: clamp(17px, 2vw, 26px);
+  height: clamp(17px, 2vw, 26px);
+  border-radius: 999px;
+  background: #e4222c;
   content: "";
-  transform-origin: top;
+  transform: translate(50%, -50%);
 }
 
-.open-sign::before {
-  left: 49%;
-  transform: rotate(43deg);
-}
-
-.open-sign::after {
-  right: 49%;
-  transform: rotate(-43deg);
+.open-peg {
+  position: absolute;
+  top: 4%;
+  left: 50%;
+  z-index: 2;
+  width: clamp(17px, 2vw, 26px);
+  height: clamp(17px, 2vw, 26px);
+  border-radius: 999px;
+  background: #e4222c;
+  transform: translate(-50%, -50%);
 }
 
 .open-board {
   position: absolute;
-  inset: 22% 1% 8%;
+  inset: 46% 5% 4%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1418,10 +1448,26 @@ noscript {
   background: linear-gradient(160deg, #ffffff, #e6e7eb);
   box-shadow: 0 70px 100px -58px rgba(16, 20, 38, 0.6);
   color: #e4222c;
-  font-size: clamp(64px, 11vw, 148px);
+  font-size: clamp(64px, 9vw, 132px);
   font-weight: 800;
   letter-spacing: 0.01em;
   transform: perspective(900px) rotateY(-8deg) rotate(-4deg);
+}
+
+/* The SynKasa lede is set in the serif italic so the sentence under the
+   headline reads as a spoken line rather than a second deck. */
+.synkasa-hero .hero-lede {
+  max-width: 26ch;
+  font-family: var(--serif);
+  font-style: italic;
+}
+
+.hero-formerly {
+  margin: 10px 0 0;
+  color: var(--ink-faint);
+  font-family: var(--serif);
+  font-size: 15px;
+  font-style: italic;
 }
 
 .form-card.dark .pill,
@@ -2316,46 +2362,17 @@ button.button.secondary {
   }
 }
 
-/* ---------- 5. the SynKasa scene has to fit the phone ---------- */
+/* ---------- 5. the SynKasa sign on a phone ---------- */
 
-/* Her iPhone, 30 July: "the open image did not come through". The scene is
-   2400x1024, and on a 390px phone the hero column is 1163px tall, so
-   object-fit: cover scaled the photograph to fill that height and left 14%
-   of its width on screen. What survived was a vertical strip of dark trees.
-   The OPEN sign sits at 74 to 80 percent across and 67 to 78 percent down,
-   which is precisely where the status card lands, so no crop could rescue it.
-
-   Below 900px the photograph becomes a band across the top of the hero
-   instead of a full-height cover. The band is wide enough to hold its own
-   aspect, so the phone, the lit path and the sign all read, and it sinks into
-   the ink before the buttons and the card start. */
+/* The board carries a 148px word, so under 900px it needs its own height or
+   the sign lands on top of the trust line. */
 @media (max-width: 900px) {
-  .synkasa-hero .cinematic-media {
-    bottom: auto;
-    height: clamp(460px, 130vw, 580px);
-    object-position: 80% 64%;
+  .open-sign {
+    min-height: 260px;
+    margin-top: 8px;
   }
 
-  .synkasa-hero .cinematic-scrim {
-    background:
-      linear-gradient(
-        180deg,
-        rgba(8, 11, 24, .62) 0%,
-        rgba(8, 11, 24, .44) 30%,
-        rgba(8, 11, 24, .86) 74%,
-        rgb(8, 11, 24) 100%
-      ),
-      linear-gradient(90deg, rgba(8, 11, 24, .52) 0%, rgba(8, 11, 24, .22) 100%);
-  }
-}
-
-/* Between 901 and 1120 the hero is 860px tall against a window that is not yet
-   wide, so cover shows 45 to 53 percent of the scene and the right edge lands
-   at 77 to 79 percent across. The sign ends at 80.3, so it was being sliced in
-   half on an iPad in landscape and on a small laptop. Move the window right far
-   enough to clear it. Above 1120 the default crop already holds the sign. */
-@media (min-width: 901px) and (max-width: 1120px) {
-  .synkasa-hero .cinematic-media {
-    object-position: 68% center;
+  .open-board {
+    font-size: clamp(52px, 15vw, 92px);
   }
 }
