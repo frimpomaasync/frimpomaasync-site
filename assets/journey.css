@@ -1397,8 +1397,10 @@ noscript {
     max-height: 56vh;
   }
 
+  /* contain, not cover: each clip has its title in the frame, and cover
+     cropped it off the top. */
   .proof-media video {
-    object-fit: cover;
+    object-fit: contain;
   }
 
   .calc-result,
