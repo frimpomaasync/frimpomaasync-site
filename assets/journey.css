@@ -450,14 +450,19 @@ body[data-cinematic]:not(:has([data-photo-hero])) #fs-nav:not(.is-past-hero) [da
     ) !important;
   }
 
-  body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navlink] {
+  /* White type belongs to the bar that floats over the photograph. The
+     handoff-hero pages keep their solid white bar, so these two rules carry
+     the same :has guard as the scrim above them. Without it the wordmark and
+     the four links were painted white on white on index and siesie, and the
+     bar read as an empty band on every phone. Her iPhone, 30 July. */
+  body[data-cinematic]:not(:has([data-photo-hero])) #fs-nav:not(.is-past-hero) [data-navlink] {
     padding-inline: 4px !important;
     border-radius: 0;
     background: transparent !important;
     color: rgba(255, 255, 255, .84) !important;
   }
 
-  body[data-cinematic] #fs-nav:not(.is-past-hero) [data-navcta] {
+  body[data-cinematic]:not(:has([data-photo-hero])) #fs-nav:not(.is-past-hero) [data-navcta] {
     background: var(--copper) !important;
   }
 
