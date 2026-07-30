@@ -3,3 +3,7 @@ e2e-test.py
 e2e-*.png
 .worktrees/
 work/site-review/
+tests/shots/
+tests/width_sweep_last.json
+tests/size_audit_*.json
+.superpowers/

@@ -1,4 +1,4 @@
-# Clean URLs for frimpomaasync.com — lives in the GitHub repo, auto-deployed.
+# Clean URLs for frimpomaasync.com. Lives in the GitHub repo, auto-deployed.
 Options -MultiViews
 RewriteEngine On
 
@@ -38,3 +38,21 @@ RewriteRule ^(.+)$ $1.html [L]
 
 # Custom 404. Replaces the host's generic error page, keeps visitors on the site.
 ErrorDocument 404 /404.html
+
+# Cache policy, added 2026-07-30. The site sent no Cache-Control at all, so
+# browsers guessed, and iOS guessed "keep it". A page holds the list of which
+# asset versions to fetch, which means a bumped ?v= inside a cached page reaches
+# nobody: the 2026-07-30 layout fix shipped correctly and stayed invisible on the
+# iPad that had already loaded the page once. Pages now revalidate on every
+# visit, which is one cheap 304 when nothing changed.
+<IfModule mod_headers.c>
+  <FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # The reverse for everything a page pulls in. Each reference carries a ?v=, so
+  # a change always arrives as a new URL and the old one can be held for good.
+  <FilesMatch "\.(css|js|jpg|jpeg|png|svg|webp|mp4|vtt|pdf|woff2?)$">
+    Header set Cache-Control "public, max-age=31536000"
+  </FilesMatch>
+</IfModule>

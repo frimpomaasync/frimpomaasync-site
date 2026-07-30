@@ -33,13 +33,22 @@
     "@media (hover:hover){#fs-nav [data-navlink]:hover{color:#101426!important}#fs-nav [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}#fs-bar [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}#fs-bar [data-navlink]:hover{color:#101426!important}#fs-foot a:hover{color:#FFFFFF}#fs-chat-fab:hover{background:#C2501C!important}}",
     "#fs-foot a{text-decoration:none;color:rgba(242,244,249,.72)}",
     "@media (max-width:1360px){#fs-rail{display:none!important}}",
-    /* Tablets. The three-column bar only fits on a wide screen: at iPad width the
-       links wrapped, the brand sat between the two rows, and the whole bar grew to
-       138px of overlapping pills on top of the hero. Give the links their own row. */
-    "@media (max-width:1080px){#fs-nav .fs-grid{grid-template-columns:1fr auto!important;row-gap:10px!important}#fs-nav .fs-grid nav{order:3;grid-column:1 / -1;flex-wrap:nowrap;justify-content:flex-start}}",
+    /* Tablets. The three-column bar needs about 910px of room: the outer columns are
+       both 1fr, so the links get half of what is left once the wordmark is placed,
+       and 339px of links need 960px of window to win that half. Below
+       that the links get their own row. The old breakpoint was 1080, which forced
+       a stacked 132px bar across 901 to 1080 that had no reason to stack, and a
+       1024px laptop wore it. */
+    "@media (max-width:960px){#fs-nav .fs-grid{grid-template-columns:1fr auto!important;padding:10px 20px!important;row-gap:8px!important}" +
+      /* Left, not stretched. The wordmark is the grid item in the 1fr column and
+         over a photograph it carries an ink chip, so stretching painted a
+         760px-wide block across the top of the hero. */
+      "#fs-nav .fs-grid > a[href='/']{justify-self:start}" +
+      "#fs-nav .fs-grid nav{order:3;grid-column:1 / -1;flex-wrap:nowrap;justify-content:flex-start}}",
     "@media (max-width:700px){#fs-nav .fs-grid{grid-template-columns:1fr auto!important}#fs-nav .fs-grid nav{order:3;grid-column:1 / -1}#fs-nav [data-fs-chat]{display:none!important}}",
-    /* Under 16px iOS zooms the page when the field takes focus. */
-    "@media (max-width:900px){#fs-chat-inp{font-size:16px!important}}",
+    /* Under 16px iOS zooms the page when the field takes focus. An iPad in
+       landscape is 1024 to 1366 css px, so ask the pointer, not the width. */
+    "@media (max-width:900px),(pointer:coarse){#fs-chat-inp{font-size:16px!important}}",
     /* The footer carried 152px of padding on a phone. */
     "@media (max-width:620px){#fs-foot > div{padding:38px 20px 52px!important;gap:24px!important}}",
     "@media (prefers-reduced-motion: reduce){#fs-veil{display:none!important}#fs-bar{transition:none!important}#fs-chat-panel span[style*='skcDot']{animation:none!important}}"

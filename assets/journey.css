@@ -1032,21 +1032,26 @@ label.field textarea {
   line-height: 1.5;
 }
 
+/* Flex, not a fixed column count. A grid of five steps in three columns leaves a
+   sixth cell with nothing in it, and that hole reads as a grey box inside the
+   border however the container is painted. Wrapping flex items grow to fill
+   whatever is left of the last row, so a strip of any length closes itself:
+   five steps, siesie's seven, the twelve on the fit page. */
 .workflow,
 .journey-strip {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 16px;
-  /* Paper, not line colour. The old 1px-gap-over-grey trick drew the dividers for
-     free, but any row the steps did not fill showed up as a grey block. Each step
-     now carries its own dividers and the container border clips the outer ones. */
   background: var(--paper);
 }
 
 .workflow-step,
 .journey-step {
+  /* 18% basis puts five on a row and leaves no room for a sixth. */
+  flex: 1 1 18%;
+  min-width: 0;
   min-height: 120px;
   padding: 20px;
   background: var(--paper);
@@ -1326,9 +1331,10 @@ noscript {
     grid-column: auto;
   }
 
-  .workflow,
-  .journey-strip {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  .workflow-step,
+  .journey-step {
+    /* Three on a row from here down. */
+    flex-basis: 30%;
   }
 
   .sticky-story {
@@ -1399,10 +1405,13 @@ noscript {
   .role-grid,
   .fields,
   .form-grid-fields,
-  .form-grid,
-  .workflow,
-  .journey-strip {
+  .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .workflow-step,
+  .journey-step {
+    flex-basis: 100%;
   }
 
   .path-card,
@@ -1509,13 +1518,71 @@ noscript {
   }
 }
 
-@media (max-width: 700px) {
+/* The stacked two-row bar. fsnav.js stacks the links onto their own row at this
+   same width, so the reservation and the bar have to change at the same number
+   or the hero eyebrow ends up underneath the pills. */
+@media (max-width: 960px) {
   :root {
-    --cinematic-nav-height: 142px;
+    --cinematic-nav-height: 118px;
   }
 
   .hero.cinematic-hero {
     padding-top: calc(var(--cinematic-nav-height) + 24px);
+  }
+}
+
+/* An iPad in landscape is 1024 to 1366 css px wide, so a width breakpoint never
+   catches it. Pointer does. Under 16px iOS zooms the whole page the moment a
+   field takes focus, whichever way the tablet is turned. */
+@media (pointer: coarse) {
+  .field input,
+  .field select,
+  .field textarea,
+  label.field input,
+  label.field select,
+  label.field textarea {
+    font-size: 16px;
+  }
+}
+
+/* Card columns follow the width the card actually needs, not a single tablet
+   breakpoint. A card holds a serif headline of up to 34px, so below about 240px
+   of content width the headline breaks across five or six lines. Two across
+   needs 720px, three across needs 1024px. */
+@media (min-width: 621px) and (max-width: 719px) {
+  .card-grid,
+  .free-grid,
+  .role-grid,
+  .form-grid,
+  .siesie-story .story-steps {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 901px) and (max-width: 1023px) {
+  .card-grid,
+  .free-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* The free page lays its five cards on six tracks so the short last row sits
+   centred. Any override of that track count has to release the placements too,
+   or cards four and five keep their old column numbers and collapse to 34px. */
+@media (min-width: 621px) and (max-width: 1023px) {
+  .free-card,
+  .free-card:nth-child(4),
+  .free-card:nth-child(5) {
+    grid-column: auto;
+  }
+}
+
+/* Without this the headline shrank as the screen grew: 72px on a phone at 620,
+   then 54px on a tablet at 621, back to 72px at 900. Hold the phone size across
+   the band so the curve only ever climbs. */
+@media (min-width: 621px) and (max-width: 900px) {
+  .hero h1 {
+    font-size: clamp(72px, 8vw, 116px);
   }
 }
 
