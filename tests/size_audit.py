@@ -20,8 +20,8 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVER = ROOT / "scripts" / "preview_server.py"
-WIDTHS = [390, 430, 620, 621, 744, 820, 834, 900, 901, 1024, 1080, 1081,
-          1112, 1180, 1194, 1280, 1366, 1440]
+WIDTHS = [320, 360, 375, 390, 414, 430, 620, 621, 744, 820, 834, 900, 901,
+          1024, 1080, 1081, 1112, 1180, 1194, 1280, 1366, 1440]
 PAGES = ["/", "/synkasa", "/siesie", "/free", "/fit", "/portfolio"]
 SHOT_WIDTHS = [390, 744, 820, 1024, 1194, 1366]
 
@@ -129,8 +129,9 @@ def main():
     results = {}
     try:
         with sync_playwright() as p:
+            exe = os.environ.get("PLAYWRIGHT_EXECUTABLE_PATH")
             browser = p.chromium.launch(
-                executable_path=os.environ.get("PLAYWRIGHT_EXECUTABLE_PATH"))
+                executable_path=exe, channel=None if exe else "chrome")
             for path in PAGES:
                 page = browser.new_page(viewport={"width": 1440, "height": 900})
                 rows = []

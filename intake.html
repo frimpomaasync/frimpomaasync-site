@@ -69,9 +69,16 @@
     width:100%; padding:14px 16px; border:1.5px solid var(--hairline); border-radius:12px;
     font-family:inherit; font-size:15px; background:#fff; color:var(--ink); transition:border-color .18s ease, box-shadow .18s ease;
   }
+  /* 15px is under the 16px threshold, so iOS zoomed the whole page on the
+     first tap into the name field and the form never sat straight again. An
+     iPad in landscape is 1024 to 1366 css px, so ask the pointer, not the
+     width. */
+  @media (pointer:coarse){
+    input[type=text], input[type=email], input[type=url], textarea, select{ font-size:16px; }
+  }
   input:focus, textarea:focus, select:focus{ outline:none; border-color:var(--copper); box-shadow:0 0 0 3px rgba(194,80,28,0.15); }
   textarea{ resize:vertical; min-height:110px; line-height:1.5; }
-  select{ appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%23C9975B' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; padding-right:42px; }
+  select{ appearance:none; -webkit-appearance:none; background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'><path d='M2 4l4 4 4-4' stroke='%23C2501C' stroke-width='1.6' fill='none' stroke-linecap='round'/></svg>"); background-repeat:no-repeat; background-position:right 16px center; padding-right:42px; }
 
   /* radio / checkbox groups as tappable chips */
   .chips{ display:flex; flex-wrap:wrap; gap:9px; margin-top:4px; }
@@ -106,6 +113,9 @@
   .foot{ margin-top:40px; text-align:center; font-size:12px; color:var(--muted); line-height:1.8; }
   .foot .brand{ font-weight:600; color:var(--ink); }
   .foot a{ color:var(--copper); text-decoration:none; }
+  /* 15px tall is a coin toss under a thumb. Padding on an inline link grows
+     the hit area without moving the line. */
+  @media (pointer:coarse){ .foot a{ padding:5px 0; } }
 
   @media (max-width:520px){ .stage{ padding:28px 16px 80px; } }
   @media (prefers-reduced-motion: reduce){

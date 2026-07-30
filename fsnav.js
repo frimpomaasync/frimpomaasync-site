@@ -50,11 +50,22 @@
       "#fs-nav .fs-grid > a[href='/']{justify-self:start}" +
       "#fs-nav .fs-grid nav{order:3;grid-column:1 / -1;flex-wrap:nowrap;justify-content:flex-start}}",
     "@media (max-width:700px){#fs-nav .fs-grid{grid-template-columns:1fr auto!important}#fs-nav .fs-grid nav{order:3;grid-column:1 / -1}#fs-nav [data-fs-chat]{display:none!important}}",
+    /* An iPhone SE is 320 css px. The wordmark is set nowrap at 14px with .2em
+       of tracking, which is 171px, and the booking button is 118px. With the
+       40px of bar padding that is 329px in a 320px window, so the last letters
+       of FRIMPOMAASYNC ran under the button. Tighten the tracking, not the
+       name. */
+    "@media (max-width:359px){#fs-nav .fs-grid > a[href='/']{font-size:13px!important;letter-spacing:.08em!important}}",
     /* Under 16px iOS zooms the page when the field takes focus. An iPad in
        landscape is 1024 to 1366 css px, so ask the pointer, not the width. */
     "@media (max-width:900px),(pointer:coarse){#fs-chat-inp{font-size:16px!important}}",
     /* The footer carried 152px of padding on a phone. */
     "@media (max-width:620px){#fs-foot > div{padding:38px 20px 52px!important;gap:24px!important}}",
+    /* The chrome links are set small on purpose and a 12px-tall link is a
+       coin toss under a thumb. Vertical padding on an inline link grows what
+       the finger can hit without moving the line, so the bar, the nav and the
+       footer keep the exact layout they have on a mouse. */
+    "@media (pointer:coarse){#fs-nav [data-navlink],#fs-bar [data-navlink]{padding:7px 0!important}#fs-foot a{padding:5px 0!important}}",
     "@media (prefers-reduced-motion: reduce){#fs-veil{display:none!important}#fs-bar{transition:none!important}#fs-chat-panel span[style*='skcDot']{animation:none!important}}"
   ].join("\n");
   document.head.appendChild(css);

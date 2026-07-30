@@ -1309,10 +1309,13 @@ label.field textarea {
   line-height: 1.45;
 }
 
+/* flex-shrink would squeeze these to 13px next to a long label, so each box
+   renders a different size down the list. Hold the square. */
 .audit-item input,
 .check-option input {
   width: 18px;
   height: 18px;
+  flex: 0 0 18px;
   accent-color: var(--copper);
 }
 
@@ -2110,7 +2113,7 @@ button.button.secondary {
   max-width: 1180px;
   margin: 0 auto;
   padding: 88px 24px 92px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
   gap: 56px;
   align-items: center;
 }
@@ -2285,5 +2288,25 @@ button.button.secondary {
 
   .proof-replay-note {
     transition: none;
+  }
+}
+
+/* ---------- 4. thumb-sized targets on touch screens ---------- */
+
+/* The button spec above sets the painted box and stays untouched on a mouse.
+   A finger needs 44px, and a bare text link needs 24px, so the floor is raised
+   only where the pointer is a thumb. */
+@media (pointer: coarse) {
+  .button,
+  button.button {
+    min-height: 44px;
+  }
+
+  .card-link {
+    min-height: 24px;
+  }
+
+  .result-actions a {
+    padding: 4px 0;
   }
 }

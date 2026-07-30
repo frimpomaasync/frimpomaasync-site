@@ -28,8 +28,8 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVER = ROOT / "scripts" / "preview_server.py"
-WIDTHS = [390, 430, 744, 820, 834, 900, 901, 940, 960, 961, 1000, 1024,
-          1080, 1081, 1112, 1180, 1194, 1280, 1366, 1440]
+WIDTHS = [320, 360, 375, 390, 414, 430, 744, 820, 834, 900, 901, 940, 960,
+          961, 1000, 1024, 1080, 1081, 1112, 1180, 1194, 1280, 1366, 1440]
 PAGES = ["/", "/synkasa", "/siesie", "/fit"]
 
 MEASURE = r"""
