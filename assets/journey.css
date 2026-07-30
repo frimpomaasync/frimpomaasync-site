@@ -123,7 +123,12 @@ a {
    shipped hero did before this rebuild. Negative z-index inside an isolated
    stacking context, and overflow:clip, both render inconsistently on older
    iOS, which left the hero a flat ink block on a real phone. */
-.cinematic-hero {
+/* Both selectors on purpose. Every cinematic hero also carries .hero, and the
+   plain .hero padding further down the file has equal specificity, so it won and
+   the nav-aware padding here never applied above 700px. The compound selector
+   keeps the fixed bar off the eyebrow and the headline. */
+.cinematic-hero,
+.hero.cinematic-hero {
   position: relative;
   min-height: 620px;
   min-height: min(860px, 100svh);
@@ -1031,11 +1036,13 @@ label.field textarea {
 .journey-strip {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 1px;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: var(--line);
+  /* Paper, not line colour. The old 1px-gap-over-grey trick drew the dividers for
+     free, but any row the steps did not fill showed up as a grey block. Each step
+     now carries its own dividers and the container border clips the outer ones. */
+  background: var(--paper);
 }
 
 .workflow-step,
@@ -1043,6 +1050,7 @@ label.field textarea {
   min-height: 120px;
   padding: 20px;
   background: var(--paper);
+  box-shadow: 1px 0 0 var(--line), 0 1px 0 var(--line);
 }
 
 .workflow-step strong,

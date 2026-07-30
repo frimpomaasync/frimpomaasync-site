@@ -33,6 +33,10 @@
     "@media (hover:hover){#fs-nav [data-navlink]:hover{color:#101426!important}#fs-nav [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}#fs-bar [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}#fs-bar [data-navlink]:hover{color:#101426!important}#fs-foot a:hover{color:#FFFFFF}#fs-chat-fab:hover{background:#C2501C!important}}",
     "#fs-foot a{text-decoration:none;color:rgba(242,244,249,.72)}",
     "@media (max-width:1360px){#fs-rail{display:none!important}}",
+    /* Tablets. The three-column bar only fits on a wide screen: at iPad width the
+       links wrapped, the brand sat between the two rows, and the whole bar grew to
+       138px of overlapping pills on top of the hero. Give the links their own row. */
+    "@media (max-width:1080px){#fs-nav .fs-grid{grid-template-columns:1fr auto!important;row-gap:10px!important}#fs-nav .fs-grid nav{order:3;grid-column:1 / -1;flex-wrap:nowrap;justify-content:flex-start}}",
     "@media (max-width:700px){#fs-nav .fs-grid{grid-template-columns:1fr auto!important}#fs-nav .fs-grid nav{order:3;grid-column:1 / -1}#fs-nav [data-fs-chat]{display:none!important}}",
     /* Under 16px iOS zooms the page when the field takes focus. */
     "@media (max-width:900px){#fs-chat-inp{font-size:16px!important}}",

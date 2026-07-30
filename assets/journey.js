@@ -237,7 +237,15 @@ function bindCalculator() {
 
   inputs.forEach((input) => {
     input.addEventListener("input", () => {
-      error.textContent = describeProblem();
+      // Recompute as she types. Waiting for the button meant changing a number
+      // left the old answer sitting there, which reads as a broken calculator.
+      const problem = describeProblem();
+      error.textContent = problem;
+      if (problem) {
+        holdResult();
+        return;
+      }
+      render();
     });
   });
 

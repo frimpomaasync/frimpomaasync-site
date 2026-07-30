@@ -95,3 +95,65 @@ test("the tier a customer picked reaches the fit form", () => {
   assert.match(journey, /TIER_LABELS\s*=\s*\{ start: "Start", grow: "Grow", full: "Full" \}/);
   assert.match(journey, /bindTierFields\(\)/);
 });
+
+test("every proof video on a reachable page carries a caption track", () => {
+  // services, products and client-catcher all 301 to /synkasa in production,
+  // so their players are unreachable and exempt.
+  for (const page of ["portfolio.html", "synkasa.html"]) {
+    const html = read(page);
+    const players = [...html.matchAll(/<video\b[\s\S]*?<\/video>/gi)].map((m) => m[0]);
+    assert.ok(players.length, `${page} should still hold its proof videos`);
+    for (const player of players) {
+      const src = (player.match(/\/videos\/([\w-]+)\.mp4/) || [])[1];
+      assert.ok(src, `a player in ${page} lost its source`);
+      assert.match(
+        player,
+        new RegExp(`<track kind="captions" src="/videos/captions/${src}\\.en\\.vtt"`),
+        `${src} on ${page} has no caption track`
+      );
+      readFileSync(`${ROOT}/videos/captions/${src}.en.vtt`, "utf8");
+    }
+  }
+});
+
+test("caption files stay inside their video and keep the house style", () => {
+  const lengths = { "01-receptionist": 35.8, "03-soma": 47.0, "04-som": 46.85, "05-tracker": 46.53 };
+  for (const [name, seconds] of Object.entries(lengths)) {
+    const vtt = read(`videos/captions/${name}.en.vtt`);
+    assert.match(vtt, /^WEBVTT/, `${name} must start with the WEBVTT header`);
+    const stamps = [...vtt.matchAll(/(\d\d):(\d\d):(\d\d\.\d\d\d) --> (\d\d):(\d\d):(\d\d\.\d\d\d)/g)];
+    assert.ok(stamps.length >= 10, `${name} looks too thin at ${stamps.length} cues`);
+    let previousEnd = 0;
+    for (const s of stamps) {
+      const from = +s[2] * 60 + +s[3];
+      const to = +s[5] * 60 + +s[6];
+      assert.ok(to > from, `${name} has a cue that ends before it starts`);
+      assert.ok(from >= previousEnd - 0.001, `${name} has overlapping cues at ${s[0]}`);
+      assert.ok(to <= seconds + 0.1, `${name} runs a cue past the end of the video`);
+      previousEnd = to;
+    }
+    assert.ok(!/[—–]/.test(vtt), `${name} contains a dash that is not allowed`);
+    assert.ok(
+      !/[\u{1F300}-\u{1FAFF}\u{2600}-\u{27BF}]/u.test(vtt),
+      `${name} contains an emoji`
+    );
+    for (const banned of ["Claude", "Anthropic", "minority-owned", "women-owned", "Black-owned"]) {
+      assert.ok(!vtt.includes(banned), `${name} names "${banned}"`);
+    }
+  }
+});
+
+test("no reachable page jumps a heading level", () => {
+  const redirected = new Set(["services.html", "products.html", "client-catcher.html"]);
+  const jumps = [];
+  for (const page of pages()) {
+    if (redirected.has(page) || /http-equiv="refresh"/.test(read(page))) continue;
+    const heads = [...read(page).matchAll(/<h([1-6])\b/gi)].map((m) => +m[1]);
+    let previous = 0;
+    for (const level of heads) {
+      if (previous && level > previous + 1) jumps.push(`${page}: h${previous} to h${level}`);
+      previous = level;
+    }
+  }
+  assert.deepEqual(jumps, [], `heading levels skipped:\n${jumps.join("\n")}`);
+});
