@@ -66,8 +66,43 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid rgba(194, 80, 28, 0.38);
+  /* Solid accent, not 38% alpha. The faded ring measured about 1.7:1 against
+     paper, under the 3:1 a focus indicator needs to be seen. Solid is 4.7:1. */
+  outline: 3px solid var(--copper);
   outline-offset: 4px;
+}
+
+/* Text for screen readers only: read aloud, never painted. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The skip link stays hidden until a keyboard reaches it. */
+.skip-link:focus {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  z-index: 200;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 12px 18px;
+  clip: auto;
+  clip-path: none;
+  background: var(--ink);
+  color: var(--paper);
+  border-radius: 8px;
+  font-size: 15px;
+  text-decoration: none;
 }
 
 .serif {

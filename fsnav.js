@@ -24,6 +24,11 @@
   var css = document.createElement("style");
   css.textContent = [
     "@keyframes skcDot{0%,100%{transform:translateY(0);opacity:.3}50%{transform:translateY(-3px);opacity:1}}",
+    /* Ships here, not in journey.css: 14 pages carry fsnav without journey.css,
+       and an unstyled skip link would just sit visible at the top of them. */
+    ".sr-only{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}",
+    ".skip-link:focus{position:fixed;top:12px;left:12px;z-index:200;width:auto;height:auto;margin:0;padding:12px 18px;clip:auto;clip-path:none;background:#101426;color:#FFFFFF;border-radius:8px;font-size:15px;text-decoration:none}",
+    "main:focus{outline:none}",
     "#fs-nav a{text-decoration:none}",
     "@media (hover:hover){#fs-nav [data-navlink]:hover{color:#101426!important}#fs-nav [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}#fs-bar [data-navcta]:hover{background:#C2501C!important;color:#FFF!important}#fs-bar [data-navlink]:hover{color:#101426!important}#fs-foot a:hover{color:#FFFFFF}#fs-chat-fab:hover{background:#C2501C!important}}",
     "#fs-foot a{text-decoration:none;color:rgba(242,244,249,.72)}",
@@ -71,6 +76,29 @@
       '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">Book a call</a>' +
       "</div></div>";
     body.insertBefore(nav, body.firstChild);
+
+    /* One skip link for every page: a keyboard reaches the page's own content
+       without tabbing the nav, the chat control and the booking link first. */
+    /* 14 pages (privacy, terms, the blog posts, 404 and friends) never had a
+       <main>, so fall back to the page's own first content block. */
+    var target =
+      document.querySelector("main") ||
+      document.querySelector("body > .wrap article") ||
+      document.querySelector("body > .wrap") ||
+      document.querySelector("body > section") ||
+      document.querySelector("body > div section");
+    if (target) {
+      if (!target.id) target.id = "fs-main";
+      var skip = document.createElement("a");
+      skip.className = "sr-only skip-link";
+      skip.href = "#" + target.id;
+      skip.textContent = "Skip to the main content";
+      skip.addEventListener("click", function () {
+        if (!target.hasAttribute("tabindex")) target.setAttribute("tabindex", "-1");
+        target.focus();
+      });
+      body.insertBefore(skip, body.firstChild);
+    }
     if (body.hasAttribute("data-cinematic")) {
       var syncCinematicNavHeight = function () {
         var height = nav.offsetHeight + "px";
@@ -343,22 +371,26 @@
   fab.type = "button";
   fab.id = "fs-chat-fab";
   fab.setAttribute("aria-label", "Chat with the front desk");
+  fab.setAttribute("aria-expanded", "false");
+  fab.setAttribute("aria-controls", "fs-chat-panel");
   fab.style.cssText = "position:fixed;right:20px;bottom:20px;z-index:60;width:58px;height:58px;border-radius:999px;border:none;cursor:pointer;background:#101426;color:#FFFFFF;font-size:22px;box-shadow:0 18px 40px -18px rgba(0,0,0,.7);transition:background .25s ease";
   fab.textContent = "◎";
   body.appendChild(fab);
 
   var panel = document.createElement("div");
   panel.id = "fs-chat-panel";
+  panel.setAttribute("role", "dialog");
+  panel.setAttribute("aria-label", "SynKasa front desk demo");
   panel.style.cssText = "position:fixed;right:20px;bottom:90px;z-index:60;width:min(360px,calc(100vw - 40px));background:#0C1226;color:#EDEFF4;border:1px solid rgba(242,244,249,.14);border-radius:22px;overflow:hidden;box-shadow:0 30px 70px -30px rgba(0,0,0,.8);display:none";
   panel.innerHTML =
     '<div style="padding:16px 18px;border-bottom:1px solid rgba(242,244,249,.12);display:flex;align-items:center;gap:10px">' +
     '<span style="width:8px;height:8px;border-radius:999px;background:#4FC07E"></span>' +
     '<span style="font-size:14px">SynKasa &middot; <span id="fs-chat-biz"></span></span>' +
     '<div style="flex:1"></div>' +
-    '<button type="button" id="fs-chat-x" style="background:transparent;border:none;color:rgba(237,239,244,.6);font-size:18px;cursor:pointer;font-family:inherit">&times;</button></div>' +
-    '<div id="fs-chat-msgs" style="padding:16px 18px;display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto"></div>' +
+    '<button type="button" id="fs-chat-x" aria-label="Close chat" style="background:transparent;border:none;color:rgba(237,239,244,.6);font-size:18px;cursor:pointer;font-family:inherit">&times;</button></div>' +
+    '<div id="fs-chat-msgs" role="log" aria-live="polite" aria-label="Conversation" style="padding:16px 18px;display:flex;flex-direction:column;gap:10px;max-height:300px;overflow-y:auto"></div>' +
     '<div style="display:flex;gap:8px;padding:12px 14px;border-top:1px solid rgba(242,244,249,.12)">' +
-    '<input id="fs-chat-inp" placeholder="Ask it something awkward" style="flex:1;min-width:0;font-family:inherit;font-size:14px;padding:11px 13px;border-radius:5px;border:1px solid rgba(242,244,249,.16);background:rgba(242,244,249,.06);color:#EDEFF4;outline:none">' +
+    '<input id="fs-chat-inp" aria-label="Your message to the front desk" placeholder="Ask it something awkward" style="flex:1;min-width:0;font-family:inherit;font-size:14px;padding:11px 13px;border-radius:5px;border:1px solid rgba(242,244,249,.16);background:rgba(242,244,249,.06);color:#EDEFF4;outline:none">' +
     '<button type="button" id="fs-chat-send" style="font-family:inherit;font-size:12.5px;letter-spacing:.02em;cursor:pointer;border:none;background:#C2501C;color:#FFF;padding:11px 16px;border-radius:5px">Send</button></div>';
   body.appendChild(panel);
 
@@ -387,17 +419,28 @@
     panel.querySelector("#fs-chat-biz").textContent = bizLabel();
   };
   function setOpen(v) {
+    var wasOpen = chatOpen;
     chatOpen = v;
     panel.style.display = v ? "block" : "none";
     fab.textContent = v ? "×" : "◎";
+    fab.setAttribute("aria-expanded", v ? "true" : "false");
+    fab.setAttribute("aria-label", v ? "Close chat" : "Chat with the front desk");
     if (v) {
       panel.querySelector("#fs-chat-biz").textContent = bizLabel();
       if (!msgs.children.length) window.skResetChat();
       setTimeout(function () { inp.focus(); }, 150);
+    } else if (wasOpen) {
+      /* Send the keyboard back where it came from, not to the top of the page. */
+      fab.focus();
     }
   }
   fab.addEventListener("click", function () { setOpen(!chatOpen); });
   panel.querySelector("#fs-chat-x").addEventListener("click", function () { setOpen(false); });
+  /* Document level, not panel level: Escape should close the chat wherever the
+     keyboard happens to be sitting when someone wants out. */
+  document.addEventListener("keydown", function (e) {
+    if (chatOpen && (e.key === "Escape" || e.key === "Esc")) setOpen(false);
+  });
   window.addEventListener("sk-open-chat", function () { setOpen(true); });
   Array.prototype.forEach.call(document.querySelectorAll("[data-fs-chat]"), function (b) {
     b.addEventListener("click", function () { setOpen(true); });
