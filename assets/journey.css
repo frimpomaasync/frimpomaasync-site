@@ -84,11 +84,15 @@ a {
   margin-inline: auto;
 }
 
+/* The photo, the scrim, and the copy stack on POSITIVE layers, the way the
+   shipped hero did before this rebuild. Negative z-index inside an isolated
+   stacking context, and overflow:clip, both render inconsistently on older
+   iOS, which left the hero a flat ink block on a real phone. */
 .cinematic-hero {
   position: relative;
+  min-height: 620px;
   min-height: min(860px, 100svh);
-  overflow: clip;
-  isolation: isolate;
+  overflow: hidden;
   padding: max(clamp(96px, 12vw, 164px), calc(var(--cinematic-nav-height) + 24px)) 0 clamp(118px, 14vw, 190px);
   background: var(--ink);
   color: var(--paper);
@@ -103,7 +107,7 @@ a {
 }
 
 .cinematic-media {
-  z-index: -3;
+  z-index: 1;
   object-fit: cover;
   object-position: center;
   transform: scale(1.025);
@@ -111,7 +115,8 @@ a {
 }
 
 .cinematic-scrim {
-  z-index: -2;
+  z-index: 2;
+  pointer-events: none;
   background:
     linear-gradient(90deg, rgba(8, 11, 24, .9) 0%, rgba(8, 11, 24, .58) 47%, rgba(8, 11, 24, .18) 74%),
     linear-gradient(0deg, rgba(8, 11, 24, .68) 0%, transparent 46%);

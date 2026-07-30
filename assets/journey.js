@@ -192,11 +192,40 @@ function bindCalculator() {
     error.textContent = "";
   };
 
+  // Name the actual problem. "Add all four numbers" was shown even when all
+  // four were there and one was simply out of range.
+  const describeProblem = () => {
+    if (inputs.some((field) => field.value.trim() === "")) {
+      return "Add all four numbers so the formula can use your scenario.";
+    }
+    if (inputs.some((field) => Number.isNaN(Number(field.value)))) {
+      return "Use plain numbers, with no letters or symbols.";
+    }
+    if ([missed, booking].some((field) => {
+      const percent = Number(field.value);
+      return percent < 0 || percent > 100;
+    })) {
+      return "The two percentages run from 0 to 100.";
+    }
+    if ([inquiries, value].some((field) => Number(field.value) < 0)) {
+      return "Inquiries and job value cannot be less than zero.";
+    }
+    return "";
+  };
+
+  // Never leave a previous answer on screen beside an error.
+  const holdResult = () => {
+    amount.textContent = "$0";
+    atRisk.textContent = "0";
+    formula.textContent = "Enter your four numbers to see the formula.";
+  };
+
   const calculateFromForm = (event) => {
     event.preventDefault();
-    if (!form.checkValidity()) {
-      error.textContent =
-        "Add all four numbers so the formula can use your scenario.";
+    const problem = describeProblem();
+    if (problem) {
+      error.textContent = problem;
+      holdResult();
       form.reportValidity();
       return;
     }
@@ -208,12 +237,7 @@ function bindCalculator() {
 
   inputs.forEach((input) => {
     input.addEventListener("input", () => {
-      if (inputs.some((field) => field.value === "")) {
-        error.textContent =
-          "Add all four numbers so the formula can use your scenario.";
-        return;
-      }
-      error.textContent = "";
+      error.textContent = describeProblem();
     });
   });
 

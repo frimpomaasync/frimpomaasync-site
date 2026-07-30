@@ -124,10 +124,33 @@
           step.style.transition = "none";
         });
       } else if (storySteps.length) {
+        /* Two steps can straddle the band at once. Pick the one nearest the
+           band instead of whichever entry happened to arrive last, so the
+           active step is the same every time you reach a given scroll spot. */
+        var inBand = [];
         var storyObserver = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
-            if (entry.isIntersecting) setActiveStoryStep(entry.target, storySteps);
+            var at = inBand.indexOf(entry.target);
+            if (entry.isIntersecting) {
+              if (at === -1) inBand.push(entry.target);
+            } else if (at !== -1) {
+              inBand.splice(at, 1);
+            }
           });
+          if (!inBand.length) return;
+          var band = window.innerHeight * 0.45;
+          var best = null;
+          var bestDistance = Infinity;
+          storySteps.forEach(function (step) {
+            if (inBand.indexOf(step) === -1) return;
+            var rect = step.getBoundingClientRect();
+            var distance = Math.abs((rect.top + rect.bottom) / 2 - band);
+            if (distance < bestDistance) {
+              bestDistance = distance;
+              best = step;
+            }
+          });
+          if (best) setActiveStoryStep(best, storySteps);
         }, { rootMargin: "-38% 0px -48% 0px" });
         storySteps.forEach(function (step) { storyObserver.observe(step); });
       }

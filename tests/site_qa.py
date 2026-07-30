@@ -130,6 +130,36 @@ def assert_no_overflow(page, width: int) -> None:
     assert size["scroll"] <= size["inner"], size
 
 
+def assert_hero_photo_is_painted(page, route: str) -> None:
+    """The hero photo must actually reach the screen.
+
+    Checking img.complete only proves the file downloaded. It stayed true while
+    a real phone showed a flat ink block, so this reads the rendered pixels: a
+    photograph varies, a solid fill does not.
+    """
+    from io import BytesIO
+    from PIL import Image
+
+    hero = page.locator("[data-cinematic-hero]")
+    box = hero.bounding_box()
+    assert box, f"{route}: no hero box"
+    image = Image.open(BytesIO(hero.screenshot())).convert("RGB")
+    width, height = image.size
+    # Sample the half of the hero the scrim leaves lightest.
+    crop = image.crop((int(width * .55), int(height * .1), width, int(height * .9)))
+    colors = crop.getcolors(maxcolors=1_000_000) or []
+    assert colors, f"{route}: hero crop had no colors"
+    distinct = len(colors)
+    total = sum(count for count, _ in colors)
+    dominant = max(count for count, _ in colors)
+    assert distinct >= 200, (
+        f"{route}: hero looks like a flat fill, only {distinct} distinct colors"
+    )
+    assert dominant / total < .5, (
+        f"{route}: {dominant / total:.0%} of the hero is one color"
+    )
+
+
 def assert_cinematic_nav_overlay(page) -> None:
     state = page.evaluate(
         """() => {
@@ -844,6 +874,15 @@ def run_foundation() -> None:
         assert_homepage_cinematic_contract(browser)
         assert_synkasa_cinematic_contract(browser)
         assert_siesie_cinematic_contract(browser)
+
+        # Desktop and phone, on every photographic hero.
+        for width, height in ((1280, 900), (390, 844)):
+            painted = browser.new_page(viewport={"width": width, "height": height})
+            for route in ("/index.html", "/synkasa.html", "/siesie.html"):
+                painted.goto(f"{BASE}{route}", wait_until="networkidle")
+                painted.wait_for_timeout(900)
+                assert_hero_photo_is_painted(painted, f"{route}@{width}")
+            painted.close()
         browser.close()
 
     with sync_playwright() as playwright:

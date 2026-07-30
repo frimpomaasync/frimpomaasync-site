@@ -140,20 +140,22 @@ test("journey and reference pages share one palette", () => {
   }
 });
 
-test("every page requests one shared fsnav.js version", () => {
+test("every page requests one version of each shared asset", () => {
   const pages = [
     ...readdirSync(ROOT).filter((name) => name.endsWith(".html")),
     ...readdirSync(`${ROOT}/blog`)
       .filter((name) => name.endsWith(".html"))
       .map((name) => `blog/${name}`),
   ];
-  const versions = new Set();
-  for (const page of pages) {
-    for (const hit of read(page).matchAll(/fsnav\.js\?v=([^"']+)/g)) {
-      versions.add(hit[1]);
+  for (const asset of ["fsnav\\.js", "assets/journey\\.css", "post\\.css"]) {
+    const versions = new Set();
+    for (const page of pages) {
+      for (const hit of read(page).matchAll(new RegExp(`${asset}\\?v=([^"']+)`, "g"))) {
+        versions.add(hit[1]);
+      }
     }
+    assert.ok(versions.size <= 1, `${asset} versions in use: ${[...versions]}`);
   }
-  assert.equal(versions.size, 1, `fsnav versions in use: ${[...versions]}`);
 });
 
 test("the SynKasa calculator ships a default that matches its own formula", () => {
