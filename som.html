@@ -22,6 +22,13 @@
   a:hover { color:#101426; }
   .serif { font-family:'Iowan Old Style','Palatino Linotype',Palatino,'Hoefler Text',Garamond,serif; font-weight:400; }
   .mono { font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace; }
+  /* Stat tiles, matching assets/modules.css. Kept here so the page stays
+     self-contained. */
+  .som-stat { background:#FFFFFF; border:1px solid rgba(16,20,38,.10); border-radius:12px; padding:20px 18px; }
+  .som-stat .n { font-family:'Iowan Old Style','Palatino Linotype',Palatino,'Hoefler Text',Garamond,serif; font-size:44px; line-height:1; color:#C2501C; font-variant-numeric:tabular-nums; }
+  .som-stat .l { margin-top:8px; font-size:12.5px; line-height:1.45; color:rgba(16,20,38,.62); }
+  @media (max-width:820px){ .som-stats { grid-template-columns:repeat(2,1fr) !important; } .som-stat .n { font-size:36px; } }
+  @media (max-width:360px){ .som-stats { grid-template-columns:1fr !important; } }
   .btn-primary, .btn-ghost, .btn-invert {
     display:inline-flex; align-items:center; gap:11px; padding:13px 19px; border-radius:5px;
     font-size:12.5px; letter-spacing:.02em; font-family:inherit; cursor:pointer;
@@ -81,6 +88,14 @@
           <div class="serif" style="font-size:24px; line-height:1.24; margin:14px 0 10px">Yours, free</div>
           <p style="margin:0; font-size:14.5px; line-height:1.58; color:rgba(16,20,38,.66)">No account, no subscription, no catch. The same rule as everything here: you own what you use.</p>
         </div>
+      </div>
+      <!-- Same stat tiles as the rest of the site. Written inline because this
+           page stays self-contained, as the note at the top of the file says. -->
+      <div data-reveal data-stagger data-stagger-step="50" style="display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-top:clamp(30px,3.4vw,44px)" class="som-stats">
+        <div class="som-stat"><div class="n serif"><span data-count="1">0</span></div><div class="l">field to fill, and no login in front of it</div></div>
+        <div class="som-stat"><div class="n serif"><span data-count="0">0</span></div><div class="l">bars of signal needed. It works in a basement</div></div>
+        <div class="som-stat"><div class="n serif"><span data-count="0">0</span></div><div class="l">accounts, and nothing to cancel later</div></div>
+        <div class="som-stat"><div class="n serif">$0</div><div class="l">forever, because it is yours</div></div>
       </div>
       <p style="margin:22px 2px 0; font-size:13.5px; line-height:1.55; font-style:italic; color:rgba(16,20,38,.46); max-width:42em">Watch it run on a real phone on the <a href="/portfolio">Proof page</a>.</p>
     </div>
