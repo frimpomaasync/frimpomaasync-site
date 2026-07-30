@@ -42,6 +42,9 @@
   .crumbs a{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);text-decoration:none;border-bottom:1px solid var(--hairline);padding-bottom:2px}
   .crumbs a:hover{color:var(--ink);border-color:var(--copper)}
   .crumbs span{font-family:var(--mono);font-size:10px;letter-spacing:.18em;color:var(--hairline)}
+  /* The crumb and the sign-off credit are set at 10px. A thumb needs 24px of
+     height to land on one, so pad them where the pointer is a finger. */
+  @media (pointer:coarse){.crumbs a{padding-top:5px}.signoff .credit a{display:inline-block;padding:7px 0}}
 
   .head{border-bottom:1px solid var(--hairline);padding-bottom:30px;margin-bottom:30px}
   h1{font-family:var(--serif);font-size:clamp(2.6rem,10vw,4.6rem);font-weight:700;letter-spacing:-.03em;line-height:1}
