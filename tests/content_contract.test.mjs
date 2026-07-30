@@ -79,6 +79,60 @@ test("core offers keep the approved facts", () => {
   }
 });
 
+const compactPages = [
+  "portfolio.html",
+  "free.html",
+  "fit.html",
+  "synkasa-fit.html",
+  "siesie-application.html",
+  "fit-thanks.html",
+];
+
+test("supporting journey pages use the compact hero", () => {
+  for (const page of compactPages) {
+    assert.match(read(page), /class="hero(?: dark)? compact-hero"/, page);
+  }
+  assert.match(read("assets/journey.css"), /\.compact-hero \{/);
+});
+
+test("active pages do not publish retired image assets", () => {
+  const activePages = [
+    "index.html",
+    "synkasa.html",
+    "siesie.html",
+    ...compactPages,
+    "privacy.html",
+    "terms.html",
+    "blog/index.html",
+  ];
+  const retired = /(og-client-catcher|ai-products-cover|og-cover|demo-followup-thread)\.(png|jpg)/;
+  for (const page of activePages) {
+    assert.doesNotMatch(read(page), retired, page);
+  }
+});
+
+test("journey and reference pages share one palette", () => {
+  const retiredPalette =
+    /#(?:C9975B|c9975b|1A1A1A|1a1a1a|8A8479|8a8479|A87938|a87938|8F6329|8f6329|E8E4DD|e8e4dd|F6F5F3|f6f5f3|FAFAF8|fafaf8|3D3A35|3d3a35|6F6A5E|6f6a5e)\b/;
+  const onCurrentTokens = [
+    "privacy.html",
+    "terms.html",
+    "404.html",
+    "blog/post.css",
+    ...readdirSync(`${ROOT}/blog`)
+      .filter((name) => name.endsWith(".html"))
+      .map((name) => `blog/${name}`),
+  ];
+  for (const page of onCurrentTokens) {
+    assert.doesNotMatch(read(page), retiredPalette, page);
+  }
+  // The pages that declare a palette rather than inherit one from post.css.
+  for (const page of ["privacy.html", "terms.html", "404.html", "blog/post.css"]) {
+    assert.match(read(page), /--ink:\s*#101426/i, page);
+    assert.match(read(page), /--copper:\s*#C2501C/i, page);
+  }
+});
+
 test("every page requests one shared fsnav.js version", () => {
   const pages = [
     ...readdirSync(ROOT).filter((name) => name.endsWith(".html")),
