@@ -336,6 +336,19 @@ function bindQualificationForms() {
   });
 }
 
+const TIER_LABELS = { start: "Start", grow: "Grow", full: "Full" };
+
+function bindTierFields() {
+  const fields = document.querySelectorAll("[data-tier-field]");
+  if (!fields.length) return;
+  const requested = (new URLSearchParams(window.location.search).get("tier") || "").toLowerCase();
+  const label = TIER_LABELS[requested];
+  if (!label) return;
+  fields.forEach((field) => {
+    field.value = label;
+  });
+}
+
 function bindFitConfirmation() {
   const root = document.querySelector("[data-fit-confirmation]");
   if (!root) return;
@@ -351,6 +364,7 @@ function startJourney() {
   bindSiesieCheck();
   bindCopyButtons();
   bindQualificationForms();
+  bindTierFields();
   bindFitConfirmation();
 }
 
