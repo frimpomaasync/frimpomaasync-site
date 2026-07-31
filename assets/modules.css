@@ -466,7 +466,15 @@
       .section.dark > .wrap.split > * + *::before{
         background:linear-gradient(90deg,transparent,rgba(255,255,255,.20) 12%,rgba(255,255,255,.20) 88%,transparent)}
     }
+    /* journey.css makes the first column of a split sticky, which was right when
+       a split was two bare columns on the page. Inside this framed card it slides
+       out of the bottom of its own border and leaves a hole above the eyebrow.
+       Seen on the /synkasa FAQ, the response script, and the homepage close.
+       The frame is the thing that has to hold, so the sticky comes off here. */
     .section > .wrap.split > *{position:relative;padding:0 40px}
+    @media (min-width:901px){
+      .section > .wrap.split > :first-child{position:relative;top:auto}
+    }
     .section > .wrap.split > *:first-child{padding-left:0}
     .section > .wrap.split > *:last-child{padding-right:0}
     .section > .wrap.split > * + *::before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:1px;
