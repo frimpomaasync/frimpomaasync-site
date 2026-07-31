@@ -334,19 +334,39 @@ a {
   align-self: flex-start;
 }
 
+/* Written for a dark cinematic hero. /synkasa now sits on paper, where white
+   text made the price and the guarantee invisible. Ink by default, white only
+   where the hero is actually dark. Fixed 31 July 2026. */
 .hero-trust {
   position: relative;
   z-index: var(--layer-hero);
   display: flex;
   flex-wrap: wrap;
-  gap: 10px 20px;
+  gap: 10px 22px;
   margin-top: clamp(22px, 3vw, 40px);
-  color: rgba(255, 255, 255, .86);
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: rgba(16, 20, 38, .62);
   font-family: var(--mono);
   font-size: 11px;
   letter-spacing: .08em;
   line-height: 1.5;
   text-transform: uppercase;
+}
+
+.hero-trust span:first-child {
+  color: var(--copper);
+}
+
+.hero.dark .hero-trust,
+.hero.cinematic-hero .hero-trust {
+  border-top-color: rgba(255, 255, 255, .16);
+  color: rgba(255, 255, 255, .86);
+}
+
+.hero.dark .hero-trust span:first-child,
+.hero.cinematic-hero .hero-trust span:first-child {
+  color: #fff;
 }
 
 .hero-trust span {

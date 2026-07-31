@@ -453,6 +453,19 @@
       border:1px solid rgba(16,20,38,.10);border-radius:16px;
       padding:38px 40px;gap:0;
       box-shadow:0 24px 56px -40px rgba(16,20,38,.4)}
+    /* A dark section paints its text white, so the paper card above would hide
+       every word inside it. Dark sections get the same frame in ink instead.
+       Fixed 31 July after /synkasa rendered two headings white on white. */
+    .section.dark > .wrap.split{
+      background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
+      border-color:rgba(255,255,255,.15);
+      box-shadow:0 30px 70px -40px rgba(0,0,0,.65)}
+    .section.dark > .wrap.split > * + *::before{
+      background:linear-gradient(180deg,transparent,rgba(255,255,255,.20) 18%,rgba(255,255,255,.20) 82%,transparent)}
+    @media (max-width:880px){
+      .section.dark > .wrap.split > * + *::before{
+        background:linear-gradient(90deg,transparent,rgba(255,255,255,.20) 12%,rgba(255,255,255,.20) 88%,transparent)}
+    }
     .section > .wrap.split > *{position:relative;padding:0 40px}
     .section > .wrap.split > *:first-child{padding-left:0}
     .section > .wrap.split > *:last-child{padding-right:0}
