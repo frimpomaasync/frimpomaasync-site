@@ -6,6 +6,10 @@
        Uses the existing motion engine in fsnav.js:
        data-reveal, data-stagger, data-count. No second animation system. */
 
+    /* Second accent, locked 30 July. journey.css defines it; the fallback is
+       here because a few pages load this sheet without journey.css. */
+    :root{ --red:#E4222C; --red-soft:rgba(228,34,44,.12); }
+
     .m-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:8px;
       border:1px solid rgba(16,20,38,.11);border-radius:14px;overflow:hidden;background:#fff;
       box-shadow:0 24px 54px -38px rgba(16,20,38,.4)}

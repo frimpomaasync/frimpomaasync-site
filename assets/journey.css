@@ -3,6 +3,11 @@
   --ink-soft: rgba(16, 20, 38, 0.66);
   --ink-faint: rgba(16, 20, 38, 0.42);
   --copper: #c2501c;
+  /* Second accent, locked 30 July with the mark. Copper is the brand's steady
+     voice; red is the one that says a thing is live right now. It carries the
+     mark, the word OPEN, and nothing else without a reason. */
+  --red: #e4222c;
+  --red-soft: rgba(228, 34, 44, 0.12);
   --paper: #ffffff;
   --paper-soft: #f8f8f9;
   --line: rgba(16, 20, 38, 0.1);
@@ -1421,7 +1426,7 @@ noscript {
   width: clamp(17px, 2vw, 26px);
   height: clamp(17px, 2vw, 26px);
   border-radius: 999px;
-  background: #e4222c;
+  background: var(--red);
   content: "";
   transform: translate(50%, -50%);
 }
@@ -1434,7 +1439,7 @@ noscript {
   width: clamp(17px, 2vw, 26px);
   height: clamp(17px, 2vw, 26px);
   border-radius: 999px;
-  background: #e4222c;
+  background: var(--red);
   transform: translate(-50%, -50%);
 }
 
@@ -1447,7 +1452,7 @@ noscript {
   border-radius: 28px;
   background: linear-gradient(160deg, #ffffff, #e6e7eb);
   box-shadow: 0 70px 100px -58px rgba(16, 20, 38, 0.6);
-  color: #e4222c;
+  color: var(--red);
   font-size: clamp(64px, 9vw, 132px);
   font-weight: 800;
   letter-spacing: 0.01em;
