@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Start Your Complimentary Denial Review | Soft Appeals</title>
+  <meta name="description" content="Start a complimentary review of 20 recent denied claims. Begin without sending patient information, then complete the appropriate privacy and secure-intake process before claim documentation is exchanged.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-start">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=25">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#101426">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="Start your complimentary denial review · Soft Appeals">
+  <meta property="og:description" content="Twenty recent denied claims, reviewed at no charge. The first step asks for business-level information only. Patient information is exchanged after the privacy documentation and secure intake are in place.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-start">
+  <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    /* The intake page. Scoped to this page. */
+
+    /* The four-step progress rail. It sits under the nav so the form always has
+       its position in the process visible above it. */
+    .prog {
+      position: sticky; top: var(--nav-height, 76px); z-index: 3;
+      padding: 12px 0; border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .93);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      backdrop-filter: saturate(180%) blur(12px);
+    }
+    .prog ol {
+      display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+      margin: 0; padding: 0; list-style: none;
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .prog li { display: flex; align-items: center; gap: 10px; }
+    .prog li b { font-weight: 400; }
+    .prog li.on { color: #B4460F; }
+    .prog li.on b { position: relative; }
+    .prog li.on b::after {
+      content: ""; position: absolute; left: 0; right: 0; bottom: -5px;
+      height: 2px; background: var(--copper, #C2501C);
+    }
+    .prog .sep { color: rgba(16, 20, 38, .26); }
+    @media (max-width: 700px) {
+      .prog { position: static; }
+      .prog ol { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 3px; }
+      .prog ol::-webkit-scrollbar { display: none; }
+    }
+
+    /* The PHI warning. Loud enough to stop a busy biller, quiet enough to belong. */
+    .warn {
+      margin: 22px 0 0; padding: 20px 22px;
+      border: 1px solid rgba(194, 80, 28, .3); border-left: 3px solid var(--copper, #C2501C);
+      border-radius: 0 16px 16px 0; background: rgba(194, 80, 28, .045);
+    }
+    .warn .k {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #B4460F;
+    }
+    .warn p { margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: var(--ink); }
+    .warn p + p { margin-top: 8px; color: var(--ink-soft); font-size: 14px; }
+
+    /* The do-not-send list. Two columns of plain items, each with a struck mark. */
+    .nolist { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+    .nolist li {
+      position: relative; padding: 11px 0 11px 30px; border-bottom: 1px solid var(--line);
+      font-size: 15px; line-height: 1.45; color: var(--ink-soft);
+    }
+    .nolist li::before {
+      content: "\00D7"; position: absolute; left: 6px; top: 9px;
+      color: var(--copper, #C2501C); font-size: 17px;
+    }
+
+    /* Checkbox groups inside the form. */
+    .checkgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px; }
+    .field > .checkgrid { margin-top: 2px; }
+    /* These checkboxes sit inside a fieldset.field, so journey.css's text-input
+       rule reaches them and gives each box a 48px min-height and 12px of
+       padding. That turned every option row into a 96px slab. Reset the box
+       back to a checkbox. */
+    .checkgrid .check-option input[type="checkbox"] {
+      width: 18px; height: 18px; min-height: 0; padding: 0; border-radius: 4px;
+    }
+    fieldset.field { min-width: 0; border: 0; margin: 0; padding: 0; }
+    fieldset.field > legend { padding: 0; margin-bottom: 8px; color: var(--ink); font-size: 13px; line-height: 1.45; }
+    .field-note { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: #B4460F; }
+    .form-shell .field.full > .field-note { margin-top: 6px; }
+
+    /* The PHI guard message, shown only when a pattern is caught. */
+    .guard {
+      display: none; margin: 16px 0 0; padding: 16px 18px;
+      border: 1px solid rgba(194, 80, 28, .34); border-radius: 12px;
+      background: rgba(194, 80, 28, .05); font-size: 14px; line-height: 1.58; color: var(--ink);
+    }
+    .guard.on { display: block; }
+    .guard b { font-weight: 600; }
+    .guard label { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; font-size: 13.5px; cursor: pointer; }
+    .guard input { width: 18px; height: 18px; flex: 0 0 18px; margin-top: 2px; accent-color: var(--copper, #C2501C); }
+
+    /* Fit / not-fit pair. */
+    /* 260, not 300. At 320px the content column is 242px wide, and a 300px
+       minimum makes the card end exactly on the viewport edge. */
+    .fitcols { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+    .fitcol { padding: 26px 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--paper); }
+    .fitcol.no { background: var(--paper-soft, #F8F8F9); }
+    .fitcol > .k {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .fitcol.yes > .k { color: #B4460F; }
+    .fitcol h3 { margin: 12px 0 16px; font-family: var(--serif); font-weight: 400; font-size: clamp(20px, 2.2vw, 25px); line-height: 1.2; }
+    .fitcol dl { margin: 0; }
+    .fitcol dt { margin-top: 16px; font-size: 15px; line-height: 1.45; color: var(--ink); }
+    .fitcol dt:first-child { margin-top: 0; }
+    .fitcol dd { margin: 5px 0 0; font-size: 14px; line-height: 1.58; color: var(--ink-soft); }
+
+    /* The five things to know before submitting. */
+    .five { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; counter-reset: five; }
+    .five li {
+      position: relative; padding: 16px 20px 16px 54px;
+      border: 1px solid var(--line); border-radius: 14px; background: var(--paper);
+      font-size: 15.5px; line-height: 1.5;
+    }
+    .five li::before {
+      counter-increment: five; content: counter(five, decimal-leading-zero);
+      position: absolute; left: 20px; top: 17px;
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 11px; letter-spacing: .1em; color: var(--copper, #C2501C);
+    }
+  </style>
+</head>
+<body data-sk-sections="Hero,Steps,The form,Do not send,Needed later,Not needed,Assessment,After,Billing company,Volume,Deadlines,Fit,Before you submit,Close" data-sk-bar="Start without sending patient information. The 20-denial review is complimentary." data-sk-biz="healthcare organization">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Hero">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · complimentary denial review</div>
+        <h1>Start with the denials. <em>Not a sales pitch.</em></h1>
+        <p class="hero-copy">Soft Appeals begins with a complimentary review of 20 recent denied claims, so you can see what needs action before deciding whether to engage anyone for recovery work. Your assessment organizes the reviewed claims by recommended action, financial value, priority, known time sensitivity and additional information required. You keep it whether or not you continue.</p>
+        <div class="warn">
+          <div class="k">First step · no patient information</div>
+          <p>Do not include patient names, dates of birth, medical record numbers, claim attachments, clinical records or other protected health information in the form below.</p>
+          <p>Patient-level information is requested only after the appropriate privacy documentation and secure intake process have been established. The form asks about your organization and your denial situation, nothing more.</p>
+        </div>
+        <div class="actions">
+          <a class="button" href="#form">Start the review <span class="button-arrow" aria-hidden="true">&#8595;</span></a>
+          <a class="button secondary" href="/soft-appeals-audit">View a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+        <div class="hero-trust">
+          <span>No upload field, by design</span>
+          <span>No call required to begin</span>
+          <span>BAA before PHI</span>
+          <span>No obligation after the assessment</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="prog">
+      <div class="wrap">
+        <ol>
+          <li class="on"><b>1 · Tell us about the denials</b></li>
+          <li><span class="sep">&#8594;</span> <b>2 · Secure intake</b></li>
+          <li><span class="sep">&#8594;</span> <b>3 · Review</b></li>
+          <li><span class="sep">&#8594;</span> <b>4 · Decide</b></li>
+        </ol>
+      </div>
+    </div>
+
+    <section class="section" data-screen-label="Steps">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">What happens next</div>
+          <h2 class="section-title"><span>Five steps</span> from inquiry to assessment.</h2>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Tell us about your organization</h3>
+            <p>Complete the short form below using general business and denial information. No patient records are needed at this stage.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Soft Appeals reviews fit</h3>
+            <p>We read what you sent to decide whether the claims and the scope you are describing suit the service. If more information is needed, we ask a business-level question rather than requesting records.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Establish the privacy and intake process</h3>
+            <p>Where the review will involve protected health information, the applicable Business Associate Agreement and the secure information-sharing process are established before PHI is exchanged.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Provide the 20 denials securely</h3>
+            <p>Once the intake process is ready, your organization receives instructions for providing the agreed claim and denial information through the designated channel.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Receive your Denial Recovery Assessment</h3>
+            <p>Soft Appeals reviews the selected claims and returns a structured assessment showing recommended actions, financial value, priority, known time-sensitive items and information still required. Then you decide what happens next.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="form" data-screen-label="The form">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Start your review</div>
+          <h2 class="section-title"><span>Tell us about</span> the denial situation.</h2>
+          <p class="section-intro">Business-level information only. Every question below is answerable without opening a chart. If you are not sure of a number, an estimate is fine, and "not sure" is a real answer on most of these.</p>
+        </div>
+
+        <h2 class="sr-only">Soft Appeals denial review intake form</h2>
+        <form class="form-shell" name="soft-appeals-start" data-qual-form data-phi-guard data-success="/soft-appeals-start-thanks" action="https://formspree.io/f/mnjkqydb" method="post">
+          <input type="hidden" name="_subject" value="Soft Appeals denial review request">
+          <input type="hidden" name="source" value="soft-appeals-start">
+          <div class="form-grid-fields">
+
+            <label class="field">Organization name
+              <input type="text" name="organization" autocomplete="organization" required>
+            </label>
+            <label class="field">Your name
+              <input type="text" name="name" autocomplete="name" required>
+            </label>
+            <label class="field">Work email
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+            <label class="field">Your role
+              <select name="role" required>
+                <option value="">Choose one</option>
+                <option>Practice owner or provider</option>
+                <option>Administrator or practice manager</option>
+                <option>Billing or revenue cycle</option>
+                <option>Finance or operations</option>
+                <option>Compliance or privacy</option>
+                <option>External billing partner</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <label class="field">Organization type
+              <select name="organization_type" required>
+                <option value="">Choose one</option>
+                <option>Behavioral health</option>
+                <option>Physical or occupational therapy</option>
+                <option>Dental</option>
+                <option>Chiropractic</option>
+                <option>Podiatry</option>
+                <option>Primary care</option>
+                <option>Specialty care</option>
+                <option>Multi-provider group</option>
+                <option>Other healthcare provider</option>
+              </select>
+            </label>
+            <label class="field">Roughly how many denied claims are unresolved?
+              <select name="denial_volume" required>
+                <option value="">Choose a range</option>
+                <option>1 to 20</option>
+                <option>21 to 50</option>
+                <option>51 to 100</option>
+                <option>101 to 250</option>
+                <option>251 to 500</option>
+                <option>More than 500</option>
+              </select>
+            </label>
+            <label class="field">Roughly how much denied reimbursement is involved?
+              <select name="denied_value" required>
+                <option value="">Choose a range</option>
+                <option>Under $5,000</option>
+                <option>$5,000 to $10,000</option>
+                <option>$10,001 to $25,000</option>
+                <option>$25,001 to $50,000</option>
+                <option>$50,001 to $100,000</option>
+                <option>More than $100,000</option>
+                <option>Not sure</option>
+              </select>
+            </label>
+            <label class="field">How are denials handled today?
+              <select name="current_handling" required>
+                <option value="">Choose one</option>
+                <option>Internal billing team</option>
+                <option>External billing company</option>
+                <option>Provider or office staff</option>
+                <option>Dedicated revenue-cycle team</option>
+                <option>A combination of these</option>
+                <option>No consistent process</option>
+                <option>Other</option>
+              </select>
+            </label>
+            <label class="field">Do you work with a billing company?
+              <select name="billing_company" required>
+                <option value="">Choose one</option>
+                <option>Yes</option>
+                <option>No</option>
+              </select>
+            </label>
+            <label class="field">Which payers are involved?
+              <input type="text" name="payers" data-phi-check placeholder="Payer names only" required>
+              <p class="field-note">Payer names only. No patient or claim-specific information.</p>
+            </label>
+
+            <fieldset class="field full">
+              <legend>What types of denials are you seeing?</legend>
+              <div class="checkgrid">
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Authorization"> Authorization</label>
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Medical necessity"> Medical necessity</label>
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Timely filing"> Timely filing</label>
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Documentation"> Documentation</label>
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Eligibility or coverage"> Eligibility or coverage</label>
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Claim information"> Claim information</label>
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Duplicate claims"> Duplicate claims</label>
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Coding-related"> Coding-related</label>
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Payer processing"> Payer processing</label>
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Not sure"> Not sure</label>
+                <label class="check-option"><input type="checkbox" name="denial_types[]" value="Other"> Other</label>
+              </div>
+            </fieldset>
+
+            <fieldset class="field full">
+              <legend>What usually happens to unresolved denials?</legend>
+              <div class="checkgrid">
+                <label class="check-option"><input type="checkbox" name="denial_outcomes[]" value="Corrected or resubmitted"> Corrected or resubmitted</label>
+                <label class="check-option"><input type="checkbox" name="denial_outcomes[]" value="Appealed"> Appealed</label>
+                <label class="check-option"><input type="checkbox" name="denial_outcomes[]" value="Sent back to the provider"> Sent back to the provider</label>
+                <label class="check-option"><input type="checkbox" name="denial_outcomes[]" value="Worked when staff have time"> Worked when staff have time</label>
+                <label class="check-option"><input type="checkbox" name="denial_outcomes[]" value="Written off"> Written off</label>
+                <label class="check-option"><input type="checkbox" name="denial_outcomes[]" value="Unsure"> Unsure</label>
+                <label class="check-option"><input type="checkbox" name="denial_outcomes[]" value="Other"> Other</label>
+              </div>
+            </fieldset>
+
+            <fieldset class="field full">
+              <legend>Roughly how old are the denials you want reviewed?</legend>
+              <div class="checkgrid">
+                <label class="check-option"><input type="checkbox" name="denial_age[]" value="Less than 30 days"> Less than 30 days</label>
+                <label class="check-option"><input type="checkbox" name="denial_age[]" value="30 to 60 days"> 30 to 60 days</label>
+                <label class="check-option"><input type="checkbox" name="denial_age[]" value="61 to 90 days"> 61 to 90 days</label>
+                <label class="check-option"><input type="checkbox" name="denial_age[]" value="91 to 180 days"> 91 to 180 days</label>
+                <label class="check-option"><input type="checkbox" name="denial_age[]" value="More than 180 days"> More than 180 days</label>
+                <label class="check-option"><input type="checkbox" name="denial_age[]" value="Mixed ages"> Mixed ages</label>
+                <label class="check-option"><input type="checkbox" name="denial_age[]" value="Not sure"> Not sure</label>
+              </div>
+            </fieldset>
+
+            <fieldset class="field full">
+              <legend>Do any of these claims look time-sensitive?</legend>
+              <div class="checkgrid">
+                <label class="check-option"><input type="checkbox" name="time_sensitive[]" value="Yes, some have approaching deadlines"> Some have approaching deadlines</label>
+                <label class="check-option"><input type="checkbox" name="time_sensitive[]" value="Not that we know of"> Not that we know of</label>
+                <label class="check-option"><input type="checkbox" name="time_sensitive[]" value="We have not checked"> We have not checked</label>
+              </div>
+              <p class="field-note">Flag it here rather than by sending a claim. Deadlines get looked at first.</p>
+            </fieldset>
+
+            <fieldset class="field full">
+              <legend>What would make this review useful to you?</legend>
+              <div class="checkgrid">
+                <label class="check-option"><input type="checkbox" name="goals[]" value="Identify which claims deserve attention"> Identify which claims deserve attention</label>
+                <label class="check-option"><input type="checkbox" name="goals[]" value="Find time-sensitive claims"> Find time-sensitive claims</label>
+                <label class="check-option"><input type="checkbox" name="goals[]" value="Determine appeal versus correction"> Determine appeal versus correction</label>
+                <label class="check-option"><input type="checkbox" name="goals[]" value="Understand the financial picture"> Understand the financial picture</label>
+                <label class="check-option"><input type="checkbox" name="goals[]" value="Get additional recovery capacity"> Get additional recovery capacity</label>
+                <label class="check-option"><input type="checkbox" name="goals[]" value="Evaluate Soft Appeals before engaging"> Evaluate Soft Appeals before engaging</label>
+                <label class="check-option"><input type="checkbox" name="goals[]" value="Coordinate with our billing team"> Coordinate with our billing team</label>
+                <label class="check-option"><input type="checkbox" name="goals[]" value="Other"> Other</label>
+              </div>
+            </fieldset>
+
+            <label class="field full">Anything else we should know? <small>Optional</small>
+              <textarea name="context" data-phi-check placeholder="Business-level context only. What has been tried, what keeps stalling, who owns the work today."></textarea>
+              <p class="field-note">No patient information, and no claim documents. There is no upload field on this page on purpose.</p>
+            </label>
+
+          </div>
+
+          <div class="guard" data-phi-guard-msg aria-live="polite"></div>
+
+          <button class="button" type="submit" style="margin-top:26px">Request my complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></button>
+          <p class="form-status" data-form-status aria-live="polite"></p>
+          <p class="small-note">Submitting this form requests an initial business-level review of fit. It does not create a recovery engagement, and it does not authorize Soft Appeals to access or submit patient information.</p>
+          <noscript>Email <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a> with your organization name, role and a business-level description of the denial situation. Do not attach patient information.</noscript>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Do not send">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Do not send claims yet</div>
+          <h2 class="section-title">The first form is deliberately free of patient information.</h2>
+          <p class="section-intro" style="margin-top:20px">You may already have denial letters, explanations of benefits, remittance files, spreadsheets, screenshots or patient records ready to go. Keep them inside your existing approved environment until the Soft Appeals intake process is established. Once it is, you will be told exactly what is needed and how to provide it.</p>
+        </div>
+        <div>
+          <div class="eyebrow">Not in this form</div>
+          <ul class="nolist" data-reveal>
+            <li>Patient names</li>
+            <li>Dates of birth</li>
+            <li>Medical record numbers</li>
+            <li>Member or subscriber identifiers</li>
+            <li>Claim attachments</li>
+            <li>Clinical records</li>
+            <li>Denial letters carrying patient information</li>
+            <li>Screenshots carrying patient information</li>
+            <li>Explanations of benefits or remittance documents at patient level</li>
+            <li>Any other protected health information</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Needed later">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">What we will ask for later</div>
+          <h2 class="section-title"><span>Not everything</span> in the chart.</h2>
+          <p class="section-intro">Once the agreements and the secure intake process are in place, the information needed for the 20-denial review may include the following. If something is missing, Soft Appeals identifies what it is and why it is needed rather than asking for a folder.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Claim and denial information</h3>
+            <p>Enough to understand what was billed, what was denied and the payer's stated reason.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Remittance or denial information</h3>
+            <p>The relevant denial codes, explanations, correspondence or payment information.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Submission information</h3>
+            <p>Acknowledgement, filing or other claim-submission evidence where it is relevant.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Supporting information</h3>
+            <p>Only the documentation reasonably needed to understand or evaluate the selected claim.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Not needed">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">What you do not need to provide</div>
+          <h2 class="section-title">Starting should not require handing over your whole system.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:20px">By default, the complimentary review does not require:</p>
+          <ul class="nolist" style="grid-template-columns:1fr">
+            <li>unrestricted EHR access</li>
+            <li>your entire patient database</li>
+            <li>administrator credentials</li>
+            <li>shared staff passwords</li>
+            <li>unrelated clinical records</li>
+            <li>every denial in your organization</li>
+            <li>a perfectly organized denial report</li>
+          </ul>
+          <p class="section-intro">Start with the agreed 20 claims. Expand when there is a reason to.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Assessment">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">What your assessment includes</div>
+          <h2 class="section-title"><span>Every reviewed claim</span> comes back with a decision attached.</h2>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Recommended action</h3>
+            <p>Correct and resubmit, appeal, investigate, or close and deprioritize.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Financial value</h3>
+            <p>The denied amount associated with the reviewed claim.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Priority</h3>
+            <p>Which claims warrant earlier attention, based on the information available.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Timing</h3>
+            <p>Known time-sensitive items, and the deadlines that need confirming.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Recommendation basis</h3>
+            <p>Why the claim received the next action it did.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>Information needed</h3>
+            <p>What is missing before the claim can move.</p></div>
+          <div class="rsn"><div class="n">07</div><h3>Ownership</h3>
+            <p>Whether the next action belongs with Soft Appeals, your organization, your billing partner or another party.</p></div>
+        </div>
+        <div class="actions" style="margin-top:26px">
+          <a class="button secondary" href="/soft-appeals-audit">View a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="After">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">After the assessment</div>
+          <h2 class="section-title"><span>You are not</span> automatically enrolled in anything.</h2>
+        </div>
+        <div class="card-grid" data-reveal data-stagger data-stagger-step="50">
+          <article class="path-card">
+            <span class="pill">Option</span>
+            <h3>Use it internally.</h3>
+            <p>Hand the recommendations to your existing billing or revenue-cycle team and work them yourselves.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Option</span>
+            <h3>Ask Soft Appeals to pursue selected claims.</h3>
+            <p>If you want recovery support, the eligible scope, responsibilities, pricing, approval process and engagement terms are established first.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Option</span>
+            <h3>Provide additional information.</h3>
+            <p>Claims marked Investigate can move forward once the missing information is obtained.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Option</span>
+            <h3>Take no further action.</h3>
+            <p>The assessment stays yours. There is no obligation to continue.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Billing company">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">If you already have a billing company</div>
+          <h2 class="section-title">Bring them into the process.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:20px">Soft Appeals is not designed to work around your billing partner. If your billing company currently owns the denial workflow, you can involve the appropriate representative in the assessment and in any recovery work that follows.</p>
+          <p class="section-intro">Clear roles beat duplicate effort. A claim should have one visible next action and one accountable owner, and agreeing that up front is faster than discovering two people worked the same appeal.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Volume">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">If you have more than 20 denials</div>
+          <h2 class="section-title">Start with a representative set.</h2>
+          <p class="section-intro" style="margin-top:20px">You do not need to send an entire backlog to find out whether the service is useful. Begin with 20 recent denials. A larger backlog can be scoped after the initial review.</p>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:20px">A sample of 20 is usually enough to establish:</p>
+          <ul class="nolist" style="grid-template-columns:1fr">
+            <li>what kinds of problems are present</li>
+            <li>which recovery paths appear most often</li>
+            <li>whether additional recovery capacity would help</li>
+            <li>what information is missing</li>
+            <li>whether a larger engagement makes sense</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Deadlines">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">If your denials are time-sensitive</div>
+          <h2 class="section-title">Say so in the form, before sending anything.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:20px">Use the time-sensitive question in the intake form to flag that some claims may have approaching deadlines. Do not put patient information in the form to make the point. Soft Appeals can then decide the appropriate next intake step and whether the review can be responsibly accepted, based on the available information and current capacity.</p>
+          <p class="section-intro">An approaching deadline does not guarantee that a claim can be accepted, or that a complete submission can be prepared without the required information.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Fit">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Fit</div>
+          <h2 class="section-title"><span>Worth knowing</span> before you fill anything in.</h2>
+        </div>
+        <div class="fitcols" data-reveal data-stagger data-stagger-step="50">
+          <div class="fitcol yes">
+            <div class="k">Soft Appeals may be a fit when</div>
+            <h3>The billing operation works, and denials still sit.</h3>
+            <dl>
+              <dt>You already have a billing operation.</dt>
+              <dd>But denied claims still go unresolved.</dd>
+              <dt>Staff know the backlog exists.</dt>
+              <dd>Nobody has dedicated capacity to work it consistently.</dd>
+              <dt>You want to know what deserves attention before paying for recovery work.</dt>
+              <dd>The complimentary assessment is that starting point.</dd>
+              <dt>You want recovery capacity without replacing your billing team.</dt>
+              <dd>Soft Appeals works the denied claims you assign it.</dd>
+              <dt>You want claim-level visibility.</dt>
+              <dd>What is happening, who owns the next action, what is blocking it, how it resolved.</dd>
+            </dl>
+          </div>
+          <div class="fitcol no">
+            <div class="k">Soft Appeals may not be a fit when</div>
+            <h3>The need sits outside denied-claim recovery.</h3>
+            <dl>
+              <dt>You need a full billing-company replacement.</dt>
+              <dd>The service covers denied-claim recovery, not the whole revenue cycle.</dd>
+              <dt>You need independent clinical decisions.</dt>
+              <dd>Clinical judgment stays with the appropriate licensed or authorized professional.</dd>
+              <dt>You need independent coding decisions or a coding audit.</dt>
+              <dd>Coding issues are identified, but qualified coding review sits outside the standard scope unless separately established.</dd>
+              <dt>You are seeking legal representation.</dt>
+              <dd>Soft Appeals does not provide legal representation or legal advice.</dd>
+              <dt>You want guaranteed payer outcomes.</dt>
+              <dd>Recovery cannot be guaranteed by anyone who is being honest with you.</dd>
+              <dt>The volume exceeds current responsible capacity.</dt>
+              <dd>Soft Appeals may recommend a narrower scope rather than accepting work it cannot manage properly.</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Before you submit">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Before you submit</div>
+          <h2 class="section-title">Five things to know.</h2>
+        </div>
+        <div>
+          <ul class="five" data-reveal data-stagger data-stagger-step="50" style="margin-top:20px">
+            <li>Do not include patient information in the intake form.</li>
+            <li>The first 20-denial assessment is complimentary.</li>
+            <li>The assessment does not obligate you to buy recovery services.</li>
+            <li>Nothing is submitted to a payer through this form.</li>
+            <li>Paid recovery work begins only after scope and engagement terms are established.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <div class="eyebrow">Ready?</div>
+        <h2>Begin without sending patient information.</h2>
+        <p>Tell us about your organization and your denial situation first. If Soft Appeals looks appropriate, the next intake step gets established before any claim-level information is exchanged. Already have security, compliance or contracting questions? Ask those before sending PHI, not after.</p>
+        <div class="actions">
+          <a class="button secondary" href="#form">Request your complimentary review →</a>
+          <a class="button secondary" href="/soft-appeals-audit">View a sample assessment →</a>
+          <a class="button secondary" href="/soft-appeals-data-security">Review data and security practices →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* Two jobs, both local to this page.
+
+       1. --nav-height. The shared nav publishes it only on cinematic pages, and
+          its real height is 82px against journey.css's 76px fallback. The
+          progress rail sticks to that value, so six pixels of it would slide
+          under the nav.
+       2. The PHI guard. The form has no upload field and asks nothing
+          patient-level, but two fields take free text, and a busy biller pasting
+          a claim line into "anything else" is the one way patient information
+          reaches an ordinary form. Catch the shapes that give it away, say what
+          was caught, and let them confirm if it was a false alarm. */
+    (function () {
+      function syncNav() {
+        var nav = document.getElementById('fs-nav');
+        if (nav) document.documentElement.style.setProperty('--nav-height', nav.offsetHeight + 'px');
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncNav);
+      else syncNav();
+      window.addEventListener('load', syncNav);
+      window.addEventListener('resize', syncNav);
+
+      var form = document.querySelector('[data-phi-guard]');
+      if (!form) return;
+      var msg = form.querySelector('[data-phi-guard-msg]');
+      var fields = [].slice.call(form.querySelectorAll('[data-phi-check]'));
+
+      var PATTERNS = [
+        { re: /\b\d{3}-\d{2}-\d{4}\b/, what: 'something shaped like a social security number' },
+        { re: /\b(0?[1-9]|1[0-2])[\/\-.](0?[1-9]|[12]\d|3[01])[\/\-.](19|20)?\d{2}\b/, what: 'something shaped like a date of birth' },
+        { re: /\b(dob|d\.o\.b|date of birth|mrn|medical record|member id|subscriber id|patient)\b/i, what: 'a word that usually travels with patient information' },
+        { re: /\b\d{7,}\b/, what: 'a long identifier that could be a member or claim number' }
+      ];
+
+      function scan() {
+        var hits = [];
+        fields.forEach(function (f) {
+          var v = f.value || '';
+          PATTERNS.forEach(function (p) {
+            if (p.re.test(v)) hits.push(p.what);
+          });
+        });
+        return hits.filter(function (h, i) { return hits.indexOf(h) === i; });
+      }
+
+      form.addEventListener('submit', function (e) {
+        var ok = msg.querySelector('input[type=checkbox]');
+        if (ok && ok.checked) return;
+        var hits = scan();
+        if (!hits.length) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        msg.innerHTML =
+          '<b>Hold on, that looks like patient information.</b> This form found ' + hits.join(', ') +
+          '. Nothing has been sent. Please take it out and describe the situation at business level instead. ' +
+          'Patient-level detail is requested later, through the secure intake process.' +
+          '<label><input type="checkbox"> I have checked this field, and it contains no patient information.</label>';
+        msg.classList.add('on');
+        msg.scrollIntoView({ block: 'center' });
+      }, true);
+    })();
+  </script>
+
+  <script type="module" src="/assets/journey.js?v=6"></script>
+  <script src="/fsnav.js?v=842" defer></script>
+</body>
+</html>

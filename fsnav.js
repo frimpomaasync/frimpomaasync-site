@@ -9,6 +9,12 @@
   window.__fsnav810 = true;
 
   var BOOK = "https://calendar.app.google/DkRJFRA3G6W6d8E48";
+  /* Soft Appeals converts on a PHI-free intake form, not on the calendar. A
+     healthcare buyer evaluating a vendor should not have to book time with a
+     stranger to find out whether the service fits, and a call is the wrong
+     first container for claim detail anyway. Scheduling stays reachable from
+     the two "ask a question" buttons and from the confirmation step. */
+  var SOFT_CTA = "/soft-appeals-start";
   var CHAT_API = "https://synkasa-api.dawn-boat-ec20.workers.dev/chat";
   var SERIF = "'Iowan Old Style','Palatino Linotype',Palatino,'Hoefler Text',Garamond,serif";
   var MONO = "ui-monospace,'SF Mono',Menlo,Consolas,monospace";
@@ -97,6 +103,10 @@
     if (p.indexOf("/soft-appeals-about") === 0) return "soft-about";
     if (p.indexOf("/soft-appeals-process") === 0) return "soft-process";
     if (p.indexOf("/soft-appeals-pricing") === 0) return "soft-pricing";
+    /* The intake page and its confirmation are not in the bar. They still need
+       their own key, or the fallback would light "Offer" while a buyer is
+       halfway through the form. */
+    if (p.indexOf("/soft-appeals-start") === 0) return "soft-start";
     return "soft-offer";
   }
   function navLink(label, href, key, on) {
@@ -156,7 +166,7 @@
       (isSoft
         ? '<a data-navlink data-fs-by href="/" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">by frimpomaasync</a>'
         : '<button type="button" data-navlink data-fs-chat style="background:none;border:0;padding:0;font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);cursor:pointer;transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Free review" : "Book a call") + "</a>" +
+      '<a data-navcta href="' + (isSoft ? SOFT_CTA : BOOK) + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Free review" : "Book a call") + "</a>" +
       "</div></div>";
     body.insertBefore(nav, body.firstChild);
 
@@ -302,7 +312,7 @@
       (isSoft
         ? '<a data-navlink href="' + (onSoft === "soft-audit" ? "/soft-appeals-data-security" : "/soft-appeals-audit") + '" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">' + (onSoft === "soft-audit" ? "Data and security" : "See the report") + "</a>"
         : '<button type="button" data-navlink data-fs-chat style="font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;background:none;border:0;padding:0;color:rgba(16,20,38,.58);transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Free review" : "Book a call") + "</a>" +
+      '<a data-navcta href="' + (isSoft ? SOFT_CTA : BOOK) + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Free review" : "Book a call") + "</a>" +
       "</div>";
     body.appendChild(barEl);
 
