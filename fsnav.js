@@ -8,13 +8,13 @@
   if (window.__fsnav810) return;
   window.__fsnav810 = true;
 
-  var BOOK = "https://calendar.app.google/DkRJFRA3G6W6d8E48";
+  var BOOK = "/book";
   /* Soft Appeals converts on a PHI-free intake form, not on the calendar. A
      healthcare buyer evaluating a vendor should not have to book time with a
      stranger to find out whether the service fits, and a call is the wrong
      first container for claim detail anyway. Scheduling stays reachable from
      the two "ask a question" buttons and from the confirmation step. */
-  var SOFT_CTA = "/soft-appeals-start";
+  var SOFT_CTA = "/soft-appeals-book";
   var CHAT_API = "https://synkasa-api.dawn-boat-ec20.workers.dev/chat";
   var SERIF = "'Iowan Old Style','Palatino Linotype',Palatino,'Hoefler Text',Garamond,serif";
   var MONO = "ui-monospace,'SF Mono',Menlo,Consolas,monospace";

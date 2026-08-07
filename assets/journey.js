@@ -1,4 +1,4 @@
-const BOOKING_URL = "https://calendar.app.google/DkRJFRA3G6W6d8E48";
+const BOOKING_URL = "/book";
 const FALLBACK_EMAIL = "hello@frimpomaasync.com";
 
 const clamp = (value, min, max) =>
