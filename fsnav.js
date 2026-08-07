@@ -93,6 +93,7 @@
     if (p.indexOf("/soft-appeals-decoder") === 0) return "soft-decoder";
     if (p.indexOf("/soft-appeals-audit") === 0) return "soft-audit";
     if (p.indexOf("/soft-appeals-data-security") === 0) return "soft-data";
+    if (p.indexOf("/soft-appeals-about") === 0) return "soft-about";
     return "soft-offer";
   }
   function navLink(label, href, key, on) {
@@ -124,7 +125,8 @@
       navLink("The offer", "/soft-appeals", "soft-offer", onSoft) +
       navLink("The decoder", "/soft-appeals-decoder", "soft-decoder", onSoft) +
       navLink("The report", "/soft-appeals-audit", "soft-audit", onSoft) +
-      navLink("Security", "/soft-appeals-data-security", "soft-data", onSoft);
+      navLink("Security", "/soft-appeals-data-security", "soft-data", onSoft) +
+      navLink("About", "/soft-appeals-about", "soft-about", onSoft);
     var siteNav =
       navLink("SynKasa", "/synkasa", "synkasa", on) +
       navLink("Siesie", "/siesie", "siesie", on) +

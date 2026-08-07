@@ -2,7 +2,7 @@
 
 frimpomaasync.com builds practical business systems for owner-run service businesses. SynKasa handles the front desk. Siesie handles the repeating work behind it. Every build lives in the client's accounts and stays theirs.
 
-There is a second audience with its own product. Soft Appeals recovers denied insurance claims for independent medical practices. It is the same idea pointed at healthcare: a hospital keeps a department for fighting denials and an independent practice does not, so Soft Appeals is that department, sized for the practice.
+There is a second audience with its own product. Soft Appeals recovers denied insurance claims for healthcare organizations. It adds focused recovery capacity for denied claims alongside an organization's existing billing operation, rather than replacing any part of it.
 
 Primary slogan: "Watch it work before you pay."
 
@@ -80,25 +80,32 @@ The Siesie application asks for contact details, business type, team size, month
 
 Page: https://frimpomaasync.com/soft-appeals
 
-Sample audit report: https://frimpomaasync.com/soft-appeals-audit
+Sample Denial Recovery Assessment: https://frimpomaasync.com/soft-appeals-audit
 
-Patient data and privacy: https://frimpomaasync.com/soft-appeals-your-data
+Data and security practices: https://frimpomaasync.com/soft-appeals-data-security
 
-Free denial decoder: https://frimpomaasync.com/soft-appeals-decoder · type any denial reason code (like CO-16, CO-29, CO-50, CO-197, PR-204) and get the plain-English meaning, whether it is a quick fix, an appeal or a dead claim, published win-rate context, the recommended move, and a sample appeal-letter opening. Runs entirely in the browser and asks for no patient information. Also carries a Maryland payer-by-payer appeal deadline table.
+About Soft Appeals: https://frimpomaasync.com/soft-appeals-about
 
-Soft Appeals recovers denied insurance claims for independent medical practices and outpatient groups. Maryland first. It is a separate audience from SynKasa and Siesie and does not serve local service businesses.
+Free denial decoder: https://frimpomaasync.com/soft-appeals-decoder . Type any denial reason code (like CO-16, CO-29, CO-50, CO-197, PR-204) and get the plain-English meaning, whether it points to a correction, an appeal or no further recovery effort, published context, the recommended next step, and a sample appeal-letter opening. Runs entirely in the browser and asks for no patient information. Also carries a Maryland payer-by-payer appeal deadline table.
 
-How it works: the practice signs a business associate agreement, sends its 20 most recent denials through a secure channel, and receives a free one-page audit within days. The audit sorts every claim into quick fixes, claims worth appealing, and claims not worth fighting, values each at the contracted allowed amount rather than billed charges, and flags claims whose appeal window closes soonest. AI drafts each appeal against the payer's own published rules, then NaNa Frimpomaa reads, corrects, signs and sends it with proof of delivery. The AI tools that touch claims operate under their own business associate agreements, and nothing trains on patient data. The practice approves every appeal before it is submitted in the practice's name.
+Soft Appeals is a denied-claim revenue recovery service for healthcare organizations. It adds focused recovery capacity alongside an organization's existing billing operation rather than replacing it. Maryland first. It is a separate audience from SynKasa and Siesie and does not serve local service businesses.
 
-Fee: 25 percent of commercial claims actually recovered, invoiced only after the payer pays the practice and matched to the payer's own remittance. Individual claims from $150, with smaller claims appealed in batches. Medicare and Medicaid claims carry a flat fee per appeal instead, because federal rules do not permit percentage fees on them. There is no setup fee, no monthly minimum, and no contract lock. No recovery means no fee.
+Who it works with: behavioral health and therapy practices, physical and occupational therapy organizations, dental practices and groups, chiropractic and podiatry organizations, primary and specialty care organizations, multi-provider groups, and other provider organizations with unresolved claim denials. Fit depends on claim type, payer mix, denial volume, documentation available, and the scope of recovery work requested. Substance use disorder claims are out of scope.
 
-The money goes from the payer directly to the practice. Soft Appeals never handles client funds.
+How it works: the applicable Business Associate Agreement is executed before protected health information is exchanged. The organization sends 20 recent denied claims through the agreed secure process. Routine EHR access is not required for the initial review. Soft Appeals returns a Denial Recovery Assessment that sorts every reviewed claim by recommended action (correct or resubmit, appeal, investigate further, close or deprioritize), assigns a Recovery Priority of A, B, C or D, records the reasoning behind each recommendation, flags known time-sensitive items, and lists what each side must do next. Claims selected for recovery then move through payer-requirement research, evidence organization, appeal preparation, client approval, submission with recorded delivery evidence, follow-up tracking, and reconciliation against the payer's remittance. Nothing is submitted in the organization's name without its approval.
 
-Strong fit: therapy, physical and occupational therapy, dental, chiropractic, podiatry, and any independent practice writing off denials monthly. Wrong fit: hospitals and health systems. Substance use disorder claims are out of scope because of the federal rules covering those records.
+Technology use: technology assists with organizing claim information, researching payer requirements, managing workflow, identifying follow-up items, preparing draft appeal materials, and tracking recovery activity. It does not independently authorize an appeal, make a clinical determination, change coding, or submit a claim in a client's name. Protected health information is not intentionally entered into consumer-facing AI accounts or unapproved tools, and client PHI is not intentionally used to train public or general-purpose AI models.
 
-Privacy commitments: a signed business associate agreement before any patient data moves, never ordinary email, never a consumer chatbot, work done inside the practice's own systems wherever possible, unique logins with two-factor sign-in, US-based with no offshoring, notification within 72 hours if anything goes wrong, and return or destruction of claim-level data when the engagement ends.
+Fee: 25 percent of verified recovered reimbursement attributable to the recovery engagement, for eligible commercial claims accepted for recovery. The payer pays the organization directly and Soft Appeals never takes custody of payer funds. The invoice follows verification against the applicable remittance documentation. Individual claims from $150, with smaller claims worked in batches where the payer's process allows it. If no eligible recovery is achieved, no contingency fee is due for that claim. There is no setup fee, no monthly retainer and no minimum. Government-program claims may be subject to different legal, contractual or fee requirements, and their pricing and scope are agreed separately before any work begins on them.
 
-Soft Appeals makes no promise about recovery amounts or win rates. The published statistics on its pages are industry figures with named sources, not predictions about any practice.
+The complimentary review is free of charge and the assessment belongs to the organization whether or not it continues with recovery services.
+
+Privacy commitments: agreement before PHI, a minimum-necessary approach to information requests, no routine EHR access for the initial review, a defined technology workflow, client approval before any payer submission, and a documented data-disposition process at the end of an engagement. Where a third-party service creates, receives, maintains or transmits PHI as part of the workflow, it is evaluated for its role and handled under the contractual and security requirements applicable to that relationship. Where PHI is required to be returned or destroyed at termination, it is, where feasible.
+
+Soft Appeals makes no promise about recovery amounts or overturn rates for any organization. The statistics published on its pages are industry figures with named sources, not predictions. A recommendation to pursue a claim does not guarantee reimbursement or reversal of a payer determination.
+
+Founder: NaNa Frimpomaa, MHA. Background in healthcare operations, performance improvement, data and administrative workflow, and health-system technology implementation including Epic go-live work. Soft Appeals is founder-led, and the founder remains accountable for work performed within the Soft Appeals scope. Soft Appeals does not make clinical, coding or legal determinations outside the agreed scope of service.
+
 
 ## Proof
 
