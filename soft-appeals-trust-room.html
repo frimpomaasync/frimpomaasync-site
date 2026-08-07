@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Trust Room · Soft Appeals | frimpomaasync.com</title>
+  <meta name="description" content="The vendor due-diligence center for Soft Appeals: privacy, BAA process, AI use, data flow, access, third parties, incident response, retention and disposition. Every item marked with its real status, and nothing claimed that cannot be supported.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-trust-room">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=26">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#101426">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="The Trust Room · Soft Appeals vendor due diligence">
+  <meta property="og:description" content="Privacy, BAA process, AI use, data flow, access, third parties, incident response and disposition, in one place, with the status of each stated plainly.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-trust-room">
+  <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    /* The Trust Room. Scoped to this page, system fonts only, no remote requests.
+       Nothing on this page states a certification, audit result, security
+       standard, insurance level, testing regime or technical control as
+       existing. Where a thing is genuinely established it says Documented;
+       where it is decided per engagement it says Set in the agreement; where
+       it exists but is not published it says Available on request; where it is
+       not yet settled it says Under review, and names what settles it. */
+    .tr-jump {
+      display: flex; gap: 8px; flex-wrap: wrap;
+      padding: 14px 0 0; margin: 0;
+    }
+    .tr-jump a {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase;
+      text-decoration: none; color: var(--ink-soft);
+      padding: 9px 13px; border: 1px solid var(--line); border-radius: 100px;
+    }
+    .tr-jump a:hover { border-color: var(--copper, #C2501C); color: var(--copper-deep, #9D3F16); }
+    .tr-jump a:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
+
+    .tr-panel {
+      border: 1px solid var(--line); border-radius: 18px; background: var(--paper);
+      overflow: hidden; margin-top: 16px;
+    }
+    .tr-head {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 14px; flex-wrap: wrap;
+      padding: 20px clamp(18px, 3vw, 28px); border-bottom: 1px solid var(--line);
+      background: var(--panel-2, #F8F8F9);
+    }
+    .tr-head h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(20px, 2.6vw, 25px); }
+    .tr-head .who { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+    .tr-in { padding: clamp(18px, 3vw, 28px); }
+
+    .tr-item { padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .tr-item:first-child { padding-top: 0; }
+    .tr-item:last-child { border-bottom: 0; padding-bottom: 0; }
+    .tr-item .q { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+    .tr-item .q b { font-size: 15.5px; font-weight: 600; line-height: 1.4; }
+    .tr-item p { margin: 9px 0 0; font-size: 14px; line-height: 1.7; color: var(--ink-soft); }
+    .tr-item p b { color: var(--ink); font-weight: 600; }
+    .tr-item p + p { margin-top: 8px; }
+
+    .st {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase;
+      padding: 5px 10px; border-radius: 100px; white-space: nowrap; flex-shrink: 0;
+      border: 1px solid var(--line); color: var(--ink-soft);
+    }
+    .st.doc { border-color: rgba(194, 80, 28, .4); background: rgba(194, 80, 28, .07); color: #B4460F; }
+    .st.req { border-color: rgba(16, 20, 38, .2); }
+    .st.rev { border-style: dashed; }
+
+    .tr-key { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+    .tr-key li { display: flex; gap: 12px; align-items: baseline; font-size: 13.5px; line-height: 1.6; }
+
+    .tr-not { margin-top: 16px; padding: 20px clamp(18px, 3vw, 24px); border: 1px solid var(--line); border-radius: 16px; background: var(--paper); }
+    .tr-not .k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #B4460F; }
+    .tr-not p { margin: 10px 0 0; font-size: 14px; line-height: 1.7; }
+    .tr-badges { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+    .tr-badges span {
+      font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px;
+      letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint);
+      padding: 7px 12px; border: 1px dashed var(--line); border-radius: 100px;
+      text-decoration: line-through; text-decoration-color: rgba(194, 80, 28, .6);
+    }
+
+    /* Data flow */
+    .tr-flow { display: grid; gap: 12px; margin-top: 14px; counter-reset: fl; }
+    .tr-step { display: flex; gap: 16px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; align-items: flex-start; }
+    .tr-step .n {
+      font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 11px;
+      color: var(--copper-deep, #9D3F16); padding-top: 3px; min-width: 26px; flex-shrink: 0;
+    }
+    .tr-step .b strong { display: block; font-size: 14.5px; }
+    .tr-step .b p { margin: 6px 0 0; font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); }
+    .tr-step .b .phi { display: inline-block; margin-top: 8px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 9.5px; letter-spacing: .1em; text-transform: uppercase; padding: 4px 9px; border-radius: 100px; border: 1px solid var(--line); color: var(--ink-faint); }
+    .tr-step .b .phi.on { border-color: rgba(194, 80, 28, .4); background: rgba(194, 80, 28, .07); color: #B4460F; }
+
+    /* Request cards */
+    .tr-reqs { display: grid; grid-template-columns: repeat(auto-fit, minmax(248px, 1fr)); gap: 12px; margin-top: 14px; }
+    .tr-req {
+      display: block; text-decoration: none; color: inherit;
+      padding: 18px; border: 1px solid var(--line); border-radius: 16px;
+      transition: border-color .2s ease, transform .2s ease;
+    }
+    .tr-req:hover { border-color: var(--copper, #C2501C); transform: translateY(-2px); }
+    .tr-req:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
+    .tr-req strong { display: block; font-size: 15px; }
+    .tr-req p { margin: 7px 0 0; font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
+    .tr-req .go { display: inline-block; margin-top: 10px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--copper-deep, #9D3F16); }
+    @media (prefers-reduced-motion: reduce) { .tr-req:hover { transform: none; } }
+    @media print { #fs-nav, #fs-bar, .tr-jump { display: none !important; } .tr-panel { break-inside: avoid; } }
+  </style>
+</head>
+<body data-sk-sections="Hero,How to read this,Privacy,Security,AI,Technology,Operations,Not claimed,Requests,Close" data-sk-bar="Vendor due diligence for Soft Appeals. Every item carries its real status. No patient information needed." data-sk-biz="healthcare organization">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Hero">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · The Trust Room</div>
+        <h1>Everything your reviewers ask, <em>before they ask.</em></h1>
+        <p class="hero-copy">This is the due-diligence center for Soft Appeals. It covers privacy and PHI handling, the Business Associate Agreement process, access and authentication, how information moves, technology and AI use, third-party services, incident response, retention and disposition, and how an engagement ends. It is written to be forwarded to whoever at your organization has to sign off.</p>
+        <p class="hero-copy"><b>Every item carries its real status.</b> Where something is established, it says so. Where it is decided in the agreement, it says that instead. Where it is not settled yet, it says that too, and names what settles it. Nothing here is dressed up to look more finished than it is.</p>
+        <nav class="tr-jump" aria-label="Trust Room sections">
+          <a href="#privacy">Privacy</a>
+          <a href="#security">Security</a>
+          <a href="#ai">AI</a>
+          <a href="#technology">Technology</a>
+          <a href="#operations">Operations</a>
+          <a href="#not-claimed">Not claimed</a>
+          <a href="#requests">Request documents</a>
+        </nav>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="How to read this">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">How to read the labels</div>
+          <h2 class="section-title">Four statuses, <span>and they mean exactly what they say.</span></h2>
+        </div>
+        <div>
+          <ul class="tr-key" style="margin-top:20px">
+            <li><span class="st doc">Documented</span><span>An established practice. It is written down, it is followed, and it can be described in writing to your reviewers.</span></li>
+            <li><span class="st">In the agreement</span><span>Decided contractually for your engagement rather than declared on a web page. The executed agreements govern, not this page.</span></li>
+            <li><span class="st req">On request</span><span>Exists and can be provided to a reviewer with a legitimate need, but is not published publicly.</span></li>
+            <li><span class="st rev">Under review</span><span>Not settled yet. The entry says what settles it, and Soft Appeals will tell you where it stands rather than implying it is finished.</span></li>
+          </ul>
+          <p class="section-intro" style="margin-top:18px">A vendor page that shows only green ticks tells a reviewer nothing, because no early-stage vendor is finished on every axis. The useful version is the one that separates what is true now from what is still being decided.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="privacy" data-screen-label="Privacy">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Section one</div>
+          <h2 class="section-title">Privacy and PHI handling.</h2>
+          <p class="section-intro">The questions a privacy officer or compliance reviewer asks first.</p>
+        </div>
+
+        <div class="tr-panel" data-reveal>
+          <div class="tr-head"><h3>Privacy</h3><span class="who">For compliance, privacy and legal</span></div>
+          <div class="tr-in">
+
+            <div class="tr-item">
+              <div class="q"><b>Will Soft Appeals execute a Business Associate Agreement before PHI is exchanged?</b><span class="st doc">Documented</span></div>
+              <p>Yes. Where the engagement requires one, the applicable Business Associate Agreement is executed before protected health information is exchanged. That sequence is not negotiable and it is not an afterthought: the complimentary review is deliberately structured so the business-level conversation happens first, with no patient information involved at all.</p>
+              <p>Soft Appeals can work from your organization's BAA. If your legal team requires its own form, that is the normal case and it is usually faster.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>What information does Soft Appeals actually need?</b><span class="st doc">Documented</span></div>
+              <p>The minimum necessary for the denied claims assigned to Soft Appeals. In practice that is claim-level information for the specific denials in scope: the denial notice and reason, claim and payer information, the amounts, dates of service, and the supporting documentation a particular denial requires.</p>
+              <p>What is <b>not</b> required: unrestricted access to your EHR, your full patient database, administrator credentials, shared staff logins, unrelated clinical records, or every denial in your organization. The initial review starts with an agreed set of 20 claims and expands only where there is a reason.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>How is minimum necessary applied in practice?</b><span class="st doc">Documented</span></div>
+              <p>Scope is agreed at claim level before information moves, so what arrives is what the assigned claims need rather than whatever an export happened to include. Patient identifiers are kept out of working materials that do not require them, and where a document can do its job without an identifier, it does.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>Does any public form on this website collect PHI?</b><span class="st doc">Documented</span></div>
+              <p>No. No public form on this site accepts a file upload, and none asks for patient-level information. The two forms that take free text run a check that blocks a submission carrying a pattern that looks like patient information, and tells the person what it caught.</p>
+              <p>Patient-level information is requested only after the privacy documentation and an agreed secure intake process are in place, and that instruction comes as its own explicit step.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>What happens to information when the engagement ends?</b><span class="st">In the agreement</span></div>
+              <p>Return or disposition of protected health information at termination, and the treatment of any permitted retained copies, are governed by the executed Business Associate Agreement and service agreement rather than by a statement on a web page. Access to any client system provided to Soft Appeals is removed when the work concludes.</p>
+              <p>Business records of the engagement itself, such as invoices and correspondence about scope, are a separate category from PHI and are treated as such.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>Retention periods for each category of record</b><span class="st rev">Under review</span></div>
+              <p>Retention periods are being set alongside the executed agreements and the applicable requirements, rather than published as a number that later turns out to conflict with a client's own contractual obligations. Where your organization requires specific retention or disposition terms, raise them before the agreement is signed and they can be addressed in it directly.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="security" data-screen-label="Security">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Section two</div>
+          <h2 class="section-title">Access, authentication and incidents.</h2>
+          <p class="section-intro">The questions an IT or security reviewer asks.</p>
+        </div>
+
+        <div class="tr-panel" data-reveal>
+          <div class="tr-head"><h3>Security</h3><span class="who">For IT and information security</span></div>
+          <div class="tr-in">
+
+            <div class="tr-item">
+              <div class="q"><b>Who can access client information?</b><span class="st doc">Documented</span></div>
+              <p>Soft Appeals is founder-operated. Access to client claim information is limited to the people performing the recovery work for that client, which today means a small, named set rather than a department. If that ever changes, the answer to this question changes with it and this page changes on the same day.</p>
+              <p>Access is scoped to the purpose it was granted for, requested rather than assumed, and removed when the work concludes.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>What authentication is used?</b><span class="st doc">Documented</span></div>
+              <p>Individual credentials, never shared logins. Where a system supports multi-factor authentication, it is enabled. Where a system cannot support it, client information does not go in that system.</p>
+              <p>That is a statement about how accounts are configured. It is deliberately not a claim about encryption standards, key management or any other technical control belonging to a service provider, because those are that provider's controls to attest to, not Soft Appeals'.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>How is information shared securely?</b><span class="st doc">Documented</span></div>
+              <p>Through an agreed channel established before anything is sent, so your team knows where information is going before it goes. Ordinary email and open chat tools are not the channel for patient information, and Soft Appeals will not ask you to use them for it.</p>
+              <p>If your organization prefers its own secure system, portal or transfer method, that is usually the better answer, and Soft Appeals will work inside it.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>What happens if there is a security incident?</b><span class="st">In the agreement</span></div>
+              <p>An incident-response process is documented and can be provided to your reviewers. The specific notification obligations, including timing, are set in the executed Business Associate Agreement, decided with counsel, for your engagement.</p>
+              <p>No notification timeframe is published on this page on purpose. A number posted on a marketing page is a commitment a vendor can be measured against before anyone has confirmed it is the right one, and your organization may require something stricter than a generic figure.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>Incident-response documentation</b><span class="st req">On request</span></div>
+              <p>Available to a reviewer with a legitimate need as part of the due-diligence process. Request it below and say who is asking, so the response is written for the right audience.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>Cyber liability and errors-and-omissions coverage</b><span class="st rev">Under review</span></div>
+              <p>Coverage is being arranged. Until a policy is in force, no coverage or limit is stated here, and no certificate is offered. If your procurement process requires specific coverage or limits as a condition of engagement, raise it before the agreement is signed. Discovering a hard insurance requirement after a BAA is executed wastes everyone's month.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="ai" data-screen-label="AI">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Section three</div>
+          <h2 class="section-title">How technology and AI are used.</h2>
+          <p class="section-intro">Increasingly the first question a health system asks a vendor, and the one most vendors answer vaguely.</p>
+        </div>
+
+        <div class="tr-panel" data-reveal>
+          <div class="tr-head"><h3>AI use statement</h3><span class="who">For compliance, IT and clinical leadership</span></div>
+          <div class="tr-in">
+
+            <div class="tr-item">
+              <div class="q"><b>Is AI used in the recovery work?</b><span class="st doc">Documented</span></div>
+              <p>Yes, and Soft Appeals says so plainly rather than burying it. Technology assists with administrative preparation: organizing claim information, drafting documents from the applicable payer requirements, and keeping records consistent. That is where its role ends.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>What does technology never decide?</b><span class="st doc">Documented</span></div>
+              <p>It does not decide whether a claim is appealed. It does not make clinical, coding, coverage or legal determinations. It does not submit anything to a payer. Every recommendation is reviewed by a person, and every submission is prepared for client approval before it goes anywhere.</p>
+              <p>The Recovery Lab demonstrates the same principle publicly: recommendations are explained through factors a reviewer can check, and no probability score appears anywhere in the method.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>Is client data used to train models?</b><span class="st doc">Documented</span></div>
+              <p>No. Client information is not provided for training public or general-purpose models, and services whose terms would permit that use are not used for client information.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>Which tools are permitted for client information?</b><span class="st doc">Documented</span></div>
+              <p>Only approved services, under the appropriate agreements, may touch client claim information. Open consumer chat tools are not among them, and patient information is not pasted into one. Where a tool has not been through that assessment, it does not get used for client work.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>Do you name the specific AI vendor?</b><span class="st req">On request</span></div>
+              <p>Not in public material, which is a general practice across everything frimpomaasync.com publishes rather than an evasion specific to this. Vendors are named to a reviewer conducting due diligence, alongside what function each performs, whether PHI is involved, and what agreements are in place.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="technology" data-screen-label="Technology">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Section four</div>
+          <h2 class="section-title">Where information goes.</h2>
+          <p class="section-intro">The high-level data flow for a Soft Appeals engagement, from first contact to closure. Note where protected health information does and does not appear.</p>
+        </div>
+
+        <div class="tr-flow" data-reveal data-stagger data-stagger-step="40">
+          <div class="tr-step"><div class="n">01</div><div class="b"><strong>Business-level inquiry</strong>
+            <p>An intake form asking about denial volume, payers, and how denials are handled today. No patient information, no attachments, no file field.</p>
+            <span class="phi">No PHI</span></div></div>
+          <div class="tr-step"><div class="n">02</div><div class="b"><strong>Fit and scope conversation</strong>
+            <p>Whether the service fits, which claims would be in scope, who owns what, and what your organization requires contractually. Still entirely business-level.</p>
+            <span class="phi">No PHI</span></div></div>
+          <div class="tr-step"><div class="n">03</div><div class="b"><strong>Agreements executed</strong>
+            <p>The applicable Business Associate Agreement and service agreement are put in place, along with any requirements your organization raises.</p>
+            <span class="phi">No PHI</span></div></div>
+          <div class="tr-step"><div class="n">04</div><div class="b"><strong>Secure intake established</strong>
+            <p>The agreed channel for claim information is set up and confirmed with your team before anything is sent.</p>
+            <span class="phi">No PHI</span></div></div>
+          <div class="tr-step"><div class="n">05</div><div class="b"><strong>Claim information received</strong>
+            <p>The agreed claims arrive through that channel, limited to the minimum necessary for the denials in scope.</p>
+            <span class="phi on">PHI</span></div></div>
+          <div class="tr-step"><div class="n">06</div><div class="b"><strong>Review and preparation</strong>
+            <p>Claims are reviewed, recommendations are made and documented, and appeal or correction materials are prepared using approved services under the appropriate agreements.</p>
+            <span class="phi on">PHI</span></div></div>
+          <div class="tr-step"><div class="n">07</div><div class="b"><strong>Client approval</strong>
+            <p>Completed materials are presented to your team. Nothing is submitted in your organization's name without approval.</p>
+            <span class="phi on">PHI</span></div></div>
+          <div class="tr-step"><div class="n">08</div><div class="b"><strong>Submission and tracking</strong>
+            <p>Approved materials go to the payer through the applicable channel, with the submission documented, and the payer response tracked against the claim.</p>
+            <span class="phi on">PHI</span></div></div>
+          <div class="tr-step"><div class="n">09</div><div class="b"><strong>Reconciliation and closure</strong>
+            <p>Recovered reimbursement is paid by the payer directly to your organization and reconciled against the claim. Access and information handling at closure follow the executed agreements.</p>
+            <span class="phi on">PHI</span></div></div>
+        </div>
+
+        <div class="tr-panel" data-reveal>
+          <div class="tr-head"><h3>Third parties and subcontractors</h3><span class="who">For vendor management and procurement</span></div>
+          <div class="tr-in">
+            <div class="tr-item">
+              <div class="q"><b>Does anyone else handle client information?</b><span class="st req">On request</span></div>
+              <p>Service providers supporting the work are assessed against the same six questions before anything client-related touches them: what function it performs, whether PHI is involved, where information is processed, what contractual protections apply, whether it uses subcontractors of its own, and what happens to information when the relationship ends.</p>
+              <p>The list of services that touch client claim information, and what is in place with each, is provided to a reviewer conducting due diligence rather than published. Request it below.</p>
+            </div>
+            <div class="tr-item">
+              <div class="q"><b>Is any of this work performed outside the United States?</b><span class="st req">On request</span></div>
+              <p>Processing locations for the services involved are covered in the vendor disclosure provided during due diligence. Where your organization has a data-residency requirement, raise it before the agreement is signed so it can be addressed rather than discovered.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="operations" data-screen-label="Operations">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Section five</div>
+          <h2 class="section-title">Controls inside the work itself.</h2>
+          <p class="section-intro">The questions a billing lead or revenue-cycle director asks, which are usually about control rather than about security.</p>
+        </div>
+
+        <div class="tr-panel" data-reveal>
+          <div class="tr-head"><h3>Operations</h3><span class="who">For billing, revenue cycle and leadership</span></div>
+          <div class="tr-in">
+
+            <div class="tr-item">
+              <div class="q"><b>Can anything be submitted in our name without our approval?</b><span class="st doc">Documented</span></div>
+              <p>No. Client approval before submission is a standing control, not a courtesy extended to careful clients. Prepared materials are presented in final form for approval, and your team can approve, request changes, or decline.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>Where does recovered money go?</b><span class="st doc">Documented</span></div>
+              <p>The payer pays your organization directly. Soft Appeals does not receive, hold or route your reimbursement at any point.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>Who owns the next action on a claim at any moment?</b><span class="st doc">Documented</span></div>
+              <p>Exactly one party, and it is recorded. Every claim in an engagement carries a status, an owner and a next action, so the question of where something sits has one answer rather than a conversation. The Recovery Lab shows this working on fictional claims.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>Does this replace or interfere with our billing team?</b><span class="st doc">Documented</span></div>
+              <p>No. Your billing operation keeps the revenue cycle. Soft Appeals works the denied claims assigned to it, and where a claim needs something only your team can provide, that request is recorded against the claim with a named person rather than left in an inbox.</p>
+              <p>If a billing company currently owns your denial workflow, the appropriate representative can be brought into the process. Clear roles prevent two people working the same appeal.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>How does an engagement end?</b><span class="st">In the agreement</span></div>
+              <p>Termination rights and notice are set in the service agreement, and information handling at termination follows the executed agreements. Work in progress at termination, and what happens to claims already submitted, are addressed there rather than left to be worked out at the time.</p>
+            </div>
+
+            <div class="tr-item">
+              <div class="q"><b>What happens to work already done if we stop?</b><span class="st">In the agreement</span></div>
+              <p>The assessment you receive is yours regardless of whether you continue, including after a complimentary review that leads to nothing. Treatment of in-flight recovery work is set in the agreement.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="not-claimed" data-screen-label="Not claimed">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Section six</div>
+          <h2 class="section-title">What Soft Appeals <span>does not claim.</span></h2>
+          <p class="section-intro">This section exists because a reviewer's real job is finding the overstatement, and it is faster for everyone if it is already listed.</p>
+        </div>
+
+        <div class="tr-not" data-reveal>
+          <div class="k">Not claimed, not held, not implied</div>
+          <p>Soft Appeals will not represent a certification, audit result, security standard, insurance policy, technical control, testing regime or other credential as existing unless it actually applies to the Soft Appeals environment and can be supported. That includes the badges a vendor page is expected to wear:</p>
+          <div class="tr-badges">
+            <span>HIPAA certified</span>
+            <span>SOC 2</span>
+            <span>HITRUST</span>
+            <span>Penetration tested</span>
+            <span>Encryption specifications</span>
+            <span>Uptime guarantees</span>
+            <span>Cyber insurance limits</span>
+          </div>
+          <p style="margin-top:16px">Two of those deserve a note rather than a line through them. <b>There is no such thing as HIPAA certification</b>, so any vendor displaying that badge is telling you something about their diligence before you read a word of their policy. And a technical control belonging to a service provider in the stack is that provider's control to attest to. Borrowing it to describe your own business is the most common way a small vendor overstates its security posture.</p>
+          <p>If your organization requires a particular certification, contractual provision, insurance level, security control or procurement step as a condition of engagement, ask now. Fit should be established before protected information enters the workflow.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="requests" data-screen-label="Requests">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Section seven</div>
+          <h2 class="section-title">Request the documents.</h2>
+          <p class="section-intro">Choose what your review needs. Each one opens the due-diligence request with that item already selected, so you are not filling in a form to explain which form you want. No patient information is requested, and the form accepts no attachments.</p>
+        </div>
+
+        <div class="tr-reqs" data-reveal data-stagger data-stagger-step="40">
+          <a class="tr-req" href="/soft-appeals-contact?request=Business%20Associate%20Agreement%20process#due-diligence">
+            <strong>BAA process</strong>
+            <p>What the agreement covers, how it is executed, and whether your own form can be used.</p>
+            <span class="go">Request →</span>
+          </a>
+          <a class="tr-req" href="/soft-appeals-contact?request=Data%20and%20security%20practices#due-diligence">
+            <strong>Security questionnaire response</strong>
+            <p>Written answers for your reviewer, or responses against your organization's own questionnaire.</p>
+            <span class="go">Request →</span>
+          </a>
+          <a class="tr-req" href="/soft-appeals-contact?request=Data-flow%20information#due-diligence">
+            <strong>Data-flow information</strong>
+            <p>The detailed version of the flow above, including where PHI does and does not appear.</p>
+            <span class="go">Request →</span>
+          </a>
+          <a class="tr-req" href="/soft-appeals-contact?request=Access-control%20approach#due-diligence">
+            <strong>Access-control approach</strong>
+            <p>How access is granted, scoped, authenticated and removed.</p>
+            <span class="go">Request →</span>
+          </a>
+          <a class="tr-req" href="/soft-appeals-contact?request=Technology%20and%20AI%20use#due-diligence">
+            <strong>AI use information</strong>
+            <p>The written AI use statement, including what technology never decides.</p>
+            <span class="go">Request →</span>
+          </a>
+          <a class="tr-req" href="/soft-appeals-contact?request=Third-party%20or%20subcontractor%20information#due-diligence">
+            <strong>Subcontractor information</strong>
+            <p>The services that touch client claim information and what is in place with each.</p>
+            <span class="go">Request →</span>
+          </a>
+          <a class="tr-req" href="/soft-appeals-contact?request=Incident-response%20process#due-diligence">
+            <strong>Incident-response information</strong>
+            <p>The documented process, for a reviewer with a legitimate need.</p>
+            <span class="go">Request →</span>
+          </a>
+          <a class="tr-req" href="/soft-appeals-contact?request=Retention%20and%20disposition%20process#due-diligence">
+            <strong>Retention and disposition</strong>
+            <p>How information is handled during and at the end of an engagement.</p>
+            <span class="go">Request →</span>
+          </a>
+          <a class="tr-req" href="/soft-appeals-contact?request=Recovery%20workflow#due-diligence">
+            <strong>Recovery workflow</strong>
+            <p>The operational detail behind the workflow, for a billing or revenue-cycle reviewer.</p>
+            <span class="go">Request →</span>
+          </a>
+          <a class="tr-req" href="/soft-appeals-contact?request=Pricing%20and%20engagement%20terms#due-diligence">
+            <strong>Service agreement and pricing</strong>
+            <p>Engagement terms, how a fee is calculated, and what falls outside the standard model.</p>
+            <span class="go">Request →</span>
+          </a>
+        </div>
+
+        <p class="small-note" style="margin-top:20px">Requests are answered with what exists. Where something is under review, the answer says so and says what settles it, rather than producing a document written to look like an answer.</p>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <div class="eyebrow">A serious vendor should expect serious questions</div>
+        <h2>Ask before anything is sent.</h2>
+        <p>If your compliance, privacy, IT, legal, procurement or billing team has a question this page does not answer, ask it now rather than after the agreements are signed. No patient information is needed for any of it.</p>
+        <div class="actions">
+          <a class="button" href="/soft-appeals-contact">Ask a question <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/soft-appeals-data-security">Review data and security practices <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/soft-appeals-start">Request your complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+        <p class="small-note" style="margin-top:20px">This page describes general practices and is not legal advice. The obligations for any engagement are governed by the executed agreements, the agreed scope of work, your organization's requirements and applicable law. Soft Appeals is a service of frimpomaasync.com.</p>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module" src="/assets/journey.js?v=7"></script>
+  <script src="/fsnav.js?v=851" defer></script>
+</body>
+</html>

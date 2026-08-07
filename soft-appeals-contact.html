@@ -609,9 +609,31 @@
         }, true);
       });
     })();
+
+    /* Deep links from the Trust Room. Each request card there arrives as
+       ?request=<exact checkbox value>#due-diligence, so the reviewer lands on
+       this form with the thing they came for already ticked instead of having
+       to find it again. The value is matched against the checkboxes that
+       already exist rather than injected, so an unknown or tampered value
+       simply selects nothing. */
+    (function () {
+      var want = new URLSearchParams(location.search).get("request");
+      if (!want) return;
+      var form = document.querySelector('form[name="soft-appeals-due-diligence"]');
+      if (!form) return;
+      var hit = null;
+      form.querySelectorAll('input[type=checkbox][name="requested[]"]').forEach(function (box) {
+        if (box.value === want) hit = box;
+      });
+      if (!hit) return;
+      hit.checked = true;
+      hit.dispatchEvent(new Event("change", { bubbles: true }));
+      var label = hit.closest("label");
+      if (label) label.classList.add("on");
+    })();
   </script>
 
   <script type="module" src="/assets/journey.js?v=7"></script>
-  <script src="/fsnav.js?v=850" defer></script>
+  <script src="/fsnav.js?v=851" defer></script>
 </body>
 </html>
