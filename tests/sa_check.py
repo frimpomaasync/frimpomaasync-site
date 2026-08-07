@@ -18,6 +18,7 @@ PAGES = [
     "/soft-appeals-start.html",
     "/soft-appeals-decoder.html",
     "/soft-appeals-recovery-lab.html",
+    "/soft-appeals-denial-health-score.html",
 ]
 WIDTHS = [320, 360, 390, 430, 768, 1024, 1440]
 
@@ -88,7 +89,7 @@ with sync_playwright() as p:
     check(page.locator("[data-fs-more]").get_attribute("aria-expanded") == "true",
           "aria-expanded not set to true")
     labels = page.locator("[data-fs-more-panel] a").all_text_contents()
-    check([s.strip() for s in labels] == ["Recovery Lab", "FAQ", "About", "Contact"],
+    check([s.strip() for s in labels] == ["Recovery Lab", "Denial Health Score", "FAQ", "About", "Contact"],
           f"More panel items wrong: {labels}")
     page.keyboard.press("Escape")
     check(not panel.is_visible(), "Escape did not close the More panel")

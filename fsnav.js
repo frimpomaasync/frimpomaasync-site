@@ -114,6 +114,7 @@
     var p = location.pathname.replace(/\.html$/, "").replace(/\/$/, "");
     if (p.indexOf("/soft-appeals-decoder") === 0) return "soft-decoder";
     if (p.indexOf("/soft-appeals-recovery-lab") === 0) return "soft-lab";
+    if (p.indexOf("/soft-appeals-denial-health-score") === 0) return "soft-score";
     if (p.indexOf("/soft-appeals-faq") === 0) return "soft-faq";
     if (p.indexOf("/soft-appeals-sample-assessment") === 0) return "soft-sample";
     if (p.indexOf("/soft-appeals-data-security") === 0) return "soft-data";
@@ -167,6 +168,7 @@
        untouched for the same 320px reason as ever. */
     var MORE_ITEMS = [
       ["Recovery Lab", "/soft-appeals-recovery-lab", "soft-lab"],
+      ["Denial Health Score", "/soft-appeals-denial-health-score", "soft-score"],
       ["FAQ", "/soft-appeals-faq", "soft-faq"],
       ["About", "/soft-appeals-about", "soft-about"],
       ["Contact", "/soft-appeals-contact", "soft-contact"]
