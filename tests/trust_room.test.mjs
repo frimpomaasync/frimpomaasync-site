@@ -47,12 +47,32 @@ test("the seven unfilled packet blanks are never invented", () => {
      periods, insurance and notification timing are all things only she can
      answer. None may be asserted here. */
   assert.ok(!/\bLLC\b|\bInc\.|\bL\.L\.C\.|Corporation\b/.test(text), "an entity type is asserted");
-  assert.ok(!/@[a-z0-9.-]+\.(com|org|net)/i.test(text), "an email address is published");
   assert.ok(!/\b\d{1,5} [A-Z][a-z]+ (Street|St|Road|Rd|Avenue|Ave|Suite|Ste)\b/.test(text),
     "a street address is published");
   assert.ok(!/\bwe (retain|keep) .{0,40}\b(for|up to) \d+ (years?|months?)/i.test(text),
     "a retention period is published");
   assert.ok(lower.includes("retention periods are being set"), "retention is marked as unsettled");
+});
+
+test("the privacy contact is a domain address, never a personal mailbox", () => {
+  /* A due-diligence packet for PHI cannot list a consumer mailbox as its
+     privacy contact: a reviewer sees it and stops reading. Her word
+     2026-08-07 is support@frimpomaasync.com. */
+  const emails = [...trust.matchAll(/[a-z0-9._%-]+@[a-z0-9.-]+\.[a-z]{2,}/gi)].map((m) => m[0].toLowerCase());
+  assert.ok(emails.length > 0, "a privacy contact is published");
+  for (const e of emails) {
+    assert.ok(e.endsWith("@frimpomaasync.com"), "off-domain contact address: " + e);
+  }
+  for (const consumer of ["gmail.com", "yahoo.", "hotmail.", "outlook.com", "icloud.com", "aol."]) {
+    assert.ok(!lower.includes(consumer), "consumer mailbox referenced: " + consumer);
+  }
+  assert.ok(emails.includes("support@frimpomaasync.com"), "the stated contact is published");
+  /* Publishing a contact address creates a route people will use, so the page
+     must say in the same breath that it is not a PHI channel. */
+  const near = text.slice(Math.max(0, lower.indexOf("support@frimpomaasync.com") - 400),
+                          lower.indexOf("support@frimpomaasync.com") + 500).toLowerCase();
+  assert.ok(near.includes("do not send patient information") || near.includes("never patient information"),
+    "the contact address is not paired with a PHI warning");
 });
 
 test("every status badge uses one of the four declared labels", () => {
