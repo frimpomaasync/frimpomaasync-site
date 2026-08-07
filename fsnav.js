@@ -84,6 +84,7 @@
      is "softappeals", so the exact-match order below is safe. */
   function softKey() {
     var p = location.pathname.replace(/\.html$/, "").replace(/\/$/, "");
+    if (p.indexOf("/soft-appeals-decoder") === 0) return "soft-decoder";
     if (p.indexOf("/soft-appeals-audit") === 0) return "soft-audit";
     if (p.indexOf("/soft-appeals-your-data") === 0) return "soft-data";
     return "soft-offer";
@@ -109,13 +110,13 @@
       "z-index:40;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(16,20,38,.08)";
     /* Soft Appeals sells to medical practices, and nothing else on this site does.
        A practice manager checking us out mid-decision must never be one tap
-       from a plumbing demo, so these pages get their own bar: Soft Appeals' three
-       pages, Soft Appeals' wordmark, and no front-desk chat. The parent brand
+       from a plumbing demo, so these pages get their own bar: Soft Appeals' four        pages, Soft Appeals' wordmark, and no front-desk chat. The parent brand
        stays visible but quiet, and the shared footer below still shows the
        real business behind it, which is the thing that makes a contingency
        offer in healthcare look legitimate rather than fly-by-night. */
     var softNav =
       navLink("The offer", "/soft-appeals", "soft-offer", onSoft) +
+      navLink("The decoder", "/soft-appeals-decoder", "soft-decoder", onSoft) +
       navLink("The audit", "/soft-appeals-audit", "soft-audit", onSoft) +
       navLink("Your data", "/soft-appeals-your-data", "soft-data", onSoft);
     var siteNav =

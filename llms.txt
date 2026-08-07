@@ -84,6 +84,8 @@ Sample audit report: https://frimpomaasync.com/soft-appeals-audit
 
 Patient data and privacy: https://frimpomaasync.com/soft-appeals-your-data
 
+Free denial decoder: https://frimpomaasync.com/soft-appeals-decoder · type any denial reason code (like CO-16, CO-29, CO-50, CO-197, PR-204) and get the plain-English meaning, whether it is a quick fix, an appeal or a dead claim, published win-rate context, the recommended move, and a sample appeal-letter opening. Runs entirely in the browser and asks for no patient information. Also carries a Maryland payer-by-payer appeal deadline table.
+
 Soft Appeals recovers denied insurance claims for independent medical practices and outpatient groups. Maryland first. It is a separate audience from SynKasa and Siesie and does not serve local service businesses.
 
 How it works: the practice signs a business associate agreement, sends its 20 most recent denials through a secure channel, and receives a free one-page audit within days. The audit sorts every claim into quick fixes, claims worth appealing, and claims not worth fighting, values each at the contracted allowed amount rather than billed charges, and flags claims whose appeal window closes soonest. AI drafts each appeal against the payer's own published rules, then NaNa Frimpomaa reads, corrects, signs and sends it with proof of delivery. The AI tools that touch claims operate under their own business associate agreements, and nothing trains on patient data. The practice approves every appeal before it is submitted in the practice's name.

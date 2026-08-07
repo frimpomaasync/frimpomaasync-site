@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The denial decoder · Soft Appeals | frimpomaasync.com</title>
+  <meta name="description" content="Type any denial code off an EOB and get the plain-English meaning, whether it is a quick fix, an appeal or a dead claim, the odds, and the move. Free, instant, no patient information needed.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-decoder">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=24">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#101426">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="The denial decoder · type the code, watch it work">
+  <meta property="og:description" content="Read one code off any denial on your desk. Plain English, the bucket, the odds and the move, in a second. No patient information needed.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-decoder">
+  <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    /* The decoder. Scoped to this page, system fonts only, no remote requests. */
+    .dec { max-width: 820px; margin: 0 auto; }
+    .dec-box {
+      border: 1px solid var(--line); border-radius: 20px; background: var(--paper);
+      padding: clamp(22px, 4vw, 34px);
+      box-shadow: 0 26px 60px rgba(16, 20, 38, .07);
+    }
+    .dec-label { display: block; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px; }
+    .dec-input {
+      width: 100%; box-sizing: border-box;
+      font: 400 18px/1.4 var(--serif);
+      color: var(--ink); background: var(--paper-soft, #F8F8F9);
+      border: 1px solid var(--line); border-radius: 12px;
+      padding: 15px 18px; outline: none;
+    }
+    .dec-input:focus { border-color: var(--copper, #C2501C); }
+    .dec-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+    .dec-chip {
+      font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 11px; letter-spacing: .08em;
+      color: var(--ink-soft); background: none; border: 1px solid var(--line); border-radius: 999px;
+      padding: 7px 13px; cursor: pointer; transition: border-color .2s ease, color .2s ease;
+    }
+    .dec-chip:hover, .dec-chip:focus-visible { border-color: var(--copper, #C2501C); color: var(--copper, #C2501C); }
+    .dec-note { margin: 14px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--ink-faint); }
+    .dec-out { margin-top: 18px; }
+    .dec-card { border: 1px solid var(--line); border-radius: 20px; background: var(--paper); overflow: hidden; }
+    .dec-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 18px clamp(18px, 3.5vw, 28px); border-bottom: 1px solid var(--line); }
+    .dec-code { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 13px; letter-spacing: .1em; color: var(--ink); }
+    .dec-pill { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
+    .dec-pill.fix { color: #FFFFFF; background: var(--copper, #C2501C); }
+    .dec-pill.appeal { color: #FFFFFF; background: var(--ink, #101426); }
+    .dec-pill.dead { color: var(--ink-soft); background: var(--paper-soft, #F8F8F9); border: 1px solid var(--line); }
+    .dec-pill.info { color: var(--copper, #C2501C); background: rgba(194, 80, 28, .08); }
+    .dec-card-in { padding: clamp(18px, 3.5vw, 28px); }
+    .dec-plain { margin: 0; font-family: var(--serif); font-size: clamp(21px, 2.8vw, 27px); line-height: 1.25; letter-spacing: -.01em; }
+    .dec-row { margin: 18px 0 0; }
+    .dec-k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
+    .dec-v { margin: 0; font-size: 14.5px; line-height: 1.65; color: var(--ink-soft); }
+    .dec-letter { margin: 18px 0 0; padding: 16px 18px; border-left: 3px solid var(--copper, #C2501C); background: rgba(194, 80, 28, .05); border-radius: 0 12px 12px 0; }
+    .dec-letter p { margin: 0; font-size: 13.5px; line-height: 1.7; color: var(--ink-soft); font-style: italic; }
+    .dec-cta { padding: 18px clamp(18px, 3.5vw, 28px); border-top: 1px solid var(--line); background: var(--paper-soft, #F8F8F9); }
+    .dec-cta p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); }
+    .dec-miss { border: 1px dashed var(--line); border-radius: 16px; padding: 20px; font-size: 14px; line-height: 1.65; color: var(--ink-soft); }
+    /* The payer deadline table. Same phone pattern as the sample report:
+       below 620px each payer becomes its own labelled block, because the
+       detail column is the one worth reading and it dies in a squeezed cell. */
+    .ddl-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 16px; }
+    .ddl-tbl { width: 100%; min-width: 560px; border-collapse: collapse; font-size: 13.5px; }
+    .ddl-tbl th, .ddl-tbl td { padding: 13px 16px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .ddl-tbl th { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 400; }
+    .ddl-tbl tr:last-child td { border-bottom: 0; }
+    .ddl-tbl td.win { white-space: nowrap; color: var(--copper, #C2501C); }
+    @media (max-width: 620px) {
+      .ddl-scroll { overflow-x: visible; }
+      .ddl-tbl { min-width: 0; }
+      .ddl-tbl thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); }
+      .ddl-tbl tr { display: block; padding: 15px 16px; border-bottom: 1px solid var(--line); }
+      .ddl-tbl tr:last-child { border-bottom: 0; }
+      .ddl-tbl td { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 4px 0; border: 0; text-align: right; }
+      .ddl-tbl td.win { white-space: normal; }
+      .ddl-tbl td::before {
+        content: attr(data-l);
+        flex: none;
+        font-family: var(--mono, ui-monospace, Menlo, monospace);
+        font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase;
+        color: var(--ink-faint); text-align: left;
+      }
+    }
+  </style>
+</head>
+<body data-sk-sections="Hero,The decoder,Prefixes,Deadlines,Honesty,Close" data-sk-bar="Type any denial code · plain English in a second · no patient information needed." data-sk-biz="independent practice">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Hero">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · the denial decoder · free</div>
+        <h1>Read me one code <em>off any denial on your desk.</em></h1>
+        <p class="hero-copy">Every EOB carries a reason code, and the code decides everything: whether the claim is a two-day fix, a letter worth writing, or money to stop chasing. Type one below and get the plain-English answer in a second. No patient information is needed, none is asked for, and nothing you type leaves this page.</p>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="The decoder">
+      <div class="wrap">
+        <div class="dec">
+          <div class="dec-box" data-reveal>
+            <label class="dec-label" for="dec-q">The code on the EOB or remittance · like CO-16 or PR-204</label>
+            <input class="dec-input" id="dec-q" type="text" inputmode="search" autocomplete="off" spellcheck="false" placeholder="Type a code, or words like &quot;prior authorization&quot;">
+            <div class="dec-chips" aria-label="Common denial codes">
+              <button class="dec-chip" type="button">CO-16</button>
+              <button class="dec-chip" type="button">CO-29</button>
+              <button class="dec-chip" type="button">CO-50</button>
+              <button class="dec-chip" type="button">CO-97</button>
+              <button class="dec-chip" type="button">CO-197</button>
+              <button class="dec-chip" type="button">CO-119</button>
+              <button class="dec-chip" type="button">PR-204</button>
+              <button class="dec-chip" type="button">CO-45</button>
+            </div>
+            <p class="dec-note">Codes only, never patient details. The decoder runs entirely in your browser.</p>
+          </div>
+          <div class="dec-out" id="dec-out" aria-live="polite"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Prefixes">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title"><span>The two letters in front</span> decide who owes.</h2>
+          <p class="section-intro">Before the number means anything, the prefix says whose money it is.</p>
+        </div>
+        <div class="card-grid" data-reveal data-stagger data-stagger-step="50">
+          <article class="path-card">
+            <span class="pill">CO</span>
+            <h3>Contractual. The practice absorbs it.</h3>
+            <p>Never billable to the patient. Fight it or fix it, because nobody else is paying.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">PR</span>
+            <h3>Patient responsibility.</h3>
+            <p>Bill the patient. PR-1, PR-2 and PR-3 (deductible, coinsurance, copay) are normal cost sharing, not denials at all.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">OA · PI</span>
+            <h3>Other adjustment · payer-initiated.</h3>
+            <p>OA is usually bookkeeping between insurances. PI has no contract behind it, which is exactly why it is often disputable.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Deadlines">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title"><span>How long you have,</span> payer by payer.</h2>
+          <p class="section-intro">Maryland law sets the floor: at least 90 working days from the denial to appeal, for every Maryland-regulated carrier and Medicaid MCO. Many payers give more. Medicare and self-funded employer plans run on their own clocks.</p>
+        </div>
+        <div class="ddl-scroll" data-reveal>
+          <table class="ddl-tbl">
+            <thead>
+              <tr><th scope="col">Payer</th><th scope="col">Appeal window</th><th scope="col">Worth knowing</th></tr>
+            </thead>
+            <tbody>
+              <tr><td data-l="Payer">CareFirst BCBS Maryland</td><td class="win" data-l="Window">180 days from the EOB</td><td data-l="Worth knowing">Response can take up to 60 days.</td></tr>
+              <tr><td data-l="Payer">UnitedHealthcare</td><td class="win" data-l="Window">12 months combined</td><td data-l="Worth knowing">Reconsideration first, then appeal, both inside 12 months. Skipping reconsideration kills the appeal.</td></tr>
+              <tr><td data-l="Payer">Aetna</td><td class="win" data-l="Window">180 days</td><td data-l="Worth knowing">Coding disputes take the reconsideration track; medical necessity takes the appeal track.</td></tr>
+              <tr><td data-l="Payer">Cigna</td><td class="win" data-l="Window">180 days</td><td data-l="Worth knowing">Behavioral services are often delegated, and the appeal goes to the delegate.</td></tr>
+              <tr><td data-l="Payer">Medicare</td><td class="win" data-l="Window">120 days</td><td data-l="Worth knowing">Redetermination decided in 60 days, then a second level with 180 more.</td></tr>
+              <tr><td data-l="Payer">Medicare Advantage</td><td class="win" data-l="Window">60 to 65 days</td><td data-l="Worth knowing">The shortest window on this table. Flag these first in any denial review.</td></tr>
+              <tr><td data-l="Payer">Maryland Medicaid FFS</td><td class="win" data-l="Window">12 months from service</td><td data-l="Worth knowing">Corrected claims share the same 12-month clock.</td></tr>
+              <tr><td data-l="Payer">Priority Partners</td><td class="win" data-l="Window">90 business days</td><td data-l="Worth knowing">First-level appeal, counted from the denial date.</td></tr>
+              <tr><td data-l="Payer">CareFirst CHPMD</td><td class="win" data-l="Window">90 days</td><td data-l="Worth knowing">Second level must follow within 15 business days of the first outcome.</td></tr>
+              <tr><td data-l="Payer">Wellpoint Maryland</td><td class="win" data-l="Window">180 then 90 days</td><td data-l="Worth knowing">Reconsideration first, then a 90-day appeal window, submitted through its portal.</td></tr>
+              <tr><td data-l="Payer">Other Maryland MCOs</td><td class="win" data-l="Window">90 working days minimum</td><td data-l="Worth knowing">The state floor governs when the contract is silent.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small-note">After internal appeals are exhausted, Maryland allows 120 days to request an independent external review through the Maryland Insurance Administration, decided within 60 days, 4 business days if expedited. Not available for self-funded employer plans or Medicare. Verify your own contract's window before relying on any row above.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Honesty">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">What this tool is</div>
+          <h2 class="section-title">The first minute of the audit, made public.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:22px">Sorting a code into quick fix, appeal or dead is the first minute of work on every claim. The decoder gives you that minute free, for any code, as often as you want. The odds shown are published industry figures by denial type, the same ones the audit uses, and none of them is a promise about any single claim.</p>
+          <p class="section-intro">The other 51 minutes are the work: the payer's policy pulled and quoted, the record cited with dates, the letter signed and sent with proof of delivery, the deadline tracked to level three. That part is <a href="/soft-appeals">the service</a>, and it is paid only from what actually comes back.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · the free audit · your 20 most recent denials</div>
+        <h2>Now run it on real claims.</h2>
+        <p>The audit does what the decoder does, across your 20 most recent denials, with your contracted dollar amounts and your payers' actual deadlines on every line. Free, and the report is yours either way.</p>
+        <div class="actions">
+          <a class="button" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Start the free audit →</a>
+          <a class="button secondary" href="/soft-appeals-audit">See a finished report →</a>
+          <a class="button secondary" href="/soft-appeals">Back to Soft Appeals →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+  (function () {
+    "use strict";
+    var DATA = [
+      { code: "CO-16", name: "Claim missing information", bucket: "fix", label: "Quick fix",
+        plain: "Something on the claim was incomplete. The payer never judged the care, it judged the paperwork.",
+        odds: "90 percent or better once the missing piece is supplied.",
+        move: "Read the remark code printed next to it (N, M or MA series): it names exactly what was missing. Fix that one thing and resubmit as a corrected claim, frequency code 7, original claim number in Box 22. One exception: remark MA130 means the claim was unprocessable, so resubmit it fresh and never appeal it.",
+        kw: "missing information incomplete remark ma130 paperwork" },
+      { code: "CO-4", name: "Modifier missing or inconsistent", bucket: "fix", label: "Quick fix",
+        plain: "The procedure code needed a modifier it did not have, or carried one that contradicts it.",
+        odds: "90 percent or better.",
+        move: "Fix the modifier and resubmit as a corrected claim. Days, not weeks, and no letter needed.",
+        kw: "modifier wrong inconsistent" },
+      { code: "CO-252", name: "Documentation requested", bucket: "fix", label: "Quick fix",
+        plain: "The payer wants to see records before paying. It is a request, not a verdict.",
+        odds: "90 percent or better when the records go back promptly.",
+        move: "Send exactly what was asked for, note the date, and diary the payer's response window.",
+        kw: "documentation records requested attachment" },
+      { code: "CO-11", name: "Diagnosis does not match the procedure", bucket: "fix", label: "Quick fix",
+        plain: "The diagnosis and procedure codes do not line up in the payer's edits.",
+        odds: "Strong, when a truthful pairing exists.",
+        move: "Correct the pairing to what the visit actually was and resubmit. Never bend a diagnosis to fit: if no truthful pairing exists, this claim belongs in the decline bucket.",
+        kw: "diagnosis procedure mismatch icd" },
+      { code: "CO-15", name: "Authorization number missing, but the auth exists", bucket: "fix", label: "Quick fix",
+        plain: "Care was authorized, the number just never made it onto the claim.",
+        odds: "90 percent or better.",
+        move: "Add the authorization number and resubmit. If no auth ever existed, you are in CO-197 territory instead: type that code in.",
+        kw: "auth number missing authorization exists" },
+      { code: "PR-31", name: "Patient could not be identified", bucket: "fix", label: "Quick fix",
+        plain: "The payer could not match the claim to a member. Usually an ID digit, a date of birth, or a name spelling.",
+        odds: "90 percent or better.",
+        move: "Verify the member ID, date of birth and exact name spelling against the card, fix, resubmit.",
+        kw: "patient identified eligibility id dob name" },
+      { code: "CO-22", name: "Another insurance is primary", bucket: "fix", label: "Quick fix",
+        plain: "The payer believes someone else should pay first.",
+        odds: "Strong once the right payer is billed in the right order.",
+        move: "Get current coverage information from the patient, bill the true primary, then rebill this payer with the primary's EOB attached.",
+        kw: "coordination benefits cob primary other insurance secondary" },
+      { code: "CO-109", name: "Claim sent to the wrong payer", bucket: "fix", label: "Quick fix",
+        plain: "This payer says the claim is not theirs to judge.",
+        odds: "Strong, if the correct payer's filing clock has not run out.",
+        move: "Rebill the correct payer immediately and watch that payer's filing deadline from day one. If it has already passed, the wrong-payer paper trail is your good-cause evidence.",
+        kw: "wrong payer not covered by this payer" },
+      { code: "CO-18", name: "Duplicate claim", bucket: "info", label: "Depends on the original",
+        plain: "The payer thinks it has seen this claim before. The duplicate is never the claim to fight.",
+        odds: "Decided entirely by what happened to the original.",
+        move: "Find the original submission. If it paid, close this one and move on. If the original denied or disappeared, work the original. Appealing the duplicate itself wins nothing.",
+        kw: "duplicate already submitted" },
+      { code: "CO-29", name: "Filed too late", bucket: "appeal", label: "Appeal · with proof",
+        plain: "The payer says the claim arrived after the filing deadline. This is the most winnable denial practices give up on.",
+        odds: "Very strong with the receipt, dead without it.",
+        move: "The overturn is a receipt: your clearinghouse acceptance report or 277CA acknowledgement, with its transaction control number, proving the claim was filed on time. Most clearinghouses purge those reports at about 90 days, so archive them monthly starting now. No receipt and no good-cause story means decline it.",
+        letter: "This is an appeal of claim [number], denied for untimely filing. The claim was filed within the contractual window: the enclosed clearinghouse acknowledgement, transaction control number [TCN], shows it was received on [date]. We request the denial be reversed and the claim processed on its merits.",
+        kw: "timely filing late deadline 277ca filed too late" },
+      { code: "CO-50", name: "Not medically necessary", bucket: "appeal", label: "Appeal",
+        plain: "The payer's reviewer decided the service was not needed. A letter built on the payer's own coverage policy says otherwise.",
+        odds: "Published data puts these around 70 percent with records attached, roughly half that when the notes are thin.",
+        move: "Pull the payer's own medical policy for this service and quote its criteria back. Show each criterion met in the record, with dates. These denials are also the strongest candidates for independent external review if the payer holds the line.",
+        letter: "This is a first level appeal of the denial of claim [number]. The remittance dated [date] denied this claim as not medically necessary. [Payer]'s own coverage policy states this service is covered when [criteria]. The enclosed record shows each criterion met, documented and dated. The denial does not state which criterion was considered unmet; the record addresses every one.",
+        kw: "medical necessity not necessary clinical" },
+      { code: "CO-97", name: "Bundled into another service", bucket: "appeal", label: "Appeal",
+        plain: "The payer folded this service into another one billed the same day and paid once.",
+        odds: "70 to 90 percent when the right modifier and documentation exist.",
+        move: "If the two services were genuinely separate and distinct, modifier 25 or 59 with supporting notes wins this, sometimes as a simple corrected claim rather than a formal appeal.",
+        letter: "This is a first level appeal of claim [number], denied as bundled. The two services were separate and distinct, as the enclosed notes document, and the applicable modifier applies. The payer's own coding policy recognises this distinction.",
+        kw: "bundled bundling inclusive global modifier 25 59" },
+      { code: "CO-197", name: "No prior authorization", bucket: "appeal", label: "Appeal",
+        plain: "The service needed sign-off in advance and the payer has no record of one.",
+        odds: "Around 65 percent.",
+        move: "First check whether an authorization actually existed: if yes, this is a quick fix, add the number and resubmit. If not, many plans allow retrospective review, and from 2026 federal rules require payers to state the specific reason for prior authorization denials, which gives the appeal its target.",
+        letter: "This is a first level appeal of claim [number], denied for absence of prior authorization. The enclosed record shows the service met the plan's own coverage criteria, and we request retrospective review under the plan's stated policy.",
+        kw: "prior authorization auth precertification precert" },
+      { code: "CO-151", name: "Frequency or units not supported", bucket: "appeal", label: "Appeal",
+        plain: "The payer thinks too many units or visits were billed for the documentation it can see.",
+        odds: "Fair, when the record shows distinct sessions or units.",
+        move: "The appeal is documentation: notes showing each session or unit as separate and real. If the record cannot show that, the claim belongs in the decline bucket.",
+        kw: "frequency units exceeded number of services" },
+      { code: "CO-198", name: "Authorization exceeded", bucket: "appeal", label: "Appeal · weak",
+        plain: "There was an authorization, and the care ran past its visit or unit limit.",
+        odds: "Occasional. Weigh the letter against the dollars.",
+        move: "Retro-authorization for the extra units sometimes works, especially with a clinical reason the extension was needed. Batch small ones or decline them; this is a bucket where the win rate is protected by saying no.",
+        kw: "auth exceeded units visits over limit" },
+      { code: "CO-B7", name: "Provider not credentialed on that date", bucket: "appeal", label: "Appeal · slow",
+        plain: "The payer says the rendering provider was not enrolled with them when the care happened. Common with new hires.",
+        odds: "Real, inside the retro-enrollment window. Dead outside it.",
+        move: "Check the payer's retroactive enrollment window and file inside it. If this code shows up more than once, the fix is upstream: credentialing before the first patient, not appeals after.",
+        kw: "credentialed credentialing enrollment b7 provider not eligible" },
+      { code: "CO-119", name: "Benefit maximum reached", bucket: "dead", label: "Usually dead",
+        plain: "The payer says the patient used up the covered visits or dollars.",
+        odds: "Low, with one real exception: payers miscount.",
+        move: "Verify the payer's visit count against your own records before accepting this. If their count is wrong, the appeal is simple arithmetic. If it is right, remaining balances may be patient responsibility under the plan.",
+        kw: "benefit maximum visit cap max met exhausted" },
+      { code: "CO-167", name: "Diagnosis not covered", bucket: "info", label: "Fix it or decline it",
+        plain: "The plan does not cover the diagnosis as billed.",
+        odds: "Decided by whether a truthful covered diagnosis fits.",
+        move: "If the visit honestly supports a covered diagnosis, correct and resubmit. If not, decline it: bending a diagnosis to fit coverage is the line no honest biller crosses.",
+        kw: "diagnosis not covered excluded" },
+      { code: "PR-204", name: "Not a covered benefit · patient responsibility", bucket: "dead", label: "Bill the patient",
+        plain: "The plan simply does not include this service, and the PR prefix moves the balance to the patient.",
+        odds: "Not appealable in the usual sense, and not a loss either.",
+        move: "Bill the patient, with the EOB as backup. PR-coded balances are collectible money, which is why the audit never marks them as zero.",
+        kw: "not covered benefit 204 patient responsibility" },
+      { code: "CO-96", name: "Not a covered benefit · contractual", bucket: "dead", label: "Usually dead",
+        plain: "Same exclusion, but coded CO, so the practice absorbs it.",
+        odds: "Low. Worth one check, not a campaign.",
+        move: "Read the plan document once: if the benefit interpretation is wrong, that is an appeal. Otherwise decline it and protect the win rate.",
+        kw: "non covered 96 excluded service" },
+      { code: "PR-26", name: "Coverage not yet active", bucket: "dead", label: "Verify, then bill the patient",
+        plain: "The payer says the policy had not started on the date of service.",
+        odds: "Low, unless the payer's dates are wrong.",
+        move: "Verify the effective dates were not the payer's error, then bill the patient. Same play for PR-27, coverage terminated.",
+        kw: "coverage not active effective date 26 27 terminated expired" },
+      { code: "PR-49", name: "Routine exam not covered", bucket: "dead", label: "Usually dead",
+        plain: "The plan excludes routine or screening visits.",
+        odds: "Low, with one exception worth checking.",
+        move: "If the visit was genuinely diagnostic and simply miscoded as routine, correct and resubmit. Otherwise the balance is the patient's.",
+        kw: "routine exam screening preventive 49" },
+      { code: "CO-45", name: "Charge above the contracted rate", bucket: "info", label: "Not a denial",
+        plain: "The gap between what you billed and what the contract pays. Every claim has one.",
+        odds: "Nothing to appeal, something to check.",
+        move: "A normal CO-45 is bookkeeping. An oversized one hides an underpayment: compare the allowed amount on the remittance against your actual contracted rate. Underpayments are recoverable, and almost nobody checks.",
+        kw: "45 contractual write off adjustment allowed amount underpayment" }
+    ];
+
+    var out = document.getElementById("dec-out");
+    var input = document.getElementById("dec-q");
+
+    function norm(s) { return (s || "").toUpperCase().replace(/[^A-Z0-9]/g, ""); }
+
+    function findByCode(q) {
+      var n = norm(q);
+      if (!n) return null;
+      for (var i = 0; i < DATA.length; i++) {
+        if (norm(DATA[i].code) === n) return DATA[i];
+      }
+      // A bare number: prefer the CO code, then any prefix.
+      if (/^[0-9]+[A-Z]?$/.test(n) || /^B[0-9]+$/.test(n)) {
+        for (var j = 0; j < DATA.length; j++) {
+          if (norm(DATA[j].code).replace(/^(CO|PR|OA|PI)/, "") === n) return DATA[j];
+        }
+      }
+      return null;
+    }
+
+    function findByWords(q) {
+      var words = (q || "").toLowerCase().split(/[^a-z0-9]+/).filter(function (w) { return w.length > 2; });
+      if (!words.length) return [];
+      var scored = [];
+      for (var i = 0; i < DATA.length; i++) {
+        var hay = (DATA[i].name + " " + DATA[i].kw).toLowerCase();
+        var score = 0;
+        for (var w = 0; w < words.length; w++) {
+          if (hay.indexOf(words[w]) !== -1) score++;
+        }
+        if (score > 0) scored.push({ d: DATA[i], s: score });
+      }
+      scored.sort(function (a, b) { return b.s - a.s; });
+      return scored.map(function (x) { return x.d; });
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    function render(d) {
+      var html =
+        '<div class="dec-card" data-code="' + esc(d.code) + '">' +
+        '<div class="dec-card-top">' +
+        '<span class="dec-code">' + esc(d.code) + ' · ' + esc(d.name) + '</span>' +
+        '<span class="dec-pill ' + d.bucket + '">' + esc(d.label) + '</span>' +
+        '</div>' +
+        '<div class="dec-card-in">' +
+        '<p class="dec-plain">' + esc(d.plain) + '</p>' +
+        '<div class="dec-row"><div class="dec-k">The odds</div><p class="dec-v">' + esc(d.odds) + '</p></div>' +
+        '<div class="dec-row"><div class="dec-k">The move</div><p class="dec-v">' + esc(d.move) + '</p></div>' +
+        (d.letter
+          ? '<div class="dec-letter"><div class="dec-k" style="color:var(--copper,#C2501C)">How the letter opens · sample</div><p>"' + esc(d.letter) + '"</p></div>'
+          : '') +
+        '</div>' +
+        '<div class="dec-cta">' +
+        '<p>The full letter, the payer\'s policy quoted, the filing, the proof of delivery, the follow-through to level three: that is the service. The audit of your 20 most recent denials is free, and the report is yours either way.</p>' +
+        '<a class="button" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Start the free audit <span class="button-arrow" aria-hidden="true">&#8594;</span></a>' +
+        '</div>' +
+        '</div>';
+      out.innerHTML = html;
+    }
+
+    function renderMiss(q) {
+      var alts = findByWords(q).slice(0, 3);
+      var wrap = document.createElement("div");
+      wrap.className = "dec-miss";
+      var p = document.createElement("p");
+      p.style.margin = "0";
+      p.appendChild(document.createTextNode(
+        "That one is not in the public table yet. The audit reads every code on your remittances, including the rare ones, so nothing collectible slips past on a technicality."
+      ));
+      wrap.appendChild(p);
+      if (alts.length) {
+        var p2 = document.createElement("p");
+        p2.style.margin = "12px 0 0";
+        p2.appendChild(document.createTextNode("Closest matches: "));
+        alts.forEach(function (d, i) {
+          var b = document.createElement("button");
+          b.type = "button";
+          b.className = "dec-chip";
+          b.textContent = d.code;
+          b.addEventListener("click", function () { input.value = d.code; run(); });
+          if (i) p2.appendChild(document.createTextNode(" "));
+          p2.appendChild(b);
+        });
+        wrap.appendChild(p2);
+      }
+      out.innerHTML = "";
+      out.appendChild(wrap);
+    }
+
+    var timer = null;
+    function run() {
+      var q = input.value.trim();
+      if (!q) { out.innerHTML = ""; return; }
+      var hit = findByCode(q);
+      if (!hit) {
+        var words = findByWords(q);
+        if (words.length === 1 || (words.length > 1 && q.length > 5)) hit = words[0];
+      }
+      if (hit) render(hit); else renderMiss(q);
+    }
+
+    input.addEventListener("input", function () {
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(run, 250);
+    });
+    input.addEventListener("keydown", function (e) { if (e.key === "Enter") { if (timer) clearTimeout(timer); run(); } });
+
+    var chips = document.querySelectorAll(".dec-chips .dec-chip");
+    for (var c = 0; c < chips.length; c++) {
+      chips[c].addEventListener("click", function () {
+        input.value = this.textContent;
+        if (timer) clearTimeout(timer);
+        run();
+      });
+    }
+  })();
+  </script>
+
+  <script type="module" src="/assets/journey.js?v=6"></script>
+  <script src="/fsnav.js?v=834" defer></script>
+</body>
+</html>
