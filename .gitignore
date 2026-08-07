@@ -7,3 +7,8 @@ tests/shots/
 tests/width_sweep_last.json
 tests/size_audit_*.json
 .superpowers/
+
+# Scratch test harnesses. An underscore prefix means "never ships": these are
+# local width-check and probe pages, and a stray `git add -A` swept one into a
+# commit on 2026-08-07. The deploy publishes whatever is in the repo.
+_*.html

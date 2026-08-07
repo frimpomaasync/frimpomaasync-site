@@ -1660,13 +1660,18 @@ noscript {
     margin-bottom: 24px;
   }
 
+  /* minmax(0, 1fr), not 1fr. A bare 1fr is minmax(auto, 1fr), and an auto
+     minimum refuses to shrink below the widest card's min-content width. On
+     soft-appeals-start-thanks that made one card 309px wide inside a 288px
+     column and pushed the whole page 5px sideways at 320. Letting the track
+     shrink means a stubborn card clips itself instead of scrolling the page. */
   .card-grid,
   .free-grid,
   .role-grid,
   .fields,
   .form-grid-fields,
   .form-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .workflow-step,

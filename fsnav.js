@@ -138,11 +138,17 @@
     /* Seven items fit here only because the three "The " prefixes came off when
        Questions joined the bar. Measured at 320px: two rows, same as six items
        carrying the longer labels. Any eighth item goes to a page, not the bar. */
+    /* Order follows the questions a healthcare buyer asks, in the order they
+       ask them: what is it, what do I actually get, what does it cost, how is
+       it done, is it safe, everything else, who is behind it. Report moved from
+       fourth to second because the sample assessment is the most persuasive
+       thing on the site and a cold buyer wants the deliverable before the
+       17-step workflow. Pricing sits ahead of Process for the same reason. */
     var softNav =
       navLink("Offer", "/soft-appeals", "soft-offer", onSoft) +
-      navLink("Process", "/soft-appeals-process", "soft-process", onSoft) +
-      navLink("Pricing", "/soft-appeals-pricing", "soft-pricing", onSoft) +
       navLink("Report", "/soft-appeals-audit", "soft-audit", onSoft) +
+      navLink("Pricing", "/soft-appeals-pricing", "soft-pricing", onSoft) +
+      navLink("Process", "/soft-appeals-process", "soft-process", onSoft) +
       navLink("Security", "/soft-appeals-data-security", "soft-data", onSoft) +
       navLink("Questions", "/soft-appeals-faq", "soft-faq", onSoft) +
       navLink("About", "/soft-appeals-about", "soft-about", onSoft);

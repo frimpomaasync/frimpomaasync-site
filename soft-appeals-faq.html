@@ -7,7 +7,7 @@
   <meta name="description" content="Answers about Soft Appeals denial recovery, complimentary claim reviews, pricing, security, PHI, AI use, billing-team coordination, appeals, timelines, and engagement scope.">
   <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-faq">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/assets/journey.css?v=25">
+  <link rel="stylesheet" href="/assets/journey.css?v=26">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
@@ -53,10 +53,19 @@
       text-decoration: none; white-space: nowrap; transition: all .2s ease;
     }
     .jump a:hover { background: #FCEFE9; border-color: rgba(194, 80, 28, .22); color: #B4460F; }
+    /* 30px tall inside a horizontal scroller is a thumb's worst case: small
+       target, and a miss drags the row instead of opening the section. Grow the
+       hit area vertically only, so the chip row keeps its width and rhythm.
+       Width and pointer both, because an iPad in landscape is 1024px wide and
+       still all thumbs. */
     @media (max-width: 700px) {
       .faqtools { position: static; }
       .jump { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
       .jump::-webkit-scrollbar { display: none; }
+      .jump a { padding-top: 13px; padding-bottom: 13px; }
+    }
+    @media (pointer: coarse) {
+      .jump a { padding-top: 13px; padding-bottom: 13px; }
     }
 
     /* Answers carry lists and emphasised lines, which the base faq-list does not style. */
@@ -1506,6 +1515,6 @@
   </script>
 
   <script type="module" src="/assets/journey.js?v=6"></script>
-  <script src="/fsnav.js?v=843" defer></script>
+  <script src="/fsnav.js?v=844" defer></script>
 </body>
 </html>
