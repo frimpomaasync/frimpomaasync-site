@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pick a time | frimpomaasync.com</title>
+  <meta name="description" content="Pick a time for a free 15-minute call, or start the Operations Map. All times Eastern.">
+  <link rel="canonical" href="https://frimpomaasync.com/book">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=26">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <link rel="stylesheet" href="/assets/booking.css?v=1">
+  <meta name="theme-color" content="#FFFFFF">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="Pick a time">
+  <meta property="og:description" content="A free 15-minute call, or the Operations Map. Pick a time and it is yours.">
+  <meta property="og:url" content="https://frimpomaasync.com/book">
+  <meta property="og:image" content="https://frimpomaasync.com/assets/hero-scene-wide.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+</head>
+
+<body data-sk-sections="Pick a time" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Pick a time">
+      <div class="wrap">
+        <div class="eyebrow">Booking · all times Eastern</div>
+        <h1>Pick a time that <em>works.</em></h1>
+        <p class="hero-copy">Choose what you want, then choose when. Times already taken are not shown, so anything you can see is really open.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="bk">
+
+          <div class="bk-demo" id="bkDemo" hidden>Preview mode · nothing here books anything yet</div>
+
+          <div class="bk-step" id="stepType">
+            <p class="bk-label">What do you want</p>
+            <div class="bk-types" id="bkTypes"></div>
+          </div>
+
+          <p class="bk-tz" id="bkTz"></p>
+
+          <div class="bk-step" id="stepDay" hidden>
+            <p class="bk-label">Which day</p>
+            <div class="bk-days" id="bkDays"></div>
+          </div>
+
+          <div class="bk-step" id="stepTime" hidden>
+            <p class="bk-label">What time</p>
+            <div class="bk-times" id="bkTimes"></div>
+          </div>
+
+          <div class="bk-step" id="stepForm" hidden>
+            <p class="bk-label">Who are you</p>
+            <div class="bk-chosen" id="bkChosen"></div>
+            <form id="bkForm" novalidate>
+              <div class="bk-field">
+                <label for="bkName">Your name</label>
+                <input id="bkName" name="name" type="text" autocomplete="name" required>
+              </div>
+              <div class="bk-field">
+                <label for="bkEmail">Email</label>
+                <input id="bkEmail" name="email" type="email" autocomplete="email" inputmode="email" required>
+              </div>
+              <div class="bk-field">
+                <label for="bkNote" id="bkNoteLabel">What is going wrong right now</label>
+                <textarea id="bkNote" name="note" rows="3"></textarea>
+              </div>
+              <button class="bk-submit" id="bkSubmit" type="submit">Book it</button>
+            </form>
+          </div>
+
+          <div class="bk-step bk-done" id="stepDone" hidden></div>
+
+          <p class="bk-msg" id="bkMsg" role="status" aria-live="polite"></p>
+
+          <p class="bk-note" id="bkFoot">
+            Nothing is charged for the free call. You do not make an account, and your
+            answers go straight to me and nowhere else.
+          </p>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>window.BK = { only: ['free', 'map'] };</script>
+  <script src="/assets/booking.js?v=1"></script>
+  <script src="/fsnav.js?v=845" defer></script>
+</body>
+</html>

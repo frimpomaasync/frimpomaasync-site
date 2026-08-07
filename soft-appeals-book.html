@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Book your denial review · Soft Appeals | frimpomaasync.com</title>
+  <meta name="description" content="Book the complimentary review of 20 recent denials. The report is yours whether or not you continue. No fee unless money is recovered.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-book">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=26">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <link rel="stylesheet" href="/assets/booking.css?v=1">
+  <meta name="theme-color" content="#101426">
+  <meta name="robots" content="index,follow">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="Book your complimentary denial review">
+  <meta property="og:description" content="Twenty recent denials, reviewed in writing. The report is yours whether or not you continue with Soft Appeals.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-book">
+  <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <style>
+    .sa-terms {
+      margin: 0 0 30px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      overflow: hidden;
+    }
+    .sa-terms div {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 13px 18px;
+      border-bottom: 1px solid var(--line);
+      font-size: 15px;
+      line-height: 1.45;
+    }
+    .sa-terms div:last-child { border-bottom: 0; }
+    .sa-terms dt {
+      margin: 0;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--ink-faint);
+      flex: 0 0 auto;
+      padding-top: 3px;
+    }
+    .sa-terms dd { margin: 0; text-align: right; color: var(--ink); }
+    .sa-bring {
+      margin: 34px 0 0;
+      padding: 20px 22px;
+      background: var(--paper-soft);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+    .sa-bring h2 { font-family: var(--serif); font-size: 20px; font-weight: 400; margin: 0 0 10px; }
+    .sa-bring p { font-size: 15px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 10px; }
+    .sa-bring p:last-child { margin-bottom: 0; }
+    @media (max-width: 520px) {
+      .sa-terms div { flex-direction: column; gap: 4px; }
+      .sa-terms dd { text-align: left; }
+    }
+  </style>
+</head>
+
+<body data-sk-sections="Book the review" data-sk-bar="Complimentary review of 20 denials · no fee unless money is recovered." data-sk-biz="healthcare organization">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Book the review">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · complimentary denial review</div>
+        <h1>Start with <em>twenty denials.</em></h1>
+        <p class="hero-copy">Thirty minutes to walk through what your payers have been sending back. You leave with a written review of what looks recoverable, and that report is yours whether or not you carry on with us.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="bk">
+
+          <dl class="sa-terms">
+            <div><dt>The review</dt><dd>20 recent denials, no charge</dd></div>
+            <div><dt>The fee after</dt><dd>25% of verified recovered reimbursement</dd></div>
+            <div><dt>If nothing is recovered</dt><dd>You pay nothing</dd></div>
+            <div><dt>Retainer</dt><dd>None, and no minimum</dd></div>
+            <div><dt>Who gets paid</dt><dd>Payers pay your organization directly</dd></div>
+          </dl>
+
+          <div class="bk-demo" id="bkDemo" hidden>Preview mode · nothing here books anything yet</div>
+
+          <div class="bk-step" id="stepType" hidden>
+            <p class="bk-label">What do you want</p>
+            <div class="bk-types" id="bkTypes"></div>
+          </div>
+
+          <p class="bk-tz" id="bkTz"></p>
+
+          <div class="bk-step" id="stepDay" hidden>
+            <p class="bk-label">Which day</p>
+            <div class="bk-days" id="bkDays"></div>
+          </div>
+
+          <div class="bk-step" id="stepTime" hidden>
+            <p class="bk-label">What time</p>
+            <div class="bk-times" id="bkTimes"></div>
+          </div>
+
+          <div class="bk-step" id="stepForm" hidden>
+            <p class="bk-label">Who are you</p>
+            <div class="bk-chosen" id="bkChosen"></div>
+            <form id="bkForm" novalidate>
+              <div class="bk-field">
+                <label for="bkName">Your name</label>
+                <input id="bkName" name="name" type="text" autocomplete="name" required>
+              </div>
+              <div class="bk-field">
+                <label for="bkEmail">Work email</label>
+                <input id="bkEmail" name="email" type="email" autocomplete="email" inputmode="email" required>
+              </div>
+              <div class="bk-field">
+                <label for="bkNote" id="bkNoteLabel">Your practice type, and roughly how many denials are sitting there</label>
+                <textarea id="bkNote" name="note" rows="3"></textarea>
+              </div>
+              <button class="bk-submit" id="bkSubmit" type="submit">Book the review</button>
+            </form>
+          </div>
+
+          <div class="bk-step bk-done" id="stepDone" hidden></div>
+
+          <p class="bk-msg" id="bkMsg" role="status" aria-live="polite"></p>
+
+          <p class="bk-note" id="bkFoot">
+            No fee unless money is recovered, and no minimum. Nothing is signed on this call
+            and no patient data changes hands. The agreement is in place before anything moves.
+          </p>
+
+          <div class="sa-bring">
+            <h2>What to have ready</h2>
+            <p>A denial export covering your last few months, and the denial notices or remittance advice that came with them. Do not send any of it before the call. The agreement goes in place first, and only then does anything move.</p>
+            <p>Substance use disorder claims are excluded because of federal requirements. Government-program claims are priced separately from the terms above.</p>
+          </div>
+
+          <div class="actions" style="margin-top:26px">
+            <a class="button secondary" href="/soft-appeals-audit">See a sample report →</a>
+            <a class="button secondary" href="/soft-appeals-pricing">Read the full terms →</a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>window.BK = { only: ['appeals'] };</script>
+  <script src="/assets/booking.js?v=1"></script>
+  <script src="/fsnav.js?v=845" defer></script>
+</body>
+</html>
