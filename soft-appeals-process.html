@@ -1,0 +1,380 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How it works · the recovery process | Soft Appeals</title>
+  <meta name="description" content="The complete Soft Appeals recovery workflow: decide, recover, resolve. Seventeen steps from secure intake to documented closeout, with claim statuses, ownership, and what happens when a claim does not go to plan.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-process">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=25">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#101426">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="How Soft Appeals works · from denied claim to documented resolution">
+  <meta property="og:description" content="Decide, recover, resolve. The full recovery workflow, the claim statuses, who owns which action, and what happens when a claim stalls.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-process">
+  <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    /* The status chain and the ownership columns. Scoped to this page. */
+    .chain { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .chain span {
+      padding: 7px 13px; border: 1px solid var(--line); border-radius: 100px;
+      background: var(--paper);
+      font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 11px; letter-spacing: .06em;
+    }
+    .chain span.hot { border-color: rgba(194, 80, 28, .34); background: rgba(194, 80, 28, .07); color: #B4460F; }
+    .own { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 16px; }
+    .owncol { padding: 24px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+    .owncol.mine { border-color: rgba(194, 80, 28, .3); background: rgba(194, 80, 28, .04); }
+    .owncol > .k {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .owncol.mine > .k { color: #B4460F; }
+    .owncol h3 { margin: 10px 0 14px; font-family: var(--serif); font-weight: 400; font-size: clamp(19px, 2.2vw, 23px); line-height: 1.22; }
+    .owncol ul { margin: 0; padding: 0; list-style: none; }
+    .owncol li { position: relative; padding-left: 20px; margin-bottom: 9px; font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
+    .owncol li:last-child { margin-bottom: 0; }
+    .owncol li::before { content: "\00B7"; position: absolute; left: 5px; color: var(--ink-faint); font-weight: 700; }
+    .owncol.mine li::before { content: "\2713"; left: 0; color: var(--copper, #C2501C); font-weight: 400; }
+    /* Phase marker above each phase block. */
+    .phase {
+      display: inline-flex; align-items: baseline; gap: 12px;
+      padding: 8px 16px; margin-bottom: 6px;
+      border: 1px solid rgba(194, 80, 28, .3); border-radius: 100px;
+      background: rgba(194, 80, 28, .06);
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #B4460F;
+    }
+  </style>
+</head>
+<body data-sk-sections="Hero,Three phases,Decide,Recover,Resolve,Visibility,Statuses,Who does what,What happens when,What to have ready,Timing,Not in our control,Questions,Close" data-sk-bar="Decide · recover · resolve. Client approval before any submission in your name." data-sk-biz="healthcare organization">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Hero">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · how it works</div>
+        <h1>From denied claim to <em>documented resolution.</em></h1>
+        <p class="hero-copy">Soft Appeals gives selected denied claims a defined recovery workflow. We start by determining what happened and what action, if any, is appropriate. Claims accepted for recovery then move through research, documentation, preparation, client approval, submission, follow-up and reconciliation. Your existing billing operation stays where it is. Soft Appeals provides focused ownership for the denied claims assigned to us.</p>
+        <div class="actions">
+          <a class="button" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Start with 20 denials <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/soft-appeals-audit">View a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+        <div class="hero-trust">
+          <span>BAA before PHI</span>
+          <span>No routine EHR access for the initial review</span>
+          <span>Client approval before submission</span>
+          <span>Payments go directly to your organization</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Three phases">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">The shape of it</div>
+          <h2 class="section-title"><span>Decide,</span> recover, resolve.</h2>
+          <p class="section-intro">Three phases, seventeen steps. The pathway is claim-specific, because not every denial becomes an appeal and the ones that do not all follow the same route.</p>
+        </div>
+        <div class="card-grid" data-reveal data-stagger data-stagger-step="50">
+          <article class="path-card">
+            <span class="pill">Phase 01</span>
+            <h3>Decide</h3>
+            <p>Understand the denial, determine the appropriate next action, and decide which claims deserve recovery effort at all.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Phase 02</span>
+            <h3>Recover</h3>
+            <p>Research the applicable pathway, organize the evidence, prepare the required action, obtain your approval, and submit.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Phase 03</span>
+            <h3>Resolve</h3>
+            <p>Track the payer response, manage the next steps, reconcile the outcome, and close the recovery record with a disposition.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Decide">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="phase">Phase 01 <span>Decide</span></div>
+          <h2 class="section-title"><span>Decide where</span> recovery effort belongs.</h2>
+          <p class="section-intro">Six steps, all of which happen before there is a fee attached to anything.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Establish the secure workflow</h3>
+            <p>Before protected health information is exchanged, the applicable Business Associate Agreement and the engagement process are established. Your organization knows how information will be provided, what is being requested, who is authorized to communicate with Soft Appeals, what systems may be involved, how approval will work, and how information is handled when the engagement ends. The complimentary review does not require routine access to your EHR.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Provide the initial denials</h3>
+            <p>Start with 20 recent denied claims, sent through the designated secure process. Useful information may include denial or remittance information, payer information, claim details, denial correspondence, submission or acknowledgement evidence, authorization information where relevant, and the documentation needed to understand the denial. You do not need to organize everything perfectly first. If something further is needed, we identify what and why.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Review and classify each denial</h3>
+            <p>The first question is not how to appeal this. It is what the appropriate next action actually is. Each reviewed claim is assessed on the information available and placed into a recommended disposition: correct or resubmit, appeal, investigate, or close and deprioritize. Not every denied claim should consume the same amount of time.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Prioritize the work</h3>
+            <p>Claims are not ranked by denied amount alone. Priority weighs the financial value, whether a known deadline needs attention, whether there is an identifiable next action on the information available, and whether the information needed for that action is actually to hand. Claims needing more immediate attention surface first.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Receive your Denial Recovery Assessment</h3>
+            <p>You receive an assessment showing the reviewed claims and their recommended next actions: claim reference, payer, denied amount, denial category, recommended action, priority, known time sensitivity, information still needed, the basis for each recommendation, and who owns the next step. The assessment belongs to your organization whether or not you continue.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>Decide what moves forward</h3>
+            <p>The complimentary review does not push every assessed claim into paid recovery work. You decide. Engage Soft Appeals for eligible recovery work, route correction items back to your billing team, provide more information on the claims needing investigation, handle selected items internally, or take no further action at all. If you continue, the recovery scope is agreed before work proceeds.</p></div>
+        </div>
+        <div class="actions" style="margin-top:26px">
+          <a class="button secondary" href="/soft-appeals-data-security">Review data and security practices <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/soft-appeals-audit">See a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Recover">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="phase">Phase 02 <span>Recover</span></div>
+          <h2 class="section-title"><span>Turn selected claims</span> into an organized worklist.</h2>
+          <p class="section-intro">Six more steps, for the claims you chose to move forward.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">07</div><h3>Confirm the recovery pathway</h3>
+            <p>For each assigned claim we determine the appropriate next administrative pathway on the information available. That may be corrected-claim or resubmission guidance, a reconsideration, an internal appeal, a further internal review, external or independent review where it applies, a payer-specific administrative process, or another appropriate action within scope. There is no single appeal ladder that fits every payer, plan and denial.</p></div>
+          <div class="rsn"><div class="n">08</div><h3>Confirm timing requirements</h3>
+            <p>The relevant timing requirement is documented, or flagged for confirmation, before the claim advances. Timing can depend on the payer, the plan, the denial type, applicable contractual terms, the governing program, the jurisdiction, the stage of review and the claim's own circumstances. Where timing cannot be confirmed from what is available, it becomes an item to resolve rather than a number to guess.</p></div>
+          <div class="rsn"><div class="n">09</div><h3>Build the evidence record</h3>
+            <p>A persuasive letter is one part of an appeal. The supporting record is the rest. Depending on the claim, the file may hold the denial notice or remittance information, the original claim information, submission acknowledgements, payer correspondence, authorization information, relevant medical or administrative documentation, the applicable payer requirements, and any prior appeal activity. Where clinical, coding, legal or other specialized judgment is needed, the requirement goes back to the right person at your organization.</p></div>
+          <div class="rsn"><div class="n">10</div><h3>Prepare the appropriate action</h3>
+            <p>We prepare the administrative recovery materials the selected pathway requires: identifying the disputed denial, organizing the relevant claim facts, addressing the payer's stated reason, incorporating the supporting documentation, referencing the applicable payer requirements where that helps, and assembling the submission package. Technology assists with research, organization, workflow and drafting. It does not authorize the appeal or replace review of the work.</p></div>
+          <div class="rsn"><div class="n">11</div><h3>Client review and approval</h3>
+            <p>Before a payer submission is made in your organization's name, the agreed approval process is completed. That is your chance to verify claim-specific information, supply anything missing, catch a factual error, obtain the internal or clinical input a claim needs, and approve the submission. Nothing reaches a payer under your authority without it.</p></div>
+          <div class="rsn"><div class="n">12</div><h3>Submit and document</h3>
+            <p>Approved materials go through the appropriate submission channel, and the record captures the submission date, the method, the acknowledgement or proof of delivery where one is available, what was submitted, the follow-up date, the payer reference information and the current status. Sending an appeal is not the end of the work. It is the next tracked event.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Resolve">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="phase">Phase 03 <span>Resolve</span></div>
+          <h2 class="section-title"><span>Follow the claim</span> through resolution.</h2>
+          <p class="section-intro">Five steps, and this is the phase most denial work quietly skips.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">13</div><h3>Track the payer response</h3>
+            <p>After submission we monitor the assigned workflow for the next required action: acknowledgement of receipt, a request for additional information, an appeal decision, payment activity, a continued denial, administrative follow-up, or another available review step. The point is to stop the recovery record turning into a second unowned queue the moment the first submission goes out.</p></div>
+          <div class="rsn"><div class="n">14</div><h3>Respond to additional-information requests</h3>
+            <p>When a payer asks for more, the request is documented and assigned. If we already hold the information, the response is prepared within scope. If it has to come from your organization, the requirement goes to the right contact with the deadline attached. If it needs clinical, coding or legal judgment, it goes to a qualified party. The workflow makes the blocker visible rather than letting the claim stall in silence.</p></div>
+          <div class="rsn"><div class="n">15</div><h3>Evaluate the next step after another denial</h3>
+            <p>A continued denial does not automatically mean appeal again. We look at what the payer decided, what pathway remains available, and whether further recovery activity is appropriate at all. The recommendation may be to provide more information, pursue another available internal review, evaluate external review where it applies, investigate a different administrative remedy, return an issue for specialized review, or close the effort. Escalation is a decision, not a sequence.</p></div>
+          <div class="rsn"><div class="n">16</div><h3>Reconcile recovered reimbursement</h3>
+            <p>When the payer issues reimbursement, the payment continues through your organization's normal process. Soft Appeals does not receive payer reimbursement on your behalf and never takes custody of payer funds. The outcome is reconciled against the applicable remittance or payment documentation, so the recovery can be verified from your own records.</p></div>
+          <div class="rsn"><div class="n">17</div><h3>Close the recovery record</h3>
+            <p>Every assigned claim reaches a documented disposition: recovered, corrected and returned to your team, no further Soft Appeals action, client action required, or closed. A claim should not disappear simply because activity stopped happening to it.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Visibility">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">What you can see</div>
+          <h2 class="section-title"><span>The status of a claim</span> should never be a mystery.</h2>
+          <p class="section-intro">For every assigned claim, the workflow exists to answer six questions at any moment.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Where is it?</h3><p>The current status.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Who owns the next action?</h3><p>Soft Appeals, your organization, your billing partner, or another appropriate party.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>What happens next?</h3><p>The next required recovery step, named rather than implied.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>When does it need attention?</h3><p>The known deadline or the follow-up date.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>What is blocking it?</h3><p>Missing documentation, a payer response, an internal review, or another dependency.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>What was the outcome?</h3><p>Recovered, returned, closed, or another documented disposition.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Statuses">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Standard workflow statuses</div>
+          <h2 class="section-title"><span>Every assigned claim</span> sits in exactly one of these.</h2>
+          <p class="section-intro">The same set is used on every engagement, so "where is that claim" has one answer rather than a conversation. The two in copper are the points where the claim is with your team rather than with us.</p>
+        </div>
+        <div class="chain" data-reveal>
+          <span>Received</span>
+          <span>Under review</span>
+          <span class="hot">Additional information needed</span>
+          <span>Correction recommended</span>
+          <span>Appeal recommended</span>
+          <span class="hot">Client review</span>
+          <span>Approved for submission</span>
+          <span>Submitted</span>
+          <span>Payer follow-up</span>
+          <span>Additional review or escalation</span>
+          <span>Recovered</span>
+          <span>Closed</span>
+        </div>
+        <p class="small-note">Not every claim uses every status. The status reflects what that specific claim actually requires.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Who does what">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Who does what</div>
+          <h2 class="section-title"><span>Soft Appeals adds capacity.</span> Your existing team keeps its role.</h2>
+          <p class="section-intro">Every action in the workflow has an owner. These are the three sets, and the exact split is agreed before recovery work begins.</p>
+        </div>
+        <div class="own" data-reveal data-stagger data-stagger-step="50">
+          <div class="owncol">
+            <div class="k">Your organization</div>
+            <h3>Your team may be responsible for:</h3>
+            <ul>
+              <li>Providing the initial claim information</li>
+              <li>Identifying authorized contacts</li>
+              <li>Supplying requested supporting records</li>
+              <li>Providing required clinical or coding input</li>
+              <li>Reviewing appeal materials</li>
+              <li>Approving submissions</li>
+              <li>Completing actions that stay inside your billing workflow</li>
+              <li>Providing the remittance information needed for reconciliation</li>
+            </ul>
+          </div>
+          <div class="owncol mine">
+            <div class="k">Soft Appeals</div>
+            <h3>Depending on scope, we may be responsible for:</h3>
+            <ul>
+              <li>Reviewing the assigned denials</li>
+              <li>Categorizing and prioritizing claims</li>
+              <li>Researching recovery requirements</li>
+              <li>Identifying missing information</li>
+              <li>Preparing administrative appeal materials</li>
+              <li>Organizing supporting evidence</li>
+              <li>Maintaining the recovery worklist</li>
+              <li>Documenting submissions</li>
+              <li>Tracking payer responses</li>
+              <li>Identifying the next available review pathway</li>
+              <li>Coordinating follow-up activity</li>
+              <li>Reconciling recovery outcomes</li>
+            </ul>
+          </div>
+          <div class="owncol">
+            <div class="k">Your billing partner</div>
+            <h3>Your existing biller keeps:</h3>
+            <ul>
+              <li>The broader revenue cycle</li>
+              <li>Claim submission and payment posting</li>
+              <li>Routine corrections</li>
+              <li>Coding decisions and coding review</li>
+              <li>Anything a corrected claim requires</li>
+            </ul>
+          </div>
+        </div>
+        <p class="small-note">When an item belongs back inside the billing workflow, a corrected claim or a coding review for example, the requirement is identified and routed there rather than absorbed. Soft Appeals works alongside the existing operation instead of building a competing one.</p>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="What happens when">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">What happens when</div>
+          <h2 class="section-title"><span>The eight situations</span> that decide whether a process is real.</h2>
+          <p class="section-intro">Any workflow looks good when a claim goes to plan. These are the cases where most of them quietly fail.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>The denial only needs a corrected claim</h3>
+            <p>We document the correction or resubmission recommendation and the information supporting it. The correction itself sits with your billing representative unless that activity is expressly inside the agreed scope.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Clinical documentation is missing</h3>
+            <p>The required record is identified and requested through the established workflow. Soft Appeals does not create clinical documentation, and does not write rationale a treating provider has not documented.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>The denial looks like a coding issue</h3>
+            <p>It is flagged for review by a qualified person. Soft Appeals does not change coding outside the agreed scope, and a coding change made without qualified review is a bigger problem than the denial was.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>The payer asks for additional information</h3>
+            <p>The request becomes a tracked action item with its own deadline. We handle the administrative response within scope and name anything that has to come from your team.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>The appeal is denied again</h3>
+            <p>The remaining pathway is evaluated before another action is taken. What comes next depends on the claim, the plan, the payer, the previous decision, the review rights still available, the timing and the evidence that remains.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>External review may be available</h3>
+            <p>Eligibility and requirements are evaluated for that specific claim. External review is not assumed to be available for every denial, because it is not.</p></div>
+          <div class="rsn"><div class="n">07</div><h3>The claim is recovered</h3>
+            <p>The payer pays your organization through the normal reimbursement process, and the outcome is reconciled using the applicable payment or remittance documentation.</p></div>
+          <div class="rsn"><div class="n">08</div><h3>Further recovery no longer makes sense</h3>
+            <p>The claim is closed with a documented disposition, rather than worked repeatedly so that activity can be reported. Knowing when more effort is no longer appropriate is part of doing this responsibly.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="What to have ready">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">What to have ready</div>
+          <h2 class="section-title">Starting does not require a perfect denial database.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:22px">For the initial 20-denial review, gather what is reasonably available: 20 recent denied claims, the matching denial or remittance information, the payer name, the denied amount, claim reference information, denial correspondence where you have it, submission acknowledgement information where it is relevant, and any supporting records already sitting with the denial.</p>
+          <p class="section-intro">Do not send protected health information until the information-sharing process has been established. That step comes first, always.</p>
+          <p class="section-intro">If something needed for the assessment is missing, we identify it and tell you what it affects. A messy export is a normal starting point, not a reason to wait another month.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Timing">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">How long does it take</div>
+          <h2 class="section-title">There is no responsible universal answer.</h2>
+          <p class="section-intro" style="margin-top:22px">The complimentary assessment and the recovery of an appealed claim are two different timelines, and only one of them is ours to control. Recovery timing depends on the volume and complexity of the claims, the information available at intake, how quickly missing information arrives from your side, the payer's submission requirements, the payer's own processing and review times, whether another review level becomes appropriate, and whether more documentation is requested along the way. We track the process and its dependencies rather than promising a recovery date the payer ultimately controls.</p>
+        </div>
+        <div>
+          <div class="eyebrow">What we do not control</div>
+          <h2 class="section-title">A disciplined workflow cannot guarantee a payer outcome.</h2>
+          <p class="section-intro" style="margin-top:22px">Soft Appeals does not control whether a payer overturns a denial, how quickly it issues a decision, whether it asks for more documentation, whether a particular appeal or external-review pathway is available at all, your clinical or coding determinations, or when payment finally arrives.</p>
+          <p class="section-intro">What we do control is the quality and organization of the work inside our scope: review, preparation, documentation, ownership, tracking, escalation and reconciliation. That is the part worth judging a vendor on, because it is the only part any vendor actually holds.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Questions">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Process FAQ</div>
+          <h2 class="section-title"><span>What people ask</span> about the workflow itself.</h2>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">Q1</div><h3>Does every denial become an appeal?</h3>
+            <p>No. The review first determines the recommended next action. Some claims need a correction or resubmission, some warrant an appeal, some need more information, and others do not justify additional recovery effort.</p></div>
+          <div class="rsn"><div class="n">Q2</div><h3>Do you take over our billing?</h3>
+            <p>No. Soft Appeals provides focused denied-claim recovery capacity alongside your existing billing operation.</p></div>
+          <div class="rsn"><div class="n">Q3</div><h3>Do you need our EHR password?</h3>
+            <p>Not for the initial complimentary review. If later recovery work requires additional system access, the purpose, scope and authorization are established before any access is provided. Shared passwords should not be used for convenience, in either direction.</p></div>
+          <div class="rsn"><div class="n">Q4</div><h3>Who decides whether an appeal is submitted?</h3>
+            <p>You do. The client-approval process is established as part of the engagement, and appeal materials are presented for your approval before anything is submitted in your organization's name.</p></div>
+          <div class="rsn"><div class="n">Q5</div><h3>What if our billing company wants to work directly with you?</h3>
+            <p>That can be built into the engagement workflow. The goal is to give every required action a clear owner rather than to work around the team already there.</p></div>
+          <div class="rsn"><div class="n">Q6</div><h3>Do you guarantee recovery?</h3>
+            <p>No. A recommendation to pursue a denial is not a guarantee that the payer will reverse its decision or issue reimbursement.</p></div>
+          <div class="rsn"><div class="n">Q7</div><h3>Do you appeal indefinitely?</h3>
+            <p>No. Each new payer decision is evaluated before the next action is recommended. Claims are not escalated to manufacture activity.</p></div>
+          <div class="rsn"><div class="n">Q8</div><h3>How do we know what is happening with each claim?</h3>
+            <p>Assigned claims are maintained with a status, a next action, an owner, the relevant timing information and a final disposition. The six questions further up this page are the ones the record is built to answer.</p></div>
+          <div class="rsn"><div class="n">Q9</div><h3>What happens after reimbursement?</h3>
+            <p>The payer keeps paying your organization directly. The applicable remittance or payment documentation is used to reconcile the recovery outcome, so you can verify it against your own records.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <div class="eyebrow">Start with the decision, not the contract</div>
+        <h2>See which claims deserve a recovery workflow first.</h2>
+        <p>Begin with 20 recent denied claims. Soft Appeals reviews them and returns a Denial Recovery Assessment showing the recommended action, the financial value, the priority, known time sensitivity, the information still required and who owns the next step. Then you decide which eligible claims, if any, move into recovery work. The initial assessment is complimentary and belongs to your organization whether or not you continue. Questions before sending any patient information? Ask those first.</p>
+        <div class="actions">
+          <a class="button secondary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Request your 20-denial review →</a>
+          <a class="button secondary" href="/soft-appeals-audit">View the sample assessment →</a>
+          <a class="button secondary" href="/soft-appeals-data-security">Review data and security practices →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module" src="/assets/journey.js?v=6"></script>
+  <script src="/fsnav.js?v=838" defer></script>
+</body>
+</html>
