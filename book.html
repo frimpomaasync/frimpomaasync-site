@@ -3,95 +3,83 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pick a time | frimpomaasync.com</title>
-  <meta name="description" content="Pick a time for a free 15-minute call, or start the Operations Map. All times Eastern.">
+  <title>Book a time | frimpomaasync.com</title>
+  <meta name="description" content="Choose the conversation, see what is genuinely open, and put it in the calendar. A free 15-minute call, or the Operations Map.">
   <link rel="canonical" href="https://frimpomaasync.com/book">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=26">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
-  <link rel="stylesheet" href="/assets/booking.css?v=1">
-  <meta name="theme-color" content="#FFFFFF">
+  <link rel="stylesheet" href="/assets/booking.css?v=2">
+  <meta name="theme-color" content="#101426">
   <meta name="robots" content="index,follow">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
-  <meta property="og:title" content="Pick a time">
-  <meta property="og:description" content="A free 15-minute call, or the Operations Map. Pick a time and it is yours.">
+  <meta property="og:title" content="Pick what we are actually talking about">
+  <meta property="og:description" content="No mystery thirty-minute link. Choose the real conversation, see what is open, and put it in the calendar.">
   <meta property="og:url" content="https://frimpomaasync.com/book">
   <meta property="og:image" content="https://frimpomaasync.com/assets/hero-scene-wide.jpg">
   <meta name="twitter:card" content="summary_large_image">
 </head>
 
-<body data-sk-sections="Pick a time" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
-  <main>
+<body data-sk-sections="Booking,Which one" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
+  <main id="bkcChooser">
 
-    <section class="hero compact-hero" data-screen-label="Pick a time">
+    <section class="hero compact-hero bkc-hero" data-screen-label="Booking">
+      <span class="bk-shape solid s1" aria-hidden="true"></span>
+      <span class="bk-shape wire s2" aria-hidden="true"></span>
       <div class="wrap">
-        <div class="eyebrow">Booking · all times Eastern</div>
-        <h1>Pick a time that <em>works.</em></h1>
-        <p class="hero-copy">Choose what you want, then choose when. Times already taken are not shown, so anything you can see is really open.</p>
+        <p class="bk-eyebrow">frimpomaasync bookings</p>
+        <h1>Pick what we are <em>actually talking about.</em></h1>
+        <p>No mystery thirty-minute link. Choose the real conversation, see the times that are genuinely open, and put it straight in the calendar.</p>
       </div>
     </section>
 
-    <section class="section">
+    <section class="bkc-band" data-screen-label="Which one">
       <div class="wrap">
-        <div class="bk">
 
-          <div class="bk-demo" id="bkDemo" hidden>Preview mode · nothing here books anything yet</div>
+        <div class="bkc-band-head">
+          <p class="bk-eyebrow">Book with Nana Frimpongmaa</p>
+          <h2>Which one is yours?</h2>
+        </div>
 
-          <div class="bk-step" id="stepType">
-            <p class="bk-label">What do you want</p>
-            <div class="bk-types" id="bkTypes"></div>
-          </div>
+        <div class="bkc-grid">
 
-          <p class="bk-tz" id="bkTz"></p>
+          <article class="bkc-card copper">
+            <div class="bkc-card-top"><span>Free call</span><span>15 min</span></div>
+            <hr>
+            <h3>The first conversation.</h3>
+            <p>Tell me what keeps getting missed. I tell you whether it is fixable, what it would take, and whether I am the wrong person for it.</p>
+            <div class="bkc-grow"></div>
+            <p class="bkc-meta">Free · nothing to cancel later</p>
+            <a class="bkc-go" href="/book-call"><span>Choose a time</span><span aria-hidden="true">→</span></a>
+            <a class="bkc-sub" href="/synkasa-fit">Not sure yet? Check the fit ↗</a>
+          </article>
 
-          <div class="bk-step" id="stepDay" hidden>
-            <p class="bk-label">Which day</p>
-            <div class="bk-days" id="bkDays"></div>
-          </div>
-
-          <div class="bk-step" id="stepTime" hidden>
-            <p class="bk-label">What time</p>
-            <div class="bk-times" id="bkTimes"></div>
-          </div>
-
-          <div class="bk-step" id="stepForm" hidden>
-            <p class="bk-label">Who are you</p>
-            <div class="bk-chosen" id="bkChosen"></div>
-            <form id="bkForm" novalidate>
-              <div class="bk-field">
-                <label for="bkName">Your name</label>
-                <input id="bkName" name="name" type="text" autocomplete="name" required>
-              </div>
-              <div class="bk-field">
-                <label for="bkEmail">Email</label>
-                <input id="bkEmail" name="email" type="email" autocomplete="email" inputmode="email" required>
-              </div>
-              <div class="bk-field">
-                <label for="bkNote" id="bkNoteLabel">What is going wrong right now</label>
-                <textarea id="bkNote" name="note" rows="3"></textarea>
-              </div>
-              <button class="bk-submit" id="bkSubmit" type="submit">Book it</button>
-            </form>
-          </div>
-
-          <div class="bk-step bk-done" id="stepDone" hidden></div>
-
-          <p class="bk-msg" id="bkMsg" role="status" aria-live="polite"></p>
-
-          <p class="bk-note" id="bkFoot">
-            Nothing is charged for the free call. You do not make an account, and your
-            answers go straight to me and nowhere else.
-          </p>
+          <article class="bkc-card ink" id="bkcPaid">
+            <div class="bkc-card-top"><span>Paid session</span><span>45 min</span></div>
+            <hr>
+            <h3>The Operations Map.</h3>
+            <p>Forty-five minutes on your real numbers, then a written map of where the time and the money leak, and what to fix in what order.</p>
+            <div class="bkc-grow"></div>
+            <p class="bkc-meta">$2,500 · credited in full against Siesie</p>
+            <a class="bkc-go" href="/book-operations-map"><span>Choose a time</span><span aria-hidden="true">→</span></a>
+            <a class="bkc-sub" href="/operations-map">What the map covers ↗</a>
+          </article>
 
         </div>
+
+        <p class="bkc-foot">
+          Runs a healthcare practice? Soft Appeals books its complimentary denial review
+          <a href="/soft-appeals-book">on its own page</a>.
+          Every time on this site is shown in your own timezone once you pick a day.
+        </p>
+
       </div>
     </section>
 
   </main>
 
-  <script>window.BK = { only: ['free', 'map'] };</script>
-  <script src="/assets/booking.js?v=1"></script>
-  <script src="/fsnav.js?v=845" defer></script>
+  <script src="/assets/booking.js?v=2"></script>
+  <script src="/fsnav.js?v=846" defer></script>
 </body>
 </html>
