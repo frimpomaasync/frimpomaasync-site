@@ -20,6 +20,14 @@ RewriteRule ^solo-business-system(\.html)?/?$ /synkasa [R=301,L,NC]
 RewriteRule ^ai-products(\.html)?/?$ /synkasa [R=301,L,NC]
 RewriteRule ^soma(\.html)?/?$ /synkasa#soma [R=301,L,NE,NC]
 
+# Renamed 2026-08-06: GyeSika became Soft Appeals. "GyeSika" collides with an
+# active payment company (gyesika.com) and could never rank for its own name.
+# These three URLs were live for under an hour, but a link may already have gone
+# out by phone or email, so they redirect rather than 404.
+RewriteRule ^gyesika-your-data(\.html)?/?$ /soft-appeals-your-data [R=301,L,NC]
+RewriteRule ^gyesika-audit(\.html)?/?$ /soft-appeals-audit [R=301,L,NC]
+RewriteRule ^gyesika(\.html)?/?$ /soft-appeals [R=301,L,NC]
+
 # /index.html -> /
 RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
 RewriteRule ^index\.html$ / [R=301,L]

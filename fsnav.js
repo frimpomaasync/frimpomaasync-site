@@ -75,26 +75,26 @@
     var p = location.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
     if (p.indexOf("/synkasa") === 0 || p.indexOf("/client-catcher") === 0) return "synkasa";
     if (p.indexOf("/siesie") === 0) return "siesie";
-    if (p.indexOf("/gyesika") === 0) return "gyesika";
+    if (p.indexOf("/soft-appeals") === 0) return "softappeals";
     if (p.indexOf("/portfolio") === 0) return "proof";
     if (p.indexOf("/free") === 0) return "free";
     return "none";
   }
-  /* Which of GyeSika's own three pages is open. Only read when activeKey()
-     is "gyesika", so the exact-match order below is safe. */
-  function gyeKey() {
+  /* Which of Soft Appeals' own three pages is open. Only read when activeKey()
+     is "softappeals", so the exact-match order below is safe. */
+  function softKey() {
     var p = location.pathname.replace(/\.html$/, "").replace(/\/$/, "");
-    if (p.indexOf("/gyesika-audit") === 0) return "gyesika-audit";
-    if (p.indexOf("/gyesika-your-data") === 0) return "gyesika-data";
-    return "gyesika-offer";
+    if (p.indexOf("/soft-appeals-audit") === 0) return "soft-audit";
+    if (p.indexOf("/soft-appeals-your-data") === 0) return "soft-data";
+    return "soft-offer";
   }
   function navLink(label, href, key, on) {
     return '<a data-navlink href="' + href + '" style="color:' + (on === key ? "#101426" : "rgba(16,20,38,.58)") + ';transition:color .25s ease">' + label + "</a>";
   }
-  var isGye = activeKey() === "gyesika";
+  var isSoft = activeKey() === "softappeals";
   if (!cfg.noChrome) {
     var on = activeKey();
-    var onGye = isGye ? gyeKey() : "";
+    var onSoft = isSoft ? softKey() : "";
     var nav = document.createElement("header");
     nav.id = "fs-nav";
     /* Sticky, in flow, on every page. The handoff spec puts the bar above the
@@ -107,34 +107,34 @@
       ? "position:fixed;top:0;left:0;right:0;"
       : "position:sticky;top:0;") +
       "z-index:40;background:rgba(255,255,255,.9);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid rgba(16,20,38,.08)";
-    /* GyeSika sells to medical practices, and nothing else on this site does.
+    /* Soft Appeals sells to medical practices, and nothing else on this site does.
        A practice manager checking us out mid-decision must never be one tap
-       from a plumbing demo, so these pages get their own bar: GyeSika's three
-       pages, GyeSika's wordmark, and no front-desk chat. The parent brand
+       from a plumbing demo, so these pages get their own bar: Soft Appeals' three
+       pages, Soft Appeals' wordmark, and no front-desk chat. The parent brand
        stays visible but quiet, and the shared footer below still shows the
        real business behind it, which is the thing that makes a contingency
        offer in healthcare look legitimate rather than fly-by-night. */
-    var gyeNav =
-      navLink("The offer", "/gyesika", "gyesika-offer", onGye) +
-      navLink("The audit", "/gyesika-audit", "gyesika-audit", onGye) +
-      navLink("Your data", "/gyesika-your-data", "gyesika-data", onGye);
+    var softNav =
+      navLink("The offer", "/soft-appeals", "soft-offer", onSoft) +
+      navLink("The audit", "/soft-appeals-audit", "soft-audit", onSoft) +
+      navLink("Your data", "/soft-appeals-your-data", "soft-data", onSoft);
     var siteNav =
       navLink("SynKasa", "/synkasa", "synkasa", on) +
       navLink("Siesie", "/siesie", "siesie", on) +
-      navLink("GyeSika", "/gyesika", "gyesika", on) +
+      navLink("Soft Appeals", "/soft-appeals", "softappeals", on) +
       navLink("Proof", "/portfolio", "proof", on) +
       navLink("Free", "/free", "free", on);
     nav.innerHTML =
       '<div class="fs-grid" style="max-width:1180px;margin:0 auto;padding:18px 24px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">' +
       '<nav style="display:flex;gap:clamp(14px,1.8vw,26px);flex-wrap:wrap;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase">' +
-      (isGye ? gyeNav : siteNav) +
+      (isSoft ? softNav : siteNav) +
       "</nav>" +
-      '<a data-navlink data-navmark href="' + (isGye ? "/gyesika" : "/") + '" style="font-family:' + SERIF + ';font-size:clamp(14px,1.5vw,18px);letter-spacing:.2em;text-transform:uppercase;color:#101426;white-space:nowrap">' + (isGye ? "GyeSika" : "frimpomaasync") + "</a>" +
+      '<a data-navlink data-navmark href="' + (isSoft ? "/soft-appeals" : "/") + '" style="font-family:' + SERIF + ';font-size:clamp(14px,1.5vw,18px);letter-spacing:.2em;text-transform:uppercase;color:#101426;white-space:nowrap">' + (isSoft ? "Soft Appeals" : "frimpomaasync") + "</a>" +
       '<div style="display:flex;align-items:center;gap:clamp(14px,1.8vw,22px);justify-content:flex-end;flex-wrap:wrap">' +
-      (isGye
+      (isSoft
         ? '<a data-navlink href="/" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">by frimpomaasync</a>'
         : '<button type="button" data-navlink data-fs-chat style="background:none;border:0;padding:0;font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);cursor:pointer;transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isGye ? "Free audit" : "Book a call") + "</a>" +
+      '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Free audit" : "Book a call") + "</a>" +
       "</div></div>";
     body.insertBefore(nav, body.firstChild);
 
@@ -259,7 +259,7 @@
       '<div style="max-width:1180px;margin:0 auto;padding:56px 24px 96px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;align-items:start">' +
       '<div><div style="font-family:' + SERIF + ';font-size:19px;color:#F2F4F9">frimpomaasync</div>' +
       '<div style="margin-top:10px;font-size:13.5px;line-height:1.6">Built, wired, and cared for by NaNa Frimpomaa.</div></div>' +
-      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/synkasa">SynKasa</a><a href="/siesie">Siesie</a><a href="/gyesika">GyeSika</a><a href="/portfolio">Proof</a></div>' +
+      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/synkasa">SynKasa</a><a href="/siesie">Siesie</a><a href="/soft-appeals">Soft Appeals</a><a href="/portfolio">Proof</a></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/free">Free</a><a href="/som">Som</a><a href="/blog/">Blog</a><a href="/fit">Find your fit</a></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/operations-map">Operations Map</a><a href="/method">The method</a><a href="/results">Evidence</a><a href="/comparison">Compare</a><a href="/about">About</a><a href="/data">Your data</a></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="' + BOOK + '">Book a call</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>' +
@@ -277,10 +277,10 @@
       '<div style="max-width:1180px;margin:0 auto;padding:12px 92px 12px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">' +
       '<span style="font-size:13px;color:rgba(16,20,38,.62)">' + cfg.barText + "</span>" +
       '<div style="flex:1"></div>' +
-      (isGye
-        ? '<a data-navlink href="' + (onGye === "gyesika-audit" ? "/gyesika-your-data" : "/gyesika-audit") + '" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">' + (onGye === "gyesika-audit" ? "Your data" : "See the report") + "</a>"
+      (isSoft
+        ? '<a data-navlink href="' + (onSoft === "soft-audit" ? "/soft-appeals-your-data" : "/soft-appeals-audit") + '" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">' + (onSoft === "soft-audit" ? "Your data" : "See the report") + "</a>"
         : '<button type="button" data-navlink data-fs-chat style="font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;background:none;border:0;padding:0;color:rgba(16,20,38,.58);transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isGye ? "Free audit" : "Book a call") + "</a>" +
+      '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Free audit" : "Book a call") + "</a>" +
       "</div>";
     body.appendChild(barEl);
 
@@ -439,12 +439,12 @@
   fab.setAttribute("aria-controls", "fs-chat-panel");
   fab.style.cssText = "position:fixed;right:20px;bottom:20px;z-index:60;width:58px;height:58px;border-radius:999px;border:none;cursor:pointer;background:#101426;color:#FFFFFF;font-size:22px;box-shadow:0 18px 40px -18px rgba(0,0,0,.7);transition:background .25s ease";
   fab.textContent = "◎";
-  /* The chat widget is the SynKasa front-desk demo. On GyeSika it would open a
+  /* The chat widget is the SynKasa front-desk demo. On Soft Appeals it would open a
      booking bot for a practice manager who came here about denied claims, so
      the launcher and its panel stay out of the document on those pages. The
      nodes are still built, which keeps every listener below unchanged; they
      simply have nothing to attach to on screen. */
-  if (!isGye) body.appendChild(fab);
+  if (!isSoft) body.appendChild(fab);
 
   var panel = document.createElement("div");
   panel.id = "fs-chat-panel";
@@ -461,7 +461,7 @@
     '<div style="display:flex;gap:8px;padding:12px 14px;border-top:1px solid rgba(242,244,249,.12)">' +
     '<input id="fs-chat-inp" aria-label="Your message to the front desk" placeholder="Ask it something awkward" style="flex:1;min-width:0;font-family:inherit;font-size:14px;padding:11px 13px;border-radius:5px;border:1px solid rgba(242,244,249,.16);background:rgba(242,244,249,.06);color:#EDEFF4;outline:none">' +
     '<button type="button" id="fs-chat-send" style="font-family:inherit;font-size:12.5px;letter-spacing:.02em;cursor:pointer;border:none;background:#C2501C;color:#FFF;padding:11px 16px;border-radius:5px">Send</button></div>';
-  if (!isGye) body.appendChild(panel);
+  if (!isSoft) body.appendChild(panel);
 
   var msgs = panel.querySelector("#fs-chat-msgs");
   var inp = panel.querySelector("#fs-chat-inp");
