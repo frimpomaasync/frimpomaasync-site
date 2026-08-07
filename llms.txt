@@ -2,6 +2,8 @@
 
 frimpomaasync.com builds practical business systems for owner-run service businesses. SynKasa handles the front desk. Siesie handles the repeating work behind it. Every build lives in the client's accounts and stays theirs.
 
+There is a second audience with its own product. GyeSika recovers denied insurance claims for small medical practices. It is the same idea pointed at healthcare: a hospital keeps a department for fighting denials and a five-provider practice does not, so GyeSika is that department, sized for the practice.
+
 Primary slogan: "Watch it work before you pay."
 
 Guarantee: "Live in 7 days, or you don't pay."
@@ -73,6 +75,28 @@ The implementation path is: map, build, test, approve, launch, train, and hand o
 The owner supplies the current process, working rules, account access, and timely approvals. Judgment calls, exceptions, approvals, and sensitive conversations stay human.
 
 The Siesie application asks for contact details, business type, team size, monthly job or client volume, current scheduling and invoicing processes, people being coordinated, owner-dependent work, the main bottleneck, implementation timing, and investment readiness. Website, current tools, and additional context are optional.
+
+## GyeSika
+
+Page: https://frimpomaasync.com/gyesika
+
+Sample audit report: https://frimpomaasync.com/gyesika-audit
+
+Patient data and privacy: https://frimpomaasync.com/gyesika-your-data
+
+GyeSika recovers denied insurance claims for small specialty medical practices, typically one to five providers. Maryland first. It is a separate audience from SynKasa and Siesie and does not serve local service businesses.
+
+How it works: the practice signs a business associate agreement, sends its 20 most recent denials through a secure channel, and receives a free one-page audit within days. The audit sorts every claim into quick fixes, claims worth appealing, and claims not worth fighting, values each at the contracted allowed amount rather than billed charges, and flags claims whose appeal window closes soonest. AI drafts each appeal and NaNa Frimpomaa reviews, signs and sends it with proof of delivery. The practice approves every appeal before it is submitted in the practice's name.
+
+Fee: 25 percent of commercial claims actually recovered, invoiced only after the payer pays the practice and matched to the payer's own remittance. Individual claims from $150, with smaller claims appealed in batches. Medicare and Medicaid claims carry a flat fee per appeal instead, because federal rules do not permit percentage fees on them. There is no setup fee, no monthly minimum, and no contract lock. No recovery means no fee.
+
+The money goes from the payer directly to the practice. GyeSika never handles client funds.
+
+Strong fit: therapy, physical and occupational therapy, dental, chiropractic, podiatry, and any small practice writing off denials monthly. Wrong fit: hospitals and health systems. Substance use disorder claims are out of scope because of the federal rules covering those records.
+
+Privacy commitments: a signed business associate agreement before any patient data moves, never ordinary email, never a consumer chatbot, work done inside the practice's own systems wherever possible, unique logins with two-factor sign-in, US-based with no offshoring, notification within 72 hours if anything goes wrong, and return or destruction of claim-level data when the engagement ends.
+
+GyeSika makes no promise about recovery amounts or win rates. The published statistics on its pages are industry figures with named sources, not predictions about any practice.
 
 ## Proof
 
