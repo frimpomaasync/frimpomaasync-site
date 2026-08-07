@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact &amp; Vendor Due Diligence | Soft Appeals</title>
+  <meta name="description" content="Contact Soft Appeals about denied-claim recovery, billing-team coordination, privacy, security, AI use, contracting, vendor due diligence, or the complimentary 20-denial review.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-contact">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=25">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#101426">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="Contact and vendor due diligence · Soft Appeals">
+  <meta property="og:description" content="A serious vendor should expect serious questions. Ask about the BAA, security, AI, subcontractors, incident response, disposition, billing coordination, pricing or procurement, before any patient information is exchanged.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-contact">
+  <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    /* Contact and vendor due diligence. Scoped to this page. */
+    section[id] { scroll-margin-top: calc(var(--nav-height, 76px) + 18px); }
+
+    /* The PHI warning, same component as the intake page. */
+    .warn {
+      margin: 22px 0 0; padding: 20px 22px;
+      border: 1px solid rgba(194, 80, 28, .3); border-left: 3px solid var(--copper, #C2501C);
+      border-radius: 0 16px 16px 0; background: rgba(194, 80, 28, .045);
+    }
+    .warn .k {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #B4460F;
+    }
+    .warn p { margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: var(--ink); }
+    .warn p + p { margin-top: 8px; color: var(--ink-soft); font-size: 14px; }
+
+    /* The five routes. Each one names an audience and lands on its own anchor. */
+    .routes { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+    .route {
+      display: flex; flex-direction: column; gap: 10px;
+      padding: 24px 22px; border: 1px solid var(--line); border-radius: 18px;
+      background: var(--paper); text-decoration: none; color: inherit;
+      transition: border-color .25s ease, transform .25s ease, box-shadow .3s ease;
+    }
+    .route:hover { border-color: rgba(194, 80, 28, .38); transform: translateY(-3px); box-shadow: 0 24px 50px -34px rgba(16, 20, 38, .42); }
+    .route.lead { border-color: rgba(194, 80, 28, .32); background: rgba(194, 80, 28, .04); }
+    .route .k {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .route.lead .k { color: #B4460F; }
+    .route h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(19px, 2.1vw, 23px); line-height: 1.2; }
+    .route p { margin: 0; font-size: 14.5px; line-height: 1.58; color: var(--ink-soft); }
+    .route .go { margin-top: auto; padding-top: 6px; font-size: 13.5px; color: #B4460F; }
+
+    /* Form pieces, shared by both forms on this page. */
+    .checkgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 8px; }
+    fieldset.field { min-width: 0; border: 0; margin: 0; padding: 0; }
+    fieldset.field > legend { padding: 0; margin-bottom: 8px; color: var(--ink); font-size: 13px; line-height: 1.45; }
+    /* journey.css's text-input rule reaches these checkboxes through .field and
+       gives each one a 48px min-height. Reset the box back to a checkbox. */
+    .checkgrid .check-option input[type="checkbox"] {
+      width: 18px; height: 18px; min-height: 0; padding: 0; border-radius: 4px;
+    }
+    .field-note { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: #B4460F; }
+    .guard {
+      display: none; margin: 16px 0 0; padding: 16px 18px;
+      border: 1px solid rgba(194, 80, 28, .34); border-radius: 12px;
+      background: rgba(194, 80, 28, .05); font-size: 14px; line-height: 1.58; color: var(--ink);
+    }
+    .guard.on { display: block; }
+    .guard b { font-weight: 600; }
+    .guard label { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; font-size: 13.5px; cursor: pointer; }
+    .guard input { width: 18px; height: 18px; flex: 0 0 18px; min-height: 0; padding: 0; margin-top: 2px; accent-color: var(--copper, #C2501C); }
+
+    /* The do-not-send list. */
+    .nolist { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
+    .nolist li {
+      position: relative; padding: 11px 0 11px 30px; border-bottom: 1px solid var(--line);
+      font-size: 15px; line-height: 1.45; color: var(--ink-soft);
+    }
+    .nolist li::before {
+      content: "\00D7"; position: absolute; left: 6px; top: 9px;
+      color: var(--copper, #C2501C); font-size: 17px;
+    }
+
+    /* The questions a buyer is invited to ask. Plain, dense, scannable. */
+    .asks { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0 30px; margin: 0; padding: 0; list-style: none; }
+    .asks li {
+      padding: 13px 0; border-bottom: 1px solid var(--line);
+      font-family: var(--serif); font-size: 17px; line-height: 1.35; color: var(--ink);
+    }
+
+    /* The overclaiming block. Struck-through badges nobody gets to assume. */
+    .badges { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+    .badges span {
+      padding: 8px 14px; border-radius: 100px;
+      border: 1px dashed rgba(16, 20, 38, .22); background: var(--paper-soft, #F8F8F9);
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+      color: var(--ink-faint); text-decoration: line-through;
+    }
+  </style>
+</head>
+<body data-sk-sections="Hero,Routes,Ask,Due diligence,Request,Expect,No overclaiming,No PHI,Billing partners,Procurement,Questions,Ready,Deciding,Close" data-sk-bar="Ask the question before you send the claim. No PHI through this page." data-sk-biz="healthcare organization">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Hero">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · contact and vendor due diligence</div>
+        <h1>Questions before you send a claim? <em>Ask them first.</em></h1>
+        <p class="hero-copy">A healthcare organization should not have to hand over patient information to find out whether a vendor is appropriate. Use this page for questions about service fit, privacy and security, Business Associate Agreements, technology and AI, billing-team coordination, pricing, contracting, vendor review, procurement or the denial-recovery process itself.</p>
+        <div class="warn">
+          <div class="k">No patient information on this page</div>
+          <p>Do not include protected health information in either form below, and do not attach claim documents. Neither form accepts a file.</p>
+          <p>If the service moves forward, the approved information-sharing process is established separately, and it will be obvious when that step arrives.</p>
+        </div>
+        <div class="actions">
+          <a class="button" href="#ask">Ask a question <span class="button-arrow" aria-hidden="true">&#8595;</span></a>
+          <a class="button secondary" href="/soft-appeals-start">Request your complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+        <div class="hero-trust">
+          <span>No upload field on either form</span>
+          <span>Due-diligence questions welcome before any engagement</span>
+          <span>No certification claimed that cannot be supported</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="routes" data-screen-label="Routes">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Choose the right path</div>
+          <h2 class="section-title"><span>What do</span> you need?</h2>
+        </div>
+        <div class="routes" data-reveal data-stagger data-stagger-step="50">
+          <a class="route lead" href="/soft-appeals-start">
+            <div class="k">Start a denial review</div>
+            <h3>You are ready for the 20-claim assessment.</h3>
+            <p>Begin with the intake process, which asks business-level questions only and requests no patient information.</p>
+            <div class="go">Request your complimentary review &#8594;</div>
+          </a>
+          <a class="route" href="#due-diligence">
+            <div class="k">Privacy, security or compliance</div>
+            <h3>Your reviewer has questions first.</h3>
+            <p>Ask about the BAA, information handling, the technology workflow, access, subcontractors, incident procedures or data disposition.</p>
+            <div class="go">Start a due-diligence request &#8595;</div>
+          </a>
+          <a class="route" href="#ask">
+            <div class="k">Billing-team coordination</div>
+            <h3>You want to know how the work divides.</h3>
+            <p>You already have an internal billing team or an outside billing company. Soft Appeals is built to complement that operation rather than work around it.</p>
+            <div class="go">Ask about billing coordination &#8595;</div>
+          </a>
+          <a class="route" href="#ask">
+            <div class="k">Pricing or contracting</div>
+            <h3>You need the engagement terms.</h3>
+            <p>Recovery pricing, claim eligibility, government-program claims, invoicing or scope.</p>
+            <div class="go">Ask an engagement question &#8595;</div>
+          </a>
+          <a class="route" href="#ask">
+            <div class="k">General question</div>
+            <h3>You are not sure which applies.</h3>
+            <p>Send a business-level question and Soft Appeals points you at the right next step.</p>
+            <div class="go">Ask a general question &#8595;</div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="ask" data-screen-label="Ask">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Contact form</div>
+          <h2 class="section-title"><span>Tell us</span> what you need.</h2>
+          <p class="section-intro">Business information only. The first field routes your question, so it reaches the right answer instead of a general inbox.</p>
+        </div>
+
+        <h2 class="sr-only">Soft Appeals contact form</h2>
+        <form class="form-shell" name="soft-appeals-contact" data-qual-form data-phi-guard data-success="/soft-appeals-contact-thanks" action="https://formspree.io/f/mnjkqydb" method="post">
+          <input type="hidden" name="_subject" value="Soft Appeals question">
+          <input type="hidden" name="source" value="soft-appeals-contact">
+          <div class="form-grid-fields">
+
+            <label class="field full">What can we help with?
+              <select name="inquiry_type" required>
+                <option value="">Choose one, so this reaches the right place</option>
+                <option>Denial review · I want the complimentary assessment</option>
+                <option>Security and compliance · due diligence</option>
+                <option>Billing partner · coordination</option>
+                <option>Pricing and contracting · engagement terms</option>
+                <option>General question</option>
+              </select>
+            </label>
+            <label class="field">Your name
+              <input type="text" name="name" autocomplete="name" required>
+            </label>
+            <label class="field">Work email
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+            <label class="field">Organization
+              <input type="text" name="organization" autocomplete="organization" required>
+            </label>
+            <label class="field">Your role
+              <select name="role" required>
+                <option value="">Choose one</option>
+                <option>Owner or provider</option>
+                <option>Administrator or practice manager</option>
+                <option>Billing or revenue cycle</option>
+                <option>Finance or operations</option>
+                <option>Compliance or privacy</option>
+                <option>Information technology or security</option>
+                <option>Legal or procurement</option>
+                <option>External billing partner</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <fieldset class="field full">
+              <legend>Which topics does your question cover?</legend>
+              <div class="checkgrid">
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Complimentary denial review"> Complimentary denial review</label>
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Service fit"> Service fit</label>
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Billing-team coordination"> Billing-team coordination</label>
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Pricing"> Pricing</label>
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Business Associate Agreement"> Business Associate Agreement</label>
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Privacy and security"> Privacy and security</label>
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Technology and AI"> Technology and AI</label>
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Vendor due diligence"> Vendor due diligence</label>
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Contracting or procurement"> Contracting or procurement</label>
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Government-program claims"> Government-program claims</label>
+                <label class="check-option"><input type="checkbox" name="topics[]" value="Other"> Other</label>
+              </div>
+            </fieldset>
+
+            <label class="field full">Your question
+              <textarea name="question" data-phi-check required placeholder="Ask it plainly. If it is a compliance question, say what your organization needs to see and by when."></textarea>
+              <p class="field-note">No patient names, dates of birth, member IDs, claim documents, medical record numbers, clinical information or screenshots carrying patient information.</p>
+            </label>
+
+          </div>
+
+          <div class="guard" data-phi-guard-msg aria-live="polite"></div>
+
+          <button class="button" type="submit" style="margin-top:26px">Send my question <span class="button-arrow" aria-hidden="true">&#8594;</span></button>
+          <p class="form-status" data-form-status aria-live="polite"></p>
+          <p class="small-note">Submitting this form begins a business-level conversation. It does not create a client engagement, authorize payer activity, or establish a channel for transmitting protected health information.</p>
+          <noscript>Email <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a> with your organization, your role and your question. Do not attach patient information.</noscript>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Due diligence">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Vendor due diligence</div>
+          <h2 class="section-title"><span>Reviewing a vendor</span> before information moves is the normal order of things.</h2>
+          <p class="section-intro">Depending on the nature and stage of the proposed engagement, your organization may want to ask about any of the following. None of these questions are treated as an objection to get past.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Business Associate Agreement</h3>
+            <p>How permitted PHI use and disclosure, safeguards, incident reporting, subcontractor responsibilities, termination and the other applicable obligations are addressed.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Data flow</h3>
+            <p>How information would move from your organization into the Soft Appeals workflow, and through the recovery process.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Access model</h3>
+            <p>What information is actually needed, whether any system access is required, and how unnecessary access is avoided.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Technology</h3>
+            <p>Which kinds of technology support the workflow, and what part each one plays.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>AI use</h3>
+            <p>How AI or automation may assist administrative tasks, and what restrictions apply where PHI is involved.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>Third-party services</h3>
+            <p>Whether third parties or subcontractors may create, receive, maintain or transmit PHI as part of the workflow.</p></div>
+          <div class="rsn"><div class="n">07</div><h3>Retention and disposition</h3>
+            <p>How information and access are handled once they are no longer required, and when an engagement ends.</p></div>
+          <div class="rsn"><div class="n">08</div><h3>Incident response</h3>
+            <p>How suspected or known information-security events are identified, evaluated, documented, escalated and communicated under the applicable agreements and requirements.</p></div>
+          <div class="rsn"><div class="n">09</div><h3>Recovery workflow</h3>
+            <p>How claims are reviewed, approved, submitted, tracked, reconciled and closed.</p></div>
+        </div>
+        <p class="small-note">The published starting point for most of this is the <a href="/soft-appeals-data-security">data and security practices</a> page. The request form below is for what that page does not answer for your organization specifically.</p>
+      </div>
+    </section>
+
+    <section class="section soft" id="due-diligence" data-screen-label="Request">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Request due-diligence information</div>
+          <h2 class="section-title"><span>What would</span> your team like to review?</h2>
+          <p class="section-intro">Tick what your organization needs, say who is asking, and add anything specific your process requires. Availability of any given document is confirmed during the review rather than assumed here.</p>
+        </div>
+
+        <h2 class="sr-only">Soft Appeals due-diligence request form</h2>
+        <form class="form-shell" name="soft-appeals-due-diligence" data-qual-form data-phi-guard data-success="/soft-appeals-contact-thanks" action="https://formspree.io/f/mnjkqydb" method="post">
+          <input type="hidden" name="_subject" value="Soft Appeals vendor due-diligence request">
+          <input type="hidden" name="source" value="soft-appeals-due-diligence">
+          <div class="form-grid-fields">
+
+            <label class="field">Your name
+              <input type="text" name="name" autocomplete="name" required>
+            </label>
+            <label class="field">Work email
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+            <label class="field">Organization
+              <input type="text" name="organization" autocomplete="organization" required>
+            </label>
+            <label class="field">Who is requesting the information?
+              <select name="requester" required>
+                <option value="">Choose one</option>
+                <option>Compliance or privacy</option>
+                <option>Information security or IT</option>
+                <option>Legal</option>
+                <option>Procurement</option>
+                <option>Revenue cycle</option>
+                <option>Administration or operations</option>
+                <option>Billing partner</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <fieldset class="field full">
+              <legend>What would your team like to review?</legend>
+              <div class="checkgrid">
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Business Associate Agreement process"> Business Associate Agreement process</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Data and security practices"> Data and security practices</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Data-flow information"> Data-flow information</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Access-control approach"> Access-control approach</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Technology and AI use"> Technology and AI use</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Third-party or subcontractor information"> Third-party or subcontractor information</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Incident-response process"> Incident-response process</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Retention and disposition process"> Retention and disposition process</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Recovery workflow"> Recovery workflow</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Pricing and engagement terms"> Pricing and engagement terms</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Service agreement information"> Service agreement information</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Billing-company coordination"> Billing-company coordination</label>
+                <label class="check-option"><input type="checkbox" name="requested[]" value="Other"> Other</label>
+              </div>
+            </fieldset>
+
+            <label class="field full">Anything specific your organization requires? <small>Optional</small>
+              <textarea name="requirements" data-phi-check placeholder="A required contractual provision, a security questionnaire, an insurance level, a vendor registration step, a deadline your review has to meet."></textarea>
+              <p class="field-note">No patient records, and no attachments. This form does not accept files.</p>
+            </label>
+
+          </div>
+
+          <div class="guard" data-phi-guard-msg aria-live="polite"></div>
+
+          <button class="button" type="submit" style="margin-top:26px">Submit due-diligence request <span class="button-arrow" aria-hidden="true">&#8594;</span></button>
+          <p class="form-status" data-form-status aria-live="polite"></p>
+          <p class="small-note">A due-diligence request is a business-level conversation about the proposed relationship. It does not create an engagement or authorize any exchange of protected health information.</p>
+          <noscript>Email <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a> with what your team needs to review. Do not attach patient information.</noscript>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Expect">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">What to expect from due diligence</div>
+          <h2 class="section-title">Review the process before the data.</h2>
+          <p class="section-intro" style="margin-top:20px">Soft Appeals can address the questions your organization reasonably needs answered to evaluate the proposed relationship. They should be resolved before unnecessary patient information enters the workflow, which is the whole reason this page exists.</p>
+        </div>
+        <div>
+          <div class="eyebrow">The seven the review has to settle</div>
+          <ul class="asks" style="grid-template-columns:1fr" data-reveal>
+            <li>What work is being performed?</li>
+            <li>What information is actually required?</li>
+            <li>Where will that information go?</li>
+            <li>Who or what may access it?</li>
+            <li>What agreements apply?</li>
+            <li>What happens if something goes wrong?</li>
+            <li>What happens when the work ends?</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="No overclaiming">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">What Soft Appeals will not do</div>
+          <h2 class="section-title">Trust does not require overclaiming.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:20px">Soft Appeals will not represent a certification, audit result, security standard, insurance policy, technical control or other credential as existing unless it actually applies to the Soft Appeals environment and can be supported.</p>
+          <p class="section-intro">That includes the badges a vendor page is expected to wear:</p>
+          <div class="badges">
+            <span>HIPAA certified</span>
+            <span>SOC 2</span>
+            <span>HITRUST</span>
+            <span>Unverified technical claims</span>
+          </div>
+          <p class="section-intro" style="margin-top:18px">If your organization requires a particular certification, contractual provision, insurance level, security control or procurement step, ask before the engagement begins. Fit should be established before protected information is exchanged, and a vendor who discovers a hard requirement after the BAA is signed has wasted everyone's month.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="No PHI">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">PHI does not belong on this page</div>
+          <h2 class="section-title">Keep patient information inside the approved intake workflow.</h2>
+          <p class="section-intro" style="margin-top:20px">Neither form on this page accepts a file, and neither one should carry patient detail in its text. If the service moves forward, the appropriate information-sharing process is established separately.</p>
+        </div>
+        <div>
+          <div class="eyebrow">Not through this page</div>
+          <ul class="nolist" data-reveal>
+            <li>Patient names</li>
+            <li>Dates of birth</li>
+            <li>Medical record numbers</li>
+            <li>Member or subscriber IDs</li>
+            <li>Claim attachments</li>
+            <li>Explanations of benefits carrying patient information</li>
+            <li>Remittance files carrying patient information</li>
+            <li>Clinical records</li>
+            <li>Denial letters carrying patient information</li>
+            <li>Screenshots carrying patient information</li>
+            <li>Patient-level spreadsheets</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Billing partners">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Billing companies and revenue-cycle partners</div>
+          <h2 class="section-title"><span>Already supporting</span> the organization?</h2>
+          <p class="section-intro">Soft Appeals does not need to cast an existing billing company as the problem to add denial-recovery capacity. With client authorization, the workflow can establish five things up front.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Which claims belong with Soft Appeals</h3>
+            <p>Only the agreed denied claims enter the recovery scope.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Which actions stay with billing</h3>
+            <p>Corrections, resubmissions, coding review and other existing responsibilities can stay exactly where they are.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>What Soft Appeals needs from billing</h3>
+            <p>Claim history, denial information, submission evidence or clarification, requested when a specific claim needs it.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Who owns the next action</h3>
+            <p>Each active claim should have one visible next step and one accountable owner.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>How outcomes come back</h3>
+            <p>Recovery activity should return useful information to the organization rather than creating another disconnected workflow.</p></div>
+        </div>
+        <p class="small-note">Billing partners are welcome to use this page to ask questions before a client authorizes any claim-level information exchange. <a href="#ask">Ask about billing coordination</a>.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Procurement">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Procurement and contracting</div>
+          <h2 class="section-title">Need the business details first? That is fine.</h2>
+          <p class="section-intro" style="margin-top:20px">Some organizations need more review before recovery work can begin. Availability and applicability of any requested document or contractual provision is confirmed during due diligence, and Soft Appeals will not claim that a certification, policy, insurance limit, contractual term or document exists until it has been verified.</p>
+        </div>
+        <div>
+          <div class="eyebrow">Questions this usually covers</div>
+          <ul class="nolist" style="grid-template-columns:1fr">
+            <li>service scope</li>
+            <li>pricing</li>
+            <li>Business Associate Agreement requirements</li>
+            <li>service agreement terms</li>
+            <li>invoicing</li>
+            <li>information-security requirements</li>
+            <li>insurance requirements</li>
+            <li>vendor registration</li>
+            <li>payment setup</li>
+            <li>tax documentation</li>
+            <li>subcontractor requirements</li>
+            <li>termination provisions</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Questions">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Questions for Soft Appeals</div>
+          <h2 class="section-title"><span>A serious vendor</span> should expect serious questions.</h2>
+          <p class="section-intro">These are the ones worth asking, listed here so nobody has to work out what they are allowed to ask. Many are already answered on the <a href="/soft-appeals-faq">full questions page</a>. Ask the rest directly.</p>
+        </div>
+        <ul class="asks" data-reveal>
+          <li>What information will you need from us?</li>
+          <li>Do you need EHR access?</li>
+          <li>Will you sign a BAA?</li>
+          <li>Which services may handle PHI?</li>
+          <li>How is AI used?</li>
+          <li>Does client PHI train public AI models?</li>
+          <li>How do you handle subcontractors?</li>
+          <li>What happens if there is a security incident?</li>
+          <li>How is access removed after the engagement?</li>
+          <li>How is PHI returned or destroyed?</li>
+          <li>How will our billing company work with you?</li>
+          <li>Who approves payer submissions?</li>
+          <li>How do you verify a recovery?</li>
+          <li>What happens if a claim is already being appealed?</li>
+          <li>Which claims qualify for contingency pricing?</li>
+          <li>How do government-program claims differ?</li>
+          <li>What happens if we stop the engagement?</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Ready">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Already ready to start?</div>
+          <h2 class="section-title">A due-diligence request is not a prerequisite.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:20px">If your next step is the complimentary assessment, go straight to the denial-review intake. You provide business-level information first. If the review looks appropriate, Soft Appeals establishes the privacy and secure-intake process before any patient-level claim information is exchanged.</p>
+          <div class="actions" style="margin-top:22px">
+            <a class="button" href="/soft-appeals-start">Request your complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+            <a class="button secondary" href="/soft-appeals-audit">View a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Deciding">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Still deciding</div>
+          <h2 class="section-title"><span>Review the company</span> before sending anything.</h2>
+          <p class="section-intro">You should understand the service, the workflow, the data practices and the financial model before deciding whether Soft Appeals belongs inside your revenue-cycle process.</p>
+        </div>
+        <div class="card-grid" data-reveal data-stagger data-stagger-step="50">
+          <a class="path-card card-link" href="/soft-appeals-about">
+            <span class="pill">The company</span>
+            <h3>About Soft Appeals.</h3>
+            <p>Who runs it, what it is accountable for, and what it deliberately does not do.</p>
+          </a>
+          <a class="path-card card-link" href="/soft-appeals-data-security">
+            <span class="pill">The safeguards</span>
+            <h3>Data and security practices.</h3>
+            <p>The page most compliance reviewers open first.</p>
+          </a>
+          <a class="path-card card-link" href="/soft-appeals-faq">
+            <span class="pill">The answers</span>
+            <h3>Full FAQ.</h3>
+            <p>Seventy-four questions across scope, claims, PHI, AI, approval, tracking, pricing and fit.</p>
+          </a>
+          <a class="path-card card-link" href="/soft-appeals-pricing">
+            <span class="pill">The money</span>
+            <h3>Pricing and engagement.</h3>
+            <p>What a recovery fee is calculated from, and the five things it is never based on.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <div class="eyebrow">Contact Soft Appeals</div>
+        <h2>Start with the question that matters to your organization.</h2>
+        <p>A recovery question, a security question, a billing question, a contracting question. Ask it. Patient information can wait until the appropriate process is established, and no answer on this page depends on seeing a single claim.</p>
+        <div class="actions">
+          <a class="button secondary" href="#ask">Contact Soft Appeals →</a>
+          <a class="button secondary" href="/soft-appeals-start">Request your complimentary review →</a>
+          <a class="button secondary" href="#due-diligence">Start a due-diligence request →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* Same two jobs as the intake page: keep --nav-height honest so the anchor
+       offsets land, and stop patient information reaching an ordinary form.
+       Both forms here run the guard, so it binds per form rather than once. */
+    (function () {
+      function syncNav() {
+        var nav = document.getElementById('fs-nav');
+        if (nav) document.documentElement.style.setProperty('--nav-height', nav.offsetHeight + 'px');
+      }
+      if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', syncNav);
+      else syncNav();
+      window.addEventListener('load', syncNav);
+      window.addEventListener('resize', syncNav);
+
+      var PATTERNS = [
+        { re: /\b\d{3}-\d{2}-\d{4}\b/, what: 'something shaped like a social security number' },
+        { re: /\b(0?[1-9]|1[0-2])[\/\-.](0?[1-9]|[12]\d|3[01])[\/\-.](19|20)?\d{2}\b/, what: 'something shaped like a date of birth' },
+        { re: /\b(dob|d\.o\.b|date of birth|mrn|medical record|member id|subscriber id|patient)\b/i, what: 'a word that usually travels with patient information' },
+        { re: /\b\d{7,}\b/, what: 'a long identifier that could be a member or claim number' }
+      ];
+
+      [].slice.call(document.querySelectorAll('[data-phi-guard]')).forEach(function (form) {
+        var msg = form.querySelector('[data-phi-guard-msg]');
+        var fields = [].slice.call(form.querySelectorAll('[data-phi-check]'));
+        form.addEventListener('submit', function (e) {
+          var ok = msg.querySelector('input[type=checkbox]');
+          if (ok && ok.checked) return;
+          var hits = [];
+          fields.forEach(function (f) {
+            PATTERNS.forEach(function (p) { if (p.re.test(f.value || '')) hits.push(p.what); });
+          });
+          hits = hits.filter(function (h, i) { return hits.indexOf(h) === i; });
+          if (!hits.length) return;
+          e.preventDefault();
+          e.stopImmediatePropagation();
+          msg.innerHTML =
+            '<b>Hold on, that looks like patient information.</b> This form found ' + hits.join(', ') +
+            '. Nothing has been sent. Please take it out and ask the question at business level instead. ' +
+            'Patient-level detail belongs in the secure intake process, not here.' +
+            '<label><input type="checkbox"> I have checked this field, and it contains no patient information.</label>';
+          msg.classList.add('on');
+          msg.scrollIntoView({ block: 'center' });
+        }, true);
+      });
+    })();
+  </script>
+
+  <script type="module" src="/assets/journey.js?v=6"></script>
+  <script src="/fsnav.js?v=843" defer></script>
+</body>
+</html>

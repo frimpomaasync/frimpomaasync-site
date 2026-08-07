@@ -107,6 +107,7 @@
        their own key, or the fallback would light "Offer" while a buyer is
        halfway through the form. */
     if (p.indexOf("/soft-appeals-start") === 0) return "soft-start";
+    if (p.indexOf("/soft-appeals-contact") === 0) return "soft-contact";
     return "soft-offer";
   }
   function navLink(label, href, key, on) {
@@ -294,7 +295,9 @@
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/synkasa">SynKasa</a><a href="/siesie">Siesie</a><a href="/soft-appeals">Soft Appeals</a><a href="/portfolio">Proof</a></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/free">Free</a><a href="/som">Som</a><a href="/blog/">Blog</a><a href="/fit">Find your fit</a></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/operations-map">Operations Map</a><a href="/method">The method</a><a href="/results">Evidence</a><a href="/comparison">Compare</a><a href="/about">About</a><a href="/data">Your data</a></div>' +
-      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="' + BOOK + '">Book a call</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>' +
+      (isSoft
+        ? '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/soft-appeals-contact">Contact and due diligence</a><a href="/soft-appeals-start">Start a denial review</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>'
+        : '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="' + BOOK + '">Book a call</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>') +
       '<div style="margin-top:14px;font-family:' + MONO + ';font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,244,249,.34)">Watch it work before you pay</div></div>' +
       "</div>";
     body.appendChild(foot);
