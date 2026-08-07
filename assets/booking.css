@@ -307,7 +307,6 @@
   margin: 0 0 3px;
 }
 .bkx-by .bkx-who .bkx-n { font-family: var(--serif); font-size: 17px; margin: 0; }
-.bkx-by .bkx-who .bkx-r { font-size: 12.5px; color: rgba(255,255,255,.55); margin: 2px 0 0; }
 
 .bkx-side .s1 { width: 210px; height: 210px; right: -70px; bottom: 90px; transform: rotate(18deg); opacity: .85; }
 .bkx-side .s2 { width: 130px; height: 130px; right: 90px;  bottom: 170px; transform: rotate(-10deg); }
