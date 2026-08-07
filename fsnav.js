@@ -16,8 +16,10 @@
      the two "ask a question" buttons and from the confirmation step.
      Restored 2026-08-07: this had been pointed at /soft-appeals-book while
      /soft-appeals-start was 404ing on the server. The page is back, so the
-     form is the front door again and /soft-appeals-book is the alternative
-     offered on the intake page for anyone who would rather talk. */
+     form is the front door again. Later the same day /soft-appeals-book was
+     retired outright (it still said "nothing here books anything yet"), and
+     anyone who would rather talk now goes to the contact page, which is built
+     to take a question without patient information attached. */
   var SOFT_CTA = "/soft-appeals-start";
   var CHAT_API = "https://synkasa-api.dawn-boat-ec20.workers.dev/chat";
   var SERIF = "'Iowan Old Style','Palatino Linotype',Palatino,'Hoefler Text',Garamond,serif";
@@ -72,6 +74,16 @@
        of FRIMPOMAASYNC ran under the button. Tighten the tracking, not the
        name. */
     "@media (max-width:359px){#fs-nav .fs-grid > a[data-navmark]{font-size:13px!important;letter-spacing:.08em!important}}",
+    /* "Complimentary review" replaced "Free review" on 2026-08-07 so the button
+       says the same thing the page buttons say. It is nine characters longer,
+       and at 10.5px with .15em of tracking it does not share a 320px row with
+       the wordmark. The tracking is what goes, not the words: uppercase at
+       .06em is still legible at this size, and it is only the phone bar. */
+    "@media (max-width:700px){#fs-nav [data-navcta]{font-size:9.5px!important;letter-spacing:.06em!important;padding:10px 12px!important}}",
+    "@media (max-width:359px){#fs-nav [data-navcta]{font-size:9px!important;letter-spacing:.03em!important;padding:9px 10px!important}}",
+    /* Same button on the sticky bar, which has 92px of right padding reserved
+       for the chat bubble and therefore less room than the nav. */
+    "@media (max-width:700px){#fs-bar [data-navcta]{font-size:9.5px!important;letter-spacing:.06em!important;padding:11px 13px!important}}",
     /* Under 16px iOS zooms the page when the field takes focus. An iPad in
        landscape is 1024 to 1366 css px, so ask the pointer, not the width. */
     "@media (max-width:900px),(pointer:coarse){#fs-chat-inp{font-size:16px!important}}",
@@ -102,7 +114,7 @@
     var p = location.pathname.replace(/\.html$/, "").replace(/\/$/, "");
     if (p.indexOf("/soft-appeals-decoder") === 0) return "soft-decoder";
     if (p.indexOf("/soft-appeals-faq") === 0) return "soft-faq";
-    if (p.indexOf("/soft-appeals-audit") === 0) return "soft-audit";
+    if (p.indexOf("/soft-appeals-sample-assessment") === 0) return "soft-sample";
     if (p.indexOf("/soft-appeals-data-security") === 0) return "soft-data";
     if (p.indexOf("/soft-appeals-about") === 0) return "soft-about";
     if (p.indexOf("/soft-appeals-process") === 0) return "soft-process";
@@ -140,28 +152,40 @@
        stays visible but quiet, and the shared footer below still shows the
        real business behind it, which is the thing that makes a contingency
        offer in healthcare look legitimate rather than fly-by-night. */
-    /* Seven items fit here only because the three "The " prefixes came off when
-       Questions joined the bar. Measured at 320px: two rows, same as six items
-       carrying the longer labels. Any eighth item goes to a page, not the bar. */
-    /* Order follows the questions a healthcare buyer asks, in the order they
-       ask them: what is it, what do I actually get, what does it cost, how is
-       it done, is it safe, everything else, who is behind it. Report moved from
-       fourth to second because the sample assessment is the most persuasive
-       thing on the site and a cold buyer wants the deliverable before the
-       17-step workflow. Pricing sits ahead of Process for the same reason. */
+    /* Order set 2026-08-07 from the pre-launch audit: overview, how it works,
+       the deliverable, the cost, the safety, then everything else. Eight equal
+       items ran to three rows on a 320px phone, so the last three sit behind
+       More. Data and Security stays in the bar itself: for a vendor asking a
+       practice to hand over claim information, it is the page a buyer needs to
+       find without hunting, and burying it would cost more than the row it
+       saves. The decoder is deliberately absent (her call 2026-08-07): it is a
+       lead magnet reached from the offer page, not a page a buyer navigates to.
+       It still gets its own highlight key so the bar shows where you are. */
+    var MORE_ITEMS = [
+      ["FAQ", "/soft-appeals-faq", "soft-faq"],
+      ["About", "/soft-appeals-about", "soft-about"],
+      ["Contact", "/soft-appeals-contact", "soft-contact"]
+    ];
+    var moreIsActive = MORE_ITEMS.some(function (item) { return item[2] === onSoft; });
     var softNav =
-      navLink("Offer", "/soft-appeals", "soft-offer", onSoft) +
-      navLink("Report", "/soft-appeals-audit", "soft-audit", onSoft) +
+      navLink("Overview", "/soft-appeals", "soft-offer", onSoft) +
+      navLink("How it works", "/soft-appeals-process", "soft-process", onSoft) +
+      navLink("Sample", "/soft-appeals-sample-assessment", "soft-sample", onSoft) +
       navLink("Pricing", "/soft-appeals-pricing", "soft-pricing", onSoft) +
-      navLink("Process", "/soft-appeals-process", "soft-process", onSoft) +
       navLink("Security", "/soft-appeals-data-security", "soft-data", onSoft) +
-      navLink("Questions", "/soft-appeals-faq", "soft-faq", onSoft) +
-      navLink("About", "/soft-appeals-about", "soft-about", onSoft);
-    /* The decoder is deliberately not in this bar (her call 2026-08-07). It is a
-       lead magnet people reach from the offer page and the checklist, not a page
-       a buyer navigates to, and at seven items the bar ran to three rows on a
-       320px phone. It keeps its own nav highlight below so the bar still shows
-       where you are if you land on it from a link. */
+      '<span style="position:relative;display:inline-flex">' +
+      '<button type="button" data-fs-more aria-expanded="false" aria-controls="fs-more-panel" ' +
+      'style="background:none;border:0;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;color:' +
+      (moreIsActive ? "#101426" : "rgba(16,20,38,.58)") + ';transition:color .25s ease">More</button>' +
+      '<span id="fs-more-panel" data-fs-more-panel style="display:none;position:fixed;top:0;left:0;min-width:196px;' +
+      'flex-direction:column;padding:8px;border:1px solid rgba(16,20,38,.12);border-radius:12px;background:#FFFFFF;' +
+      'box-shadow:0 24px 48px -22px rgba(16,20,38,.45);z-index:60">' +
+      MORE_ITEMS.map(function (item) {
+        return '<a data-navlink data-fs-more-link href="' + item[1] +
+          '" style="padding:9px 12px;border-radius:8px;font-size:14px;letter-spacing:normal;text-transform:none;white-space:nowrap;color:' +
+          (onSoft === item[2] ? "#101426" : "rgba(16,20,38,.66)") + '">' + item[0] + "</a>";
+      }).join("") +
+      "</span></span>";
     var siteNav =
       navLink("SynKasa", "/synkasa", "synkasa", on) +
       navLink("Siesie", "/siesie", "siesie", on) +
@@ -178,9 +202,44 @@
       (isSoft
         ? '<a data-navlink data-fs-by href="/" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">by frimpomaasync</a>'
         : '<button type="button" data-navlink data-fs-chat style="background:none;border:0;padding:0;font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);cursor:pointer;transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + (isSoft ? SOFT_CTA : BOOK) + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Free review" : "Book a call") + "</a>" +
+      '<a data-navcta href="' + (isSoft ? SOFT_CTA : BOOK) + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Complimentary review" : "Book a call") + "</a>" +
       "</div></div>";
     body.insertBefore(nav, body.firstChild);
+
+    /* The More panel. Fixed rather than absolute, so it cannot be clipped by an
+       ancestor and cannot be pushed off the right edge of a phone: it is placed
+       from the button's own rect at open time and clamped to the viewport.
+       Scrolling closes it, because a fixed panel would otherwise sit still
+       while the button it belongs to moves away. */
+    var moreBtn = nav.querySelector("[data-fs-more]");
+    var morePanel = nav.querySelector("[data-fs-more-panel]");
+    if (moreBtn && morePanel) {
+      var moreOpen = false;
+      var setMore = function (open) {
+        moreOpen = open;
+        moreBtn.setAttribute("aria-expanded", open ? "true" : "false");
+        if (!open) { morePanel.style.display = "none"; return; }
+        morePanel.style.display = "flex";
+        var r = moreBtn.getBoundingClientRect();
+        var w = morePanel.offsetWidth;
+        var left = Math.max(8, Math.min(r.left, window.innerWidth - w - 8));
+        morePanel.style.top = Math.round(r.bottom + 12) + "px";
+        morePanel.style.left = Math.round(left) + "px";
+      };
+      moreBtn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        setMore(!moreOpen);
+      });
+      /* A tap on a link inside the panel must not be eaten by the outside-click
+         handler before the browser follows the href. */
+      morePanel.addEventListener("click", function (e) { e.stopPropagation(); });
+      document.addEventListener("click", function () { if (moreOpen) setMore(false); });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && moreOpen) { setMore(false); moreBtn.focus(); }
+      });
+      window.addEventListener("scroll", function () { if (moreOpen) setMore(false); }, { passive: true });
+      window.addEventListener("resize", function () { if (moreOpen) setMore(true); });
+    }
 
     /* One skip link for every page: a keyboard reaches the page's own content
        without tabbing the nav, the chat control and the booking link first. */
@@ -324,9 +383,9 @@
       '<span style="font-size:13px;color:rgba(16,20,38,.62)">' + cfg.barText + "</span>" +
       '<div style="flex:1"></div>' +
       (isSoft
-        ? '<a data-navlink href="' + (onSoft === "soft-audit" ? "/soft-appeals-data-security" : "/soft-appeals-audit") + '" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">' + (onSoft === "soft-audit" ? "Data and security" : "See the report") + "</a>"
+        ? '<a data-navlink href="' + (onSoft === "soft-sample" ? "/soft-appeals-data-security" : "/soft-appeals-sample-assessment") + '" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">' + (onSoft === "soft-sample" ? "Review data and security" : "View a sample assessment") + "</a>"
         : '<button type="button" data-navlink data-fs-chat style="font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;background:none;border:0;padding:0;color:rgba(16,20,38,.58);transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + (isSoft ? SOFT_CTA : BOOK) + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Free review" : "Book a call") + "</a>" +
+      '<a data-navcta href="' + (isSoft ? SOFT_CTA : BOOK) + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Complimentary review" : "Book a call") + "</a>" +
       "</div>";
     body.appendChild(barEl);
 

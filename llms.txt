@@ -80,7 +80,7 @@ The Siesie application asks for contact details, business type, team size, month
 
 Page: https://frimpomaasync.com/soft-appeals
 
-Sample Denial Recovery Assessment: https://frimpomaasync.com/soft-appeals-audit
+Sample Denial Recovery Assessment: https://frimpomaasync.com/soft-appeals-sample-assessment
 
 Data and security practices: https://frimpomaasync.com/soft-appeals-data-security
 

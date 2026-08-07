@@ -34,6 +34,19 @@ RewriteRule ^gyesika(\.html)?/?$ /soft-appeals [R=301,L,NC]
 # deploy deletes it from the server, so this rule is what keeps the URL working.
 RewriteRule ^soft-appeals-your-data(\.html)?/?$ /soft-appeals-data-security [R=301,L,NC]
 
+# Renamed 2026-08-07: the sample deliverable stopped being called an audit
+# months before its URL did. /soft-appeals-audit was live, indexed and linked
+# from eight pages, so it redirects rather than 404s. The file is now
+# soft-appeals-sample-assessment.html.
+RewriteRule ^soft-appeals-audit(\.html)?/?$ /soft-appeals-sample-assessment [R=301,L,NC]
+
+# Retired 2026-08-07: /soft-appeals-book was an unfinished calendar that told
+# visitors "nothing here books anything yet", and it promised a written claim
+# review during a 30-minute call, which contradicts the PHI-free intake process.
+# The intake form is the front door. Anyone who would rather talk goes to the
+# contact page, which is built for questions without patient information.
+RewriteRule ^soft-appeals-book(\.html)?/?$ /soft-appeals-start [R=301,L,NC]
+
 # /index.html -> /
 RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
 RewriteRule ^index\.html$ / [R=301,L]

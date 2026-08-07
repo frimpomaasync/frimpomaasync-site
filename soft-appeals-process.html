@@ -49,6 +49,42 @@
       font-family: var(--mono, ui-monospace, Menlo, monospace);
       font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #B4460F;
     }
+    /* Phase rail. Seventeen steps is a lot of page to be lost in, so the three
+       phases stay reachable the whole way down. It sticks under the site nav,
+       whose height is measured at runtime because the nav wraps to two rows on
+       a phone and a hard-coded offset would hide the rail behind it. */
+    .prail {
+      position: sticky; top: var(--sa-nav-h, 68px); z-index: 30;
+      margin: 0; padding: 0;
+      background: rgba(255, 255, 255, .93);
+      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line);
+    }
+    .prail-in {
+      max-width: 1180px; margin: 0 auto; padding: 0 24px;
+      display: flex; align-items: stretch; gap: 4px;
+      overflow-x: auto; scrollbar-width: none;
+    }
+    .prail-in::-webkit-scrollbar { display: none; }
+    .prail a {
+      display: flex; align-items: center; gap: 9px;
+      padding: 13px 14px; border-bottom: 2px solid transparent;
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ink-faint); text-decoration: none; white-space: nowrap;
+      transition: color .25s ease, border-color .25s ease;
+    }
+    .prail a .pn { font-size: 10px; opacity: .62; }
+    .prail a.on { color: #B4460F; border-bottom-color: var(--copper, #C2501C); }
+    @media (hover: hover) { .prail a:hover { color: var(--ink); } }
+    @media (max-width: 480px) {
+      .prail-in { padding: 0 14px; }
+      .prail a { padding: 12px 10px; letter-spacing: .1em; }
+      .prail a .pn { display: none; }
+    }
+    /* The rail is 45px tall and it covers whatever an anchor jump lands on. */
+    #decide, #recover, #resolve { scroll-margin-top: calc(var(--sa-nav-h, 68px) + 58px); }
+    @media (prefers-reduced-motion: reduce) { .prail a { transition: none; } }
   </style>
 </head>
 <body data-sk-sections="Hero,Three phases,Decide,Recover,Resolve,Visibility,Statuses,Who does what,What happens when,What to have ready,Timing,Not in our control,Questions,Close" data-sk-bar="Decide · recover · resolve. Client approval before any submission in your name." data-sk-biz="healthcare organization">
@@ -61,7 +97,7 @@
         <p class="hero-copy">Soft Appeals gives selected denied claims a defined recovery workflow. We start by determining what happened and what action, if any, is appropriate. Claims accepted for recovery then move through research, documentation, preparation, client approval, submission, follow-up and reconciliation. Your existing billing operation stays where it is. Soft Appeals provides focused ownership for the denied claims assigned to us.</p>
         <div class="actions">
           <a class="button" href="/soft-appeals-start">Request your complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
-          <a class="button secondary" href="/soft-appeals-audit">View a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/soft-appeals-sample-assessment">View a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
         </div>
         <div class="hero-trust">
           <span>BAA before PHI</span>
@@ -71,6 +107,14 @@
         </div>
       </div>
     </section>
+
+    <nav class="prail" aria-label="Recovery phases">
+      <div class="prail-in">
+        <a href="#decide"><span class="pn">01</span> Decide</a>
+        <a href="#recover"><span class="pn">02</span> Recover</a>
+        <a href="#resolve"><span class="pn">03</span> Resolve</a>
+      </div>
+    </nav>
 
     <section class="section" data-screen-label="Three phases">
       <div class="wrap">
@@ -99,7 +143,7 @@
       </div>
     </section>
 
-    <section class="section soft" data-screen-label="Decide">
+    <section class="section soft" id="decide" data-screen-label="Decide">
       <div class="wrap">
         <div class="section-head">
           <div class="phase">Phase 01 <span>Decide</span></div>
@@ -122,12 +166,12 @@
         </div>
         <div class="actions" style="margin-top:26px">
           <a class="button secondary" href="/soft-appeals-data-security">Review data and security practices <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
-          <a class="button secondary" href="/soft-appeals-audit">View a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/soft-appeals-sample-assessment">View a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
         </div>
       </div>
     </section>
 
-    <section class="section" data-screen-label="Recover">
+    <section class="section" id="recover" data-screen-label="Recover">
       <div class="wrap">
         <div class="section-head">
           <div class="phase">Phase 02 <span>Recover</span></div>
@@ -151,7 +195,7 @@
       </div>
     </section>
 
-    <section class="section soft" data-screen-label="Resolve">
+    <section class="section soft" id="resolve" data-screen-label="Resolve">
       <div class="wrap">
         <div class="section-head">
           <div class="phase">Phase 03 <span>Resolve</span></div>
@@ -366,9 +410,9 @@
         <p>Begin with 20 recent denied claims. Soft Appeals reviews them and returns a Denial Recovery Assessment showing the recommended action, the financial value, the priority, known time sensitivity, the information still required and who owns the next step. Then you decide which eligible claims, if any, move into recovery work. The initial assessment is complimentary and belongs to your organization whether or not you continue. Questions before sending any patient information? Ask those first.</p>
         <div class="actions">
           <a class="button secondary" href="/soft-appeals-start">Request your complimentary review &#8594;</a>
-          <a class="button secondary" href="/soft-appeals-audit">View a sample assessment &#8594;</a>
+          <a class="button secondary" href="/soft-appeals-sample-assessment">View a sample assessment &#8594;</a>
           <a class="button secondary" href="/soft-appeals-data-security">Review data and security practices →</a>
-          <a class="button secondary" href="/soft-appeals-decoder">Decode a denial code, free →</a>
+          <a class="button secondary" href="/soft-appeals-decoder">Decode a denial code →</a>
         </div>
       </div>
     </section>
@@ -376,6 +420,52 @@
   </main>
 
   <script type="module" src="/assets/journey.js?v=7"></script>
-  <script src="/fsnav.js?v=845" defer></script>
+  <script src="/fsnav.js?v=848" defer></script>
+  <script>
+    /* Phase rail: keep it clear of the site nav, and light the phase you are in.
+       fsnav.js is deferred, so #fs-nav does not exist until after this file has
+       been parsed. DOMContentLoaded fires after every deferred script has run,
+       which is the first moment the nav can be measured. */
+    document.addEventListener("DOMContentLoaded", function () {
+      var siteNav = document.getElementById("fs-nav");
+      if (siteNav) {
+        var syncRailTop = function () {
+          document.documentElement.style.setProperty("--sa-nav-h", siteNav.offsetHeight + "px");
+        };
+        syncRailTop();
+        if ("ResizeObserver" in window) new ResizeObserver(syncRailTop).observe(siteNav);
+        else window.addEventListener("resize", syncRailTop);
+      }
+
+      var links = Array.prototype.slice.call(document.querySelectorAll(".prail a"));
+      var phases = links.map(function (a) { return document.querySelector(a.getAttribute("href")); });
+      if (!phases.length || phases.indexOf(null) !== -1) return;
+
+      /* Which phase owns the viewport right now. Reading positions on scroll
+         beats an IntersectionObserver here: the three sections are taller than
+         the screen, so at any moment either one or none of them is "entering",
+         and none of them is a useful answer. */
+      var paint = function () {
+        var line = (window.scrollY || 0) + window.innerHeight * 0.3;
+        var current = -1;
+        phases.forEach(function (el, i) {
+          if (el.offsetTop <= line) current = i;
+        });
+        /* Past the last phase the rail goes quiet rather than leaving Resolve
+           lit through the eight sections that follow it. */
+        var last = phases[phases.length - 1];
+        if (current === phases.length - 1 && line > last.offsetTop + last.offsetHeight) current = -1;
+        links.forEach(function (a, i) { a.classList.toggle("on", i === current); });
+      };
+      var queued = false;
+      window.addEventListener("scroll", function () {
+        if (queued) return;
+        queued = true;
+        requestAnimationFrame(function () { queued = false; paint(); });
+      }, { passive: true });
+      window.addEventListener("resize", paint);
+      paint();
+    });
+  </script>
 </body>
 </html>
