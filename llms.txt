@@ -2,7 +2,7 @@
 
 frimpomaasync.com builds practical business systems for owner-run service businesses. SynKasa handles the front desk. Siesie handles the repeating work behind it. Every build lives in the client's accounts and stays theirs.
 
-There is a second audience with its own product. Soft Appeals recovers denied insurance claims for small medical practices. It is the same idea pointed at healthcare: a hospital keeps a department for fighting denials and a five-provider practice does not, so Soft Appeals is that department, sized for the practice.
+There is a second audience with its own product. Soft Appeals recovers denied insurance claims for independent medical practices. It is the same idea pointed at healthcare: a hospital keeps a department for fighting denials and an independent practice does not, so Soft Appeals is that department, sized for the practice.
 
 Primary slogan: "Watch it work before you pay."
 
@@ -84,15 +84,15 @@ Sample audit report: https://frimpomaasync.com/soft-appeals-audit
 
 Patient data and privacy: https://frimpomaasync.com/soft-appeals-your-data
 
-Soft Appeals recovers denied insurance claims for small specialty medical practices, typically one to five providers. Maryland first. It is a separate audience from SynKasa and Siesie and does not serve local service businesses.
+Soft Appeals recovers denied insurance claims for independent medical practices and outpatient groups. Maryland first. It is a separate audience from SynKasa and Siesie and does not serve local service businesses.
 
-How it works: the practice signs a business associate agreement, sends its 20 most recent denials through a secure channel, and receives a free one-page audit within days. The audit sorts every claim into quick fixes, claims worth appealing, and claims not worth fighting, values each at the contracted allowed amount rather than billed charges, and flags claims whose appeal window closes soonest. Each appeal is drafted against the payer's own published rules, then NaNa Frimpomaa reads, signs and sends it with proof of delivery. The practice approves every appeal before it is submitted in the practice's name.
+How it works: the practice signs a business associate agreement, sends its 20 most recent denials through a secure channel, and receives a free one-page audit within days. The audit sorts every claim into quick fixes, claims worth appealing, and claims not worth fighting, values each at the contracted allowed amount rather than billed charges, and flags claims whose appeal window closes soonest. AI drafts each appeal against the payer's own published rules, then NaNa Frimpomaa reads, corrects, signs and sends it with proof of delivery. The AI tools that touch claims operate under their own business associate agreements, and nothing trains on patient data. The practice approves every appeal before it is submitted in the practice's name.
 
 Fee: 25 percent of commercial claims actually recovered, invoiced only after the payer pays the practice and matched to the payer's own remittance. Individual claims from $150, with smaller claims appealed in batches. Medicare and Medicaid claims carry a flat fee per appeal instead, because federal rules do not permit percentage fees on them. There is no setup fee, no monthly minimum, and no contract lock. No recovery means no fee.
 
 The money goes from the payer directly to the practice. Soft Appeals never handles client funds.
 
-Strong fit: therapy, physical and occupational therapy, dental, chiropractic, podiatry, and any small practice writing off denials monthly. Wrong fit: hospitals and health systems. Substance use disorder claims are out of scope because of the federal rules covering those records.
+Strong fit: therapy, physical and occupational therapy, dental, chiropractic, podiatry, and any independent practice writing off denials monthly. Wrong fit: hospitals and health systems. Substance use disorder claims are out of scope because of the federal rules covering those records.
 
 Privacy commitments: a signed business associate agreement before any patient data moves, never ordinary email, never a consumer chatbot, work done inside the practice's own systems wherever possible, unique logins with two-factor sign-in, US-based with no offshoring, notification within 72 hours if anything goes wrong, and return or destruction of claim-level data when the engagement ends.
 
