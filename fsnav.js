@@ -49,7 +49,13 @@
          760px-wide block across the top of the hero. */
       "#fs-nav .fs-grid > a[data-navmark]{justify-self:start}" +
       "#fs-nav .fs-grid nav{order:3;grid-column:1 / -1;flex-wrap:nowrap;justify-content:flex-start}}",
-    "@media (max-width:700px){#fs-nav .fs-grid{grid-template-columns:1fr auto!important}#fs-nav .fs-grid nav{order:3;grid-column:1 / -1}#fs-nav [data-fs-chat]{display:none!important}}",
+    /* The Soft Appeals bar carries a fourth element the site bar does not: the
+       "by frimpomaasync" attribution. On the site bar the equivalent slot is the
+       chat button, which is already hidden here, so the right-hand column fits.
+       With the attribution left in, that column measured 244px against a 390px
+       window and pushed the booking button 24px off the right edge on every
+       Soft Appeals page. The parent brand is still named in the footer. */
+    "@media (max-width:700px){#fs-nav .fs-grid{grid-template-columns:1fr auto!important}#fs-nav .fs-grid nav{order:3;grid-column:1 / -1}#fs-nav [data-fs-chat],#fs-nav [data-fs-by]{display:none!important}}",
     /* An iPhone SE is 320 css px. The wordmark is set nowrap at 14px with .2em
        of tracking, which is 171px, and the booking button is 118px. With the
        40px of bar padding that is 329px in a 320px window, so the last letters
@@ -117,7 +123,7 @@
     var softNav =
       navLink("The offer", "/soft-appeals", "soft-offer", onSoft) +
       navLink("The decoder", "/soft-appeals-decoder", "soft-decoder", onSoft) +
-      navLink("The audit", "/soft-appeals-audit", "soft-audit", onSoft) +
+      navLink("The report", "/soft-appeals-audit", "soft-audit", onSoft) +
       navLink("Your data", "/soft-appeals-your-data", "soft-data", onSoft);
     var siteNav =
       navLink("SynKasa", "/synkasa", "synkasa", on) +
@@ -133,9 +139,9 @@
       '<a data-navlink data-navmark href="' + (isSoft ? "/soft-appeals" : "/") + '" style="font-family:' + SERIF + ';font-size:clamp(14px,1.5vw,18px);letter-spacing:.2em;text-transform:uppercase;color:#101426;white-space:nowrap">' + (isSoft ? "Soft Appeals" : "frimpomaasync") + "</a>" +
       '<div style="display:flex;align-items:center;gap:clamp(14px,1.8vw,22px);justify-content:flex-end;flex-wrap:wrap">' +
       (isSoft
-        ? '<a data-navlink href="/" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">by frimpomaasync</a>'
+        ? '<a data-navlink data-fs-by href="/" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">by frimpomaasync</a>'
         : '<button type="button" data-navlink data-fs-chat style="background:none;border:0;padding:0;font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);cursor:pointer;transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Free audit" : "Book a call") + "</a>" +
+      '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Free review" : "Book a call") + "</a>" +
       "</div></div>";
     body.insertBefore(nav, body.firstChild);
 
@@ -281,7 +287,7 @@
       (isSoft
         ? '<a data-navlink href="' + (onSoft === "soft-audit" ? "/soft-appeals-your-data" : "/soft-appeals-audit") + '" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">' + (onSoft === "soft-audit" ? "Your data" : "See the report") + "</a>"
         : '<button type="button" data-navlink data-fs-chat style="font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;background:none;border:0;padding:0;color:rgba(16,20,38,.58);transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Free audit" : "Book a call") + "</a>" +
+      '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Free review" : "Book a call") + "</a>" +
       "</div>";
     body.appendChild(barEl);
 

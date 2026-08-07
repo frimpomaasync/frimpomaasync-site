@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>The free audit, in full · Soft Appeals | frimpomaasync.com</title>
-  <meta name="description" content="The whole denied-claims audit report, published, with sample data. What your denials are worth, which are winnable, which expire this month, and how every number was made.">
+  <title>Sample Denial Recovery Assessment · Soft Appeals | frimpomaasync.com</title>
+  <meta name="description" content="The full sample deliverable: executive summary, claim worklist, recovery priority, claim-level reasoning, pattern observations and action items. Fictional claim information, published in full before you send anything.">
   <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-audit">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=24">
@@ -12,15 +12,15 @@
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
-  <meta property="og:title" content="The free audit, in full · Soft Appeals">
-  <meta property="og:description" content="Everyone else gates their audit report. Here is the whole thing, with sample data, before you give anyone anything.">
+  <meta property="og:title" content="Sample Denial Recovery Assessment · Soft Appeals">
+  <meta property="og:description" content="See exactly what your denial review will look like. The whole sample deliverable, published, with fictional claim information.">
   <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-audit">
   <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
   <meta name="twitter:card" content="summary_large_image">
   <style>
-    /* The sample report. Scoped to this page, system fonts only, no remote requests. */
+    /* The sample assessment. Scoped to this page, system fonts only, no remote requests. */
     .rep {
-      max-width: 820px;
+      max-width: 880px;
       margin: 0 auto;
       border: 1px solid var(--line);
       border-radius: 20px;
@@ -40,38 +40,90 @@
     .rep-top b { color: var(--copper, #C2501C); font-weight: 400; }
     .rep-in { padding: clamp(24px, 4vw, 40px); }
     .rep-for {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 14px 26px; padding-bottom: 22px; border-bottom: 1px solid var(--line);
     }
-    .rep-for span { display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 5px; }
+    .rep-for span { display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 5px; font-family: var(--mono, ui-monospace, Menlo, monospace); }
     .rep-for p { margin: 0; font-size: 14.5px; line-height: 1.5; }
-    .rep-head { margin: 26px 0 0; font-family: var(--serif); font-weight: 400; font-size: clamp(26px, 3.6vw, 40px); line-height: 1.12; letter-spacing: -.015em; }
+    .rep-head { margin: 26px 0 0; font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.14; letter-spacing: -.015em; }
     .rep-head b { font-weight: 400; color: var(--copper, #C2501C); }
-    .rep-flag { margin: 20px 0 0; padding: 16px 18px; border-left: 3px solid var(--copper, #C2501C); background: rgba(194, 80, 28, .06); border-radius: 0 12px 12px 0; }
+    .rep-flag { margin: 22px 0 0; padding: 16px 18px; border-left: 3px solid var(--copper, #C2501C); background: rgba(194, 80, 28, .06); border-radius: 0 12px 12px 0; }
     .rep-flag p { margin: 0; font-size: 14.5px; line-height: 1.6; }
     .rep-flag p + p { margin-top: 8px; color: var(--ink-soft); font-size: 13px; }
-    .rep-piles { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 26px 0 0; }
-    .rep-pile { padding: 20px; border: 1px solid var(--line); border-radius: 16px; }
+    .rep-piles { display: grid; grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); gap: 14px; margin: 22px 0 0; }
+    .rep-pile { padding: 18px; border: 1px solid var(--line); border-radius: 16px; }
     .rep-pile .k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .rep-pile .v { margin: 8px 0 10px; font-family: var(--serif); font-size: 30px; line-height: 1; }
+    .rep-pile .v { margin: 8px 0 4px; font-family: var(--serif); font-size: 28px; line-height: 1; }
+    .rep-pile .c { font-size: 12px; color: var(--ink-faint); margin-bottom: 9px; }
     .rep-pile.win .v { color: var(--copper, #C2501C); }
     .rep-pile p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
-    .rep-sub { margin: 32px 0 12px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+    .rep-sub { margin: 34px 0 12px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
     .rep-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 16px; }
-    .rep-tbl { width: 100%; min-width: 620px; border-collapse: collapse; font-size: 13.5px; }
-    .rep-tbl th, .rep-tbl td { padding: 13px 16px; text-align: left; border-bottom: 1px solid var(--line); }
+    /* 760, not 880. The card is 880 wide with 40px of padding a side, so a table
+       wider than 800 scrolls inside its own container and the Status column, the
+       last one, sits clipped at the right edge on a laptop. At 760 all eight
+       columns fit the card without a sideways swipe. */
+    .rep-tbl { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 12.5px; }
+    .rep-tbl th, .rep-tbl td { padding: 11px 11px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .rep-tbl td.id { white-space: nowrap; font-variant-numeric: tabular-nums; }
     .rep-tbl th { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 400; }
     .rep-tbl tr:last-child td { border-bottom: 0; }
     .rep-tbl td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
     .rep-tbl td.due { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--copper, #C2501C); }
-    .rep-note { margin: 26px 0 0; padding-top: 22px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.7; color: var(--ink-soft); }
+    /* Recovery priority pill. A is copper, B and C are ink-soft, D recedes. */
+    .pr { display: inline-block; min-width: 20px; padding: 3px 8px; border-radius: 100px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .1em; text-align: center; }
+    .pr.a { background: rgba(194, 80, 28, .12); color: #B4460F; }
+    .pr.b { background: rgba(16, 20, 38, .07); color: rgba(16, 20, 38, .74); }
+    .pr.c { background: rgba(16, 20, 38, .05); color: rgba(16, 20, 38, .58); }
+    .pr.d { background: rgba(16, 20, 38, .04); color: rgba(16, 20, 38, .42); }
+    .rep-note { margin: 24px 0 0; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.7; color: var(--ink-soft); }
     .rep-note b { color: var(--ink); font-weight: 400; }
-    .rep-foot { padding: 18px clamp(20px, 4vw, 38px); border-top: 1px solid var(--line); background: var(--paper-soft, #F8F8F9); font-size: 11.5px; line-height: 1.6; color: var(--ink-faint); }
-    @media (max-width: 620px) { .rep-head { font-size: 26px; } }
-    /* On a phone the five columns push Value and Appeal deadline off the right
-       edge, and the deadline is the one number the whole report is built to
-       deliver. Below 620 each claim becomes its own labelled block, so nothing
-       depends on a sideways swipe a reader may never make. */
+    /* Claim detail block. */
+    .rep-dd { margin: 14px 0 0; padding: 22px clamp(18px, 3vw, 26px); border: 1px solid var(--line); border-radius: 18px; background: var(--paper-soft, #F8F8F9); }
+    .rep-dd h3 { margin: 0 0 4px; font-family: var(--serif); font-weight: 400; font-size: clamp(19px, 2.4vw, 24px); line-height: 1.2; }
+    .rep-dd .meta { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0 0 18px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
+    .rep-dd .meta b { color: var(--copper, #C2501C); font-weight: 400; }
+    .rep-dd dl { margin: 0; }
+    .rep-dd dt { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-top: 16px; }
+    .rep-dd dt:first-child { margin-top: 0; }
+    .rep-dd dd { margin: 6px 0 0; font-size: 14px; line-height: 1.65; }
+    /* Recommendation basis checklist. */
+    .rep-basis { margin: 18px 0 0; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
+    .rep-basis ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 7px 22px; }
+    .rep-basis li { position: relative; padding-left: 22px; font-size: 13.5px; line-height: 1.55; }
+    .rep-basis li::before { content: "\2713"; position: absolute; left: 0; top: 0; color: var(--copper, #C2501C); }
+    /* Pattern bars. */
+    .rep-pat { display: grid; gap: 16px; margin: 14px 0 0; }
+    .rep-patrow { padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; }
+    .rep-patrow .t { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+    .rep-patrow .t b { color: var(--ink); font-weight: 400; }
+    .rep-bar { height: 7px; margin: 10px 0 12px; border-radius: 100px; background: rgba(16, 20, 38, .07); overflow: hidden; }
+    .rep-bar i { display: block; height: 100%; border-radius: 100px; background: var(--copper, #C2501C); }
+    .rep-patrow p { margin: 0; font-size: 13.5px; line-height: 1.6; }
+    .rep-patrow p.q { margin-top: 8px; color: var(--ink-soft); font-size: 13px; }
+    /* Two-column ownership. */
+    .rep-own { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 14px 0 0; }
+    .rep-owncol { padding: 20px; border: 1px solid var(--line); border-radius: 16px; }
+    .rep-owncol > .k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+    .rep-owncol.mine { border-color: rgba(194, 80, 28, .3); background: rgba(194, 80, 28, .04); }
+    .rep-owncol.mine > .k { color: #B4460F; }
+    .rep-owncol dl { margin: 12px 0 0; }
+    .rep-owncol dt { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 11px; letter-spacing: .08em; color: var(--ink); margin-top: 12px; }
+    .rep-owncol dt:first-child { margin-top: 0; }
+    .rep-owncol dd { margin: 3px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
+    .rep-foot { padding: 20px clamp(20px, 4vw, 38px); border-top: 1px solid var(--line); background: var(--paper-soft, #F8F8F9); font-size: 11.5px; line-height: 1.7; color: var(--ink-faint); }
+    .rep-foot b { color: rgba(16, 20, 38, .68); font-weight: 400; }
+    .rep-foot p { margin: 0 0 9px; }
+    .rep-foot p:last-child { margin-bottom: 0; }
+    /* Status chain, used outside the document. */
+    .chain { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .chain span { padding: 7px 13px; border: 1px solid var(--line); border-radius: 100px; background: var(--paper); font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 11px; letter-spacing: .06em; }
+    .chain span.hot { border-color: rgba(194, 80, 28, .34); background: rgba(194, 80, 28, .07); color: #B4460F; }
+    @media (max-width: 620px) { .rep-head { font-size: 24px; } }
+    /* On a phone eight columns push Recommended action and Timing off the right
+       edge, and those are the two the whole worklist exists to deliver. Below 620
+       each claim becomes its own labelled block, so nothing depends on a sideways
+       swipe a reader may never make. */
     @media (max-width: 620px) {
       .rep-scroll { overflow-x: visible; }
       .rep-tbl { min-width: 0; }
@@ -89,129 +141,371 @@
     }
   </style>
 </head>
-<body data-sk-sections="Hero,The report,How to read it,Honesty,Close" data-sk-bar="The audit is free, and the report is yours either way." data-sk-biz="independent practice">
+<body data-sk-sections="Hero,What you receive,The assessment,Recovery priority,Claim status,Recovery and prevention,If you continue,Close" data-sk-bar="Complimentary review of 20 denials · the assessment is yours either way." data-sk-biz="healthcare organization">
   <main>
 
     <section class="hero compact-hero" data-screen-label="Hero">
       <div class="wrap">
-        <div class="eyebrow">Soft Appeals · the free audit</div>
-        <h1>Every other firm hides this. <em>Here is the whole thing.</em></h1>
-        <p class="hero-copy">This is the report you get, in full, before you give anyone a single claim. The practice below is invented and so are the numbers, but the format is exactly what lands in your inbox within days of you sending your denials. Read it, judge it, and decide whether it is worth fifteen minutes of your time.</p>
+        <div class="eyebrow">Sample deliverable · Denial Recovery Assessment</div>
+        <h1>See what your denial review <em>will actually look like.</em></h1>
+        <p class="hero-copy">Before deciding whether to engage Soft Appeals for recovery work, you receive an assessment of the denied claims reviewed. It identifies what happened, what may warrant action, what should be prioritized, and the recommended next step for each claim. The example below uses fictional claim information and exists only to show the format and the level of analysis.</p>
         <div class="actions">
-          <a class="button" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Start the free audit <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
-          <a class="button secondary" href="/soft-appeals">Back to Soft Appeals <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button" href="#assessment">View the sample assessment <span class="button-arrow" aria-hidden="true">&#8595;</span></a>
+          <a class="button secondary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Request your complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+        <div class="hero-trust">
+          <span>Fictional claim information</span>
+          <span>No patient identifiers, in the sample or in a real assessment</span>
+          <span>Your assessment is yours whether or not you continue</span>
         </div>
       </div>
     </section>
 
-    <section class="section soft" data-screen-label="The report">
+    <section class="section" data-screen-label="What you receive">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">What you receive</div>
+          <h2 class="section-title"><span>One review.</span> Five questions answered.</h2>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>What was denied?</h3>
+            <p>The payer, denied amount, denial category, service information and available denial reason, organized into one review instead of scattered across remittances.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>What needs attention first?</h3>
+            <p>Known time-sensitive items and claims requiring prompt action are surfaced for priority review, so the queue has an order rather than a date stamp.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>What is the recommended next step?</h3>
+            <p>Each claim receives a recommended disposition: correct or resubmit, appeal, investigate, or close and deprioritize.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Why?</h3>
+            <p>The assessment records the reasoning and the available information supporting each recommended action, so your billing team can check the logic rather than take it on trust.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>What happens next?</h3>
+            <p>Claims selected for recovery move into the appropriate Soft Appeals workflow, after your organization approves the scope.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="assessment" data-screen-label="The assessment">
       <div class="wrap">
 
         <div class="rep" data-reveal>
           <div class="rep-top">
-            <span>Soft Appeals · denied claims audit</span>
-            <span><b>Sample data</b> · not a real practice</span>
+            <span>Soft Appeals · Denial Recovery Assessment</span>
+            <span><b>Sample</b> · fictional data</span>
           </div>
 
           <div class="rep-in">
             <div class="rep-for">
-              <div><span>Prepared for</span><p>Example Therapy Group<br>Annapolis, Maryland</p></div>
-              <div><span>Prepared by</span><p>NaNa Frimpomaa<br>frimpomaasync.com/soft-appeals</p></div>
-              <div><span>Claims reviewed</span><p>27 denials<br>Last 90 days</p></div>
+              <div><span>Organization</span><p>Example Specialty Group</p></div>
+              <div><span>Review period</span><p>Sample 90-day period</p></div>
+              <div><span>Claims reviewed</span><p>20 denials</p></div>
+              <div><span>Total denied amount</span><p>$14,850</p></div>
             </div>
 
-            <h2 class="rep-head">You have <b>$18,400</b> sitting in denied claims.<br><b>$11,900</b> of it is winnable.</h2>
+            <h2 class="rep-head">Executive summary</h2>
 
-            <div class="rep-flag">
-              <p><b>$3,100 of that passes its appeal deadline by September 5</b>, whether anyone acts on it or not.</p>
-              <p>Deadlines here come from your payers' own published appeal windows, counted from the date on each remittance.</p>
-            </div>
-
+            <div class="rep-sub">Recommended disposition</div>
             <div class="rep-piles">
               <div class="rep-pile">
-                <div class="k">Quick fixes</div>
-                <div class="v">$5,200</div>
-                <p>9 claims. Wrong modifiers, missing information, wrong payer. A corrected claim wins these in days. No appeal letter needed.</p>
+                <div class="k">Correct / resubmit</div>
+                <div class="v">$2,750</div>
+                <div class="c">5 claims</div>
+                <p>Appear to need correction or resubmission rather than a formal appeal.</p>
               </div>
               <div class="rep-pile win">
-                <div class="k">Worth appealing</div>
-                <div class="v">$6,700</div>
-                <p>11 claims. Prior authorization and medical necessity denials. Each one needs a letter citing the payer's own published rules and, where it matters, your clinical notes.</p>
+                <div class="k">Appeal</div>
+                <div class="v">$6,400</div>
+                <div class="c">7 claims</div>
+                <p>Available information supports further review through an appeal pathway.</p>
               </div>
               <div class="rep-pile">
-                <div class="k">Not worth fighting</div>
-                <div class="v">$6,500</div>
-                <p>7 claims. True non-covered benefits and expired windows without proof. Declining these protects the win rate. Some are billable to patients instead.</p>
+                <div class="k">Investigate further</div>
+                <div class="v">$3,100</div>
+                <div class="c">4 claims</div>
+                <p>Additional documentation, payer clarification or an internal decision is needed first.</p>
+              </div>
+              <div class="rep-pile">
+                <div class="k">Close / deprioritize</div>
+                <div class="v">$2,600</div>
+                <div class="c">4 claims</div>
+                <p>Information, timing or value may not support further recovery effort.</p>
               </div>
             </div>
 
-            <div class="rep-sub">Expiring first · act-by dates</div>
+            <div class="rep-flag">
+              <p><b>Priority attention: 3 claims · $4,150.</b> These claims have known timing, documentation or recovery considerations that warrant priority review.</p>
+              <p>Priority is assigned using the Recovery Priority method set out below this assessment, not by claim age alone.</p>
+            </div>
+
+            <p class="rep-note"><b>Initial observation.</b> This review identifies a combination of correction opportunities, claims that may warrant formal appeal, items needing additional information, and claims where further recovery effort may not be appropriate. The purpose of the assessment is not to assume every denial should be appealed. It is to help determine where recovery effort should be directed first.</p>
+
+            <div class="rep-sub">How to read the assessment</div>
+            <div class="rep-basis">
+              <ul>
+                <li><b>Priority</b> tells you what deserves attention first.</li>
+                <li><b>Recommended action</b> tells you the proposed next step.</li>
+                <li><b>Basis</b> explains why that action is recommended.</li>
+                <li><b>Timing</b> identifies known deadlines or items needing confirmation.</li>
+                <li><b>Status</b> shows where the claim currently sits in the recovery process.</li>
+              </ul>
+            </div>
+
+            <div class="rep-sub">Claim worklist</div>
             <div class="rep-scroll">
               <table class="rep-tbl">
                 <thead>
-                  <tr><th scope="col">Claim</th><th scope="col">Payer</th><th scope="col">Denied for</th><th scope="col">Value</th><th scope="col">Appeal deadline</th></tr>
+                  <tr>
+                    <th scope="col">Priority</th><th scope="col">Claim</th><th scope="col">Payer</th><th scope="col">Denied</th>
+                    <th scope="col">Category</th><th scope="col">Recommended action</th><th scope="col">Timing</th><th scope="col">Status</th>
+                  </tr>
                 </thead>
                 <tbody>
-                  <tr><td data-l="Claim">J.M. · 03/12/26 · 90837</td><td data-l="Payer">CareFirst</td><td data-l="Denied for">No prior authorization</td><td class="num" data-l="Value">$1,340</td><td class="due" data-l="Appeal deadline">Sep 5</td></tr>
-                  <tr><td data-l="Claim">A.R. · 03/28/26 · 90834</td><td data-l="Payer">UnitedHealthcare</td><td data-l="Denied for">Medical necessity</td><td class="num" data-l="Value">$980</td><td class="due" data-l="Appeal deadline">Sep 18</td></tr>
-                  <tr><td data-l="Claim">T.K. · 04/02/26 · 90847</td><td data-l="Payer">Priority Partners</td><td data-l="Denied for">Claim information missing</td><td class="num" data-l="Value">$780</td><td class="due" data-l="Appeal deadline">Sep 26</td></tr>
+                  <tr>
+                    <td data-l="Priority"><span class="pr a">A</span></td><td class="id" data-l="Claim">SA-001</td><td data-l="Payer">Sample Health Plan</td><td class="num" data-l="Denied">$1,850</td>
+                    <td data-l="Category">Authorization</td><td data-l="Recommended action">Investigate, then appeal</td><td class="due" data-l="Timing">Confirm deadline</td><td data-l="Status">Action needed</td>
+                  </tr>
+                  <tr>
+                    <td data-l="Priority"><span class="pr a">A</span></td><td class="id" data-l="Claim">SA-002</td><td data-l="Payer">Sample Health Plan</td><td class="num" data-l="Denied">$1,425</td>
+                    <td data-l="Category">Medical necessity</td><td data-l="Recommended action">Appeal</td><td class="due" data-l="Timing">18 days*</td><td data-l="Status">Ready for review</td>
+                  </tr>
+                  <tr>
+                    <td data-l="Priority"><span class="pr a">A</span></td><td class="id" data-l="Claim">SA-003</td><td data-l="Payer">Example Insurance</td><td class="num" data-l="Denied">$875</td>
+                    <td data-l="Category">Timely filing</td><td data-l="Recommended action">Investigate</td><td class="due" data-l="Timing">24 days*</td><td data-l="Status">Evidence needed</td>
+                  </tr>
+                  <tr>
+                    <td data-l="Priority"><span class="pr b">B</span></td><td class="id" data-l="Claim">SA-004</td><td data-l="Payer">Example Insurance</td><td class="num" data-l="Denied">$640</td>
+                    <td data-l="Category">Claim information</td><td data-l="Recommended action">Correct / resubmit</td><td data-l="Timing">Confirm</td><td data-l="Status">Correction identified</td>
+                  </tr>
+                  <tr>
+                    <td data-l="Priority"><span class="pr c">C</span></td><td class="id" data-l="Claim">SA-005</td><td data-l="Payer">Sample Health Plan</td><td class="num" data-l="Denied">$525</td>
+                    <td data-l="Category">Documentation</td><td data-l="Recommended action">Investigate</td><td data-l="Timing">Confirm</td><td data-l="Status">Records needed</td>
+                  </tr>
+                  <tr>
+                    <td data-l="Priority"><span class="pr d">D</span></td><td class="id" data-l="Claim">SA-006</td><td data-l="Payer">Example Insurance</td><td class="num" data-l="Denied">$185</td>
+                    <td data-l="Category">Duplicate</td><td data-l="Recommended action">Close, after verification</td><td data-l="Timing">Not applicable</td><td data-l="Status">Low priority</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
+            <p class="rep-note" style="border-top:0;padding-top:12px;margin-top:12px">*Sample timing shown for demonstration only. Actual deadlines must be determined from the applicable payer, plan, claim circumstances and governing requirements. Six of the twenty reviewed claims are shown here. A real assessment lists every claim reviewed.</p>
 
-            <p class="rep-note"><b>How these numbers were made.</b> Every dollar figure uses your contracted allowed amounts, never billed charges, because a won appeal only ever pays the contracted rate. Winnable estimates apply published overturn rates by denial type, drawn from KFF's analysis of marketplace claims and a Premier survey of hospitals and health systems. Administrative errors carry the highest rate and true non-covered benefits the lowest. Nothing on this page is a guarantee. The claim-by-claim working papers behind every number are yours whenever you ask.</p>
+            <div class="rep-sub">Financial snapshot</div>
+            <div class="rep-piles">
+              <div class="rep-pile"><div class="k">Total denied reviewed</div><div class="v">$14,850</div><div class="c">20 claims</div></div>
+              <div class="rep-pile win"><div class="k">Appeal recommended</div><div class="v">$6,400</div><div class="c">7 claims</div></div>
+              <div class="rep-pile"><div class="k">Correction recommended</div><div class="v">$2,750</div><div class="c">5 claims</div></div>
+              <div class="rep-pile"><div class="k">Further investigation</div><div class="v">$3,100</div><div class="c">4 claims</div></div>
+            </div>
+            <p class="rep-note"><b>Denied amount is not the same as expected recovery.</b> These figures represent the amounts associated with the reviewed denied claims and their recommended dispositions. They should not be read as guaranteed or projected reimbursement. Actual recovery depends on claim-specific facts, documentation, payer determinations, applicable requirements and other circumstances.</p>
 
-            <p class="rep-note"><b>What happens next, if you want it to.</b> I go get the winnable claims. Recovered money lands in your account, from your payers, and my fee is a share of what actually arrives. No recovery, no fee. This report is yours either way.</p>
+            <div class="rep-sub">Sample claim analysis</div>
+            <div class="rep-dd">
+              <h3>SA-002 · medical necessity denial</h3>
+              <div class="meta">
+                <span>Sample Health Plan</span>
+                <span>Denied $1,425</span>
+                <span>Priority <b>A</b></span>
+                <span>Appeal recommended</span>
+                <span>Ready for client review</span>
+              </div>
+              <dl>
+                <dt>What happened</dt>
+                <dd>The claim was denied on the payer's stated medical-necessity determination.</dd>
+                <dt>What was reviewed</dt>
+                <dd>The available denial documentation and claim information, to identify the stated basis for the denial and the appropriate next-step pathway.</dd>
+                <dt>Initial assessment</dt>
+                <dd>On the fictional information in this example, the claim appears appropriate for further appeal review rather than correction or routine resubmission.</dd>
+                <dt>What is needed</dt>
+                <dd>Before submission, confirm that the supporting clinical documentation and any applicable authorization or coverage information required for the appeal are available.</dd>
+                <dt>Recommended next step</dt>
+                <dd>Prepare the appeal package using the applicable payer requirements and supporting documentation, then present the completed materials for client approval before submission.</dd>
+                <dt>Timing</dt>
+                <dd>The applicable appeal deadline should be confirmed against the governing plan and payer requirements before submission.</dd>
+              </dl>
+              <div class="rep-basis">
+                <div class="rep-sub" style="margin:0">Recommendation basis</div>
+                <ul>
+                  <li>Denial reason reviewed</li>
+                  <li>Available claim documentation reviewed</li>
+                  <li>Correction and resubmission pathway considered</li>
+                  <li>Appeal pathway considered</li>
+                  <li>Additional information requirements identified</li>
+                  <li>Timing requirements reviewed or flagged for confirmation</li>
+                </ul>
+              </div>
+            </div>
+
+            <div class="rep-sub">Pattern observations</div>
+            <p class="rep-note" style="border-top:0;padding-top:0;margin-top:0">Individual denials can reveal operational patterns. Alongside the claim-level recommendations, the assessment records recurring themes visible within the reviewed sample.</p>
+            <div class="rep-pat">
+              <div class="rep-patrow">
+                <div class="t"><span>Authorization</span><b>4 of 20 claims</b></div>
+                <div class="rep-bar"><i style="width:20%"></i></div>
+                <p>Four of the twenty sample denials involve authorization-related issues.</p>
+                <p class="q">Operational question: is authorization information consistently verified and retained before services are rendered?</p>
+              </div>
+              <div class="rep-patrow">
+                <div class="t"><span>Documentation</span><b>3 of 20 claims</b></div>
+                <div class="rep-bar"><i style="width:15%"></i></div>
+                <p>Three claims need additional documentation before the appropriate recovery pathway can be completed.</p>
+                <p class="q">Operational question: can supporting documentation be retrieved quickly when a payer requests it?</p>
+              </div>
+              <div class="rep-patrow">
+                <div class="t"><span>Claim information</span><b>5 of 20 claims</b></div>
+                <div class="rep-bar"><i style="width:25%"></i></div>
+                <p>Five denials appear potentially addressable through correction rather than formal appeal.</p>
+                <p class="q">Operational question: are recurring correction reasons tracked upstream, so the same issue shows up less often in future submissions?</p>
+              </div>
+            </div>
+            <p class="rep-note">These observations are directional and based only on the claims included in the review. A limited sample should not be treated as a complete revenue-cycle analysis.</p>
+
+            <div class="rep-sub">Action items</div>
+            <div class="rep-own">
+              <div class="rep-owncol">
+                <div class="k">Your team</div>
+                <dl>
+                  <dt>SA-003</dt><dd>Provide available timely-filing evidence.</dd>
+                  <dt>SA-005</dt><dd>Provide the requested supporting documentation.</dd>
+                  <dt>SA-008</dt><dd>Confirm whether a corrected claim was previously submitted.</dd>
+                  <dt>SA-011</dt><dd>Confirm payer correspondence received after the denial.</dd>
+                </dl>
+              </div>
+              <div class="rep-owncol mine">
+                <div class="k">Soft Appeals</div>
+                <dl>
+                  <dt>SA-002</dt><dd>Prepare the appeal package.</dd>
+                  <dt>SA-004</dt><dd>Document the correction recommendation.</dd>
+                  <dt>SA-007</dt><dd>Confirm the applicable payer appeal pathway.</dd>
+                  <dt>SA-001</dt><dd>Confirm the filing deadline before any submission.</dd>
+                </dl>
+              </div>
+            </div>
           </div>
 
-          <div class="rep-foot">Confidential. A real report is prepared for the named practice and delivered through a secure channel. Patient references are reduced to initials and the document is handled as protected health information throughout. Soft Appeals is a service of frimpomaasync.com · Maryland.</div>
+          <div class="rep-foot">
+            <p><b>About this sample.</b> This sample contains fictional information and exists solely to demonstrate the format of a Soft Appeals Denial Recovery Assessment.</p>
+            <p>Actual assessments are based on the information made available for the claims reviewed. Recommendations reflect the information available at the time of review and may change if additional claim, payer, plan, clinical, contractual, regulatory or other relevant information becomes available.</p>
+            <p>A recommendation to pursue a claim does not guarantee reimbursement or reversal of a payer determination. Soft Appeals does not independently make clinical, coding, legal or coverage determinations outside the agreed scope of service.</p>
+            <p>Soft Appeals is a service of frimpomaasync.com.</p>
+          </div>
         </div>
 
       </div>
     </section>
 
-    <section class="section" data-screen-label="How to read it">
+    <section class="section" data-screen-label="Recovery priority">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="section-title"><span>Five things</span> to check when it arrives.</h2>
-          <p class="section-intro">Hold your report against these. Hold anyone else's against them too.</p>
+          <div class="eyebrow">Recovery priority</div>
+          <h2 class="section-title"><span>How a claim gets its letter,</span> and why it is not a probability score.</h2>
+          <p class="section-intro">Priority is assigned the same way on every assessment, using four factors anyone on your team can check. There is no proprietary success percentage attached to a claim, because a credible one would need enough of our own verified outcome data to stand behind, and that data is still being built.</p>
         </div>
-        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
-          <div class="rsn"><div class="n">01</div><h3>Are the dollars allowed, or billed?</h3>
-            <p>Billed charges run two to four times the contracted rate. A report built on billed numbers looks bigger and means nothing, because a won appeal only ever pays the contract. Every figure in this report is the allowed amount.</p></div>
-          <div class="rsn"><div class="n">02</div><h3>Does it name what is not winnable?</h3>
-            <p>A report where everything is winnable is a sales document. Roughly a third of the sample above is named as not worth fighting, with the reason. Declining claims is part of the work.</p></div>
-          <div class="rsn"><div class="n">03</div><h3>Are the deadlines real dates?</h3>
-            <p>Not "act fast", not "limited time". A payer's published appeal window, counted from the date on your remittance, landing on a named day. You can check every one of them yourself.</p></div>
-          <div class="rsn"><div class="n">04</div><h3>Can you see the working?</h3>
-            <p>Behind the one page sits a row per claim: the code, the payer's own claim number, the remittance date, the bucket, the deadline. Ask for it and it comes. A number you cannot trace is a number you should not trust.</p></div>
-          <div class="rsn"><div class="n">05</div><h3>Does a named person stand behind it?</h3>
-            <p>Ask who reviewed the claims and who signs the appeals. Here, AI reads the payer rulebooks at scale and a named person judges, corrects and signs every page. A report nobody signs is a report nobody stands behind.</p></div>
+        <div class="card-grid" data-reveal data-stagger data-stagger-step="50">
+          <article class="path-card">
+            <span class="pill">Factor 01</span>
+            <h3>Financial value</h3>
+            <p>How much reimbursement is at issue on this claim.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Factor 02</span>
+            <h3>Time sensitivity</h3>
+            <p>Whether known timing requires prompt action, or a deadline still needs confirming.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Factor 03</span>
+            <h3>Recovery path</h3>
+            <p>Whether there is an identifiable next step based on the information available now.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Factor 04</span>
+            <h3>Information readiness</h3>
+            <p>Whether enough is available to proceed, or additional documentation is required first.</p>
+          </article>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50" style="margin-top:26px">
+          <div class="rsn"><div class="n">A</div><h3>Immediate attention</h3>
+            <p>Value, timing and an identifiable path all point the same way. These are worked first.</p></div>
+          <div class="rsn"><div class="n">B</div><h3>Review next</h3>
+            <p>A clear next step, without the timing pressure that puts a claim in A.</p></div>
+          <div class="rsn"><div class="n">C</div><h3>Additional information needed</h3>
+            <p>The path may be viable, but something has to arrive before anyone can act on it.</p></div>
+          <div class="rsn"><div class="n">D</div><h3>Close or deprioritize</h3>
+            <p>The information, timing or value does not support spending more on the claim.</p></div>
         </div>
       </div>
     </section>
 
-    <section class="section soft" data-screen-label="Honesty">
+    <section class="section soft" data-screen-label="Claim status">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Claim status</div>
+          <h2 class="section-title"><span>Every assigned claim</span> sits in exactly one status.</h2>
+          <p class="section-intro">The same set of statuses is used on every engagement, so "where is SA-002" has one answer rather than a conversation. The two marked in copper are the points where the claim is with your team, not with us.</p>
+        </div>
+        <div class="chain" data-reveal>
+          <span>Received</span>
+          <span>Under review</span>
+          <span class="hot">Additional information needed</span>
+          <span>Correction recommended</span>
+          <span>Appeal recommended</span>
+          <span class="hot">Client review</span>
+          <span>Approved for submission</span>
+          <span>Submitted</span>
+          <span>Payer follow-up</span>
+          <span>Additional review or escalation</span>
+          <span>Recovered</span>
+          <span>Closed</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Recovery and prevention">
       <div class="wrap split">
         <div>
-          <div class="eyebrow">What the report is not</div>
-          <h2 class="section-title">Nobody can promise you a recovery.</h2>
+          <div class="eyebrow">Two different opportunities</div>
+          <h2 class="section-title">Recover today's denial. Learn from tomorrow's.</h2>
         </div>
         <div>
-          <p class="section-intro" style="margin-top:22px">The winnable figure is an estimate built from published overturn rates by denial type. It is the honest expectation on those claims, not a number anyone owes you. Payers can and do uphold denials that deserved to be overturned.</p>
-          <p class="section-intro">What is promised is smaller and firmer. The audit costs nothing. The report is yours whatever you decide. Nothing is submitted in your practice's name without your approval. And if a claim recovers nothing, it costs you nothing.</p>
+          <p class="section-intro" style="margin-top:22px">Soft Appeals works on denied-claim recovery. Recurring denial patterns may also point to something upstream that your organization could look at.</p>
+          <p class="section-intro">Recovery asks what the appropriate next step is for this denied claim. Prevention asks whether a recurring workflow issue is contributing to similar denials in the first place.</p>
+          <p class="section-intro">When a pattern shows up in the reviewed claims, we flag the observation for your team. What to do about the underlying process is your organization's decision, and your organization's call to make.</p>
         </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="If you continue">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">If you choose to continue</div>
+          <h2 class="section-title"><span>The assessment becomes</span> the recovery worklist.</h2>
+          <p class="section-intro">You decide which eligible claims, if any, you want Soft Appeals to pursue. For approved claims, the next phase may include these steps.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Payer requirement research</h3>
+            <p>Confirm the appropriate reconsideration, appeal, resubmission or other available recovery pathway for the claim.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Evidence organization</h3>
+            <p>Identify and organize the available documentation relevant to the denial.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Appeal preparation</h3>
+            <p>Prepare the appropriate appeal materials for client review.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Client approval</h3>
+            <p>Nothing is submitted in your organization's name until the agreed approval process is complete.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Submission documentation</h3>
+            <p>Record submission dates and the available delivery or acknowledgement evidence.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>Follow-up tracking</h3>
+            <p>Track payer responses, requests for additional information, relevant deadlines and next actions.</p></div>
+          <div class="rsn"><div class="n">07</div><h3>Recovery reconciliation</h3>
+            <p>When reimbursement is received, reconcile the outcome against the applicable remittance documentation.</p></div>
+        </div>
+        <p class="small-note">The complimentary review is the diagnosis. The recovery work is the part with a fee attached, and that fee only exists once verified recovered reimbursement lands with you. <a href="/soft-appeals#how">The full process is on the offer page</a>.</p>
       </div>
     </section>
 
     <section class="site-close" data-screen-label="Close">
       <div class="wrap">
-        <div class="eyebrow">Soft Appeals · your 20 most recent denials</div>
-        <h2>Get this one with your own numbers in it.</h2>
-        <p>Fifteen minutes to start. We sign the privacy agreement, you export the 20 most recent denials, and the report comes back within days. The number makes the decision, not the pitch.</p>
+        <div class="eyebrow">Your denials · your assessment</div>
+        <h2>See the same analysis applied to your claims.</h2>
+        <p>Start with 20 recent denied claims. Soft Appeals organizes the reviewed claims by recommended action, priority, financial value, known time sensitivity and next-step requirements. You receive the assessment whether or not you continue with recovery services. Complimentary initial review, no obligation to continue.</p>
         <div class="actions">
-          <a class="button" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Book the fifteen minutes →</a>
-          <a class="button secondary" href="/soft-appeals-your-data">First, what happens to the data →</a>
+          <a class="button secondary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Request your denial review →</a>
+          <a class="button secondary" href="/soft-appeals">See how Soft Appeals works →</a>
+          <a class="button secondary" href="/soft-appeals-your-data">Review data and security practices →</a>
         </div>
       </div>
     </section>
