@@ -91,6 +91,7 @@
   function softKey() {
     var p = location.pathname.replace(/\.html$/, "").replace(/\/$/, "");
     if (p.indexOf("/soft-appeals-decoder") === 0) return "soft-decoder";
+    if (p.indexOf("/soft-appeals-faq") === 0) return "soft-faq";
     if (p.indexOf("/soft-appeals-audit") === 0) return "soft-audit";
     if (p.indexOf("/soft-appeals-data-security") === 0) return "soft-data";
     if (p.indexOf("/soft-appeals-about") === 0) return "soft-about";
@@ -123,12 +124,16 @@
        stays visible but quiet, and the shared footer below still shows the
        real business behind it, which is the thing that makes a contingency
        offer in healthcare look legitimate rather than fly-by-night. */
+    /* Seven items fit here only because the three "The " prefixes came off when
+       Questions joined the bar. Measured at 320px: two rows, same as six items
+       carrying the longer labels. Any eighth item goes to a page, not the bar. */
     var softNav =
-      navLink("The offer", "/soft-appeals", "soft-offer", onSoft) +
-      navLink("The process", "/soft-appeals-process", "soft-process", onSoft) +
+      navLink("Offer", "/soft-appeals", "soft-offer", onSoft) +
+      navLink("Process", "/soft-appeals-process", "soft-process", onSoft) +
       navLink("Pricing", "/soft-appeals-pricing", "soft-pricing", onSoft) +
-      navLink("The report", "/soft-appeals-audit", "soft-audit", onSoft) +
+      navLink("Report", "/soft-appeals-audit", "soft-audit", onSoft) +
       navLink("Security", "/soft-appeals-data-security", "soft-data", onSoft) +
+      navLink("Questions", "/soft-appeals-faq", "soft-faq", onSoft) +
       navLink("About", "/soft-appeals-about", "soft-about", onSoft);
     /* The decoder is deliberately not in this bar (her call 2026-08-07). It is a
        lead magnet people reach from the offer page and the checklist, not a page

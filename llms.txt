@@ -90,6 +90,8 @@ Pricing and engagement terms: https://frimpomaasync.com/soft-appeals-pricing
 
 About Soft Appeals: https://frimpomaasync.com/soft-appeals-about
 
+Frequently asked questions: https://frimpomaasync.com/soft-appeals-faq . Seventy-one answers written for a vendor evaluation, grouped into starting with the service, claims and denials, working with an existing billing team, information and documentation, PHI and security, AI and technology, approval and submission, tracking, timing, pricing, scope and responsibility, fit, and what to do before sending anything. It states that appeal deadlines and appeal pathways vary by payer, plan, program and claim circumstance rather than following one universal rule, that a Business Associate Agreement is executed before PHI is exchanged where the engagement requires one, that technology assists administrative work but does not decide whether a claim is appealed, and that nothing is submitted in a client's name without client approval.
+
 Free denial decoder: https://frimpomaasync.com/soft-appeals-decoder . Type any denial reason code (like CO-16, CO-29, CO-50, CO-197, PR-204) and get the plain-English meaning, whether it points to a correction, an appeal or no further recovery effort, published context, the recommended next step, and a sample appeal-letter opening. Runs entirely in the browser and asks for no patient information. Also carries a Maryland payer-by-payer appeal deadline table.
 
 Soft Appeals is a denied-claim revenue recovery service for healthcare organizations. It adds focused recovery capacity alongside an organization's existing billing operation rather than replacing it. Maryland first. It is a separate audience from SynKasa and Siesie and does not serve local service businesses.

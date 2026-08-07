@@ -1,0 +1,1511 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Frequently Asked Questions | Soft Appeals</title>
+  <meta name="description" content="Answers about Soft Appeals denial recovery, complimentary claim reviews, pricing, security, PHI, AI use, billing-team coordination, appeals, timelines, and engagement scope.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-faq">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=25">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#101426">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="Frequently asked questions · Soft Appeals">
+  <meta property="og:description" content="The answers a healthcare buyer needs before a call. Scope, claims, appeals, PHI, security, AI, approval, tracking, timing, pricing and fit.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-faq">
+  <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    /* The jump rail, the filter and the long-form answer styles. Scoped to this page. */
+    /* Two sticky bars stack above the content here, the shared nav and the filter
+       bar. A jump link has to clear both or it lands the group heading underneath
+       them. --sticky-chrome is measured in script, because the filter bar drops
+       out of sticky below 700px and the offset changes with it. */
+    section[id] { scroll-margin-top: calc(var(--sticky-chrome, 96px) + 18px); }
+
+    .faqtools {
+      position: sticky; top: var(--nav-height, 76px); z-index: 3;
+      padding: 14px 0; border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .92);
+      -webkit-backdrop-filter: saturate(180%) blur(12px);
+      backdrop-filter: saturate(180%) blur(12px);
+    }
+    .faqfind { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .faqfind input {
+      flex: 1 1 260px; min-width: 0;
+      padding: 12px 15px; border: 1px solid var(--line); border-radius: 12px;
+      background: var(--paper); color: var(--ink);
+      font-family: inherit; font-size: 16px; /* 16px keeps iOS from zooming the page */
+    }
+    .faqfind input:focus { outline: 2px solid rgba(194, 80, 28, .38); outline-offset: 1px; border-color: rgba(194, 80, 28, .4); }
+    .faqfind .cnt {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint);
+      white-space: nowrap;
+    }
+    .jump { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .jump a {
+      padding: 6px 12px; border-radius: 100px;
+      border: 1px solid rgba(16, 20, 38, .1); background: #F4F4F6;
+      font-size: 12.2px; line-height: 1.3; color: rgba(16, 20, 38, .6);
+      text-decoration: none; white-space: nowrap; transition: all .2s ease;
+    }
+    .jump a:hover { background: #FCEFE9; border-color: rgba(194, 80, 28, .22); color: #B4460F; }
+    @media (max-width: 700px) {
+      .faqtools { position: static; }
+      .jump { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; -webkit-overflow-scrolling: touch; }
+      .jump::-webkit-scrollbar { display: none; }
+    }
+
+    /* Answers carry lists and emphasised lines, which the base faq-list does not style. */
+    .faq-list summary { font-size: clamp(19px, 2.1vw, 22px); line-height: 1.28; }
+    .faq-list details > :last-child { padding-bottom: 24px; }
+    .faq-list details p { padding-bottom: 12px; }
+    .faq-list details ul {
+      margin: 0; padding: 0 40px 12px 0; list-style: none;
+      color: var(--ink-soft); font-size: 15px;
+    }
+    .faq-list details li { position: relative; padding-left: 22px; margin-bottom: 7px; line-height: 1.55; }
+    .faq-list details li::before {
+      content: "\00B7"; position: absolute; left: 6px; top: -1px;
+      color: var(--copper, #C2501C); font-weight: 700;
+    }
+    .faq-list details .lead { color: var(--ink); font-family: var(--serif); font-size: 18px; }
+    .faq-list details .tags { display: flex; flex-wrap: wrap; gap: 7px; padding: 0 0 16px; }
+    .faq-list details .tags span {
+      padding: 5px 12px; border-radius: 100px; background: rgba(194, 80, 28, .07);
+      border: 1px solid rgba(194, 80, 28, .18);
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: #B4460F;
+    }
+    .faq-list details .after {
+      margin: 0 40px 20px 0; padding: 14px 18px; border-left: 2px solid var(--copper, #C2501C);
+      background: var(--paper-soft, #F8F8F9); border-radius: 0 12px 12px 0;
+      font-size: 14.5px; line-height: 1.6; color: var(--ink-soft);
+    }
+    .faq-list details .after strong { color: var(--ink); font-weight: 600; }
+    .faq-list details a { color: #B4460F; }
+    .faq-empty {
+      display: none; padding: 28px 0; color: var(--ink-faint); font-size: 15px;
+    }
+    /* A short group header keeps the sticky left column from stranding white space. */
+    .grp-count {
+      margin-top: 14px;
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint);
+    }
+  </style>
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "name": "Frequently Asked Questions | Soft Appeals",
+  "url": "https://frimpomaasync.com/soft-appeals-faq",
+  "inLanguage": "en",
+  "publisher": {
+    "@type": "Organization",
+    "name": "frimpomaasync.com",
+    "url": "https://frimpomaasync.com/"
+  },
+  "about": {
+    "@type": "Service",
+    "name": "Soft Appeals denied-claim recovery",
+    "provider": {
+      "@type": "Organization",
+      "name": "Soft Appeals",
+      "url": "https://frimpomaasync.com/soft-appeals"
+    }
+  },
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What does Soft Appeals do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Soft Appeals provides focused denied-claim recovery support alongside an organization's existing billing operation. Depending on the agreed scope, the work may include: denial review; claim prioritization; payer-requirement research; correction or resubmission recommendations; appeal preparation; supporting-document organization; submission tracking; payer follow-up; escalation-path research; recovery reconciliation. The goal is to give selected denied claims a defined owner and a recovery workflow."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the complimentary 20-denial review?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is an initial assessment of 20 recent denied claims. Soft Appeals reviews the available information and organizes the claims by recommended next action, financial value, priority, known time sensitivity and additional information required. You receive a Denial Recovery Assessment whether or not you continue with paid recovery services."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the initial review really complimentary?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. There is no charge for the standard initial 20-denial assessment. Receiving the assessment does not require your organization to continue with Soft Appeals."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do you start with 20 denials?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because the best way to evaluate the service is to begin with the claims themselves. Twenty claims give enough information to show the assessment process while keeping the initial review focused and manageable. After reviewing the findings, your organization decides whether any eligible claims should move into recovery work."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens after we receive the assessment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You decide. Your organization can: ask Soft Appeals to pursue eligible claims; route correction items to your existing billing team; provide additional information for claims requiring investigation; handle selected claims internally; take no further action. There is no automatic transition from complimentary assessment to paid recovery."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does every denied claim get appealed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. An appeal is one possible next action. A reviewed claim may be categorized as: Correct / Resubmit; Appeal; Investigate; Close / Deprioritize. Responsible denial recovery includes knowing when an appeal is the wrong next step."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What types of denials can you review?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Soft Appeals can evaluate a range of administrative and reimbursement denials to determine whether they fit the service scope. Examples may involve issues such as: authorization; timely filing; medical-necessity determinations; documentation; claim information; eligibility or coverage questions; duplicate-claim issues; payer processing questions; other claim-specific denial reasons. Acceptance for recovery is determined claim by claim."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you work every denial we send?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not automatically. Part of the point of the assessment is to determine which claims warrant additional recovery effort. Some claims may require actions outside the Soft Appeals scope, or may not be appropriate for further recovery."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can we decide which claims you work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You assign the claims. The assessment recommends a next action for each one, and your organization decides which of those recommendations Soft Appeals acts on. Claims you want left alone are left alone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which payers do you work with?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Commercial payers, with the requirements researched per payer and per plan rather than assumed. Government-program claims are scoped and priced separately before any work starts. If your denials concentrate in two or three payers, say so early. That usually makes the work more effective rather than less."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are older denials automatically too late?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. But age matters. Available correction, reconsideration, appeal and review timelines can vary by payer, plan, denial type, program, jurisdiction, contractual terms and claim circumstances. Older claims are reviewed based on the recovery pathways that remain available, rather than rejected only because of age."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do all payers use the same appeal process?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The right process can vary significantly. A claim may involve: correction or resubmission; reconsideration; internal appeal; additional internal review; external or independent review where available; payer-specific administrative processes; another appropriate recovery pathway. Soft Appeals researches the applicable pathway for the assigned claim rather than assuming one universal sequence."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do all claims have the same appeal deadline?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Soft Appeals does not rely on one universal deadline. Timing may depend on the payer, plan, program, denial reason, contractual requirements, jurisdiction, review stage and other claim-specific circumstances. Known time-sensitive items are documented and prioritized."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can you guarantee an appeal will win?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. No responsible recovery service can guarantee that a payer will reverse a denial or issue reimbursement. Soft Appeals controls the quality and organization of the work performed within its scope. The payer controls its own determination."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if an appeal is denied again?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The remaining options are evaluated before another action is recommended. Depending on the circumstances, the next step may involve: additional documentation; another available internal review; external review where applicable; another administrative pathway; specialized client review; closure of the recovery effort. Another denial does not automatically mean another appeal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you handle external review?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Where external or independent review appears applicable, Soft Appeals can identify the potential pathway and the associated requirements within the agreed scope. External review is not available for every claim or every type of denial. Eligibility has to be evaluated for the specific claim."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will Soft Appeals replace our biller?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Soft Appeals is designed to work alongside your existing billing operation. Your billing team or billing company can continue handling functions such as: routine claim submission; payment posting; coding; standard corrections; patient billing; ongoing revenue-cycle activity; other responsibilities already assigned to them. Soft Appeals focuses on the denied claims placed within its recovery scope."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if we already use an outside billing company?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "That is fine. Soft Appeals can coordinate with an external billing company when the client authorizes that workflow. A billing company usually has its own view of which denials it is already working, and agreeing the claim list up front is the fastest way to avoid duplicate effort. Check your billing contract as well. Some agreements carry terms about third-party appeal work. Your billing partner keeps its work. What changes is that selected denied claims get a named owner and a defined next action."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the denial just needs a corrected claim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The assessment can identify that recommendation. The correction can then go back to the appropriate billing representative, unless correction or resubmission activity is specifically included in the Soft Appeals engagement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the issue involves coding?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Soft Appeals does not independently change coding outside the agreed scope. Potential coding issues are identified and routed to the appropriate qualified person or client representative."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if clinical input is required?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Soft Appeals identifies what information or decision is needed. Clinical judgment stays with the appropriate licensed or authorized professional. The specific document is requested from the person in your organization who holds it, with the reason it is needed and the deadline it affects. Soft Appeals does not independently create clinical documentation or make clinical decisions, and never writes clinical rationale that a treating provider has not documented."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What information do you need to begin?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For the complimentary review, useful information may include: denial or remittance information; payer information; claim reference information; denied amount; denial correspondence; relevant submission information; other documentation needed to understand the denial. A denial or aging export covering the claims you want reviewed is usually the fastest starting point. Exports from your billing system or clearinghouse are fine, and messy exports are fine too. The exact request depends on the claims being reviewed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do we have to organize everything first?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Provide the agreed information that is reasonably available. If more is required to understand or advance a claim, Soft Appeals identifies what is missing and why it is needed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you need our entire patient chart?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not by default. Soft Appeals follows a minimum-necessary approach to information requests. Only information reasonably needed for the assigned recovery work should be requested."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if documentation is missing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The missing information becomes a visible action item. If the client has the documentation, Soft Appeals requests it through the established workflow. If it requires a clinical, coding, legal or other specialized determination, the issue is routed to the appropriate person."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will you sign a Business Associate Agreement?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When the Soft Appeals engagement requires a Business Associate Agreement, the applicable agreement is executed before PHI is exchanged for that engagement. The agreement establishes the permitted uses and disclosures of PHI and the other applicable responsibilities between the parties."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should we email patient information before the BAA is signed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Do not send PHI simply because an introductory conversation has started. The information-sharing process should be established before protected information is exchanged."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you need access to our EHR?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not for the standard complimentary denial review. The initial review is designed to begin from securely provided claim and denial information. If system access later becomes necessary for an approved recovery engagement, the purpose and scope are discussed and authorized first."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you need our staff passwords?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Shared staff passwords should not be used for convenience. Where system access is authorized and supported, it should use appropriate individual credentials and the available security controls."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much patient information do you request?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Soft Appeals uses a minimum-necessary approach. Request enough information to complete the assigned work, without collecting broader PHI simply because it exists."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who can access our information?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Access is limited to the individuals and services required for the authorized work, and is subject to the processes and agreements applicable to the engagement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens to our data when the engagement ends?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Access and information are handled according to the applicable agreements and the data-disposition process. Where required and feasible, PHI is returned or destroyed. Where information has to remain, the applicable protections and limitations continue under the governing requirements."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if there is a security incident?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The event is evaluated and handled under the applicable Business Associate Agreement, internal procedures and legal requirements. Depending on the circumstances, response activities may include containment, investigation, documentation, mitigation, corrective action and required notification to the client. Specific notification obligations are governed by the applicable agreement and law."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you use AI?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Technology may assist with administrative work such as: organizing information; researching payer requirements; workflow management; identifying follow-up items; preparing draft materials. Technology does not independently decide whether a claim should be appealed, and does not authorize payer submissions on behalf of a client."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does AI make the final decision on our claims?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Technology may assist the process. Human review and the agreed client-approval process stay part of the workflow."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you put PHI into regular consumer AI tools?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "PHI is not intentionally entered into unapproved consumer-facing AI accounts, or into general-purpose tools that have not been approved for the engagement. Where a third-party service handles PHI as part of the workflow, that relationship is evaluated under the contractual and security requirements applicable to its role."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is our information used to train public AI models?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Soft Appeals does not intentionally use client PHI to train public or general-purpose AI models. Technology use involving client information stays subject to the restrictions established for the engagement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can our compliance or IT team ask about the technology you use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Security, privacy, technology and data-handling questions can be addressed during vendor due diligence, before PHI is exchanged."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Will you submit an appeal without telling us?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The engagement establishes the approval and authorization process before payer submissions begin. Under the standard Soft Appeals workflow, appeal materials are presented for client approval before submission in the organization's name."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What exactly are we approving?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Depending on the claim, the client may review: claim-specific facts; appeal content; supporting documentation; requested client input; relevant attachments; the proposed payer submission. The purpose is to catch factual issues and obtain any required internal or professional input before submission."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who submits the appeal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "That depends on the engagement and the payer workflow. Soft Appeals may handle administrative submission when it is included in scope and appropriately authorized, or the completed materials may be provided for submission through the client's established process. The responsibility is defined before work begins."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you keep proof that something was submitted?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Where available, submission and tracking information is kept as part of the recovery record. That may include: submission date; submission method; acknowledgement; proof of delivery; payer reference information; follow-up status."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How will we know what is happening with our claims?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Assigned claims move through defined statuses and next actions. The workflow is built to answer six questions at any moment: Where is the claim?; Who owns the next action?; What happens next?; When does it need attention?; What is blocking it?; What was the final outcome?."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What statuses do you use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Depending on the claim, statuses may include: Received; Under Review; Additional Information Needed; Correction Recommended; Appeal Recommended; Client Review; Approved for Submission; Submitted; Payer Follow-Up; Additional Review / Escalation; Recovered; Closed. Not every claim uses every status."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if we are holding up the claim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "That dependency is documented. For example: Client Action Required · supporting clinical documentation needed. This makes responsibility visible instead of letting a claim sit unresolved with nobody named."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the payer is holding things up?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The claim stays in the appropriate follow-up status. Soft Appeals tracks the available payer response information and the next administrative action within scope."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if a payer requests additional information?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The request is logged against the claim with its response deadline. The information is gathered from the agreed source, and the response goes back through the same approval process as the original submission. Payer requests with a clock on them are the most common way a recoverable claim quietly dies. They get tracked, not filed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How quickly will we receive the complimentary assessment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The expected turnaround is confirmed when the review is accepted, based on claim volume, information readiness and current capacity. Soft Appeals does not publish a turnaround promise it cannot consistently support."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long does an appeal take?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "There is no universal answer. Timing can depend on: the payer; plan requirements; denial type; review stage; information availability; client response time; payer processing time; requests for additional information; whether another review level becomes appropriate. Soft Appeals tracks the process. It does not control the payer's decision timeline."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can you rush an expiring claim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Time-sensitive claims are prioritized when they fall within scope and enough information is available. An approaching deadline does not guarantee that a complete and appropriate submission can be prepared, if required information is missing or the applicable pathway cannot be established."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How much does the initial review cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The standard 20-denial assessment is complimentary."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the standard recovery fee?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For eligible commercial claims accepted under the standard recovery model, the fee is: 25% of verified recovered reimbursement attributable to the Soft Appeals recovery engagement. Eligibility and pricing are confirmed before paid recovery work begins."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who receives the payer reimbursement?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your organization. The payer continues paying your organization through its normal reimbursement process. Under the standard workflow, Soft Appeals does not need the payer to redirect reimbursement to Soft Appeals."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if nothing is recovered?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For a claim operating under the standard contingency model, no qualifying verified recovery means no recovery fee for that claim."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if only part of the denied amount is recovered?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The standard percentage is calculated against the qualifying amount actually recovered, rather than against the full denied amount."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the fee based on the original billed charge?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Under the standard contingency structure, the fee is based on qualifying verified recovered reimbursement under the engagement terms. Not on the amount originally billed, and not on the amount denied."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the claim gets paid while you are working it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The claim is reconciled. A payment arriving during the engagement does not automatically mean Soft Appeals earned a fee. The payment has to satisfy the attribution and verification requirements established in the engagement terms."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if we had already started appealing the claim?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Soft Appeals reviews the previous recovery activity before accepting it. Claims with substantial work already underway may require modified terms, so responsibility and attribution stay clear."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you charge a monthly retainer?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not under the standard recovery-aligned engagement. Custom or future services outside that scope may use different pricing, which would be agreed before work begins."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are Medicare and Medicaid claims automatically included in the 25% model?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Government-program claims, and other specially regulated or contractually restricted claims, should not be assumed to qualify for the standard commercial contingency model. Scope and pricing are reviewed separately before work begins."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are you a billing company?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Soft Appeals is not positioned as a replacement for a full-service billing operation. The service specializes in focused denied-claim recovery."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are you a law firm?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Soft Appeals does not provide legal representation or legal advice. Questions requiring legal interpretation outside the administrative recovery scope belong with your organization's counsel or advisor."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you make clinical decisions?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Clinical decisions stay with appropriate licensed or authorized professionals."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you perform coding audits?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not as part of the standard denied-claim recovery service. Potential coding issues may be identified and returned for review by the appropriate qualified party."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do you guarantee compliance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No vendor should reduce healthcare compliance to a blanket marketing guarantee. Soft Appeals follows the processes, contractual responsibilities and safeguards established for its engagement. Each organization stays responsible for its own compliance obligations and vendor-review requirements."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Who is accountable for the Soft Appeals work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Soft Appeals is founder-led. NaNa Frimpomaa, MHA, oversees the current review and recovery workflow, and stays accountable for work performed within the agreed Soft Appeals scope."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What kinds of healthcare organizations can work with Soft Appeals?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Potential clients may include organizations such as: behavioral health providers; therapy organizations; dental organizations; chiropractic practices; podiatry practices; primary and specialty care organizations; multi-provider groups; other eligible healthcare provider organizations carrying unresolved claim denials. Fit is based on the claims and the requested scope, rather than on a label attached to organization size."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do we need a minimum denial volume?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Not for the initial 20-denial review. For ongoing recovery work, fit may depend on volume, claim characteristics, payer mix, administrative burden and the requested engagement scope."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if we only have a few denials?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You can still ask about fit. Not every organization needs an ongoing denial-recovery engagement."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if we have a very large denial inventory?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Soft Appeals can first evaluate a defined sample, then determine whether the requested volume suits the current service capacity and scope. The business should not accept a volume it cannot responsibly manage."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What should we do first?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Do not begin by emailing patient records. Begin with the intake request. Soft Appeals establishes the next step from there, including any necessary privacy documentation and the designated process for providing claim information."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can we ask security questions before signing anything?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. You are encouraged to resolve privacy, security, technology, contracting, scope and workflow questions before PHI is exchanged."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can our billing company join the conversation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, when the client authorizes it. Bringing in the people who already own the revenue-cycle workflow makes responsibilities and handoffs clearer."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can we see an example before sending our claims?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The public Sample Denial Recovery Assessment uses fictional claim information to show the format and the level of analysis."
+      }
+    }
+  ]
+}
+  </script>
+</head>
+<body data-sk-sections="Hero,Starting,Claims,Billing team,Documents,Privacy,AI,Approval,Tracking,Timing,Pricing,Scope,Fit,Before we begin,Close" data-sk-bar="Ask before you send PHI. The 20-denial review is complimentary." data-sk-biz="healthcare organization">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Hero">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · frequently asked questions</div>
+        <h1>Questions before you send a claim? <em>Good.</em></h1>
+        <p class="hero-copy">A denied-claim recovery partner may work with reimbursement information, payer correspondence, claim documentation and protected health information. You should understand how the service works before deciding whether it belongs inside your revenue-cycle workflow. Below are the answers healthcare organizations commonly need before beginning, written so you can forward this page to a biller, an administrator, a compliance lead or an operations director and have most of it settled without a call.</p>
+        <div class="actions">
+          <a class="button" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Start with 20 denials <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/soft-appeals-data-security">Review data and security practices <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+        <div class="hero-trust">
+          <span>No PHI required to ask a question</span>
+          <span>No obligation after the assessment</span>
+          <span>Written for a vendor review</span>
+          <span>Send it to your biller or your compliance reviewer</span>
+        </div>
+      </div>
+    </section>
+
+    <div class="faqtools">
+      <div class="wrap">
+        <div class="faqfind">
+          <label class="sr-only" for="faqq">Search the questions</label>
+          <input id="faqq" type="search" placeholder="Search the questions. Try BAA, deadline, coding, Medicare." autocomplete="off">
+          <span class="cnt" id="faqcount"></span>
+        </div>
+        <nav class="jump" aria-label="Question categories">
+          <a href="#starting">Starting</a>
+          <a href="#claims">Claims and denials</a>
+          <a href="#billing">Your billing team</a>
+          <a href="#documents">Documentation</a>
+          <a href="#privacy">PHI and security</a>
+          <a href="#ai">AI and technology</a>
+          <a href="#approval">Approval</a>
+          <a href="#tracking">Tracking</a>
+          <a href="#timing">Timing</a>
+          <a href="#pricing">Pricing</a>
+          <a href="#scope">Scope</a>
+          <a href="#fit">Fit</a>
+          <a href="#before">Before we begin</a>
+        </nav>
+      </div>
+    </div>
+
+    <p class="wrap faq-empty" id="faqempty">Nothing here matches that word. Clear the box to see all the questions, or ask directly and it gets answered before any patient information moves.</p>
+
+    <section class="section" id="starting" data-faq-group data-screen-label="Starting">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Starting with Soft Appeals</div>
+          <h2 class="section-title">What the service is, and what the first step costs.</h2>
+          <div class="grp-count">Five questions</div>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>What does Soft Appeals do?</summary>
+            <p>Soft Appeals provides focused denied-claim recovery support alongside an organization's existing billing operation. Depending on the agreed scope, the work may include:</p>
+            <ul>
+              <li>denial review</li>
+              <li>claim prioritization</li>
+              <li>payer-requirement research</li>
+              <li>correction or resubmission recommendations</li>
+              <li>appeal preparation</li>
+              <li>supporting-document organization</li>
+              <li>submission tracking</li>
+              <li>payer follow-up</li>
+              <li>escalation-path research</li>
+              <li>recovery reconciliation</li>
+            </ul>
+            <p>The goal is to give selected denied claims a defined owner and a recovery workflow.</p>
+          </details>
+          <details>
+            <summary>What is the complimentary 20-denial review?</summary>
+            <p>It is an initial assessment of 20 recent denied claims. Soft Appeals reviews the available information and organizes the claims by recommended next action, financial value, priority, known time sensitivity and additional information required.</p>
+            <p>You receive a Denial Recovery Assessment whether or not you continue with paid recovery services.</p>
+          </details>
+          <details>
+            <summary>Is the initial review really complimentary?</summary>
+            <p class="lead">Yes.</p>
+            <p>There is no charge for the standard initial 20-denial assessment. Receiving the assessment does not require your organization to continue with Soft Appeals.</p>
+          </details>
+          <details>
+            <summary>Why do you start with 20 denials?</summary>
+            <p>Because the best way to evaluate the service is to begin with the claims themselves. Twenty claims give enough information to show the assessment process while keeping the initial review focused and manageable.</p>
+            <p>After reviewing the findings, your organization decides whether any eligible claims should move into recovery work.</p>
+          </details>
+          <details>
+            <summary>What happens after we receive the assessment?</summary>
+            <p class="lead">You decide.</p>
+            <p>Your organization can:</p>
+            <ul>
+              <li>ask Soft Appeals to pursue eligible claims</li>
+              <li>route correction items to your existing billing team</li>
+              <li>provide additional information for claims requiring investigation</li>
+              <li>handle selected claims internally</li>
+              <li>take no further action</li>
+            </ul>
+            <p>There is no automatic transition from complimentary assessment to paid recovery.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="claims" data-faq-group data-screen-label="Claims">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Claims and denials</div>
+          <h2 class="section-title">Which claims get worked, and how a pathway is chosen.</h2>
+          <div class="grp-count">Eleven questions</div>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>Does every denied claim get appealed?</summary>
+            <p class="lead">No.</p>
+            <p>An appeal is one possible next action. A reviewed claim may be categorized as:</p>
+            <div class="tags"><span>Correct / Resubmit</span><span>Appeal</span><span>Investigate</span><span>Close / Deprioritize</span></div>
+            <p>Responsible denial recovery includes knowing when an appeal is the wrong next step.</p>
+          </details>
+          <details>
+            <summary>What types of denials can you review?</summary>
+            <p>Soft Appeals can evaluate a range of administrative and reimbursement denials to determine whether they fit the service scope. Examples may involve issues such as:</p>
+            <ul>
+              <li>authorization</li>
+              <li>timely filing</li>
+              <li>medical-necessity determinations</li>
+              <li>documentation</li>
+              <li>claim information</li>
+              <li>eligibility or coverage questions</li>
+              <li>duplicate-claim issues</li>
+              <li>payer processing questions</li>
+              <li>other claim-specific denial reasons</li>
+            </ul>
+            <p>Acceptance for recovery is determined claim by claim.</p>
+          </details>
+          <details>
+            <summary>Do you work every denial we send?</summary>
+            <p>Not automatically. Part of the point of the assessment is to determine which claims warrant additional recovery effort.</p>
+            <p>Some claims may require actions outside the Soft Appeals scope, or may not be appropriate for further recovery.</p>
+          </details>
+          <details>
+            <summary>Can we decide which claims you work?</summary>
+            <p class="lead">Yes. You assign the claims.</p>
+            <p>The assessment recommends a next action for each one, and your organization decides which of those recommendations Soft Appeals acts on. Claims you want left alone are left alone.</p>
+          </details>
+          <details data-keys="payers commercial Medicare Medicaid insurance carriers">
+            <summary>Which payers do you work with?</summary>
+            <p>Commercial payers, with the requirements researched per payer and per plan rather than assumed.</p>
+            <p>Government-program claims are scoped and priced separately before any work starts. If your denials concentrate in two or three payers, say so early. That usually makes the work more effective rather than less.</p>
+          </details>
+          <details data-keys="deadline timely filing aged old AR aging expire">
+            <summary>Are older denials automatically too late?</summary>
+            <p class="lead">No. But age matters.</p>
+            <p>Available correction, reconsideration, appeal and review timelines can vary by payer, plan, denial type, program, jurisdiction, contractual terms and claim circumstances.</p>
+            <p>Older claims are reviewed based on the recovery pathways that remain available, rather than rejected only because of age.</p>
+          </details>
+          <details data-keys="appeal levels reconsideration external review process">
+            <summary>Do all payers use the same appeal process?</summary>
+            <p class="lead">No. The right process can vary significantly.</p>
+            <p>A claim may involve:</p>
+            <ul>
+              <li>correction or resubmission</li>
+              <li>reconsideration</li>
+              <li>internal appeal</li>
+              <li>additional internal review</li>
+              <li>external or independent review where available</li>
+              <li>payer-specific administrative processes</li>
+              <li>another appropriate recovery pathway</li>
+            </ul>
+            <p>Soft Appeals researches the applicable pathway for the assigned claim rather than assuming one universal sequence.</p>
+          </details>
+          <details data-keys="deadline timely filing timeframe days limit expire">
+            <summary>Do all claims have the same appeal deadline?</summary>
+            <p class="lead">No.</p>
+            <p>Soft Appeals does not rely on one universal deadline. Timing may depend on the payer, plan, program, denial reason, contractual requirements, jurisdiction, review stage and other claim-specific circumstances.</p>
+            <p>Known time-sensitive items are documented and prioritized.</p>
+          </details>
+          <details>
+            <summary>Can you guarantee an appeal will win?</summary>
+            <p class="lead">No.</p>
+            <p>No responsible recovery service can guarantee that a payer will reverse a denial or issue reimbursement.</p>
+            <div class="after">Soft Appeals controls the quality and organization of the work performed within its scope. <strong>The payer controls its own determination.</strong></div>
+          </details>
+          <details>
+            <summary>What happens if an appeal is denied again?</summary>
+            <p>The remaining options are evaluated before another action is recommended. Depending on the circumstances, the next step may involve:</p>
+            <ul>
+              <li>additional documentation</li>
+              <li>another available internal review</li>
+              <li>external review where applicable</li>
+              <li>another administrative pathway</li>
+              <li>specialized client review</li>
+              <li>closure of the recovery effort</li>
+            </ul>
+            <p>Another denial does not automatically mean another appeal.</p>
+          </details>
+          <details>
+            <summary>Do you handle external review?</summary>
+            <p>Where external or independent review appears applicable, Soft Appeals can identify the potential pathway and the associated requirements within the agreed scope.</p>
+            <p>External review is not available for every claim or every type of denial. Eligibility has to be evaluated for the specific claim.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="billing" data-faq-group data-screen-label="Billing team">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Working with your billing team</div>
+          <h2 class="section-title">Nobody is being replaced. Ownership is being made clear.</h2>
+          <div class="grp-count">Five questions</div>
+        </div>
+        <div class="faq-list">
+          <details data-keys="billing company biller RCM replace vendor">
+            <summary>Will Soft Appeals replace our biller?</summary>
+            <p class="lead">No.</p>
+            <p>Soft Appeals is designed to work alongside your existing billing operation. Your billing team or billing company can continue handling functions such as:</p>
+            <ul>
+              <li>routine claim submission</li>
+              <li>payment posting</li>
+              <li>coding</li>
+              <li>standard corrections</li>
+              <li>patient billing</li>
+              <li>ongoing revenue-cycle activity</li>
+              <li>other responsibilities already assigned to them</li>
+            </ul>
+            <p>Soft Appeals focuses on the denied claims placed within its recovery scope.</p>
+          </details>
+          <details data-keys="billing company outsourced RCM vendor coordination contract">
+            <summary>What if we already use an outside billing company?</summary>
+            <p class="lead">That is fine.</p>
+            <p>Soft Appeals can coordinate with an external billing company when the client authorizes that workflow. A billing company usually has its own view of which denials it is already working, and agreeing the claim list up front is the fastest way to avoid duplicate effort.</p>
+            <p>Check your billing contract as well. Some agreements carry terms about third-party appeal work.</p>
+            <div class="after">Your billing partner keeps its work. What changes is that <strong>selected denied claims get a named owner</strong> and a defined next action.</div>
+          </details>
+          <details>
+            <summary>What if the denial just needs a corrected claim?</summary>
+            <p>The assessment can identify that recommendation.</p>
+            <p>The correction can then go back to the appropriate billing representative, unless correction or resubmission activity is specifically included in the Soft Appeals engagement.</p>
+          </details>
+          <details data-keys="coding CPT ICD modifier coder audit">
+            <summary>What if the issue involves coding?</summary>
+            <p>Soft Appeals does not independently change coding outside the agreed scope.</p>
+            <p>Potential coding issues are identified and routed to the appropriate qualified person or client representative.</p>
+          </details>
+          <details>
+            <summary>What if clinical input is required?</summary>
+            <p>Soft Appeals identifies what information or decision is needed. Clinical judgment stays with the appropriate licensed or authorized professional.</p>
+            <p>The specific document is requested from the person in your organization who holds it, with the reason it is needed and the deadline it affects.</p>
+            <div class="after">Soft Appeals does not independently create clinical documentation or make clinical decisions, and <strong>never writes clinical rationale that a treating provider has not documented.</strong></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="documents" data-faq-group data-screen-label="Documents">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Information and documentation</div>
+          <h2 class="section-title">What you send to begin, and what you do not have to organize first.</h2>
+          <div class="grp-count">Four questions</div>
+        </div>
+        <div class="faq-list">
+          <details data-keys="documents onboarding export aging report remittance ERA EOB">
+            <summary>What information do you need to begin?</summary>
+            <p>For the complimentary review, useful information may include:</p>
+            <ul>
+              <li>denial or remittance information</li>
+              <li>payer information</li>
+              <li>claim reference information</li>
+              <li>denied amount</li>
+              <li>denial correspondence</li>
+              <li>relevant submission information</li>
+              <li>other documentation needed to understand the denial</li>
+            </ul>
+            <p>A denial or aging export covering the claims you want reviewed is usually the fastest starting point. Exports from your billing system or clearinghouse are fine, and messy exports are fine too.</p>
+            <p>The exact request depends on the claims being reviewed.</p>
+          </details>
+          <details>
+            <summary>Do we have to organize everything first?</summary>
+            <p class="lead">No.</p>
+            <p>Provide the agreed information that is reasonably available. If more is required to understand or advance a claim, Soft Appeals identifies what is missing and why it is needed.</p>
+          </details>
+          <details>
+            <summary>Do you need our entire patient chart?</summary>
+            <p class="lead">Not by default.</p>
+            <p>Soft Appeals follows a minimum-necessary approach to information requests. Only information reasonably needed for the assigned recovery work should be requested.</p>
+          </details>
+          <details>
+            <summary>What happens if documentation is missing?</summary>
+            <p>The missing information becomes a visible action item.</p>
+            <p>If the client has the documentation, Soft Appeals requests it through the established workflow. If it requires a clinical, coding, legal or other specialized determination, the issue is routed to the appropriate person.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="privacy" data-faq-group data-screen-label="Privacy">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">PHI, privacy and security</div>
+          <h2 class="section-title">The part your compliance reviewer opens first.</h2>
+          <div class="grp-count">Eight questions</div>
+          <p class="section-intro" style="margin-top:18px">Longer detail on safeguards, access and disposition sits on the <a href="/soft-appeals-data-security">data and security practices</a> page.</p>
+        </div>
+        <div class="faq-list">
+          <details data-keys="BAA HIPAA business associate agreement contract compliance">
+            <summary>Will you sign a Business Associate Agreement?</summary>
+            <p>When the Soft Appeals engagement requires a Business Associate Agreement, the applicable agreement is executed before PHI is exchanged for that engagement.</p>
+            <p>The agreement establishes the permitted uses and disclosures of PHI and the other applicable responsibilities between the parties.</p>
+          </details>
+          <details data-keys="BAA HIPAA email PHI secure">
+            <summary>Should we email patient information before the BAA is signed?</summary>
+            <p class="lead">No.</p>
+            <p>Do not send PHI simply because an introductory conversation has started. The information-sharing process should be established before protected information is exchanged.</p>
+          </details>
+          <details data-keys="EHR EMR system access login practice management">
+            <summary>Do you need access to our EHR?</summary>
+            <p>Not for the standard complimentary denial review. The initial review is designed to begin from securely provided claim and denial information.</p>
+            <p>If system access later becomes necessary for an approved recovery engagement, the purpose and scope are discussed and authorized first.</p>
+          </details>
+          <details data-keys="password credentials login access security MFA">
+            <summary>Do you need our staff passwords?</summary>
+            <p class="lead">No.</p>
+            <p>Shared staff passwords should not be used for convenience. Where system access is authorized and supported, it should use appropriate individual credentials and the available security controls.</p>
+          </details>
+          <details data-keys="minimum necessary HIPAA PHI">
+            <summary>How much patient information do you request?</summary>
+            <p>Soft Appeals uses a minimum-necessary approach.</p>
+            <div class="after">Request enough information to complete the assigned work, <strong>without collecting broader PHI simply because it exists.</strong></div>
+          </details>
+          <details data-keys="access control who sees data workforce">
+            <summary>Who can access our information?</summary>
+            <p>Access is limited to the individuals and services required for the authorized work, and is subject to the processes and agreements applicable to the engagement.</p>
+          </details>
+          <details data-keys="offboarding termination retention destruction disposition data">
+            <summary>What happens to our data when the engagement ends?</summary>
+            <p>Access and information are handled according to the applicable agreements and the data-disposition process.</p>
+            <p>Where required and feasible, PHI is returned or destroyed. Where information has to remain, the applicable protections and limitations continue under the governing requirements.</p>
+          </details>
+          <details data-keys="breach notification incident security HIPAA">
+            <summary>What happens if there is a security incident?</summary>
+            <p>The event is evaluated and handled under the applicable Business Associate Agreement, internal procedures and legal requirements.</p>
+            <p>Depending on the circumstances, response activities may include containment, investigation, documentation, mitigation, corrective action and required notification to the client.</p>
+            <p>Specific notification obligations are governed by the applicable agreement and law.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="ai" data-faq-group data-screen-label="AI">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">AI and technology</div>
+          <h2 class="section-title">Stated openly, because your IT reviewer will ask anyway.</h2>
+          <div class="grp-count">Five questions</div>
+        </div>
+        <div class="faq-list">
+          <details data-keys="AI artificial intelligence automation technology software">
+            <summary>Do you use AI?</summary>
+            <p>Technology may assist with administrative work such as:</p>
+            <ul>
+              <li>organizing information</li>
+              <li>researching payer requirements</li>
+              <li>workflow management</li>
+              <li>identifying follow-up items</li>
+              <li>preparing draft materials</li>
+            </ul>
+            <p>Technology does not independently decide whether a claim should be appealed, and does not authorize payer submissions on behalf of a client.</p>
+          </details>
+          <details data-keys="AI human review automation">
+            <summary>Does AI make the final decision on our claims?</summary>
+            <p class="lead">No.</p>
+            <p>Technology may assist the process. Human review and the agreed client-approval process stay part of the workflow.</p>
+          </details>
+          <details data-keys="AI ChatGPT consumer tools PHI vendor">
+            <summary>Do you put PHI into regular consumer AI tools?</summary>
+            <p>PHI is not intentionally entered into unapproved consumer-facing AI accounts, or into general-purpose tools that have not been approved for the engagement.</p>
+            <p>Where a third-party service handles PHI as part of the workflow, that relationship is evaluated under the contractual and security requirements applicable to its role.</p>
+          </details>
+          <details data-keys="AI training model data privacy">
+            <summary>Is our information used to train public AI models?</summary>
+            <p>Soft Appeals does not intentionally use client PHI to train public or general-purpose AI models.</p>
+            <p>Technology use involving client information stays subject to the restrictions established for the engagement.</p>
+          </details>
+          <details>
+            <summary>Can our compliance or IT team ask about the technology you use?</summary>
+            <p class="lead">Yes.</p>
+            <p>Security, privacy, technology and data-handling questions can be addressed during vendor due diligence, before PHI is exchanged.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="approval" data-faq-group data-screen-label="Approval">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Approval and submission</div>
+          <h2 class="section-title">Nothing goes out in your name until you have seen it.</h2>
+          <div class="grp-count">Four questions</div>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>Will you submit an appeal without telling us?</summary>
+            <p class="lead">No.</p>
+            <p>The engagement establishes the approval and authorization process before payer submissions begin.</p>
+            <div class="after">Under the standard Soft Appeals workflow, <strong>appeal materials are presented for client approval before submission in the organization's name.</strong></div>
+          </details>
+          <details>
+            <summary>What exactly are we approving?</summary>
+            <p>Depending on the claim, the client may review:</p>
+            <ul>
+              <li>claim-specific facts</li>
+              <li>appeal content</li>
+              <li>supporting documentation</li>
+              <li>requested client input</li>
+              <li>relevant attachments</li>
+              <li>the proposed payer submission</li>
+            </ul>
+            <p>The purpose is to catch factual issues and obtain any required internal or professional input before submission.</p>
+          </details>
+          <details>
+            <summary>Who submits the appeal?</summary>
+            <p>That depends on the engagement and the payer workflow.</p>
+            <p>Soft Appeals may handle administrative submission when it is included in scope and appropriately authorized, or the completed materials may be provided for submission through the client's established process. The responsibility is defined before work begins.</p>
+          </details>
+          <details data-keys="proof of submission tracking documentation audit trail">
+            <summary>Do you keep proof that something was submitted?</summary>
+            <p>Where available, submission and tracking information is kept as part of the recovery record. That may include:</p>
+            <ul>
+              <li>submission date</li>
+              <li>submission method</li>
+              <li>acknowledgement</li>
+              <li>proof of delivery</li>
+              <li>payer reference information</li>
+              <li>follow-up status</li>
+            </ul>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="tracking" data-faq-group data-screen-label="Tracking">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Tracking and communication</div>
+          <h2 class="section-title">A claim should never go quiet.</h2>
+          <div class="grp-count">Five questions</div>
+        </div>
+        <div class="faq-list">
+          <details data-keys="status reporting visibility updates dashboard tracking">
+            <summary>How will we know what is happening with our claims?</summary>
+            <p>Assigned claims move through defined statuses and next actions. The workflow is built to answer six questions at any moment:</p>
+            <ul>
+              <li>Where is the claim?</li>
+              <li>Who owns the next action?</li>
+              <li>What happens next?</li>
+              <li>When does it need attention?</li>
+              <li>What is blocking it?</li>
+              <li>What was the final outcome?</li>
+            </ul>
+          </details>
+          <details>
+            <summary>What statuses do you use?</summary>
+            <p>Depending on the claim, statuses may include:</p>
+            <div class="tags"><span>Received</span><span>Under Review</span><span>Additional Information Needed</span><span>Correction Recommended</span><span>Appeal Recommended</span><span>Client Review</span><span>Approved for Submission</span><span>Submitted</span><span>Payer Follow-Up</span><span>Additional Review / Escalation</span><span>Recovered</span><span>Closed</span></div>
+            <p>Not every claim uses every status.</p>
+          </details>
+          <details>
+            <summary>What if we are holding up the claim?</summary>
+            <p>That dependency is documented. For example:</p>
+            <div class="after"><strong>Client Action Required</strong> · supporting clinical documentation needed.</div>
+            <p>This makes responsibility visible instead of letting a claim sit unresolved with nobody named.</p>
+          </details>
+          <details>
+            <summary>What if the payer is holding things up?</summary>
+            <p>The claim stays in the appropriate follow-up status.</p>
+            <p>Soft Appeals tracks the available payer response information and the next administrative action within scope.</p>
+          </details>
+          <details>
+            <summary>What happens if a payer requests additional information?</summary>
+            <p>The request is logged against the claim with its response deadline. The information is gathered from the agreed source, and the response goes back through the same approval process as the original submission.</p>
+            <div class="after">Payer requests with a clock on them are the most common way a recoverable claim quietly dies. <strong>They get tracked, not filed.</strong></div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="timing" data-faq-group data-screen-label="Timing">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Timing</div>
+          <h2 class="section-title">What can be promised, and what belongs to the payer.</h2>
+          <div class="grp-count">Three questions</div>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>How quickly will we receive the complimentary assessment?</summary>
+            <p>The expected turnaround is confirmed when the review is accepted, based on claim volume, information readiness and current capacity.</p>
+            <p>Soft Appeals does not publish a turnaround promise it cannot consistently support.</p>
+          </details>
+          <details>
+            <summary>How long does an appeal take?</summary>
+            <p class="lead">There is no universal answer.</p>
+            <p>Timing can depend on:</p>
+            <ul>
+              <li>the payer</li>
+              <li>plan requirements</li>
+              <li>denial type</li>
+              <li>review stage</li>
+              <li>information availability</li>
+              <li>client response time</li>
+              <li>payer processing time</li>
+              <li>requests for additional information</li>
+              <li>whether another review level becomes appropriate</li>
+            </ul>
+            <p>Soft Appeals tracks the process. It does not control the payer's decision timeline.</p>
+          </details>
+          <details data-keys="deadline urgent rush expiring timely filing">
+            <summary>Can you rush an expiring claim?</summary>
+            <p>Time-sensitive claims are prioritized when they fall within scope and enough information is available.</p>
+            <p>An approaching deadline does not guarantee that a complete and appropriate submission can be prepared, if required information is missing or the applicable pathway cannot be established.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="pricing" data-faq-group data-screen-label="Pricing">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Pricing</div>
+          <h2 class="section-title">The fee exists only after the money does.</h2>
+          <div class="grp-count">Ten questions</div>
+          <p class="section-intro" style="margin-top:18px">The full model, including what is excluded and how recovery is verified, sits on the <a href="/soft-appeals-pricing">pricing and engagement</a> page.</p>
+        </div>
+        <div class="faq-list">
+          <details data-keys="cost price free complimentary">
+            <summary>How much does the initial review cost?</summary>
+            <p class="lead">The standard 20-denial assessment is complimentary.</p>
+          </details>
+          <details data-keys="cost price fee percent percentage 25% contingency rate">
+            <summary>What is the standard recovery fee?</summary>
+            <p>For eligible commercial claims accepted under the standard recovery model, the fee is:</p>
+            <div class="after"><strong>25% of verified recovered reimbursement</strong> attributable to the Soft Appeals recovery engagement.</div>
+            <p>Eligibility and pricing are confirmed before paid recovery work begins.</p>
+          </details>
+          <details>
+            <summary>Who receives the payer reimbursement?</summary>
+            <p class="lead">Your organization.</p>
+            <p>The payer continues paying your organization through its normal reimbursement process. Under the standard workflow, Soft Appeals does not need the payer to redirect reimbursement to Soft Appeals.</p>
+          </details>
+          <details>
+            <summary>What if nothing is recovered?</summary>
+            <p>For a claim operating under the standard contingency model, no qualifying verified recovery means no recovery fee for that claim.</p>
+          </details>
+          <details>
+            <summary>What if only part of the denied amount is recovered?</summary>
+            <p>The standard percentage is calculated against the qualifying amount actually recovered, rather than against the full denied amount.</p>
+          </details>
+          <details>
+            <summary>Is the fee based on the original billed charge?</summary>
+            <p class="lead">No.</p>
+            <p>Under the standard contingency structure, the fee is based on qualifying verified recovered reimbursement under the engagement terms. Not on the amount originally billed, and not on the amount denied.</p>
+          </details>
+          <details>
+            <summary>What if the claim gets paid while you are working it?</summary>
+            <p class="lead">The claim is reconciled.</p>
+            <p>A payment arriving during the engagement does not automatically mean Soft Appeals earned a fee. The payment has to satisfy the attribution and verification requirements established in the engagement terms.</p>
+          </details>
+          <details>
+            <summary>What if we had already started appealing the claim?</summary>
+            <p>Soft Appeals reviews the previous recovery activity before accepting it.</p>
+            <p>Claims with substantial work already underway may require modified terms, so responsibility and attribution stay clear.</p>
+          </details>
+          <details data-keys="retainer subscription monthly cost price">
+            <summary>Do you charge a monthly retainer?</summary>
+            <p>Not under the standard recovery-aligned engagement.</p>
+            <p>Custom or future services outside that scope may use different pricing, which would be agreed before work begins.</p>
+          </details>
+          <details data-keys="Medicare Medicaid government payer CMS pricing">
+            <summary>Are Medicare and Medicaid claims automatically included in the 25% model?</summary>
+            <p class="lead">No.</p>
+            <p>Government-program claims, and other specially regulated or contractually restricted claims, should not be assumed to qualify for the standard commercial contingency model.</p>
+            <p>Scope and pricing are reviewed separately before work begins.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="scope" data-faq-group data-screen-label="Scope">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Scope and responsibility</div>
+          <h2 class="section-title">What this service is not, said plainly.</h2>
+          <div class="grp-count">Six questions</div>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>Are you a billing company?</summary>
+            <p>Soft Appeals is not positioned as a replacement for a full-service billing operation.</p>
+            <p>The service specializes in focused denied-claim recovery.</p>
+          </details>
+          <details data-keys="legal attorney lawyer counsel ERISA">
+            <summary>Are you a law firm?</summary>
+            <p class="lead">No.</p>
+            <p>Soft Appeals does not provide legal representation or legal advice. Questions requiring legal interpretation outside the administrative recovery scope belong with your organization's counsel or advisor.</p>
+          </details>
+          <details>
+            <summary>Do you make clinical decisions?</summary>
+            <p class="lead">No.</p>
+            <p>Clinical decisions stay with appropriate licensed or authorized professionals.</p>
+          </details>
+          <details data-keys="coding audit CPT ICD compliance">
+            <summary>Do you perform coding audits?</summary>
+            <p>Not as part of the standard denied-claim recovery service.</p>
+            <p>Potential coding issues may be identified and returned for review by the appropriate qualified party.</p>
+          </details>
+          <details data-keys="compliance HIPAA guarantee regulatory">
+            <summary>Do you guarantee compliance?</summary>
+            <p>No vendor should reduce healthcare compliance to a blanket marketing guarantee.</p>
+            <p>Soft Appeals follows the processes, contractual responsibilities and safeguards established for its engagement. Each organization stays responsible for its own compliance obligations and vendor-review requirements.</p>
+          </details>
+          <details data-keys="founder owner accountable NaNa Frimpomaa MHA who">
+            <summary>Who is accountable for the Soft Appeals work?</summary>
+            <p class="lead">Soft Appeals is founder-led.</p>
+            <p>NaNa Frimpomaa, MHA, oversees the current review and recovery workflow, and stays accountable for work performed within the agreed Soft Appeals scope.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="fit" data-faq-group data-screen-label="Fit">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Fit</div>
+          <h2 class="section-title">Fit comes from the claims, not from the size of the practice.</h2>
+          <div class="grp-count">Four questions</div>
+        </div>
+        <div class="faq-list">
+          <details data-keys="specialty practice type behavioral dental therapy chiropractic podiatry clinic">
+            <summary>What kinds of healthcare organizations can work with Soft Appeals?</summary>
+            <p>Potential clients may include organizations such as:</p>
+            <ul>
+              <li>behavioral health providers</li>
+              <li>therapy organizations</li>
+              <li>dental organizations</li>
+              <li>chiropractic practices</li>
+              <li>podiatry practices</li>
+              <li>primary and specialty care organizations</li>
+              <li>multi-provider groups</li>
+              <li>other eligible healthcare provider organizations carrying unresolved claim denials</li>
+            </ul>
+            <p>Fit is based on the claims and the requested scope, rather than on a label attached to organization size.</p>
+          </details>
+          <details>
+            <summary>Do we need a minimum denial volume?</summary>
+            <p>Not for the initial 20-denial review.</p>
+            <p>For ongoing recovery work, fit may depend on volume, claim characteristics, payer mix, administrative burden and the requested engagement scope.</p>
+          </details>
+          <details>
+            <summary>What if we only have a few denials?</summary>
+            <p>You can still ask about fit.</p>
+            <p>Not every organization needs an ongoing denial-recovery engagement.</p>
+          </details>
+          <details>
+            <summary>What if we have a very large denial inventory?</summary>
+            <p>Soft Appeals can first evaluate a defined sample, then determine whether the requested volume suits the current service capacity and scope.</p>
+            <div class="after">The business should not accept a volume it cannot responsibly manage.</div>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="before" data-faq-group data-screen-label="Before we begin">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Before we begin</div>
+          <h2 class="section-title">The first move is not an email with patient records in it.</h2>
+          <div class="grp-count">Four questions</div>
+        </div>
+        <div class="faq-list">
+          <details>
+            <summary>What should we do first?</summary>
+            <p>Do not begin by emailing patient records. Begin with the intake request.</p>
+            <p>Soft Appeals establishes the next step from there, including any necessary privacy documentation and the designated process for providing claim information.</p>
+          </details>
+          <details data-keys="vendor due diligence security questionnaire procurement compliance review">
+            <summary>Can we ask security questions before signing anything?</summary>
+            <p class="lead">Yes.</p>
+            <p>You are encouraged to resolve privacy, security, technology, contracting, scope and workflow questions before PHI is exchanged.</p>
+          </details>
+          <details>
+            <summary>Can our billing company join the conversation?</summary>
+            <p>Yes, when the client authorizes it.</p>
+            <p>Bringing in the people who already own the revenue-cycle workflow makes responsibilities and handoffs clearer.</p>
+          </details>
+          <details>
+            <summary>Can we see an example before sending our claims?</summary>
+            <p class="lead">Yes.</p>
+            <p>The public <a href="/soft-appeals-audit">Sample Denial Recovery Assessment</a> uses fictional claim information to show the format and the level of analysis.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <div class="eyebrow">Still have a question?</div>
+        <h2>Ask before you send PHI.</h2>
+        <p>You do not need to hand over patient information to find out whether Soft Appeals suits your organization. Ask about fit, claims, pricing, billing-team coordination, security, technology, the BAA, scope, vendor due diligence or the initial review process. Then start with the claims.</p>
+        <div class="actions">
+          <a class="button secondary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Ask a question →</a>
+          <a class="button secondary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Request your complimentary review →</a>
+          <a class="button secondary" href="/soft-appeals-data-security">Review data and security practices →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* Filter the questions in place. Plain DOM work, no dependencies, so a slow
+       connection cannot leave the page in a half-working state. */
+    (function () {
+      var box = document.getElementById('faqq');
+      if (!box) return;
+      var count = document.getElementById('faqcount');
+      var empty = document.getElementById('faqempty');
+      var groups = [].slice.call(document.querySelectorAll('[data-faq-group]'));
+      var items = [].slice.call(document.querySelectorAll('.faq-list details')).map(function (d) {
+        /* data-keys carries the words a buyer types that the answer never says:
+           BAA, HIPAA, EHR, ERA, CPT, timely filing, retainer, ChatGPT. */
+        return { el: d, text: ((d.textContent || '') + ' ' + (d.getAttribute('data-keys') || '')).toLowerCase() };
+      });
+      var total = items.length;
+
+      function render() {
+        var q = box.value.trim().toLowerCase();
+        var shown = 0;
+        items.forEach(function (it) {
+          var hit = !q || it.text.indexOf(q) !== -1;
+          it.el.style.display = hit ? '' : 'none';
+          if (hit) shown++;
+          /* Open a match while filtering so the answer is readable without a second click. */
+          if (q && hit) it.el.setAttribute('open', '');
+          if (!q) it.el.removeAttribute('open');
+        });
+        groups.forEach(function (g) {
+          var any = [].slice.call(g.querySelectorAll('.faq-list details')).some(function (d) {
+            return d.style.display !== 'none';
+          });
+          g.style.display = any ? '' : 'none';
+          /* "Ten questions" under a filtered group that is showing one would
+             contradict the counter above, so it goes while a filter is active. */
+          var c = g.querySelector('.grp-count');
+          if (c) c.style.display = q ? 'none' : '';
+        });
+        if (empty) empty.style.display = shown === 0 ? 'block' : 'none';
+        if (count) count.textContent = q ? shown + ' of ' + total + ' questions' : total + ' questions';
+      }
+
+      box.addEventListener('input', render);
+      box.addEventListener('search', render);
+      render();
+    })();
+
+    /* The shared nav only publishes --nav-height on cinematic pages, and its real
+       height here is 82px against the 76px fallback. Six pixels is enough for the
+       filter bar to slide under the nav and lose its top edge, and for every
+       jump link to land six pixels high. Measure it and keep it measured. */
+    (function () {
+      function sync() {
+        var nav = document.getElementById('fs-nav');
+        var tools = document.querySelector('.faqtools');
+        var navH = nav ? nav.offsetHeight : 0;
+        if (nav) document.documentElement.style.setProperty('--nav-height', navH + 'px');
+        var toolsH = tools && getComputedStyle(tools).position === 'sticky' ? tools.offsetHeight : 0;
+        document.documentElement.style.setProperty('--sticky-chrome', (navH + toolsH) + 'px');
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', sync);
+      } else {
+        sync();
+      }
+      window.addEventListener('load', sync);
+      window.addEventListener('resize', sync);
+    })();
+  </script>
+
+  <script type="module" src="/assets/journey.js?v=6"></script>
+  <script src="/fsnav.js?v=841" defer></script>
+</body>
+</html>
