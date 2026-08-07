@@ -6,7 +6,7 @@
 - Working branch: `codex/full-customer-path`
 - Latest pushed commit: `c7d2575`
 - Live Hostinger site: unchanged
-- Important: merging or pushing to `main` triggers the Hostinger deployment workflow. Do not merge until the full browser suite passes and NaNa Frimpomaa approves the final preview.
+- Important: merging or pushing to `main` triggers the Hostinger deployment workflow. Do not merge until the full browser suite passes and Nana Frimpongmaa approves the final preview.
 
 ## What is complete
 
@@ -117,7 +117,7 @@ Local browser launch may fail on this Mac because Chrome aborts inside the Codex
 
 ## Brand and copy requirements
 
-- Always write the full name `NaNa Frimpomaa`.
+- Always write the full name `Nana Frimpongmaa`.
 - No emojis.
 - No em dashes in customer-facing copy.
 - Do not name the AI vendor in customer-facing copy.
@@ -135,5 +135,5 @@ Do not push or merge to `main` until:
 1. Tasks 4 through 8 are complete.
 2. The full GitHub browser suite is green.
 3. Desktop and mobile screenshots have been reviewed.
-4. NaNa Frimpomaa gives final approval.
+4. Nana Frimpongmaa gives final approval.
 

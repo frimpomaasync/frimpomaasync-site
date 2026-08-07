@@ -24,7 +24,7 @@
 - Frame outcomes first and keep the approved mockup's restrained product-story direction.
 - Run the copywriting and both humanizer passes on every human-facing page, metadata field, form message, and `llms.txt`.
 - The ADHD material in the shared conversation guides assistant replies only and must not appear on the website.
-- A push to `main` deploys the live site, so implementation and review stay on `codex/full-customer-path` until NaNa Frimpomaa explicitly approves publishing.
+- A push to `main` deploys the live site, so implementation and review stay on `codex/full-customer-path` until Nana Frimpongmaa explicitly approves publishing.
 
 ---
 
@@ -309,7 +309,7 @@ Create `<form name="siesie-application" data-qual-form>` with required name, ema
 
 - [ ] **Step 4: Update the confirmation and shared navigation**
 
-Keep the shared navigation's `Book a call` action on the current Google booking URL and keep the live SynKasa demo available. Make `/fit-thanks` `noindex`, read the `source` query parameter, explain what NaNa Frimpomaa reviews, and provide the existing 15-minute booking link.
+Keep the shared navigation's `Book a call` action on the current Google booking URL and keep the live SynKasa demo available. Make `/fit-thanks` `noindex`, read the `source` query parameter, explain what Nana Frimpongmaa reviews, and provide the existing 15-minute booking link.
 
 Bind both forms to this behavior: call `reportValidity()`, disable the submit button during delivery, send `FormData` with `Accept: application/json`, redirect to `data-success` on a successful response, and restore the button after a failure. The inline failure message links to `hello@frimpomaasync.com` and the current booking URL. A `noscript` note provides the same email and booking fallback.
 

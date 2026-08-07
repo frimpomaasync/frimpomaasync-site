@@ -100,19 +100,19 @@ const fitConfirmations = {
     source: "synkasa",
     heading: "Your inquiry path is ready for review.",
     body:
-      "NaNa Frimpomaa will review how inquiries arrive, where they wait, and what you want handled before the 15-minute call.",
+      "Nana Frimpongmaa will review how inquiries arrive, where they wait, and what you want handled before the 15-minute call.",
   },
   siesie: {
     source: "siesie",
     heading: "Your back office is ready for review.",
     body:
-      "NaNa Frimpomaa will review the roles that still depend on you and the process causing the most interruptions before the 15-minute call.",
+      "Nana Frimpongmaa will review the roles that still depend on you and the process causing the most interruptions before the 15-minute call.",
   },
   fit: {
     source: "fit",
     heading: "Your answers are ready for review.",
     body:
-      "NaNa Frimpomaa will review the form before the 15-minute call, so the conversation can start with the real bottleneck.",
+      "Nana Frimpongmaa will review the form before the 15-minute call, so the conversation can start with the real bottleneck.",
   },
 };
 

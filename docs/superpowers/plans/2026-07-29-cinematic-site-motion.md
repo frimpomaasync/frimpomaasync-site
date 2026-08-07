@@ -28,7 +28,7 @@
 - Reduced-motion mode removes parallax and scaling, keeps the complete content visible, and preserves every interaction.
 - The leak finder, calculator, audit, forms, navigation, chat, copy action, redirects, structured data, and privacy behavior must keep working.
 - Run copywriting and both humanizer passes on every changed public string, metadata field, form message, and `llms.txt`.
-- Do not update the live branch until the complete test suite passes and NaNa Frimpomaa approves the verified deployment candidate.
+- Do not update the live branch until the complete test suite passes and Nana Frimpongmaa approves the verified deployment candidate.
 
 ---
 
@@ -989,7 +989,7 @@ Capture Home, SynKasa, and Siesie at:
 
 Capture the Siesie hero with all five roles visible and one reduced-motion homepage state. Save the files under `work/site-review/` and inspect each screenshot for clipping, low contrast, broken media, overlap, or accidental retired content.
 
-- [ ] **Step 3: Present the verified candidate to NaNa Frimpomaa**
+- [ ] **Step 3: Present the verified candidate to Nana Frimpongmaa**
 
 Report:
 
@@ -1006,7 +1006,7 @@ Stop before updating the live branch.
 
 - [ ] **Step 4: Publish only after explicit approval**
 
-After NaNa Frimpomaa approves the verified candidate:
+After Nana Frimpongmaa approves the verified candidate:
 
 ```bash
 git fetch origin

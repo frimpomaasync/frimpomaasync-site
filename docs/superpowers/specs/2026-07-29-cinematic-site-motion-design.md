@@ -7,7 +7,7 @@ Selected direction: A, Cinematic Working Landscape
 
 ## 1. Objective
 
-Give the full customer journey the visual confidence and section movement NaNa Frimpomaa liked on SolidRoad while keeping frimpomaasync.com recognizable, fast, accessible, and accurate.
+Give the full customer journey the visual confidence and section movement Nana Frimpongmaa liked on SolidRoad while keeping frimpomaasync.com recognizable, fast, accessible, and accurate.
 
 This is an adaptation, not a copy. The site will use its own photography, offer structure, type, colors, tools, and customer path.
 
@@ -354,6 +354,6 @@ Required review checks:
 - Two-stage humanizer pass on all customer-facing copy and metadata
 - UI and responsive review
 - Motion review against the approved timing and reduced-motion rules
-- Final visual screenshots for NaNa Frimpomaa
+- Final visual screenshots for Nana Frimpongmaa
 
 Passing tests creates a deployment candidate. Publishing remains a separate final approval because updating the live branch triggers the public site.

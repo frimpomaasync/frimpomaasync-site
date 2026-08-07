@@ -14,7 +14,7 @@ The site must:
 - Preserve the current visual system, pricing, guarantee, product names, and public URLs.
 - Give visitors something useful before asking them to book or apply.
 - Use only verified proof and visitor-provided numbers.
-- Keep all ADHD guidance out of the website. That guidance applies only to how Codex replies to NaNa Frimpomaa.
+- Keep all ADHD guidance out of the website. That guidance applies only to how Codex replies to Nana Frimpongmaa.
 
 ## 2. Success criteria
 
@@ -178,7 +178,7 @@ Optional field:
 
 - Website or social page
 
-On successful submission, send the visitor to `/fit-thanks` with a SynKasa source marker. The confirmation page explains what NaNa Frimpomaa will review and offers the confirmed booking link.
+On successful submission, send the visitor to `/fit-thanks` with a SynKasa source marker. The confirmation page explains what Nana Frimpongmaa will review and offers the confirmed booking link.
 
 ### 6.4 Siesie
 
@@ -399,5 +399,5 @@ Files expected to be added:
 - No new product or renamed offer.
 - No fabricated customer proof.
 - No new analytics, tracking cookies, advertising pixels, remote fonts, or customer accounts.
-- No self-serve payment links until NaNa Frimpomaa supplies confirmed replacement links.
+- No self-serve payment links until Nana Frimpongmaa supplies confirmed replacement links.
 - No deletion of existing public pages or free tools.

@@ -107,6 +107,7 @@
        their own key, or the fallback would light "Offer" while a buyer is
        halfway through the form. */
     if (p.indexOf("/soft-appeals-start") === 0) return "soft-start";
+    if (p.indexOf("/soft-appeals-book") === 0) return "soft-book";
     if (p.indexOf("/soft-appeals-contact") === 0) return "soft-contact";
     return "soft-offer";
   }
@@ -297,7 +298,7 @@
     foot.innerHTML =
       '<div style="max-width:1180px;margin:0 auto;padding:56px 24px 96px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;align-items:start">' +
       '<div><div style="font-family:' + SERIF + ';font-size:19px;color:#F2F4F9">frimpomaasync</div>' +
-      '<div style="margin-top:10px;font-size:13.5px;line-height:1.6">Built, wired, and cared for by NaNa Frimpomaa.</div></div>' +
+      '<div style="margin-top:10px;font-size:13.5px;line-height:1.6">Built, wired, and cared for by Nana Frimpongmaa.</div></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/synkasa">SynKasa</a><a href="/siesie">Siesie</a><a href="/soft-appeals">Soft Appeals</a><a href="/portfolio">Proof</a></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/free">Free</a><a href="/som">Som</a><a href="/blog/">Blog</a><a href="/fit">Find your fit</a></div>' +
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/operations-map">Operations Map</a><a href="/method">The method</a><a href="/results">Evidence</a><a href="/comparison">Compare</a><a href="/about">About</a><a href="/data">Your data</a></div>' +
