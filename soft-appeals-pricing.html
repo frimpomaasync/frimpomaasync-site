@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pricing &amp; Engagement | Soft Appeals</title>
+  <meta name="description" content="Soft Appeals pricing, the complimentary 20-denial review, recovery-aligned fees, how recovered reimbursement is verified, and which claims require separate engagement terms.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-pricing">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=25">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#101426">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="Pricing and engagement · Soft Appeals">
+  <meta property="og:description" content="The complimentary 20-denial review is $0. For eligible commercial claims, 25% of verified recovered reimbursement attributable to the engagement. The payer pays your organization directly.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-pricing">
+  <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    /* Pricing cards and the reconciliation sample. Scoped to this page. */
+    .pcards { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 16px; }
+    .pcard { padding: 28px 24px; border: 1px solid var(--line); border-radius: 20px; background: var(--paper); }
+    .pcard.lead { border-color: rgba(194, 80, 28, .32); background: rgba(194, 80, 28, .045); }
+    .pcard > .k {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .pcard.lead > .k { color: #B4460F; }
+    .pcard .big {
+      margin: 12px 0 4px;
+      font-family: var(--serif); font-weight: 400;
+      font-size: clamp(40px, 6vw, 56px); line-height: 1; letter-spacing: -.02em;
+    }
+    .pcard.lead .big { color: var(--copper, #C2501C); }
+    .pcard .sub { font-size: 13px; color: var(--ink-faint); margin-bottom: 12px; }
+    .pcard p { margin: 0; font-size: 14.5px; line-height: 1.58; color: var(--ink-soft); }
+    /* The reconciliation sample. */
+    .recon {
+      max-width: 500px; margin: 0 auto;
+      border: 1px solid var(--line); border-radius: 18px; background: var(--paper);
+      overflow: hidden; box-shadow: 0 20px 46px rgba(16, 20, 38, .06);
+    }
+    .recon-top {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap;
+      padding: 16px 22px; border-bottom: 1px solid var(--line);
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .recon-top b { color: var(--copper, #C2501C); font-weight: 400; }
+    .recon-in { padding: 22px; }
+    .rrow {
+      display: flex; align-items: baseline; justify-content: space-between; gap: 18px;
+      padding: 10px 0; border-bottom: 1px solid var(--line);
+      font-size: 14.5px;
+    }
+    .rrow:last-child { border-bottom: 0; }
+    .rrow .l { color: var(--ink-soft); }
+    .rrow .v { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .rrow.total { margin-top: 6px; padding-top: 14px; border-top: 2px solid var(--ink); border-bottom: 0; }
+    .rrow.total .l { color: var(--ink); }
+    .rrow.total .v { font-family: var(--serif); font-size: 26px; color: var(--copper, #C2501C); }
+    .rrow .tag {
+      padding: 3px 10px; border-radius: 100px; background: rgba(16, 20, 38, .06);
+      font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10.5px; letter-spacing: .06em;
+      color: var(--ink-soft);
+    }
+    .recon-foot {
+      padding: 14px 22px; border-top: 1px solid var(--line); background: var(--paper-soft, #F8F8F9);
+      font-size: 12px; line-height: 1.6; color: var(--ink-faint);
+    }
+    /* Two-column include / does not include. */
+    .incl { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .inc { padding: 24px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+    .inc.no { background: var(--paper-soft, #F8F8F9); }
+    .inc > .k {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .inc.yes > .k { color: #B4460F; }
+    .inc h3 { margin: 10px 0 14px; font-family: var(--serif); font-weight: 400; font-size: clamp(19px, 2.2vw, 23px); line-height: 1.22; }
+    .inc ul { margin: 0; padding: 0; list-style: none; }
+    .inc li { position: relative; padding-left: 24px; margin-bottom: 9px; font-size: 14.5px; line-height: 1.55; }
+    .inc li:last-child { margin-bottom: 0; }
+    .inc.yes li::before { content: "\2713"; position: absolute; left: 0; color: var(--copper, #C2501C); }
+    .inc.no li::before { content: "\00B7"; position: absolute; left: 6px; color: var(--ink-faint); font-weight: 700; }
+    .inc.no li { color: var(--ink-soft); }
+  </style>
+</head>
+<body data-sk-sections="Hero,The numbers,How the fee works,Verified recovery,Not a recovery,Partial,Invoice,Reconciliation,The free review,Government claims,Contracts,Edge cases,Ending,Your part,Not based on,Questions,Close" data-sk-bar="The 20-denial review is complimentary · 25% of verified recovered reimbursement on eligible commercial claims." data-sk-biz="healthcare organization">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Hero">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · pricing and engagement</div>
+        <h1>Start with the claims <em>before you commit to recovery work.</em></h1>
+        <p class="hero-copy">Your first 20-denial review is complimentary. You receive a Denial Recovery Assessment showing the recommended action, financial value, priority, known time sensitivity and the information still required for the claims reviewed. If you then engage Soft Appeals for eligible recovery work, the standard commercial-claim model is recovery-aligned: 25% of verified recovered reimbursement attributable to the recovery engagement. The payer continues paying your organization directly, and Soft Appeals never takes custody of payer reimbursement.</p>
+        <div class="actions">
+          <a class="button" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Request your complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/soft-appeals-process">See the recovery process <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+        <div class="hero-trust">
+          <span>No obligation after the assessment</span>
+          <span>No monthly retainer under the standard model</span>
+          <span>Payer pays your organization directly</span>
+          <span>Invoice follows verification, not submission</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="The numbers">
+      <div class="wrap">
+        <div class="pcards" data-reveal data-stagger data-stagger-step="50">
+          <div class="pcard">
+            <div class="k">Initial 20-denial review</div>
+            <div class="big">$0</div>
+            <div class="sub">Complimentary assessment</div>
+            <p>No obligation to continue. The assessment is yours whether or not you engage Soft Appeals afterwards.</p>
+          </div>
+          <div class="pcard lead">
+            <div class="k">Eligible commercial recovery</div>
+            <div class="big">25%</div>
+            <div class="sub">Of verified recovered reimbursement</div>
+            <p>Attributable to the recovery engagement, calculated from what was actually recovered rather than what was originally denied.</p>
+          </div>
+          <div class="pcard">
+            <div class="k">No verified recovery</div>
+            <div class="big">$0</div>
+            <div class="sub">Recovery fee for that claim</div>
+            <p>Under the standard contingency model, a claim producing no qualifying verified recovery generates no recovery fee.</p>
+          </div>
+        </div>
+        <p class="small-note">Eligibility and pricing are confirmed before recovery work begins. Certain claims, payers, programs or scopes may require different terms. Individual claims from $150, with smaller claims worked in batches where the payer's process allows one submission to cover several.</p>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="How the fee works">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">How the standard recovery fee works</div>
+          <h2 class="section-title">The fee exists only after the money does.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:22px">For eligible claims accepted under the standard contingency model, Soft Appeals earns a fee only after qualifying reimbursement attributable to the recovery engagement has been verified.</p>
+          <p class="section-intro">If an eligible denied claim produces $2,000 in verified recovered reimbursement after Soft Appeals recovery work, the standard 25% recovery fee would be $500. Your organization receives the payer payment directly, and Soft Appeals then invoices the applicable fee.</p>
+          <p class="section-intro">If only part of the denied amount is recovered, the fee is calculated from the verified recovered amount rather than from the original denied amount.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Verified recovery">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Definitions that prevent arguments</div>
+          <h2 class="section-title"><span>What counts</span> as a verified recovery?</h2>
+          <p class="section-intro">For standard contingency engagements, a recovery generally means payer reimbursement received by the client after Soft Appeals begins authorized recovery work on the assigned claim, and that can reasonably be attributed to that work. Verification is based on appropriate payment or remittance documentation.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Electronic remittance advice</h3><p>The standard source, where your systems produce one.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Explanation of payment</h3><p>Where the payer issues one for the claim.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Payer remittance</h3><p>The payer's own record of what it paid and against what.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Documented claim reprocessing</h3><p>Where the payer reprocessed rather than issuing a new decision letter.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Other payment documentation</h3><p>Anything that reasonably demonstrates the reimbursement was received.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>Another agreed source</h3><p>Where your systems produce something more reliable, that can be the agreed source instead.</p></div>
+        </div>
+        <p class="small-note">The engagement terms establish the final definition used for your relationship. This page explains the model. The agreement is what defines it, and where the two differ, the agreement controls.</p>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Not a recovery">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title"><span>What is not automatically</span> treated as a Soft Appeals recovery.</h2>
+          <p class="section-intro">The recovery fee is not meant to apply simply because money appeared on an account during the engagement. These are the cases that get excluded, and naming them now is cheaper than arguing about them later.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Payment received before recovery work began</h3>
+            <p>If the payer had already paid the claim before the recovery engagement started, that is not a Soft Appeals recovery.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Unrelated reimbursement</h3>
+            <p>Payments associated with other claims or services are not included just because they arrived during the engagement.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Patient payments</h3>
+            <p>The standard model applies to qualifying payer reimbursement, not to unrelated patient payments.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Duplicate or erroneous payments</h3>
+            <p>Amounts that are clearly duplicate, mistaken or subject to immediate repayment are not treated as confirmed recovery because they briefly appeared on a remittance.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Claims outside the agreed scope</h3>
+            <p>No recovery fee is charged for unrelated claims that were never accepted into the engagement.</p></div>
+        </div>
+        <p class="small-note">Where attribution is unclear, your organization and Soft Appeals resolve it using the claim record and the applicable remittance documentation before any invoice is issued.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Partial">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Partial recovery</div>
+          <h2 class="section-title">A partial recovery is still a recovery.</h2>
+          <p class="section-intro" style="margin-top:22px">Under the standard contingency model, the fee is calculated from the qualifying amount actually recovered, not from the full amount originally denied. Soft Appeals does not charge a percentage against reimbursement that was never received.</p>
+        </div>
+        <div>
+          <div class="eyebrow">Interest and other amounts</div>
+          <h2 class="section-title">Not every payment is only reimbursement.</h2>
+          <p class="section-intro" style="margin-top:22px">Some payer payments may include interest or other amounts alongside the reimbursement. Whether those are included in the fee calculation is established in the engagement terms before recovery work begins.</p>
+          <p class="section-intro">Soft Appeals does not assume that any given claim is entitled to interest, penalties or additional payment, and does not promise them.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Invoice">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">When Soft Appeals invoices</div>
+          <h2 class="section-title"><span>An expected payment</span> is not a verified recovery.</h2>
+          <p class="section-intro">The standard recovery fee is triggered after qualifying reimbursement has been verified according to the engagement terms. Three things that do not trigger it, and one that does.</p>
+        </div>
+        <div class="card-grid" data-reveal data-stagger data-stagger-step="50">
+          <article class="path-card">
+            <span class="pill">Does not trigger a fee</span>
+            <h3>A submitted appeal.</h3>
+            <p>Sending the appeal is work, not recovery. On its own it produces no invoice.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Does not trigger a fee</span>
+            <h3>A favourable payer letter.</h3>
+            <p>A decision in your favour without verified reimbursement does not automatically trigger anything.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Triggers the fee</span>
+            <h3>Verified reimbursement.</h3>
+            <p>Once recovery is verified, Soft Appeals issues an invoice identifying the applicable claim and the recovery amount used to calculate the fee, so your team can check it against its own records.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Reconciliation">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">What an invoice looks like</div>
+          <h2 class="section-title"><span>Every fee</span> traces back to a claim and a document.</h2>
+        </div>
+        <div class="recon" data-reveal>
+          <div class="recon-top">
+            <span>Soft Appeals · recovery reconciliation</span>
+            <span><b>Sample</b> · illustrative</span>
+          </div>
+          <div class="recon-in">
+            <div class="rrow"><span class="l">Claim</span><span class="v">SA-024</span></div>
+            <div class="rrow"><span class="l">Original denied amount</span><span class="v">$3,200</span></div>
+            <div class="rrow"><span class="l">Verified reimbursement</span><span class="v">$2,400</span></div>
+            <div class="rrow"><span class="l">Verified against</span><span class="tag">Remittance advice</span></div>
+            <div class="rrow"><span class="l">Standard recovery rate</span><span class="v">25%</span></div>
+            <div class="rrow"><span class="l">Payer payment</span><span class="tag">Direct to client</span></div>
+            <div class="rrow total"><span class="l">Soft Appeals fee</span><span class="v">$600</span></div>
+          </div>
+          <div class="recon-foot">Illustrative example only. Actual engagement terms control. Note that the fee is calculated from the $2,400 actually recovered, not from the $3,200 originally denied.</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="The free review">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">The complimentary review</div>
+          <h2 class="section-title"><span>What free includes,</span> and what it does not.</h2>
+          <p class="section-intro">The initial review exists to help you decide where further recovery effort may be appropriate. It is a diagnosis, not twenty appeals at no charge, and being clear about that up front is fairer to both sides.</p>
+        </div>
+        <div class="incl" data-reveal data-stagger data-stagger-step="50">
+          <div class="inc yes">
+            <div class="k">Included in the review</div>
+            <h3>For each of the 20 claims.</h3>
+            <ul>
+              <li>Denial categorization</li>
+              <li>Denied amount</li>
+              <li>Recommended disposition</li>
+              <li>Recovery priority</li>
+              <li>Known time-sensitive items</li>
+              <li>Additional information requirements</li>
+              <li>The basis for the recommendation</li>
+              <li>Proposed next ownership</li>
+            </ul>
+          </div>
+          <div class="inc no">
+            <div class="k">Not included in the review</div>
+            <h3>These begin only under an approved engagement.</h3>
+            <ul>
+              <li>Preparation of 20 complete appeals</li>
+              <li>Payer submission</li>
+              <li>Ongoing payer follow-up</li>
+              <li>Unlimited claim research</li>
+              <li>Clinical or coding review</li>
+              <li>Legal analysis</li>
+              <li>Broad revenue-cycle consulting</li>
+              <li>Ongoing denial management</li>
+            </ul>
+          </div>
+        </div>
+        <p class="small-note">The assessment belongs to your organization whether or not you engage Soft Appeals afterwards.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Government claims">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Government-program and specially regulated claims</div>
+          <h2 class="section-title">Do not assume the standard model applies to every claim.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:22px">Medicare, Medicaid, other government-program claims, certain managed-care arrangements, and claims subject to specific contractual or legal restrictions may require different engagement terms, or may sit outside the standard contingency scope entirely.</p>
+          <p class="section-intro">Eligibility and pricing for those claims are determined before any recovery work begins on them.</p>
+          <p class="section-intro">Soft Appeals does not apply the standard contingency model to a claim where doing so would conflict with applicable law, regulation, contract, payer requirements or the agreed engagement structure. The rules governing these arrangements are fact-specific, and reducing them to a single sentence on a pricing page would be the wrong way to decide them.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Contracts">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Contracts, not only statutes</div>
+          <h2 class="section-title">Payer and client agreements can affect the engagement.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:22px">Not every restriction comes from a statute. Provider agreements, payer contracts, network terms, delegation arrangements and other contractual requirements can affect how a claim may be handled or how services may be compensated.</p>
+          <p class="section-intro">Your organization remains responsible for identifying the contractual restrictions it knows about, including anything in an existing billing-company agreement about third-party appeal work.</p>
+          <p class="section-intro">Where an applicable restriction is uncertain, Soft Appeals may ask for clarification before accepting a claim or a scope. That is a slower start and a better one.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Edge cases">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">The awkward cases</div>
+          <h2 class="section-title"><span>Three situations</span> that decide whether pricing is honest.</h2>
+          <p class="section-intro">These come up in real engagements, so they are settled here rather than negotiated when the invoice arrives.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>The claim was already in progress</h3>
+            <p>Soft Appeals may still take it, but the history is reviewed first: what has already been submitted, what was completed before the engagement, what deadlines or review rights remain, what information is still required, and whether future reimbursement can reasonably be attributed to Soft Appeals recovery work. Claims with substantial pre-existing recovery activity may need modified terms so attribution is clear before work continues.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>The claim is paid while recovery work is underway</h3>
+            <p>The payment is reviewed against the claim history and the engagement record. A payment arriving during an engagement does not by itself establish that Soft Appeals earned a fee. The recovery has to meet the attribution and verification requirements in the engagement terms, and where the source is unclear, the claim is reconciled before any invoice is issued.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>The money is later reversed or recouped</h3>
+            <p>A payer can reverse, offset or recoup a payment after issuing it. The engagement terms establish how a confirmed post-payment reversal affecting previously invoiced recovery is handled. Soft Appeals does not treat a temporary payment as permanently resolved when later payer activity changes the outcome.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Ending">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Ending an engagement</div>
+          <h2 class="section-title">Nobody should be guessing who owns an active claim.</h2>
+          <p class="section-intro" style="margin-top:22px">You may stop assigning new claims to Soft Appeals, subject to the engagement terms. The service agreement establishes how claims already in progress are handled: work already completed, pending payer submissions, claims awaiting a decision, future reimbursement attributable to work completed before termination, outstanding invoices, access termination, and the return, destruction or retention of information.</p>
+        </div>
+        <div>
+          <div class="eyebrow">No obligation from the assessment</div>
+          <h2 class="section-title">The review does not commit you to anything.</h2>
+          <p class="section-intro" style="margin-top:22px">Receiving the complimentary Denial Recovery Assessment does not require your organization to place those claims with Soft Appeals. You decide whether to proceed.</p>
+          <p class="section-intro">If you continue, the service scope, fees, responsibilities, privacy terms, approval process and the rest of the engagement requirements are established before any paid recovery work begins.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Your part">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Client responsibilities</div>
+          <h2 class="section-title"><span>A contingency fee</span> does not mean you do nothing.</h2>
+          <p class="section-intro">Recovery work needs your organization at several points. Naming those points is part of the pricing, because a claim that stalls waiting on a document is a claim nobody gets paid for.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Accurate claim and denial information</h3><p>What you send is what the assessment is built from.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Requested supporting documentation</h3><p>Provided when asked, with the deadline it affects attached to the request.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Authorized contacts</h3><p>Who can give instructions, and who can approve a submission.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Clinical or coding input</h3><p>Where a claim needs judgment that has to come from your side.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Relevant prior appeal activity</h3><p>Disclosed up front, because it changes both the pathway and the attribution.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>Review and approval of submissions</h3><p>Nothing goes out in your name until you have approved it.</p></div>
+          <div class="rsn"><div class="n">07</div><h3>Client-side billing actions</h3><p>Corrections and resubmissions that belong inside your own workflow.</p></div>
+          <div class="rsn"><div class="n">08</div><h3>Relevant payer communications</h3><p>Anything the payer sends you directly that affects an assigned claim.</p></div>
+          <div class="rsn"><div class="n">09</div><h3>Remittance information for reconciliation</h3><p>So recovery can be verified rather than assumed.</p></div>
+          <div class="rsn"><div class="n">10</div><h3>Known contractual restrictions</h3><p>Anything in your agreements that affects how a claim can be worked or paid.</p></div>
+        </div>
+        <p class="small-note">Soft Appeals identifies the required client actions and keeps them visible in the recovery workflow, so nothing waits on a request nobody saw.</p>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Not based on">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">What the fee is not based on</div>
+          <h2 class="section-title"><span>Five things</span> the percentage is never calculated from.</h2>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>The original billed charge</h3><p>Billed charges commonly run well above the contracted rate. A fee built on them would inflate itself.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>The total denial inventory</h3><p>Reviewing claims is not the same as recovering them, and reviewing is free.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>An appeal, because it was submitted</h3><p>Effort is not an outcome. Submission produces no fee on its own.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>A predicted recovery amount</h3><p>No estimate anywhere in the assessment ever becomes an invoice.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Money that cannot be tied to the work</h3><p>If the recovery cannot reasonably be attributed to the assigned recovery work, it is not a Soft Appeals recovery.</p></div>
+        </div>
+        <p class="small-note">The fee is based on verified qualifying recovery under the applicable engagement terms, and nothing else.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Questions">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Pricing FAQ</div>
+          <h2 class="section-title"><span>What people ask</span> before signing anything.</h2>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">Q1</div><h3>Is the initial review really complimentary?</h3>
+            <p>Yes. There is no charge for the initial 20-denial assessment, and your organization keeps the assessment whether or not it continues.</p></div>
+          <div class="rsn"><div class="n">Q2</div><h3>Is there a setup fee?</h3>
+            <p>Not for the standard complimentary assessment. If a future engagement needs a materially different onboarding or service scope, any separate charge is disclosed before work begins.</p></div>
+          <div class="rsn"><div class="n">Q3</div><h3>Do you charge monthly?</h3>
+            <p>Not under the standard recovery-aligned model. The engagement is not a subscription for keeping claims in a queue. Other or custom services would be priced separately and agreed separately.</p></div>
+          <div class="rsn"><div class="n">Q4</div><h3>Do we pay if an appeal loses?</h3>
+            <p>Under the standard contingency model, a claim that produces no qualifying verified recovery generates no recovery fee.</p></div>
+          <div class="rsn"><div class="n">Q5</div><h3>Who receives the payer money?</h3>
+            <p>Your organization. Soft Appeals does not need reimbursement redirected to it under the standard workflow, and does not take custody of payer funds.</p></div>
+          <div class="rsn"><div class="n">Q6</div><h3>Can we choose which claims you work?</h3>
+            <p>Yes. The assessment helps determine which claims warrant action, and the recovery scope is agreed before any paid work begins.</p></div>
+          <div class="rsn"><div class="n">Q7</div><h3>Is every commercial claim automatically eligible for 25% pricing?</h3>
+            <p>No. Eligibility can depend on the payer, the plan, contractual restrictions, previous work on the claim, the claim type, legal requirements, the scope and other circumstances.</p></div>
+          <div class="rsn"><div class="n">Q8</div><h3>What about Medicare or Medicaid?</h3>
+            <p>Do not assume those claims fall under the standard commercial contingency model. Government-program claims are reviewed separately for appropriate scope and pricing before any work begins.</p></div>
+          <div class="rsn"><div class="n">Q9</div><h3>What if our payer pays while you are reviewing the claim?</h3>
+            <p>The claim is reconciled to determine whether the payment qualifies as a Soft Appeals recovery under the engagement terms. A payment arriving during the engagement does not automatically create a fee.</p></div>
+          <div class="rsn"><div class="n">Q10</div><h3>Can we see how the fee was calculated?</h3>
+            <p>Yes. Recovery is reconciled against the applicable remittance or payment documentation, and the invoice identifies the recovery amount used for the calculation.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <div class="eyebrow">Start with the assessment</div>
+        <h2>You do not have to agree to recovery fees to find out what needs attention.</h2>
+        <p>Begin with 20 recent denied claims. Soft Appeals returns an assessment showing recommended actions, priority, denied financial value, known time-sensitive items and the information still required. Review the findings first. If you then want Soft Appeals to pursue eligible claims, the recovery scope and pricing are established before any paid work begins. No obligation to continue after the initial assessment.</p>
+        <div class="actions">
+          <a class="button secondary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Request your complimentary review →</a>
+          <a class="button secondary" href="/soft-appeals-audit">View a sample assessment →</a>
+          <a class="button secondary" href="/soft-appeals-process">See how recovery works →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module" src="/assets/journey.js?v=6"></script>
+  <script src="/fsnav.js?v=839" defer></script>
+</body>
+</html>

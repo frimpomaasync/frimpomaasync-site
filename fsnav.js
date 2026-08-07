@@ -95,6 +95,7 @@
     if (p.indexOf("/soft-appeals-data-security") === 0) return "soft-data";
     if (p.indexOf("/soft-appeals-about") === 0) return "soft-about";
     if (p.indexOf("/soft-appeals-process") === 0) return "soft-process";
+    if (p.indexOf("/soft-appeals-pricing") === 0) return "soft-pricing";
     return "soft-offer";
   }
   function navLink(label, href, key, on) {
@@ -125,6 +126,7 @@
     var softNav =
       navLink("The offer", "/soft-appeals", "soft-offer", onSoft) +
       navLink("The process", "/soft-appeals-process", "soft-process", onSoft) +
+      navLink("Pricing", "/soft-appeals-pricing", "soft-pricing", onSoft) +
       navLink("The report", "/soft-appeals-audit", "soft-audit", onSoft) +
       navLink("Security", "/soft-appeals-data-security", "soft-data", onSoft) +
       navLink("About", "/soft-appeals-about", "soft-about", onSoft) +
