@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Data &amp; Security Practices | Soft Appeals</title>
+  <meta name="description" content="How Soft Appeals approaches PHI, Business Associate Agreements, access controls, secure claim intake, technology use, incident response and data disposition during denied-claim recovery engagements.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-data-security">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=25">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#101426">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="Data &amp; Security Practices · Soft Appeals">
+  <meta property="og:description" content="Agreement before access. Minimum necessary information. Defined systems and responsibilities. The whole process, written down before any claim information is exchanged.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-data-security">
+  <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    /* The data-flow diagram and the need/not-need lists. Scoped to this page,
+       system fonts only, no remote requests. */
+    .flow { max-width: 640px; margin: 0 auto; }
+    .flow-step {
+      position: relative; padding: 16px 20px;
+      border: 1px solid var(--line); border-radius: 14px; background: var(--paper);
+    }
+    .flow-step .k {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .flow-step p { margin: 5px 0 0; font-size: 14.5px; line-height: 1.5; }
+    .flow-step.start { border-color: rgba(16, 20, 38, .22); }
+    .flow-step.gate { border-color: rgba(194, 80, 28, .34); background: rgba(194, 80, 28, .05); }
+    .flow-step.gate .k { color: #B4460F; }
+    .flow-arrow {
+      display: flex; align-items: center; gap: 10px;
+      padding: 9px 0 9px 22px;
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10.5px; letter-spacing: .1em; color: var(--ink-faint);
+    }
+    .flow-arrow::before {
+      content: ""; width: 1px; height: 22px; background: rgba(16, 20, 38, .2); flex: none;
+    }
+    .flow-branch {
+      margin: 9px 0 9px 22px; padding: 12px 16px;
+      border: 1px dashed rgba(16, 20, 38, .22); border-radius: 12px;
+      font-size: 13.5px; line-height: 1.55; color: var(--ink-soft);
+    }
+    .flow-branch b { color: var(--ink); font-weight: 400; }
+    /* What we may need, what we do not. */
+    .needs { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+    .need { padding: 24px; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+    .need.no { background: var(--paper-soft, #F8F8F9); }
+    .need > .k {
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint);
+    }
+    .need.yes > .k { color: #B4460F; }
+    .need h3 { margin: 10px 0 14px; font-family: var(--serif); font-weight: 400; font-size: clamp(19px, 2.2vw, 23px); line-height: 1.22; }
+    .need ul { margin: 0; padding: 0; list-style: none; }
+    .need li { position: relative; padding: 0 0 0 24px; margin-bottom: 9px; font-size: 14.5px; line-height: 1.55; }
+    .need li:last-child { margin-bottom: 0; }
+    .need.yes li::before { content: "\2713"; position: absolute; left: 0; color: var(--copper, #C2501C); }
+    .need.no li::before { content: "\00B7"; position: absolute; left: 6px; color: var(--ink-faint); font-weight: 700; }
+    .need.no li { color: var(--ink-soft); }
+    /* The closing note. */
+    .fineprint {
+      max-width: 780px; margin: 0 auto; padding: 22px 24px;
+      border: 1px solid var(--line); border-radius: 16px; background: var(--paper-soft, #F8F8F9);
+      font-size: 13px; line-height: 1.7; color: var(--ink-soft);
+    }
+    .fineprint b { color: var(--ink); font-weight: 400; }
+    .fineprint p { margin: 0 0 8px; }
+    .fineprint p:last-child { margin-bottom: 0; }
+  </style>
+</head>
+<body data-sk-sections="Hero,Principles,Minimization,What we need,Secure intake,Data flow,Access,Handling,Technology,Human review,Third parties,Safeguards,Incidents,Ending,Client control,Ask any vendor,Questions,Close" data-sk-bar="Agreement before PHI · minimum necessary information · defined systems and responsibilities." data-sk-biz="healthcare organization">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Hero">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · data and security practices</div>
+        <h1>Before you send <em>a single claim.</em></h1>
+        <p class="hero-copy">Denied-claim recovery can require access to protected health information. Privacy, access and data handling should be understood before the work begins, not after information has already been exchanged. Soft Appeals uses a defined process for receiving, accessing, using, sharing, retaining and disposing of the information associated with a client engagement. This page sets out that process.</p>
+        <div class="actions">
+          <a class="button" href="#principles">Start with the security process <span class="button-arrow" aria-hidden="true">&#8595;</span></a>
+          <a class="button secondary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Ask a security question <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+        <div class="hero-trust">
+          <span>BAA before PHI</span>
+          <span>Minimum-necessary approach</span>
+          <span>No routine EHR access for the initial review</span>
+          <span>Defined technology workflow</span>
+          <span>Client approval before submission</span>
+          <span>Data-disposition process</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="principles" data-screen-label="Principles">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">The operating principles</div>
+          <h2 class="section-title"><span>Three principles</span> guide every engagement.</h2>
+        </div>
+        <div class="card-grid" data-reveal data-stagger data-stagger-step="50">
+          <article class="path-card">
+            <span class="pill">01</span>
+            <h3>Agreement before PHI.</h3>
+            <p>Where Soft Appeals will act as a business associate, the applicable Business Associate Agreement is executed before protected health information is exchanged for the engagement. The agreement defines permitted uses and disclosures of PHI, applicable safeguards, incident-reporting responsibilities, subcontractor requirements, termination provisions and the other responsibilities between the parties.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">02</span>
+            <h3>Minimum necessary information.</h3>
+            <p>Soft Appeals does not request broad access simply because information may be available. Requests are limited to what is reasonably needed for the assigned denial-recovery work. The complimentary denial review starts from claim and denial information you provide securely, rather than routine access to your EHR.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">03</span>
+            <h3>Defined systems and responsibilities.</h3>
+            <p>Before work begins, the engagement establishes how information will be exchanged, who is authorized to access it, what systems may be used, and what happens to the information when the engagement ends. Security should not rest on assumptions, so the process is documented before PHI is exchanged.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Minimization">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Data minimization</div>
+          <h2 class="section-title">Start with what is needed, not everything available.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:22px">A denial may sit inside a large patient record. The recovery task may need only part of it. Soft Appeals limits information requests to what the work being performed actually requires.</p>
+          <p class="section-intro">For an initial review, that may include payer and plan information relevant to the denial, claim and remittance information, the denial reason or payer correspondence, the amount denied, service information relevant to the claim, submission or acknowledgement information where relevant, and the documentation needed to determine or support the appropriate recovery pathway.</p>
+          <p class="section-intro">Anything further is requested when a specific claim or recovery step needs it, with the reason attached to the request.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="What we need">
+      <div class="wrap">
+        <div class="section-head">
+          <h2 class="section-title"><span>What we may need,</span> and what we do not ask for.</h2>
+          <p class="section-intro">The second list matters as much as the first. A vendor that wants more than the work requires is telling you something about how it handles patient information.</p>
+        </div>
+        <div class="needs" data-reveal data-stagger data-stagger-step="50">
+          <div class="need yes">
+            <div class="k">What we may need</div>
+            <h3>Claim-specific information.</h3>
+            <ul>
+              <li>Denial and remittance information</li>
+              <li>Claim information</li>
+              <li>Payer correspondence</li>
+              <li>Submission acknowledgements</li>
+              <li>Relevant authorization information</li>
+              <li>Relevant supporting documentation</li>
+              <li>Other claim-specific evidence where a recovery step requires it</li>
+            </ul>
+          </div>
+          <div class="need no">
+            <div class="k">What we do not ask for by default</div>
+            <h3>Broad access to your organization.</h3>
+            <ul>
+              <li>Full EHR access</li>
+              <li>Your entire patient database</li>
+              <li>Unrelated clinical records</li>
+              <li>Shared staff passwords</li>
+              <li>Broad administrative access</li>
+              <li>PHI sent through casual communication channels</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Secure intake">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Secure intake</div>
+          <h2 class="section-title">You know where information is going before it is sent.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:22px">Once the applicable agreements are in place, claim information is exchanged through the process established for the engagement. Clients should not send PHI through unapproved channels.</p>
+          <p class="section-intro">If information arrives through an unintended channel anyway, Soft Appeals follows the applicable internal handling and incident procedures rather than treating the transmission as routine.</p>
+          <p class="section-intro">Where it is practical and appropriate, Soft Appeals can work with the secure workflow your organization already uses, instead of duplicating information into another system. Any system access needed beyond the initial review is discussed and authorized separately.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Data flow">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Where information goes</div>
+          <h2 class="section-title"><span>The whole path,</span> start to disposition.</h2>
+          <p class="section-intro">One diagram instead of another paragraph about security. Two points on this path belong to your organization rather than to us, and both are marked.</p>
+        </div>
+        <div class="flow" data-reveal>
+          <div class="flow-step start">
+            <div class="k">Your organization</div>
+            <p>You decide which claims are in scope and what information is provided.</p>
+          </div>
+          <div class="flow-arrow">Approved secure process</div>
+          <div class="flow-step">
+            <div class="k">Secure claim intake</div>
+            <p>Claim and denial information arrives through the method agreed for the engagement.</p>
+          </div>
+          <div class="flow-arrow">After the BAA is executed</div>
+          <div class="flow-step">
+            <div class="k">Minimum-necessary review</div>
+            <p>Each claim is evaluated on the information available, and nothing broader is requested.</p>
+          </div>
+          <div class="flow-branch">If more is needed, the specific document is requested from your team, with the reason and the deadline it affects. <b>Access is not widened to avoid asking.</b></div>
+          <div class="flow-arrow">For claims selected for appeal</div>
+          <div class="flow-step">
+            <div class="k">Appeal preparation</div>
+            <p>Payer requirements are researched and the appeal package is assembled from the available documentation.</p>
+          </div>
+          <div class="flow-arrow">Nothing proceeds without this step</div>
+          <div class="flow-step gate">
+            <div class="k">Client review and approval</div>
+            <p>Your organization approves the materials before anything is submitted in your name.</p>
+          </div>
+          <div class="flow-arrow">Through the appropriate channel</div>
+          <div class="flow-step">
+            <div class="k">Payer submission</div>
+            <p>Submission dates and the available delivery or acknowledgement evidence are recorded.</p>
+          </div>
+          <div class="flow-arrow">Until the claim resolves</div>
+          <div class="flow-step">
+            <div class="k">Tracking and payer response</div>
+            <p>Responses, requests for more information, deadlines and next actions are tracked against the claim.</p>
+          </div>
+          <div class="flow-arrow">Payer pays your organization directly</div>
+          <div class="flow-step">
+            <div class="k">Resolution and reconciliation</div>
+            <p>The outcome is reconciled against the applicable remittance documentation.</p>
+          </div>
+          <div class="flow-arrow">At the end of the engagement</div>
+          <div class="flow-step gate">
+            <div class="k">Return, destroy or retain under the agreement</div>
+            <p>Where required and feasible, PHI is returned or destroyed. Access that is no longer needed is removed.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Access">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Access</div>
+          <h2 class="section-title"><span>Access should be limited,</span> intentional and removable.</h2>
+          <p class="section-intro">Access to client information is limited to the people and services required to perform the agreed work. Where credentials or system access are necessary, these controls apply.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Authorization comes first</h3>
+            <p>Authorization is established before access is granted, not alongside it.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Scoped to the purpose</h3>
+            <p>Access is limited to the agreed purpose rather than to whatever the credential happens to permit.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Individual credentials</h3>
+            <p>Individual credentials are used where the system supports them, so activity is attributable to a person.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Authentication controls</h3>
+            <p>Available authentication and access controls are enabled where they are supported and appropriate.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>No shared logins</h3>
+            <p>Credentials are not shared between unrelated users, in either direction.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>Removal when finished</h3>
+            <p>Access that is no longer required is removed rather than left dormant.</p></div>
+        </div>
+        <p class="small-note">Soft Appeals does not require routine EHR access for the complimentary denial review. If additional access later becomes necessary, the scope and the purpose are discussed with you before anything is granted.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Handling">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Information handling</div>
+          <h2 class="section-title">Patient identifiers stay out of places that do not need them.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:22px">Soft Appeals avoids putting unnecessary patient identifiers into operational areas that do not require them. Where it is practical, internal references use claim identifiers or other limited references instead of patient names.</p>
+          <p class="section-intro">PHI does not belong in ordinary task titles, calendar entries, casual text messages, public collaboration spaces, or any other channel that has not been approved for the engagement.</p>
+          <p class="section-intro">The goal is straightforward: fewer unnecessary copies, less unnecessary access, less unnecessary exposure.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Technology">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Technology and AI</div>
+          <h2 class="section-title"><span>Technology supports the work.</span> It does not replace responsibility.</h2>
+          <p class="section-intro">Soft Appeals may use technology to assist with administrative tasks: organizing claim information, researching payer requirements, managing workflow, identifying items needing follow-up, preparing draft appeal materials, and tracking recovery activity.</p>
+        </div>
+        <div class="card-grid" data-reveal data-stagger data-stagger-step="50">
+          <article class="path-card">
+            <span class="pill">What it does not do</span>
+            <h3>Decide, code, or submit.</h3>
+            <p>Technology does not independently authorize an appeal, make a clinical determination, change coding, or submit a claim in your organization's name. Those sit with people, inside the approval process agreed for the engagement.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">When PHI is involved</span>
+            <h3>Approved services only.</h3>
+            <p>PHI is not intentionally entered into consumer-facing AI accounts or general-purpose tools that have not been approved for the engagement. Where a third-party service creates, receives, maintains or transmits PHI as part of the workflow, it is evaluated for the role it performs and handled under the contractual and security requirements that apply to that relationship. Where a Business Associate Agreement or equivalent downstream protection is required, that is addressed before the service is used for PHI.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Model training</span>
+            <h3>Not used to train public models.</h3>
+            <p>Soft Appeals does not intentionally use client PHI to train public or general-purpose AI models. Technology use involving client information stays subject to the restrictions established for the engagement.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Human review">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Human review</div>
+          <h2 class="section-title">A tool does not make the final call.</h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:22px">Technology can assist with research and preparation. Human responsibility stays in the workflow. Before an appeal is presented for submission, the available claim information, the denial basis, the supporting documentation, the payer requirements and the proposed appeal materials are reviewed.</p>
+          <p class="section-intro">Nothing is submitted in your name outside the approval and authorization process established for the engagement.</p>
+          <p class="section-intro">Anything requiring clinical, coding, legal or other professional judgment outside the Soft Appeals scope is returned or escalated to the appropriate person at your organization rather than decided here.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Third parties">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Third-party services</div>
+          <h2 class="section-title"><span>A vendor's vendor</span> matters too.</h2>
+          <p class="section-intro">Some technology and communication services are necessary to support denial-recovery work. When a third party will handle PHI on behalf of Soft Appeals, its role is evaluated before that workflow is used, and the appropriate contractual restrictions and safeguards are required where they apply.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>What function does it perform?</h3>
+            <p>Ask what the service is actually for in the workflow, rather than accepting a product name.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Is PHI involved?</h3>
+            <p>Some services in a workflow never touch patient information. The ones that do are a different conversation.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Where is information processed?</h3>
+            <p>Where the information is processed or maintained, and under whose control.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>What contractual protections apply?</h3>
+            <p>What is in writing between Soft Appeals and that service for the information it handles.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Are subcontractors involved?</h3>
+            <p>Whether the service passes information to anyone further down the chain.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>What happens at the end?</h3>
+            <p>How information is handled when that service relationship ends.</p></div>
+        </div>
+        <p class="small-note">Soft Appeals can provide information about the relevant service providers and data-handling relationships during your due diligence. You do not have to become a client to ask.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Safeguards">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Administrative, technical and operational safeguards</div>
+          <h2 class="section-title"><span>Security is more</span> than a password.</h2>
+          <p class="section-intro">The information-handling process is built around safeguards appropriate to the information and the work involved. Depending on the system and the workflow, those may include measures such as these.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Access controls</h3>
+            <p>Limit access to authorized users and approved functions.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Authentication</h3>
+            <p>Individual credentials and additional authentication controls where they are supported and appropriate.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Secure transmission</h3>
+            <p>Designated methods for exchanging information, rather than casual or unapproved channels.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Information minimization</h3>
+            <p>Limit the PHI requested, copied and retained to what the engagement reasonably needs.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Access management</h3>
+            <p>Add, change and remove access as roles and engagement requirements change.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>Documented procedures</h3>
+            <p>Written processes for information handling, incidents and termination, rather than informal practice.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Incidents">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">If something goes wrong</div>
+          <h2 class="section-title"><span>Security incidents</span> require a defined response.</h2>
+          <p class="section-intro">No responsible organization should promise that an incident can never occur. The question worth asking is what happens if one does. If Soft Appeals becomes aware of an impermissible use or disclosure, a suspected compromise, a security incident or another event involving client information, the event is evaluated and handled under the applicable Business Associate Agreement, internal procedures and legal requirements.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Contain</h3>
+            <p>Stop the issue from continuing before anything else happens.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Preserve</h3>
+            <p>Keep the information needed to understand the event, rather than overwriting it.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Determine what happened</h3>
+            <p>Establish the facts of the event before drawing conclusions from them.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Identify what was involved</h3>
+            <p>Which information and which individuals were potentially affected.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Assess the extent</h3>
+            <p>How far the event reached, on the evidence available.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>Mitigate</h3>
+            <p>Reduce further exposure where it can be reduced.</p></div>
+          <div class="rsn"><div class="n">07</div><h3>Document</h3>
+            <p>Record the response, so it can be reviewed rather than recalled.</p></div>
+          <div class="rsn"><div class="n">08</div><h3>Inform and correct</h3>
+            <p>Provide the required information to the client, and put corrective action in place where it is appropriate.</p></div>
+        </div>
+        <p class="small-note">The applicable agreement establishes the notification responsibilities between Soft Appeals and the client, including any reporting timeframe. That belongs in the agreement your attorney reads, not in a sentence on a marketing page.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Ending">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">When the engagement ends</div>
+          <h2 class="section-title">Access does not stay open because the work is finished.</h2>
+          <p class="section-intro" style="margin-top:22px">When information or system access is no longer required, Soft Appeals follows the termination and data-disposition requirements in the applicable agreement. Where it is required and feasible, PHI is returned or destroyed. Where return or destruction is not feasible, the protections and limitations the agreement requires continue to apply for as long as the information is retained. Client-issued access that is no longer necessary should be revoked.</p>
+        </div>
+        <div>
+          <div class="eyebrow">Records that may remain</div>
+          <h2 class="section-title">Patient data and business records are not the same thing.</h2>
+          <p class="section-intro" style="margin-top:22px">Some records need to remain for legitimate business, contractual, accounting, legal or documentation purposes. Soft Appeals separates ordinary business records from unnecessary patient-level information, and retention is addressed through the applicable agreements and internal record-management practice. Patient information is not kept for future marketing, model training or unrelated business use.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Client control">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Client control</div>
+          <h2 class="section-title"><span>Your organization</span> stays in control of the engagement.</h2>
+          <p class="section-intro">Before recovery work begins, you and Soft Appeals establish which claims are in scope, what information may be provided, which communication and transfer methods will be used, who is authorized to give instructions, what approval is required before payer submission, what system access is authorized if any, and how access and information are handled at termination.</p>
+        </div>
+        <div class="card-grid" data-reveal data-stagger data-stagger-step="50">
+          <article class="path-card">
+            <span class="pill">Before PHI moves</span>
+            <h3>Raise your own requirements.</h3>
+            <p>Your organization can bring security or workflow requirements into onboarding before any protected health information is exchanged. That is the point at which changing the process costs nothing.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Special categories</span>
+            <h3>Some records need more.</h3>
+            <p>Certain categories of health information carry requirements beyond the standard workflow. Where a claim involves information needing additional legal, contractual, privacy or security controls, Soft Appeals may request additional safeguards, change the process, or decline that claim from the standard engagement until the right requirements are in place. Scope is settled before that information is processed.</p>
+          </article>
+          <article class="path-card">
+            <span class="pill">Your documents</span>
+            <h3>Read the agreements first.</h3>
+            <p>The Business Associate Agreement and the recovery agreement come to you as documents, to read on your own time and send to your own attorney. Nothing is signed in a meeting.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Ask any vendor">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Before you hire any denial-recovery vendor</div>
+          <h2 class="section-title"><span>Ask these seven questions.</span> Ask us too.</h2>
+          <p class="section-intro">Every one of them is answered somewhere on this page. Use the list on whoever else you are considering.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Will you execute the appropriate Business Associate Agreement before PHI is exchanged?</h3>
+            <p>The answer should be clear before any claim information is sent.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>What information do you actually need?</h3>
+            <p>A vendor should be able to explain why it needs each thing it is asking for.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Where will our information be stored or processed?</h3>
+            <p>Ask about the systems involved in receiving, maintaining, transmitting and working with your information.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Who else may handle PHI?</h3>
+            <p>Ask about the subcontractors and technology providers inside the workflow, not only the company you are signing with.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>How is AI or automation used?</h3>
+            <p>If technology touches PHI, ask what information it receives, what contractual protections apply, and whether your information is used for model training.</p></div>
+          <div class="rsn"><div class="n">06</div><h3>What happens if there is a security incident?</h3>
+            <p>Ask who contacts you, what information you receive, and what the applicable agreement requires of them.</p></div>
+          <div class="rsn"><div class="n">07</div><h3>What happens to our information and access when the work ends?</h3>
+            <p>Termination should be settled before the relationship starts, not negotiated while you are leaving.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Questions">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">Security FAQ</div>
+          <h2 class="section-title"><span>What compliance and IT teams</span> ask first.</h2>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">Q1</div><h3>Do you need access to our EHR?</h3>
+            <p>Not for the initial complimentary denial review, which starts from claim and denial information you provide securely. If later recovery work needs additional system access, the purpose and the scope are discussed and authorized before anything is granted.</p></div>
+          <div class="rsn"><div class="n">Q2</div><h3>Will Soft Appeals sign a Business Associate Agreement?</h3>
+            <p>Where Soft Appeals is performing work that requires one, the applicable agreement is executed before PHI is exchanged for that engagement.</p></div>
+          <div class="rsn"><div class="n">Q3</div><h3>Can we use our own secure system?</h3>
+            <p>Where it is practical, yes. The information-transfer and access process is established during onboarding, based on your workflow and what the engagement requires.</p></div>
+          <div class="rsn"><div class="n">Q4</div><h3>Do you use AI?</h3>
+            <p>Technology assists with research, organization, workflow and preparing draft materials. It does not authorize submissions on its own and it does not replace human review. PHI is not intentionally entered into unapproved consumer AI accounts, and third-party services that handle PHI are subject to the requirements applicable to their role in the engagement.</p></div>
+          <div class="rsn"><div class="n">Q5</div><h3>Is our patient information used to train AI?</h3>
+            <p>Soft Appeals does not intentionally use client PHI to train public or general-purpose AI models.</p></div>
+          <div class="rsn"><div class="n">Q6</div><h3>Who can access our information?</h3>
+            <p>Access is limited to the individuals and services needed for the authorized work, subject to the controls and agreements that apply to the engagement.</p></div>
+          <div class="rsn"><div class="n">Q7</div><h3>What happens if additional records are needed?</h3>
+            <p>Soft Appeals identifies what is required and why. You then provide that information through the designated process, rather than granting broader access to save a step.</p></div>
+          <div class="rsn"><div class="n">Q8</div><h3>What happens when we stop working together?</h3>
+            <p>Access and information are handled under the termination provisions in the applicable agreements. Where it is required and feasible, PHI is returned or destroyed, and access that is no longer needed is removed.</p></div>
+          <div class="rsn"><div class="n">Q9</div><h3>Can our compliance or IT team ask more questions?</h3>
+            <p>Yes. Security, privacy, technology and workflow questions can be worked through during due diligence, before any PHI is exchanged. If your organization runs its own vendor-security review, bring it.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Fineprint">
+      <div class="wrap">
+        <div class="fineprint" data-reveal>
+          <p><b>About this page.</b> This page describes general Soft Appeals data and security practices.</p>
+          <p>The specific obligations for a client engagement are governed by the applicable agreements, the scope of work, client requirements and applicable law. Where an agreement establishes a different or more specific requirement, the agreement controls.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <div class="eyebrow">Due diligence</div>
+        <h2>Review the process before sending anything.</h2>
+        <p>You do not need to send patient information to start the conversation. Ask about the Business Associate Agreement, the information requirements, the technology workflow, the access model or the data-disposition process first. The point is to work out whether the relationship is appropriate before protected information enters the workflow.</p>
+        <div class="actions">
+          <a class="button secondary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Ask a data and security question →</a>
+          <a class="button secondary" href="https://calendar.app.google/DkRJFRA3G6W6d8E48">Start your denial review →</a>
+          <a class="button secondary" href="/soft-appeals">Back to Soft Appeals →</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module" src="/assets/journey.js?v=6"></script>
+  <script src="/fsnav.js?v=836" defer></script>
+</body>
+</html>

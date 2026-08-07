@@ -847,6 +847,14 @@ button.button.secondary {
   line-height: 1.65;
 }
 
+/* Stacked intros ran flush into each other, so three paragraphs in a split
+   column read as one undifferentiated block. The margin stays on the pair
+   rather than on the element, so a single intro keeps its exact position under
+   the heading and no existing page shifts. */
+.section-intro + .section-intro {
+  margin-top: 14px;
+}
+
 .card-grid,
 .free-grid {
   display: grid;

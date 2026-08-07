@@ -92,7 +92,7 @@
     var p = location.pathname.replace(/\.html$/, "").replace(/\/$/, "");
     if (p.indexOf("/soft-appeals-decoder") === 0) return "soft-decoder";
     if (p.indexOf("/soft-appeals-audit") === 0) return "soft-audit";
-    if (p.indexOf("/soft-appeals-your-data") === 0) return "soft-data";
+    if (p.indexOf("/soft-appeals-data-security") === 0) return "soft-data";
     return "soft-offer";
   }
   function navLink(label, href, key, on) {
@@ -124,7 +124,7 @@
       navLink("The offer", "/soft-appeals", "soft-offer", onSoft) +
       navLink("The decoder", "/soft-appeals-decoder", "soft-decoder", onSoft) +
       navLink("The report", "/soft-appeals-audit", "soft-audit", onSoft) +
-      navLink("Your data", "/soft-appeals-your-data", "soft-data", onSoft);
+      navLink("Security", "/soft-appeals-data-security", "soft-data", onSoft);
     var siteNav =
       navLink("SynKasa", "/synkasa", "synkasa", on) +
       navLink("Siesie", "/siesie", "siesie", on) +
@@ -285,7 +285,7 @@
       '<span style="font-size:13px;color:rgba(16,20,38,.62)">' + cfg.barText + "</span>" +
       '<div style="flex:1"></div>' +
       (isSoft
-        ? '<a data-navlink href="' + (onSoft === "soft-audit" ? "/soft-appeals-your-data" : "/soft-appeals-audit") + '" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">' + (onSoft === "soft-audit" ? "Your data" : "See the report") + "</a>"
+        ? '<a data-navlink href="' + (onSoft === "soft-audit" ? "/soft-appeals-data-security" : "/soft-appeals-audit") + '" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">' + (onSoft === "soft-audit" ? "Data and security" : "See the report") + "</a>"
         : '<button type="button" data-navlink data-fs-chat style="font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;background:none;border:0;padding:0;color:rgba(16,20,38,.58);transition:color .25s ease">See it answer</button>') +
       '<a data-navcta href="' + BOOK + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Free review" : "Book a call") + "</a>" +
       "</div>";
