@@ -13,8 +13,12 @@
      healthcare buyer evaluating a vendor should not have to book time with a
      stranger to find out whether the service fits, and a call is the wrong
      first container for claim detail anyway. Scheduling stays reachable from
-     the two "ask a question" buttons and from the confirmation step. */
-  var SOFT_CTA = "/soft-appeals-book";
+     the two "ask a question" buttons and from the confirmation step.
+     Restored 2026-08-07: this had been pointed at /soft-appeals-book while
+     /soft-appeals-start was 404ing on the server. The page is back, so the
+     form is the front door again and /soft-appeals-book is the alternative
+     offered on the intake page for anyone who would rather talk. */
+  var SOFT_CTA = "/soft-appeals-start";
   var CHAT_API = "https://synkasa-api.dawn-boat-ec20.workers.dev/chat";
   var SERIF = "'Iowan Old Style','Palatino Linotype',Palatino,'Hoefler Text',Garamond,serif";
   var MONO = "ui-monospace,'SF Mono',Menlo,Consolas,monospace";
