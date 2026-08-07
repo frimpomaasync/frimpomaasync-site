@@ -113,6 +113,7 @@
   function softKey() {
     var p = location.pathname.replace(/\.html$/, "").replace(/\/$/, "");
     if (p.indexOf("/soft-appeals-decoder") === 0) return "soft-decoder";
+    if (p.indexOf("/soft-appeals-recovery-lab") === 0) return "soft-lab";
     if (p.indexOf("/soft-appeals-faq") === 0) return "soft-faq";
     if (p.indexOf("/soft-appeals-sample-assessment") === 0) return "soft-sample";
     if (p.indexOf("/soft-appeals-data-security") === 0) return "soft-data";
@@ -161,7 +162,11 @@
        saves. The decoder is deliberately absent (her call 2026-08-07): it is a
        lead magnet reached from the offer page, not a page a buyer navigates to.
        It still gets its own highlight key so the bar shows where you are. */
+    /* The Recovery Lab joined More on 2026-08-07: it is a destination a buyer
+       may want to return to, unlike the decoder, but the five-item bar stays
+       untouched for the same 320px reason as ever. */
     var MORE_ITEMS = [
+      ["Recovery Lab", "/soft-appeals-recovery-lab", "soft-lab"],
       ["FAQ", "/soft-appeals-faq", "soft-faq"],
       ["About", "/soft-appeals-about", "soft-about"],
       ["Contact", "/soft-appeals-contact", "soft-contact"]

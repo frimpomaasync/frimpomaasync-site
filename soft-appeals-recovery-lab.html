@@ -1,0 +1,854 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Recovery Lab · Soft Appeals | frimpomaasync.com</title>
+  <meta name="description" content="An interactive denial worklist built on twenty fictional claims. Sort it, filter it, open a claim, and read why each recommendation was made. No sign-up, no patient information.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-recovery-lab">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=26">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#101426">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="The Recovery Lab · work a fictional denial portfolio">
+  <meta property="og:description" content="Twenty fictional denied claims, the real Soft Appeals method. Executive view, worklist, claim detail, and the reasoning behind every recommendation.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-recovery-lab">
+  <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <style>
+    /* The Recovery Lab. Scoped to this page, system fonts only, no remote requests.
+       Every figure on this page is computed at runtime from the LAB_CLAIMS array
+       at the bottom of the file. Nothing numeric is hand-typed into the markup,
+       so the views cannot disagree with each other or with the dataset. The
+       dataset itself reconciles to the published sample assessment: same twenty
+       claims, same $14,850, same disposition totals. Change one without the
+       other and tests/lab_reconcile.mjs fails. */
+    .lab {
+      max-width: 1040px; margin: 0 auto;
+      border: 1px solid var(--line); border-radius: 20px;
+      background: var(--paper); overflow: hidden;
+      box-shadow: 0 26px 60px rgba(16, 20, 38, .07);
+    }
+    .lab-top {
+      display: flex; align-items: baseline; justify-content: space-between;
+      gap: 14px; flex-wrap: wrap;
+      padding: 20px clamp(18px, 4vw, 34px);
+      border-bottom: 1px solid var(--line);
+      font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--ink-faint);
+    }
+    .lab-top b { color: var(--copper, #C2501C); font-weight: 400; }
+    .lab-tabs {
+      display: flex; gap: 4px; padding: 12px clamp(18px, 4vw, 34px) 0;
+      border-bottom: 1px solid var(--line); flex-wrap: wrap;
+    }
+    .lab-tabs [role=tab] {
+      appearance: none; border: 0; background: none; cursor: pointer;
+      padding: 12px 16px 14px; margin-bottom: -1px;
+      font: inherit; font-size: 14px; color: var(--ink-soft);
+      border-bottom: 2px solid transparent; border-radius: 8px 8px 0 0;
+    }
+    .lab-tabs [role=tab][aria-selected=true] {
+      color: var(--ink); border-bottom-color: var(--copper, #C2501C); font-weight: 600;
+    }
+    .lab-tabs [role=tab]:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
+    .lab-body { padding: clamp(20px, 4vw, 36px); }
+    .lab-sub { margin: 30px 0 12px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+    .lab-sub:first-child { margin-top: 0; }
+
+    /* Executive view */
+    .lab-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); gap: 14px; }
+    .lab-tile { padding: 18px; border: 1px solid var(--line); border-radius: 16px; }
+    .lab-tile .k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+    .lab-tile .v { margin: 8px 0 4px; font-family: var(--serif); font-size: 28px; line-height: 1; }
+    .lab-tile .c { font-size: 12px; color: var(--ink-faint); }
+    .lab-tile.lead .v { color: var(--copper, #C2501C); }
+    .lab-bars { display: grid; gap: 14px; }
+    .lab-barrow .t { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; margin-bottom: 6px; }
+    .lab-barrow .t b { font-weight: 600; font-variant-numeric: tabular-nums; }
+    .lab-barrow .t span span { color: var(--ink-faint); font-size: 12px; }
+    .lab-bar { height: 10px; border-radius: 5px; background: var(--panel-2, #F8F8F9); border: 1px solid var(--line); overflow: hidden; }
+    .lab-bar i { display: block; height: 100%; background: var(--copper, #C2501C); border-radius: 4px; min-width: 3px; }
+    .lab-note { margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 12px; }
+
+    /* Worklist */
+    .lab-filters {
+      display: flex; flex-wrap: wrap; gap: 10px; align-items: end;
+      padding: 0 0 16px; border-bottom: 1px solid var(--line); margin-bottom: 4px;
+    }
+    .lab-filters label { display: grid; gap: 4px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
+    .lab-filters select {
+      font: inherit; font-size: 16px; font-family: var(--sans, system-ui);
+      color: var(--ink); letter-spacing: 0; text-transform: none;
+      padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper);
+      min-width: 130px;
+    }
+    .lab-filters select:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 1px; }
+    .lab-filters .reset {
+      appearance: none; font: inherit; font-size: 13px; cursor: pointer;
+      border: 1px solid var(--line); border-radius: 10px; background: none;
+      color: var(--ink-soft); padding: 9px 14px;
+    }
+    .lab-count { font-size: 13px; color: var(--ink-soft); margin: 12px 0; font-variant-numeric: tabular-nums; }
+    .lab-count b { color: var(--ink); font-weight: 600; }
+    .lab-scroll { overflow-x: auto; }
+    .lab-tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+    .lab-tbl th {
+      text-align: left; font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+      color: var(--ink-faint); font-weight: 400;
+      padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap;
+    }
+    .lab-tbl th button {
+      appearance: none; border: 0; background: none; cursor: pointer;
+      font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit;
+      padding: 0; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .lab-tbl th button:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
+    .lab-tbl th button::after { content: "↕"; opacity: .45; }
+    .lab-tbl th[aria-sort=ascending] button::after { content: "↑"; opacity: 1; }
+    .lab-tbl th[aria-sort=descending] button::after { content: "↓"; opacity: 1; }
+    .lab-tbl td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+    .lab-tbl tr[data-id] { cursor: pointer; }
+    .lab-tbl tr[data-id]:hover td, .lab-tbl tr[data-id]:focus-within td { background: rgba(194, 80, 28, .045); }
+    .lab-tbl .id button {
+      appearance: none; border: 0; background: none; cursor: pointer; padding: 0;
+      font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 12.5px;
+      color: var(--copper, #C2501C); text-decoration: underline; text-underline-offset: 3px;
+    }
+    .lab-tbl .id button:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
+    .lab-tbl .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .lab-pr {
+      display: inline-grid; place-items: center; width: 24px; height: 24px;
+      border-radius: 50%; font-family: var(--mono, ui-monospace, Menlo, monospace);
+      font-size: 11.5px; border: 1px solid var(--line); color: var(--ink-soft);
+    }
+    .lab-pr.a { background: var(--copper, #C2501C); border-color: var(--copper, #C2501C); color: #fff; }
+    .lab-pr.b { border-color: var(--copper, #C2501C); color: var(--copper-deep, #9D3F16); }
+    .lab-own { font-size: 12px; white-space: nowrap; }
+    .lab-own.you { color: var(--copper-deep, #9D3F16); font-weight: 600; }
+    @media (max-width: 760px) {
+      .lab-tbl thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+      .lab-tbl, .lab-tbl tbody, .lab-tbl tr, .lab-tbl td { display: block; }
+      .lab-tbl tr { border: 1px solid var(--line); border-radius: 14px; margin-bottom: 12px; padding: 6px 0; }
+      .lab-tbl td { border: 0; padding: 6px 16px; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
+      .lab-tbl td::before {
+        content: attr(data-l);
+        font-family: var(--mono, ui-monospace, Menlo, monospace);
+        font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint);
+        flex-shrink: 0;
+      }
+    }
+
+    /* Claim detail */
+    .lab-detail { margin-top: 18px; border: 1px solid var(--copper, #C2501C); border-radius: 16px; overflow: hidden; }
+    .lab-detail-top {
+      display: flex; justify-content: space-between; align-items: center; gap: 12px;
+      padding: 14px 18px; background: rgba(194, 80, 28, .06); border-bottom: 1px solid var(--line);
+    }
+    .lab-detail-top h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 20px; }
+    .lab-detail-top .x {
+      appearance: none; border: 1px solid var(--line); background: var(--paper); cursor: pointer;
+      border-radius: 10px; font: inherit; font-size: 13px; color: var(--ink-soft); padding: 7px 12px;
+    }
+    .lab-detail-in { padding: 18px; }
+    .lab-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--ink-soft); margin-bottom: 4px; }
+    .lab-meta b { color: var(--ink); font-weight: 600; }
+    .lab-detail dl { margin: 14px 0 0; display: grid; gap: 10px; }
+    .lab-detail dt { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
+    .lab-detail dd { margin: 2px 0 0; font-size: 14px; line-height: 1.65; }
+    .lab-why { margin-top: 18px; border: 1px solid var(--line); border-radius: 14px; }
+    .lab-why summary {
+      cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      padding: 13px 16px; font-size: 14px; font-weight: 600;
+    }
+    .lab-why summary::-webkit-details-marker { display: none; }
+    .lab-why summary::after { content: "+"; font-family: var(--mono, ui-monospace, Menlo, monospace); color: var(--copper, #C2501C); font-size: 18px; }
+    .lab-why[open] summary::after { content: "–"; }
+    .lab-why summary:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
+    .lab-why .in { padding: 0 16px 14px; }
+    .lab-why ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
+    .lab-why li { position: relative; padding-left: 18px; font-size: 13.5px; line-height: 1.6; }
+    .lab-why li::before { content: ""; position: absolute; left: 0; top: 8px; width: 7px; height: 7px; border-radius: 2px; background: var(--copper, #C2501C); }
+    .lab-why .no-score { margin: 12px 0 0; padding-top: 11px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; }
+    .lab-hist { margin-top: 16px; display: grid; gap: 0; }
+    .lab-hist .h { position: relative; padding: 0 0 14px 22px; font-size: 13px; line-height: 1.5; }
+    .lab-hist .h::before { content: ""; position: absolute; left: 5px; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
+    .lab-hist .h.now::before { background: var(--copper, #C2501C); }
+    .lab-hist .h:not(:last-child)::after { content: ""; position: absolute; left: 8px; top: 16px; bottom: 0; width: 1px; background: var(--line); }
+    .lab-hist .h b { display: block; font-weight: 600; }
+    .lab-hist .h span { color: var(--ink-faint); font-size: 12px; }
+
+    /* Patterns */
+    .lab-pat { display: grid; gap: 18px; }
+    .lab-patrow p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); }
+    .lab-patrow .q { color: var(--ink); border-left: 3px solid var(--copper, #C2501C); padding: 2px 0 2px 12px; }
+    .lab-foot { padding: 18px clamp(18px, 4vw, 34px); border-top: 1px solid var(--line); background: var(--panel-2, #F8F8F9); }
+    .lab-foot p { margin: 0 0 8px; font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); }
+    .lab-foot p:last-child { margin: 0; }
+
+    @media (prefers-reduced-motion: no-preference) {
+      .lab-detail { animation: lab-in .25s ease; }
+      @keyframes lab-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+    }
+  </style>
+</head>
+<body data-sk-sections="Hero,The Lab,How to read it,Close" data-sk-bar="Work twenty fictional denials with the real method. No sign-up, no patient information." data-sk-biz="healthcare organization">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="Hero">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · The Recovery Lab</div>
+        <h1>Twenty denials, worked <em>in the open.</em></h1>
+        <p class="hero-copy">The Recovery Lab is a working denial portfolio you can explore before you send anything. The same twenty fictional claims from the sample assessment, live: an executive view for the money questions, a worklist you can sort and filter, and a full record behind every claim. Open any claim and press Show me why to read the reasoning behind its recommendation.</p>
+        <p class="hero-copy"><b>Every claim in the Lab is fictional.</b> No patient information appears here, and none is requested. What is real is the method.</p>
+        <div class="actions">
+          <a class="button" href="/soft-appeals-start">Request your complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/soft-appeals-sample-assessment">View a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" id="lab" data-screen-label="The Lab">
+      <div class="wrap">
+
+        <div class="lab" data-reveal>
+          <div class="lab-top">
+            <span>Soft Appeals · Recovery Lab</span>
+            <span><b>Sample</b> · fictional data</span>
+          </div>
+
+          <div class="lab-tabs" role="tablist" aria-label="Lab views">
+            <button role="tab" id="tab-exec" aria-controls="view-exec" aria-selected="true">Executive view</button>
+            <button role="tab" id="tab-work" aria-controls="view-work" aria-selected="false" tabindex="-1">Worklist</button>
+            <button role="tab" id="tab-pat" aria-controls="view-pat" aria-selected="false" tabindex="-1">Patterns</button>
+          </div>
+
+          <div class="lab-body">
+
+            <div id="view-exec" role="tabpanel" aria-labelledby="tab-exec" tabindex="0">
+              <div class="lab-sub">The portfolio at a glance</div>
+              <div class="lab-tiles" id="exec-tiles"></div>
+
+              <div class="lab-sub">Denied value by recommended action</div>
+              <div class="lab-bars" id="exec-actions"></div>
+              <p class="lab-note"><b>Denied amount is not the same as expected recovery.</b> These figures are the amounts attached to the reviewed claims and their recommended dispositions, not projected reimbursement. No recovery projection appears anywhere in the Lab.</p>
+
+              <div class="lab-sub">Where the next action sits</div>
+              <div class="lab-tiles" id="exec-owners"></div>
+              <p class="lab-note">Two statuses put a claim with your team: Additional information needed and Client review. Everything else is owned by Soft Appeals or sits with the payer. That split is the point: at any moment, each claim has exactly one owner and one next action.</p>
+
+              <div class="lab-sub">Denied value by payer</div>
+              <div class="lab-bars" id="exec-payers"></div>
+
+              <div class="lab-sub">Denials by category</div>
+              <div class="lab-bars" id="exec-cats"></div>
+              <p class="lab-note">Payer names in the Lab are fictional. In a real assessment this section names your actual payers, and the category mix comes from your own denials.</p>
+            </div>
+
+            <div id="view-work" role="tabpanel" aria-labelledby="tab-work" tabindex="0" hidden>
+              <div class="lab-filters" role="group" aria-label="Worklist filters">
+                <label>Action
+                  <select id="f-action">
+                    <option value="">All actions</option>
+                    <option>Appeal</option>
+                    <option>Correct / resubmit</option>
+                    <option>Investigate</option>
+                    <option>Close / deprioritize</option>
+                  </select>
+                </label>
+                <label>Status
+                  <select id="f-status"><option value="">All statuses</option></select>
+                </label>
+                <label>Owner
+                  <select id="f-owner">
+                    <option value="">All owners</option>
+                    <option>Soft Appeals</option>
+                    <option>Your team</option>
+                    <option>Payer</option>
+                    <option>Closed</option>
+                  </select>
+                </label>
+                <label>Payer
+                  <select id="f-payer"><option value="">All payers</option></select>
+                </label>
+                <label>Priority
+                  <select id="f-priority">
+                    <option value="">All priorities</option>
+                    <option>A</option><option>B</option><option>C</option><option>D</option>
+                  </select>
+                </label>
+                <button class="reset" id="f-reset" type="button">Clear filters</button>
+              </div>
+
+              <p class="lab-count" id="work-count" aria-live="polite"></p>
+
+              <div class="lab-scroll">
+                <table class="lab-tbl" id="work-tbl">
+                  <thead>
+                    <tr>
+                      <th scope="col" data-sort="priority"><button type="button">Priority</button></th>
+                      <th scope="col" data-sort="id"><button type="button">Claim</button></th>
+                      <th scope="col" data-sort="amount"><button type="button">Denied</button></th>
+                      <th scope="col">Payer</th>
+                      <th scope="col">Category</th>
+                      <th scope="col">Recommended action</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Owner</th>
+                      <th scope="col">Next action</th>
+                    </tr>
+                  </thead>
+                  <tbody id="work-rows"></tbody>
+                </table>
+              </div>
+              <p class="lab-note">Select any claim reference to open the full record, including the reasoning behind its recommendation. Timing marked with * is sample timing for demonstration only. Actual deadlines must be determined from the applicable payer, plan, claim circumstances and governing requirements.</p>
+
+              <div id="claim-detail" aria-live="polite"></div>
+            </div>
+
+            <div id="view-pat" role="tabpanel" aria-labelledby="tab-pat" tabindex="0" hidden>
+              <div class="lab-sub">Recurring themes in this portfolio</div>
+              <div class="lab-pat" id="pat-rows"></div>
+              <p class="lab-note">Pattern observations are directional and describe only the claims in the reviewed sample. A limited sample should not be treated as a complete revenue-cycle analysis. In a real engagement, these observations become upstream questions for your team, because a denial category that keeps recurring is usually cheaper to prevent than to recover.</p>
+            </div>
+
+          </div>
+
+          <div class="lab-foot">
+            <p><b>About this Lab.</b> Everything above is fictional and exists to demonstrate how Soft Appeals reviews, prioritizes, tracks and resolves denied claims. The claims, payers, amounts, statuses and timing are invented, and they match the published sample assessment so the numbers you see here and there are the same numbers.</p>
+            <p>A recommendation to pursue a claim does not guarantee reimbursement or reversal of a payer determination. Soft Appeals does not independently make clinical, coding, legal or coverage determinations outside the agreed scope of service. Soft Appeals is a service of frimpomaasync.com.</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="How to read it">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">Why there is no score</div>
+          <h2 class="section-title">Reasons you can check, <span>not a number you have to trust.</span></h2>
+        </div>
+        <div>
+          <p class="section-intro" style="margin-top:20px">Every recommendation in the Lab is explained by the same kind of factors: what the denial states, what the available documentation shows, which pathways were considered, and what is still missing. That is what Show me why opens on every claim.</p>
+          <p class="section-intro">What you will not find is a percentage next to any claim. A probability score would be a prediction dressed up as data, and it would tell you nothing about what to do next. The factors tell you exactly what to do next, and they can be checked against your own records.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <h2>Now run the same method on real denials.</h2>
+        <p>The complimentary review applies exactly this process to 20 of your recent denied claims. Business-level intake first, no patient information through the website, and the assessment is yours whether or not you continue.</p>
+        <div class="actions">
+          <a class="button" href="/soft-appeals-start">Request your complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/soft-appeals-data-security">Review data and security practices <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    /* The Lab dataset and views. One array is the single source of truth; every
+       number shown anywhere on this page is computed from it at render time.
+       The six claims published in the sample assessment (SA-001 to SA-006) are
+       reproduced here exactly; the remaining fourteen complete the same totals:
+       20 claims, $14,850, Appeal $6,400/7, Correct $2,750/5, Investigate
+       $3,100/4, Close $2,600/4, priority attention 3 claims at $4,150. */
+    (function () {
+      "use strict";
+
+      var NO_SCORE = "No probability score is used. The recommendation is the pathway the reviewed information supports, and each factor above can be checked against the claim record.";
+
+      var LAB_CLAIMS = [
+        { id: "SA-001", payer: "Sample Health Plan", amount: 1850, category: "Authorization", action: "Appeal", actionLabel: "Investigate, then appeal", priority: "A", status: "Under review", owner: "Soft Appeals", next: "Confirm the applicable filing deadline, then complete the appeal package.", timing: "Confirm deadline", blocker: "", readiness: "Partial. An authorization record has been located; the filing deadline is unconfirmed.",
+          happened: "The claim was denied for a missing prior authorization. The service was provided, and the available records appear to include an approved authorization for this episode of care.",
+          reviewed: "The denial notice, the authorization history and the claim dates, to establish whether the payer's stated reason matches the record.",
+          missing: "Confirmation of the payer's filing deadline, which is sequenced before any submission.",
+          why: [
+            "The denial states that no authorization was on file. The available records show an authorization was requested and approved for this episode of care, so the stated reason and the record appear to disagree.",
+            "A correction pathway was considered. The claim data itself does not appear wrong, so a corrected claim would not answer the payer's stated reason.",
+            "An appeal pathway fits this situation: the question is whether the documented authorization covers the billed service, and that is decided through review, not through resubmission.",
+            "The filing deadline has not been confirmed. Deadline confirmation is sequenced first, because a strong appeal filed late is worth nothing.",
+            "At $1,850 this is the largest denial in the sample. Value raises its place in the queue. It says nothing about the outcome."
+          ],
+          history: [["Received", "Denial added to the portfolio with its documentation."], ["Under review", "Authorization history pulled and compared against the stated denial reason."]] },
+
+        { id: "SA-002", payer: "Sample Health Plan", amount: 1425, category: "Medical necessity", action: "Appeal", actionLabel: "Appeal", priority: "A", status: "Appeal recommended", owner: "Soft Appeals", next: "Prepare the appeal package, then present it for client approval before submission.", timing: "18 days*", blocker: "", readiness: "Clinical documentation identified. The package is not yet assembled.",
+          happened: "The claim was denied on the payer's stated medical-necessity determination.",
+          reviewed: "The available denial documentation and claim information, to identify the stated basis for the denial and the appropriate next-step pathway.",
+          missing: "Nothing for preparation. Client approval is required before anything is submitted.",
+          why: [
+            "The denial rests on a medical-necessity determination, which is a judgment about the clinical picture, not a data error on the claim.",
+            "Correction and routine resubmission were considered and set aside: resubmitting the same claim would meet the same determination.",
+            "The supporting clinical documentation identified in review is the kind an appeal pathway is built to present.",
+            "Sample timing shows 18 days, so this claim is sequenced ahead of undated work.",
+            "Nothing is submitted without client approval. That is a standing rule, not a property of this claim."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Denial basis and clinical documentation reviewed."], ["Appeal recommended", "Appeal pathway selected; package preparation under way."]] },
+
+        { id: "SA-003", payer: "Example Insurance", amount: 875, category: "Timely filing", action: "Investigate", actionLabel: "Investigate", priority: "A", status: "Additional information needed", owner: "Your team", next: "Provide available submission evidence, such as clearinghouse acceptance records for the original claim.", timing: "24 days*", blocker: "Client action required", readiness: "Incomplete. The original submission history has not been located.",
+          happened: "The claim was denied for late filing. Whether the original claim was actually submitted on time is the open question.",
+          reviewed: "The denial notice and the claim dates. The original submission evidence was not available at review.",
+          missing: "Submission evidence from your side: a clearinghouse acceptance report, a submission log, or equivalent records.",
+          why: [
+            "A timely-filing denial stands or falls on evidence of when the claim was first submitted. That evidence lives in your systems, not the payer's notice.",
+            "If acceptance records show a timely original submission, a documented pathway exists to contest the denial. Without them, there is nothing to submit.",
+            "An immediate appeal was considered and set aside: filing one before the evidence exists would waste the attempt.",
+            "Sample timing shows 24 days, which is why this sits in priority A while the evidence is gathered.",
+            "The next action is yours, and the claim is flagged that way. Recovery work stalls in silence when nobody can see whose turn it is."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Denial reason and claim dates reviewed."], ["Additional information needed", "Submission evidence requested from the client team."]] },
+
+        { id: "SA-004", payer: "Example Insurance", amount: 640, category: "Claim information", action: "Correct / resubmit", actionLabel: "Correct / resubmit", priority: "B", status: "Correction recommended", owner: "Soft Appeals", next: "Document the correction, then present it for client review before resubmission.", timing: "Confirm", blocker: "", readiness: "Complete for correction. The error and the fix are both identified.",
+          happened: "The claim was denied over incorrect claim information, and the specific field in error has been identified.",
+          reviewed: "The denial notice against the submitted claim data, field by field, to locate what the payer flagged.",
+          missing: "Nothing. The correction is being documented for review.",
+          why: [
+            "The denial traces to a specific, identifiable error in the submitted claim information.",
+            "When the stated reason is a data error, correction and resubmission is the direct pathway. A formal appeal would be slower and argues about nothing.",
+            "The correction is documented in writing before resubmission, so your team can see exactly what changed and why.",
+            "The resubmission window should be confirmed before this moves, which is why timing reads Confirm rather than a number.",
+            "Corrections like this one also feed the Patterns view: the same field failing repeatedly is an upstream fix, not a recovery task."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Claim data compared against the denial reason."], ["Correction recommended", "Error identified; correction being documented."]] },
+
+        { id: "SA-005", payer: "Sample Health Plan", amount: 525, category: "Documentation", action: "Investigate", actionLabel: "Investigate", priority: "C", status: "Additional information needed", owner: "Your team", next: "Provide the requested supporting documentation.", timing: "Confirm", blocker: "Client action required", readiness: "Incomplete. The supporting records have not yet been provided.",
+          happened: "The claim was denied pending supporting documentation the payer states it did not receive.",
+          reviewed: "The denial notice and the claim record, to identify exactly which documentation the payer's request covers.",
+          missing: "The supporting records named in the payer's request, which sit with your team.",
+          why: [
+            "The pathway depends entirely on documentation that has not been reviewed yet. Recommending an appeal or a correction now would be guessing.",
+            "The payer's request identifies what it wants. The first step is retrieving it, not arguing about it.",
+            "Once the records arrive, the claim is re-reviewed and gets a definitive recommendation.",
+            "Value is modest at $525, and the next action is a retrieval task, so this sits at priority C rather than ahead of dated work.",
+            "How quickly requested documentation can be produced is itself a finding. It appears in the Patterns view for a reason."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Payer's documentation request identified."], ["Additional information needed", "Records requested from the client team."]] },
+
+        { id: "SA-006", payer: "Example Insurance", amount: 185, category: "Duplicate", action: "Close / deprioritize", actionLabel: "Close, after verification", priority: "D", status: "Under review", owner: "Soft Appeals", next: "Verify that the original claim was paid, then recommend closing this one.", timing: "Not applicable", blocker: "", readiness: "Verification in progress against the original claim.",
+          happened: "The claim was denied as a duplicate of a claim already processed.",
+          reviewed: "The denial notice and the claim history, to confirm whether an original claim exists and what happened to it.",
+          missing: "Confirmation that the original claim was paid, which closes the question.",
+          why: [
+            "A duplicate denial is frequently correct. If the original claim was paid, there is nothing to recover here, and the honest recommendation is to close.",
+            "Verification comes before closing: a claim is never dropped on the payer's say-so alone.",
+            "Pursuing this claim before checking the original would spend effort on a claim that may already be resolved.",
+            "At $185 with a likely-correct denial, this is exactly what deprioritization is for. Effort spent here is effort taken from SA-001.",
+            "Closing with a documented reason still counts as resolution. Every claim in the portfolio ends in a recorded outcome, not a shrug."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Original-claim history being verified before a close recommendation."]] },
+
+        { id: "SA-007", payer: "Sample Health Plan", amount: 825, category: "Authorization", action: "Appeal", actionLabel: "Appeal", priority: "B", status: "Under review", owner: "Soft Appeals", next: "Confirm the applicable payer appeal pathway before preparing the package.", timing: "Confirm", blocker: "", readiness: "Authorization documentation located. The correct submission pathway is being confirmed.",
+          happened: "The claim was denied on an authorization-related reason, and the episode's authorization documentation has been located.",
+          reviewed: "The denial notice, the authorization record and the payer's published appeal information for this plan type.",
+          missing: "Confirmation of the correct appeal pathway and submission channel for this specific plan.",
+          why: [
+            "The documentation to support an appeal exists. The open question is procedural: which pathway and channel this plan requires.",
+            "Submitting through the wrong channel is a common way a sound appeal disappears, so the pathway is confirmed before the package is built.",
+            "A correction pathway was considered and set aside: the claim data is not the problem the denial describes.",
+            "This is the second authorization denial from the same payer in the sample. The repetition is recorded in the Patterns view.",
+            "Timing reads Confirm because the deadline depends on the pathway. Confirming both is one task, done first."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Authorization record located; appeal pathway being confirmed."]] },
+
+        { id: "SA-008", payer: "Demo Benefit Administrators", amount: 950, category: "Claim information", action: "Investigate", actionLabel: "Investigate", priority: "B", status: "Additional information needed", owner: "Your team", next: "Confirm whether a corrected claim was previously submitted.", timing: "Confirm", blocker: "Client action required", readiness: "Incomplete. The submission history for a possible earlier correction is unconfirmed.",
+          happened: "The claim was denied over claim information, and there is an indication a correction may already have been attempted before the review began.",
+          reviewed: "The denial notice and the visible claim history, which shows an earlier transaction that may have been a corrected submission.",
+          missing: "Your team's confirmation of whether a corrected claim was already submitted, and if so, when and through what channel.",
+          why: [
+            "If a correction was already submitted, the right next step is tracking that submission, not sending another one.",
+            "Duplicate corrections muddy the claim history and can trigger a second denial, so the history is established before anything moves.",
+            "The answer lives in your submission records, which is why the next action sits with your team.",
+            "Once the history is confirmed, the claim gets a definitive pathway: track the pending correction, or prepare a fresh one.",
+            "At $950 this is worth resolving properly. The hold is procedural, not a judgment about the claim."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Claim history reviewed; possible earlier correction noticed."], ["Additional information needed", "Submission history requested from the client team."]] },
+
+        { id: "SA-009", payer: "Sample Health Plan", amount: 780, category: "Medical necessity", action: "Appeal", actionLabel: "Appeal", priority: "B", status: "Client review", owner: "Your team", next: "Approve the prepared appeal package, or request changes.", timing: "Confirm", blocker: "Awaiting client approval", readiness: "Complete. The appeal package is assembled and awaiting approval.",
+          happened: "The claim was denied on a medical-necessity determination. The appeal package has been prepared and is waiting on your approval.",
+          reviewed: "The denial basis, the supporting clinical documentation and the payer's stated appeal requirements, all reflected in the prepared package.",
+          missing: "Only your approval. Nothing is submitted without it.",
+          why: [
+            "The denial is a clinical-judgment determination, which the appeal pathway exists to contest with documentation.",
+            "The supporting documentation was sufficient to assemble a complete package, which is why this claim advanced while others wait.",
+            "Client review is a deliberate gate, not a delay: you see exactly what will be sent, in final form, before it goes.",
+            "Approve and it moves to submission. Request changes and it returns to preparation with your notes attached.",
+            "The claim is marked as waiting on you, visibly. The worklist never hides whose turn it is."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Denial basis and documentation reviewed."], ["Appeal recommended", "Appeal pathway selected."], ["Client review", "Completed package presented for approval."]] },
+
+        { id: "SA-010", payer: "Example Insurance", amount: 725, category: "Claim information", action: "Correct / resubmit", actionLabel: "Correct / resubmit", priority: "B", status: "Submitted", owner: "Payer", next: "Track the payer's response to the corrected claim.", timing: "Follow-up scheduled", blocker: "", readiness: "Complete. The corrected claim is with the payer.",
+          happened: "The claim was denied over incorrect claim information. The correction was approved and the corrected claim has been resubmitted.",
+          reviewed: "The original denial, the documented correction and the client approval, all completed before resubmission.",
+          missing: "Nothing. The claim is with the payer, and follow-up is scheduled.",
+          why: [
+            "The denial traced to a specific data error, the direct case for correction and resubmission.",
+            "The correction was documented and approved before it went out, so there is a record of exactly what changed.",
+            "Submission was documented at the time it happened: date, channel and content. If the payer later disputes receiving it, the record answers.",
+            "Ownership has moved to the payer, and the claim says so. Even waiting has a status, an owner and a date.",
+            "If the response does not arrive on schedule, follow-up happens on the documented date instead of when someone remembers."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Error identified."], ["Correction recommended", "Correction documented."], ["Client review", "Correction approved."], ["Submitted", "Corrected claim resubmitted; follow-up scheduled."]] },
+
+        { id: "SA-011", payer: "Demo Benefit Administrators", amount: 750, category: "Documentation", action: "Investigate", actionLabel: "Investigate", priority: "B", status: "Additional information needed", owner: "Your team", next: "Confirm what payer correspondence was received after the denial.", timing: "Confirm", blocker: "Client action required", readiness: "Incomplete. Post-denial correspondence from the payer is unaccounted for.",
+          happened: "The claim was denied pending documentation, and the payer appears to have sent follow-up correspondence that is not in the reviewed record.",
+          reviewed: "The denial notice and the available claim file. The gap is what the payer sent afterward.",
+          missing: "Any payer letters or requests received after the denial, which may change the pathway or its timing.",
+          why: [
+            "Post-denial correspondence often contains a specific request with its own deadline. Acting without it risks answering the wrong question.",
+            "If the payer has already asked for something specific, the fastest path is supplying exactly that, not starting a broader process.",
+            "That correspondence would have arrived at your organization, which is why the confirmation sits with your team.",
+            "Once the correspondence picture is complete, the claim is re-reviewed with the full record.",
+            "Untracked payer mail is a recurring leak in denial workflows. The Patterns view asks about it directly."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Claim file reviewed; correspondence gap identified."], ["Additional information needed", "Post-denial correspondence requested from the client team."]] },
+
+        { id: "SA-012", payer: "Sample Health Plan", amount: 640, category: "Authorization", action: "Appeal", actionLabel: "Appeal", priority: "B", status: "Appeal recommended", owner: "Soft Appeals", next: "Assemble the authorization record for the appeal package.", timing: "Confirm", blocker: "", readiness: "Authorization documentation partially assembled.",
+          happened: "The claim was denied on an authorization-related reason, the third such denial from this payer in the sample.",
+          reviewed: "The denial notice, the authorization history and the pattern across this payer's other denials in the portfolio.",
+          missing: "The remaining pieces of the authorization record for the package.",
+          why: [
+            "The available records support an appeal on the authorization question, following the same shape as SA-001 and SA-007.",
+            "The repetition matters: three authorization denials from one payer in a twenty-claim sample points at a process issue, not three coincidences.",
+            "Each claim is still appealed on its own record. A pattern explains the queue, never the argument.",
+            "A correction pathway was considered and set aside for the same reason as its siblings: the claim data is not the stated problem.",
+            "The upstream question this raises for your team is recorded in the Patterns view, where it belongs."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Authorization history reviewed."], ["Appeal recommended", "Appeal pathway selected; record being assembled."]] },
+
+        { id: "SA-013", payer: "Demo Benefit Administrators", amount: 565, category: "Claim information", action: "Correct / resubmit", actionLabel: "Correct / resubmit", priority: "C", status: "Client review", owner: "Your team", next: "Approve the documented correction before resubmission.", timing: "Confirm", blocker: "Awaiting client approval", readiness: "Complete. The documented correction is awaiting approval.",
+          happened: "The claim was denied over incorrect claim information. The correction has been documented and is waiting on your approval.",
+          reviewed: "The denial reason against the submitted claim data, and the documented fix now in front of your team.",
+          missing: "Only your approval of the documented correction.",
+          why: [
+            "The denial traces to a specific data error with a documented fix, the standard case for correction over appeal.",
+            "Even a routine correction passes through client review, because your team may know context the claim file does not show.",
+            "The documentation shows the exact field, the previous value and the corrected value, so approval takes minutes, not research.",
+            "On approval it moves straight to resubmission, with the submission documented on the way out.",
+            "This is the third claim-information correction in the sample. The recurring field problem is flagged in the Patterns view."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Error identified."], ["Correction recommended", "Correction documented."], ["Client review", "Correction presented for approval."]] },
+
+        { id: "SA-014", payer: "Example Insurance", amount: 1240, category: "Timely filing", action: "Close / deprioritize", actionLabel: "Close / deprioritize", priority: "C", status: "Client review", owner: "Your team", next: "Decide whether to accept the close recommendation.", timing: "Not applicable", blocker: "Awaiting client decision", readiness: "Review complete. No supporting submission evidence was located.",
+          happened: "The claim was denied for late filing, and no evidence of a timely original submission could be located on either side.",
+          reviewed: "The denial notice, the claim dates and the available submission history, searched for any record supporting a timely filing.",
+          missing: "Nothing further has been identified to look for. The evidence search came back empty.",
+          why: [
+            "A timely-filing pathway needs evidence that the claim was submitted in time. The search for that evidence found none.",
+            "Pursuing this claim without evidence would spend effort on a submission with nothing behind it, at the expense of claims that have support.",
+            "This is the second-largest denial in the sample, which is exactly why the recommendation is written down with its reasoning: a close at $1,240 should be a decision, not a disappearance.",
+            "The decision is yours. If evidence surfaces later, the claim can be reopened and re-reviewed with it.",
+            "Compare SA-003, the same category with a live evidence trail and a dated clock. Same denial reason, opposite recommendation. The record decides, not the category."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Submission history searched for filing evidence."], ["Client review", "Close recommendation presented with its basis."]] },
+
+        { id: "SA-015", payer: "Demo Benefit Administrators", amount: 490, category: "Medical necessity", action: "Appeal", actionLabel: "Appeal", priority: "C", status: "Under review", owner: "Soft Appeals", next: "Complete the clinical-documentation review before finalizing the recommendation.", timing: "Confirm", blocker: "", readiness: "Partial. Clinical documentation is under review.",
+          happened: "The claim was denied on a medical-necessity determination, and the supporting documentation is still being reviewed.",
+          reviewed: "The denial notice and the initial claim record. The clinical-documentation review is in progress.",
+          missing: "Completion of the documentation review, which determines whether the appeal recommendation is finalized.",
+          why: [
+            "The denial type points toward an appeal pathway, but the recommendation is not finalized until the documentation review is complete.",
+            "An appeal recommendation made before reading the documentation would be a guess wearing a conclusion's clothes.",
+            "The early direction is shown anyway, so the portfolio view stays honest about where things lean while work is in progress.",
+            "If the documentation does not support an appeal, the recommendation changes, and the record will say why.",
+            "Undated and mid-review, it sits at priority C behind claims with confirmed clocks."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Clinical-documentation review in progress."]] },
+
+        { id: "SA-016", payer: "Demo Benefit Administrators", amount: 480, category: "Claim information", action: "Correct / resubmit", actionLabel: "Correct / resubmit", priority: "C", status: "Correction recommended", owner: "Soft Appeals", next: "Document the correction for client review.", timing: "Confirm", blocker: "", readiness: "Complete for correction. The error is identified; documentation in progress.",
+          happened: "The claim was denied over incorrect claim information, and the field in error has been identified.",
+          reviewed: "The denial notice against the submitted claim data, isolating the flagged field.",
+          missing: "Nothing. The correction documentation is being prepared.",
+          why: [
+            "The denial names a data problem, and review located the specific field behind it.",
+            "Correction and resubmission answers the stated reason directly. An appeal here would argue with a typo.",
+            "The correction is documented before review so your team approves a specific change, not a general intention.",
+            "The resubmission window still needs confirming, so timing reads Confirm rather than a date.",
+            "It queues behind the dated and higher-value work at priority C. Order in the queue reflects urgency, never difficulty."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Flagged field identified."], ["Correction recommended", "Correction being documented."]] },
+
+        { id: "SA-017", payer: "Example Insurance", amount: 725, category: "Documentation", action: "Close / deprioritize", actionLabel: "Close / deprioritize", priority: "D", status: "Client review", owner: "Your team", next: "Decide whether to accept the close recommendation.", timing: "Not applicable", blocker: "Awaiting client decision", readiness: "Review complete. The required records are reported unavailable.",
+          happened: "The claim was denied pending documentation, and the records the payer requires have been reported unavailable.",
+          reviewed: "The payer's documentation requirement and the search for the underlying records, which came back unavailable.",
+          missing: "The required records themselves. Without them, no pathway can be completed.",
+          why: [
+            "Every viable pathway for this denial runs through documentation that is reported not to exist in retrievable form.",
+            "Submitting an appeal without the required records would invite a second denial and spend the attempt.",
+            "The close recommendation is presented with this reasoning, and the decision stays with your team.",
+            "If the records surface, the claim reopens and is re-reviewed with them. Closed here means shelved with a reason, not erased.",
+            "The documentation gap itself is the finding that outlives the claim. It appears in the Patterns view as an upstream question."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Records search completed; unavailable."], ["Client review", "Close recommendation presented with its basis."]] },
+
+        { id: "SA-018", payer: "Sample Health Plan", amount: 390, category: "Authorization", action: "Appeal", actionLabel: "Appeal", priority: "C", status: "Payer follow-up", owner: "Payer", next: "Follow up on the submitted appeal on the documented schedule.", timing: "Follow-up scheduled", blocker: "",
+          readiness: "Complete. The appeal was approved, submitted and documented.",
+          happened: "The claim was denied on an authorization-related reason. The appeal was prepared, approved by the client and submitted, and the payer's response is now being tracked.",
+          reviewed: "The full appeal preparation: denial basis, authorization record, package assembly and client approval, all before submission.",
+          missing: "Nothing from either team. The payer's response is the open item.",
+          why: [
+            "The authorization record supported an appeal, the same fact pattern as the other authorization denials from this payer.",
+            "The package went through client approval before submission, and the submission itself was documented with date and channel.",
+            "The claim now demonstrates the tracked-waiting state: with the payer, follow-up scheduled, nobody's memory involved.",
+            "If the payer requests more information, the claim moves to that status and the request gets its own owner and date.",
+            "The smallest of the authorization denials, it still completes the pattern recorded in the Patterns view: four in twenty claims, all one payer."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Authorization record reviewed."], ["Appeal recommended", "Package prepared."], ["Client review", "Package approved."], ["Submitted", "Appeal submitted and documented."], ["Payer follow-up", "Response being tracked on schedule."]] },
+
+        { id: "SA-019", payer: "Demo Benefit Administrators", amount: 340, category: "Coordination of benefits", action: "Correct / resubmit", actionLabel: "Correct / resubmit", priority: "C", status: "Submitted", owner: "Payer", next: "Track the payer's response to the resubmission.", timing: "Follow-up scheduled", blocker: "", readiness: "Complete. The resubmission is with the payer.",
+          happened: "The claim was denied on a coordination-of-benefits question. Updated coverage information was confirmed, the claim was corrected, approved and resubmitted.",
+          reviewed: "The denial reason, the coverage information on file and the corrected claim, approved before resubmission.",
+          missing: "Nothing. The payer's response is the open item.",
+          why: [
+            "The denial rested on a coverage-order question that updated information resolved, making correction the direct pathway.",
+            "Once the coverage picture was confirmed, an appeal had nothing left to argue. The corrected claim answers the payer's question.",
+            "The correction went through client review like every other, then out with a documented submission.",
+            "Ownership sits with the payer and follow-up is on the calendar, visible in the worklist rather than in anyone's head.",
+            "At $340 it shows the floor of the method: small claims get the same documented pathway, just never at the front of the queue."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Coverage information confirmed."], ["Correction recommended", "Correction documented."], ["Client review", "Correction approved."], ["Submitted", "Resubmitted; follow-up scheduled."]] },
+
+        { id: "SA-020", payer: "Demo Benefit Administrators", amount: 450, category: "Eligibility", action: "Close / deprioritize", actionLabel: "Closed", priority: "D", status: "Closed", owner: "Closed", next: "None. The claim is closed with a documented reason.", timing: "Not applicable", blocker: "", readiness: "Closed with client agreement after eligibility review.",
+          happened: "The claim was denied on an eligibility determination. Review confirmed the coverage picture supported the denial, and the claim was closed with client agreement.",
+          reviewed: "The denial notice and the available eligibility information for the date of service.",
+          missing: "Nothing. The record is complete and closed.",
+          why: [
+            "The eligibility information available for the date of service was consistent with the payer's determination.",
+            "Pursuing a claim the record does not support would spend your team's credibility with the payer along with the effort.",
+            "The close was recommended with this reasoning and accepted by the client. The decision and its basis are both on record.",
+            "A closed claim keeps its record. If new eligibility information appears, reopening starts from documentation, not from scratch.",
+            "This is what resolution means in the Lab: every one of the twenty claims ends in a documented outcome, including the ones that end here."
+          ],
+          history: [["Received", "Denial added to the portfolio."], ["Under review", "Eligibility information reviewed."], ["Client review", "Close recommendation presented."], ["Closed", "Closed with client agreement; reason documented."]] }
+      ];
+
+      /* ---------- helpers ---------- */
+      function usd(n) { return "$" + n.toLocaleString("en-US"); }
+      function sum(list) { return list.reduce(function (t, c) { return t + c.amount; }, 0); }
+      function esc(s) { return String(s).replace(/[&<>"]/g, function (ch) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]; }); }
+      function el(id) { return document.getElementById(id); }
+      function groupBy(key) {
+        var out = {};
+        LAB_CLAIMS.forEach(function (c) { (out[c[key]] = out[c[key]] || []).push(c); });
+        return out;
+      }
+      function barRows(container, groups, order) {
+        var total = sum(LAB_CLAIMS);
+        container.innerHTML = order.map(function (name) {
+          var list = groups[name] || [];
+          var v = sum(list);
+          var pct = Math.round((v / total) * 1000) / 10;
+          return '<div class="lab-barrow"><div class="t"><span>' + esc(name) +
+            ' <span>· ' + list.length + (list.length === 1 ? " claim" : " claims") + '</span></span><b>' + usd(v) +
+            '</b></div><div class="lab-bar" role="img" aria-label="' + esc(name) + ": " + usd(v) + " across " + list.length +
+            ' claims, ' + pct + ' percent of the portfolio"><i style="width:' + pct + '%"></i></div></div>';
+        }).join("");
+      }
+
+      /* ---------- executive view ---------- */
+      var byAction = groupBy("action");
+      var byPayer = groupBy("payer");
+      var byCategory = groupBy("category");
+      var priorityA = LAB_CLAIMS.filter(function (c) { return c.priority === "A"; });
+      var withYou = LAB_CLAIMS.filter(function (c) { return c.owner === "Your team"; });
+      var withPayer = LAB_CLAIMS.filter(function (c) { return c.owner === "Payer"; });
+      var infoNeeded = LAB_CLAIMS.filter(function (c) { return c.status === "Additional information needed"; });
+      var clientReview = LAB_CLAIMS.filter(function (c) { return c.status === "Client review"; });
+
+      el("exec-tiles").innerHTML =
+        '<div class="lab-tile"><div class="k">Total denied in scope</div><div class="v">' + usd(sum(LAB_CLAIMS)) + '</div><div class="c">' + LAB_CLAIMS.length + ' claims</div></div>' +
+        '<div class="lab-tile lead"><div class="k">Priority attention</div><div class="v">' + usd(sum(priorityA)) + '</div><div class="c">' + priorityA.length + ' claims with known timing or recovery considerations</div></div>' +
+        '<div class="lab-tile"><div class="k">With your team</div><div class="v">' + withYou.length + '</div><div class="c">' + infoNeeded.length + ' need information · ' + clientReview.length + ' need a decision</div></div>' +
+        '<div class="lab-tile"><div class="k">With the payer</div><div class="v">' + withPayer.length + '</div><div class="c">submitted, follow-up scheduled</div></div>';
+
+      barRows(el("exec-actions"), byAction, ["Appeal", "Investigate", "Correct / resubmit", "Close / deprioritize"]);
+
+      el("exec-owners").innerHTML = ["Soft Appeals", "Your team", "Payer", "Closed"].map(function (o) {
+        var list = LAB_CLAIMS.filter(function (c) { return c.owner === o; });
+        return '<div class="lab-tile"><div class="k">' + esc(o) + '</div><div class="v">' + list.length + '</div><div class="c">' + usd(sum(list)) + ' denied value</div></div>';
+      }).join("");
+
+      barRows(el("exec-payers"), byPayer, Object.keys(byPayer).sort(function (a, b) { return sum(byPayer[b]) - sum(byPayer[a]); }));
+      barRows(el("exec-cats"), byCategory, Object.keys(byCategory).sort(function (a, b) { return sum(byCategory[b]) - sum(byCategory[a]); }));
+
+      /* ---------- worklist ---------- */
+      var PR_RANK = { A: 0, B: 1, C: 2, D: 3 };
+      var state = { sort: "priority", dir: 1, filters: {} };
+
+      var statuses = [];
+      LAB_CLAIMS.forEach(function (c) { if (statuses.indexOf(c.status) < 0) statuses.push(c.status); });
+      statuses.forEach(function (s) { el("f-status").insertAdjacentHTML("beforeend", "<option>" + esc(s) + "</option>"); });
+      Object.keys(byPayer).forEach(function (p) { el("f-payer").insertAdjacentHTML("beforeend", "<option>" + esc(p) + "</option>"); });
+
+      function filtered() {
+        var f = state.filters;
+        return LAB_CLAIMS.filter(function (c) {
+          return (!f.action || c.action === f.action) &&
+                 (!f.status || c.status === f.status) &&
+                 (!f.owner || c.owner === f.owner) &&
+                 (!f.payer || c.payer === f.payer) &&
+                 (!f.priority || c.priority === f.priority);
+        }).sort(function (a, b) {
+          var k = state.sort, va, vb;
+          if (k === "priority") { va = PR_RANK[a.priority]; vb = PR_RANK[b.priority]; }
+          else if (k === "amount") { va = a.amount; vb = b.amount; }
+          else { va = a.id; vb = b.id; }
+          return (va < vb ? -1 : va > vb ? 1 : 0) * state.dir;
+        });
+      }
+
+      function renderWork() {
+        var list = filtered();
+        el("work-count").innerHTML = "Showing <b>" + list.length + "</b> of " + LAB_CLAIMS.length +
+          " claims · <b>" + usd(sum(list)) + "</b> denied value in view";
+        el("work-rows").innerHTML = list.map(function (c) {
+          return '<tr data-id="' + c.id + '">' +
+            '<td data-l="Priority"><span class="lab-pr ' + c.priority.toLowerCase() + '">' + c.priority + '</span></td>' +
+            '<td class="id" data-l="Claim"><button type="button" data-open="' + c.id + '" aria-label="Open claim ' + c.id + '">' + c.id + '</button></td>' +
+            '<td class="num" data-l="Denied">' + usd(c.amount) + '</td>' +
+            '<td data-l="Payer">' + esc(c.payer) + '</td>' +
+            '<td data-l="Category">' + esc(c.category) + '</td>' +
+            '<td data-l="Action">' + esc(c.actionLabel) + '</td>' +
+            '<td data-l="Status">' + esc(c.status) + '</td>' +
+            '<td data-l="Owner"><span class="lab-own' + (c.owner === "Your team" ? " you" : "") + '">' + esc(c.owner) + '</span></td>' +
+            '<td data-l="Next action">' + esc(c.next) + '</td>' +
+            '</tr>';
+        }).join("");
+      }
+
+      document.querySelectorAll("#work-tbl th[data-sort]").forEach(function (th) {
+        th.querySelector("button").addEventListener("click", function () {
+          var k = th.getAttribute("data-sort");
+          if (state.sort === k) state.dir = -state.dir; else { state.sort = k; state.dir = 1; }
+          document.querySelectorAll("#work-tbl th[data-sort]").forEach(function (t) { t.removeAttribute("aria-sort"); });
+          th.setAttribute("aria-sort", state.dir === 1 ? "ascending" : "descending");
+          renderWork();
+        });
+      });
+
+      [["f-action", "action"], ["f-status", "status"], ["f-owner", "owner"], ["f-payer", "payer"], ["f-priority", "priority"]].forEach(function (pair) {
+        el(pair[0]).addEventListener("change", function () {
+          state.filters[pair[1]] = this.value;
+          closeDetail();
+          renderWork();
+        });
+      });
+      el("f-reset").addEventListener("click", function () {
+        state.filters = {};
+        ["f-action", "f-status", "f-owner", "f-payer", "f-priority"].forEach(function (id) { el(id).value = ""; });
+        closeDetail();
+        renderWork();
+      });
+
+      /* ---------- claim detail ---------- */
+      function closeDetail() { el("claim-detail").innerHTML = ""; }
+
+      function openDetail(id) {
+        var c = null;
+        LAB_CLAIMS.forEach(function (x) { if (x.id === id) c = x; });
+        if (!c) return;
+        var hist = c.history.map(function (h, i) {
+          return '<div class="h' + (i === c.history.length - 1 ? " now" : "") + '"><b>' + esc(h[0]) + '</b><span>' + esc(h[1]) + '</span></div>';
+        }).join("");
+        el("claim-detail").innerHTML =
+          '<div class="lab-detail" role="region" aria-label="Claim ' + c.id + ' detail">' +
+            '<div class="lab-detail-top"><h3>' + c.id + ' · ' + esc(c.category.toLowerCase()) + ' denial</h3>' +
+            '<button type="button" class="x" data-close>Close</button></div>' +
+            '<div class="lab-detail-in">' +
+              '<div class="lab-meta"><span>' + esc(c.payer) + '</span><span>Denied <b>' + usd(c.amount) + '</b></span>' +
+              '<span>Priority <b>' + c.priority + '</b></span><span><b>' + esc(c.actionLabel) + '</b></span>' +
+              '<span>Status: <b>' + esc(c.status) + '</b></span><span>Owner: <b>' + esc(c.owner) + '</b></span>' +
+              (c.blocker ? '<span>Blocker: <b>' + esc(c.blocker) + '</b></span>' : '') + '</div>' +
+              '<dl>' +
+                '<dt>What happened</dt><dd>' + esc(c.happened) + '</dd>' +
+                '<dt>What was reviewed</dt><dd>' + esc(c.reviewed) + '</dd>' +
+                '<dt>Information readiness</dt><dd>' + esc(c.readiness) + '</dd>' +
+                '<dt>What is missing</dt><dd>' + esc(c.missing) + '</dd>' +
+                '<dt>Next step</dt><dd>' + esc(c.next) + '</dd>' +
+                '<dt>Timing</dt><dd>' + esc(c.timing) + (/\d+ days/.test(c.timing) ? " · sample timing for demonstration only" : "") + '</dd>' +
+              '</dl>' +
+              '<details class="lab-why"><summary>Show me why</summary><div class="in"><ul>' +
+                c.why.map(function (w) { return "<li>" + esc(w) + "</li>"; }).join("") +
+              '</ul><p class="no-score">' + NO_SCORE + '</p></div></details>' +
+              '<div class="lab-sub" style="margin-top:20px">Status history</div>' +
+              '<div class="lab-hist">' + hist + '</div>' +
+            '</div>' +
+          '</div>';
+        var region = el("claim-detail").firstChild;
+        region.scrollIntoView({ block: "nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        region.querySelector("[data-close]").focus();
+      }
+
+      el("work-tbl").addEventListener("click", function (e) {
+        var btn = e.target.closest("[data-open]");
+        var row = e.target.closest("tr[data-id]");
+        if (btn) openDetail(btn.getAttribute("data-open"));
+        else if (row && !e.target.closest("a,button")) openDetail(row.getAttribute("data-id"));
+      });
+      el("claim-detail").addEventListener("click", function (e) {
+        if (e.target.closest("[data-close]")) closeDetail();
+      });
+      el("claim-detail").addEventListener("keydown", function (e) {
+        if (e.key === "Escape") closeDetail();
+      });
+
+      /* ---------- patterns ---------- */
+      var total = sum(LAB_CLAIMS);
+      var PATTERNS = [
+        { name: "Authorization", claims: byCategory["Authorization"] || [],
+          note: "All four authorization denials in this sample come from the same fictional payer, and all four support an appeal on their records.",
+          q: "Operational question: is authorization information consistently verified and retained before services are rendered, and does one payer account for most of the exceptions?" },
+        { name: "Claim information", claims: byCategory["Claim information"] || [],
+          note: "Five denials trace to correctable claim-information errors rather than anything requiring a formal appeal.",
+          q: "Operational question: are recurring correction reasons tracked upstream, so the same field stops failing in future submissions?" },
+        { name: "Documentation", claims: byCategory["Documentation"] || [],
+          note: "Three claims are held by documentation: two waiting on retrieval, one closed because the records are reported unavailable.",
+          q: "Operational question: can supporting documentation be retrieved quickly when a payer requests it, and is anyone tracking payer correspondence after a denial?" },
+        { name: "Timely filing", claims: byCategory["Timely filing"] || [],
+          note: "Two timely-filing denials, opposite recommendations: one has a live evidence trail and a dated clock, the other has no locatable submission evidence. The record decides, not the category.",
+          q: "Operational question: does submission evidence get captured and stored at filing time, when it is easy, rather than searched for after a denial, when it is not?" }
+      ];
+      el("pat-rows").innerHTML = PATTERNS.map(function (p) {
+        var pct = Math.round((p.claims.length / LAB_CLAIMS.length) * 100);
+        return '<div class="lab-patrow"><div class="lab-barrow"><div class="t"><span>' + esc(p.name) +
+          '</span><b>' + p.claims.length + ' of ' + LAB_CLAIMS.length + ' claims · ' + usd(sum(p.claims)) + '</b></div>' +
+          '<div class="lab-bar" role="img" aria-label="' + esc(p.name) + ": " + p.claims.length + " of " + LAB_CLAIMS.length + ' claims"><i style="width:' + pct + '%"></i></div></div>' +
+          '<p>' + esc(p.note) + '</p><p class="q">' + esc(p.q) + '</p></div>';
+      }).join("");
+
+      /* ---------- tabs ---------- */
+      var tabs = [].slice.call(document.querySelectorAll(".lab-tabs [role=tab]"));
+      function selectTab(tab) {
+        tabs.forEach(function (t) {
+          var on = t === tab;
+          t.setAttribute("aria-selected", on ? "true" : "false");
+          t.tabIndex = on ? 0 : -1;
+          el(t.getAttribute("aria-controls")).hidden = !on;
+        });
+        tab.focus();
+      }
+      tabs.forEach(function (t, i) {
+        t.addEventListener("click", function () { selectTab(t); });
+        t.addEventListener("keydown", function (e) {
+          var next = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : null;
+          if (e.key === "Home") next = 0;
+          if (e.key === "End") next = tabs.length - 1;
+          if (next === null) return;
+          e.preventDefault();
+          selectTab(tabs[(next + tabs.length) % tabs.length]);
+        });
+      });
+
+      renderWork();
+    })();
+  </script>
+
+  <script type="module" src="/assets/journey.js?v=7"></script>
+  <script src="/fsnav.js?v=849" defer></script>
+</body>
+</html>
