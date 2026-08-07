@@ -129,8 +129,12 @@
       navLink("Pricing", "/soft-appeals-pricing", "soft-pricing", onSoft) +
       navLink("The report", "/soft-appeals-audit", "soft-audit", onSoft) +
       navLink("Security", "/soft-appeals-data-security", "soft-data", onSoft) +
-      navLink("About", "/soft-appeals-about", "soft-about", onSoft) +
-      navLink("The decoder", "/soft-appeals-decoder", "soft-decoder", onSoft);
+      navLink("About", "/soft-appeals-about", "soft-about", onSoft);
+    /* The decoder is deliberately not in this bar (her call 2026-08-07). It is a
+       lead magnet people reach from the offer page and the checklist, not a page
+       a buyer navigates to, and at seven items the bar ran to three rows on a
+       320px phone. It keeps its own nav highlight below so the bar still shows
+       where you are if you land on it from a link. */
     var siteNav =
       navLink("SynKasa", "/synkasa", "synkasa", on) +
       navLink("Siesie", "/siesie", "siesie", on) +
