@@ -147,7 +147,7 @@ Som: https://frimpomaasync.com/som
 
 Blueprint: https://frimpomaasync.com/automated-small-business-blueprint.pdf
 
-Live demo: https://frimpomaasync.com/client-catcher-demo/
+Live demo: https://frimpomaasync.com/synkasa-demo/
 
 ## The method
 

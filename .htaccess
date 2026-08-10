@@ -10,6 +10,11 @@ RewriteRule ^ - [L]
 # email lands on the app instead of a 404.
 RewriteRule ^Som\.zip$ /som-app/ [R=301,L,NC]
 
+# Renamed 2026-08-10: the demo folder followed the product name. SynKasa's live
+# demo now lives at /synkasa-demo/. Old prospect links carry ?biz=&owner=&build=
+# query strings, which the redirect passes through untouched.
+RewriteRule ^client-catcher-demo(/.*)?$ /synkasa-demo/ [R=301,L,NC]
+
 # Retired pages (2026-07 one-ladder rebuild): everything the Client Catcher and
 # the old catalog pages used to say now lives on /synkasa. Files stay in the
 # repo (the FTPS deploy deletes removed files); these rules retire the URLs.

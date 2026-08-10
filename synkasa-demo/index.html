@@ -469,7 +469,7 @@
         <div class="tile">
           <div class="k">First reply</div>
           <div class="n"><em>28</em><span style="font-size:.45em"> sec</span></div>
-          <div class="s">median · industry avg is 5 hours</div>
+          <div class="s">median · demo data</div>
           <div class="bar red"><i style="width:0" data-w="94%"></i></div>
         </div>
         <div class="tile">
@@ -500,43 +500,9 @@
         </div>
       </div>
 
-      <div class="yourbuild" id="yourBuild" hidden>
-        <div class="wt">Your custom build &mdash; designed for <span class="b-biz">Demo Detailing Co.</span>, not off a shelf</div>
-        <div class="yb-row">
-          <span class="yb-n">01</span>
-          <div><h4>The WhatsApp front door</h4>
-          <p>Every inquiry &mdash; WhatsApp, Instagram, or your website, Ghana or the USA, any hour &mdash; lands in one place and gets a warm reply in <span class="b-owner">the owner</span>'s voice within seconds. Mid-event, mid-flight, or asleep: nothing sits unanswered.</p></div>
-        </div>
-        <div class="yb-row">
-          <span class="yb-n">02</span>
-          <div><h4>Follow-up that never forgets</h4>
-          <p>Sequences written in <span class="b-owner">the owner</span>'s own voice keep every conversation warm until the client books &mdash; and keep serving after the yes: final headcounts, event-week details, the review ask. No lead, and no client, cools quietly again.</p></div>
-        </div>
-        <div class="yb-row">
-          <span class="yb-n">03</span>
-          <div><h4>The date-hold booking sheet</h4>
-          <p>Events book dates, not appointments. Clients pick a consultation time shown in their own timezone, and hold their event date with a deposit &mdash; straight onto the real calendar.</p></div>
-        </div>
-        <div class="yb-row">
-          <span class="yb-n">04</span>
-          <div><h4>The proposal engine</h4>
-          <p>Decor packages and curated dining menus assembled into a branded proposal with signature built in &mdash; so being sold to by <span class="b-biz">Demo Detailing Co.</span> feels as curated as the event itself.</p></div>
-        </div>
-        <div class="yb-row">
-          <span class="yb-n">05</span>
-          <div><h4>Payments that work on both sides of the ocean</h4>
-          <p>Mobile Money and cards in cedis for Ghana; cards in dollars for the US. A deposit locks the date, and milestone reminders chase the balance so <span class="b-owner">the owner</span> never has to.</p></div>
-        </div>
-        <div class="yb-row">
-          <span class="yb-n">06</span>
-          <div><h4>Your morning cockpit</h4>
-          <p>One phone view each morning: new leads, replies waiting, deposits due, this week's events. Run the whole thing from a venue floor.</p></div>
-        </div>
-        <div class="yb-foot">
-          <b>The Seven-Day Switch-On.</b> Not live within 7 days of our first call &mdash; you pay nothing at all. And either way you keep the follow-up scripts written in your voice, and the setup documentation.
-          <span class="yb-price">Custom, done-for-you &middot; $1,500 &mdash; founding rate $750 for the first 3 clients, a named review in exchange &middot; optional $99/mo care plan</span>
-        </div>
-      </div>
+      <!-- The ?build=events prospect panel is injected by script; see buildPanels below.
+           Keeping it out of the base HTML keeps the detailing demo coherent for
+           visitors and crawlers. -->
     </section>
 
     <!-- INBOX -->
@@ -776,15 +742,38 @@
     document.querySelectorAll('.b-ownerline').forEach(function(el){ el.textContent = BRAND.ownerLine; });
   }
 
-  /* rebrandable links: /client-catcher-demo/?biz=Lash+Lounge+by+Kim&owner=Kim */
+  /* rebrandable links: /synkasa-demo/?biz=Lash+Lounge+by+Kim&owner=Kim */
   var qs = new URLSearchParams(location.search);
   if((qs.get('biz')||'').trim() || (qs.get('owner')||'').trim()){
     setBrand((qs.get('biz')||'').trim(), (qs.get('owner')||'').trim());
     seedThread();
   }
-  /* ?build=events adds the "your build" scope panel — prospect-specific links only */
-  if((qs.get('build')||'').trim() === 'events'){
-    document.getElementById('yourBuild').hidden = false;
+  /* ?build=events adds the "your build" scope panel — prospect-specific links only.
+     Injected here (not in the base HTML) so the plain demo stays internally
+     coherent for visitors and crawlers. */
+  var buildPanels = {
+    events: '<div class="yourbuild" id="yourBuild">' +
+      '<div class="wt">Your custom build · designed for <span class="b-biz">Demo Detailing Co.</span>, not off a shelf</div>' +
+      '<div class="yb-row"><span class="yb-n">01</span><div><h4>The WhatsApp front door</h4>' +
+      '<p>Every inquiry (WhatsApp, Instagram, or your website, Ghana or the USA, any hour) lands in one place and gets a warm reply in <span class="b-owner">the owner</span>’s voice within seconds. Mid-event, mid-flight, or asleep: nothing sits unanswered.</p></div></div>' +
+      '<div class="yb-row"><span class="yb-n">02</span><div><h4>Follow-up that never forgets</h4>' +
+      '<p>Sequences written in <span class="b-owner">the owner</span>’s own voice keep every conversation warm until the client books, and keep serving after the yes: final headcounts, event-week details, the review ask. No lead, and no client, cools quietly again.</p></div></div>' +
+      '<div class="yb-row"><span class="yb-n">03</span><div><h4>The date-hold booking sheet</h4>' +
+      '<p>Events book dates, not appointments. Clients pick a consultation time shown in their own timezone, and hold their event date with a deposit, straight onto the real calendar.</p></div></div>' +
+      '<div class="yb-row"><span class="yb-n">04</span><div><h4>The proposal engine</h4>' +
+      '<p>Decor packages and curated dining menus assembled into a branded proposal with signature built in, so being sold to by <span class="b-biz">Demo Detailing Co.</span> feels as curated as the event itself.</p></div></div>' +
+      '<div class="yb-row"><span class="yb-n">05</span><div><h4>Payments that work on both sides of the ocean</h4>' +
+      '<p>Mobile Money and cards in cedis for Ghana; cards in dollars for the US. A deposit locks the date, and milestone reminders chase the balance so <span class="b-owner">the owner</span> never has to.</p></div></div>' +
+      '<div class="yb-row"><span class="yb-n">06</span><div><h4>Your morning cockpit</h4>' +
+      '<p>One phone view each morning: new leads, replies waiting, deposits due, this week’s events. Run the whole thing from a venue floor.</p></div></div>' +
+      '<div class="yb-foot"><b>The Seven-Day Switch-On.</b> Not live within 7 days of our first call? You pay nothing at all. And either way you keep the follow-up scripts written in your voice, and the setup documentation.' +
+      '<span class="yb-price">Custom, done-for-you · $1,500 · founding rate $750 for the first 3 clients, a named review in exchange · optional $222/mo care plan</span></div>' +
+      '</div>'
+  };
+  var buildKey = (qs.get('build')||'').trim();
+  if(buildPanels[buildKey]){
+    document.querySelector('.wired').insertAdjacentHTML('afterend', buildPanels[buildKey]);
+    setBrand();
   }
 
   async function playBookingSheet(){
