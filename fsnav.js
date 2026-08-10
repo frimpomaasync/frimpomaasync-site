@@ -1,4 +1,4 @@
-/* fsnav.js v810 · site chrome for the 2026-07 customer path.
+/* fsnav.js v852 · site chrome, six-group nav (2026-08-10 hierarchy rebuild).
    Ships the sticky nav, footer, sticky CTA bar, section rail, chat widget,
    page cross-fade veil, and the motion engine (data-reveal / data-stagger / data-count).
    Every page includes this once before </body>. Design source: design_handoff_frimpomaasync_site.
@@ -102,10 +102,12 @@
   function activeKey() {
     var p = location.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
     if (p.indexOf("/synkasa") === 0 || p.indexOf("/client-catcher") === 0) return "synkasa";
-    if (p.indexOf("/siesie") === 0) return "siesie";
+    if (p.indexOf("/siesie") === 0 || p.indexOf("/operations-map") === 0 || p.indexOf("/comparison") === 0) return "siesie";
     if (p.indexOf("/soft-appeals") === 0) return "softappeals";
-    if (p.indexOf("/portfolio") === 0) return "proof";
-    if (p.indexOf("/free") === 0) return "free";
+    if (p.indexOf("/portfolio") === 0 || p.indexOf("/results") === 0) return "proof";
+    if (p.indexOf("/method") === 0) return "method";
+    if (p.indexOf("/free") === 0 || p.indexOf("/som") === 0 || p.indexOf("/blog") === 0) return "resources";
+    if (p.indexOf("/about") === 0 || p.indexOf("/data") === 0) return "about";
     return "none";
   }
   /* Which of Soft Appeals' own three pages is open. Only read when activeKey()
@@ -195,12 +197,38 @@
           (onSoft === item[2] ? "#101426" : "rgba(16,20,38,.66)") + '">' + item[0] + "</a>";
       }).join("") +
       "</span></span>";
+    /* 2026-08-10 six-group nav (layer 3 of the hierarchy rebuild). Two systems
+       under one Services menu, then Proof, the method, Resources, About. Soft
+       Appeals left the site bar: it sells to a different buyer, keeps its own
+       bar on its own pages, and stays one tap away in the footer and on the
+       homepage. The Services menu reuses the More panel machinery below —
+       exactly one of the two menus exists per page, so the single-instance
+       binding holds. */
+    var SERVICES_ITEMS = [
+      ["SynKasa · the front desk", "/synkasa", "synkasa"],
+      ["Siesie · the back office", "/siesie", "siesie"],
+      ["The Operations Map", "/operations-map", "siesie-map"]
+    ];
+    var servicesActive = on === "synkasa" || on === "siesie";
     var siteNav =
-      navLink("SynKasa", "/synkasa", "synkasa", on) +
-      navLink("Siesie", "/siesie", "siesie", on) +
-      navLink("Soft Appeals", "/soft-appeals", "softappeals", on) +
+      '<span style="position:relative;display:inline-flex">' +
+      '<button type="button" data-fs-more aria-expanded="false" aria-controls="fs-more-panel" ' +
+      'style="background:none;border:0;padding:0;font:inherit;letter-spacing:inherit;text-transform:inherit;cursor:pointer;color:' +
+      (servicesActive ? "#101426" : "rgba(16,20,38,.58)") + ';transition:color .25s ease">Services ▾</button>' +
+      '<span id="fs-more-panel" data-fs-more-panel style="display:none;position:fixed;top:0;left:0;min-width:196px;' +
+      'flex-direction:column;padding:8px;border:1px solid rgba(16,20,38,.12);border-radius:12px;background:#FFFFFF;' +
+      'box-shadow:0 24px 48px -22px rgba(16,20,38,.45);z-index:60">' +
+      SERVICES_ITEMS.map(function (item) {
+        var itemOn = item[2] === on || (item[2] === "siesie-map" && location.pathname.indexOf("/operations-map") === 0);
+        return '<a data-navlink data-fs-more-link href="' + item[1] +
+          '" style="padding:9px 12px;border-radius:8px;font-size:14px;letter-spacing:normal;text-transform:none;white-space:nowrap;color:' +
+          (itemOn ? "#101426" : "rgba(16,20,38,.66)") + '">' + item[0] + "</a>";
+      }).join("") +
+      "</span></span>" +
       navLink("Proof", "/portfolio", "proof", on) +
-      navLink("Free", "/free", "free", on);
+      navLink("How it works", "/method", "method", on) +
+      navLink("Resources", "/free", "resources", on) +
+      navLink("About", "/about", "about", on);
     nav.innerHTML =
       '<div class="fs-grid" style="max-width:1180px;margin:0 auto;padding:18px 24px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">' +
       '<nav style="display:flex;gap:clamp(14px,1.8vw,26px);flex-wrap:wrap;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase">' +
@@ -211,7 +239,7 @@
       (isSoft
         ? '<a data-navlink data-fs-by href="/" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">by frimpomaasync</a>'
         : '<button type="button" data-navlink data-fs-chat style="background:none;border:0;padding:0;font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);cursor:pointer;transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + (isSoft ? SOFT_CTA : BOOK) + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Complimentary review" : "Book a call") + "</a>" +
+      '<a data-navcta href="' + (isSoft ? SOFT_CTA : "/fit") + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Complimentary review" : "Find my fit") + "</a>" +
       "</div></div>";
     body.insertBefore(nav, body.firstChild);
 
@@ -371,12 +399,12 @@
       '<div style="max-width:1180px;margin:0 auto;padding:56px 24px 96px;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:32px;align-items:start">' +
       '<div><div style="font-family:' + SERIF + ';font-size:19px;color:#F2F4F9">frimpomaasync</div>' +
       '<div style="margin-top:10px;font-size:13.5px;line-height:1.6">Built, wired, and cared for by Nana Frimpongmaa.</div></div>' +
-      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/synkasa">SynKasa</a><a href="/siesie">Siesie</a><a href="/soft-appeals">Soft Appeals</a><a href="/portfolio">Proof</a></div>' +
-      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/free">Free</a><a href="/som">Som</a><a href="/blog/">Blog</a><a href="/fit">Find your fit</a></div>' +
-      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/operations-map">Operations Map</a><a href="/method">The method</a><a href="/results">Evidence</a><a href="/comparison">Compare</a><a href="/about">About</a><a href="/data">Your data</a></div>' +
+      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/synkasa">SynKasa</a><a href="/siesie">Siesie</a><a href="/operations-map">The Operations Map</a><a href="/comparison">Compare the cost</a><a href="/soft-appeals">Soft Appeals · healthcare</a></div>' +
+      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/portfolio">Proof</a><a href="/results">Evidence</a><a href="/method">The method</a><a href="/fit">Find your fit</a></div>' +
+      '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/free">Free tools</a><a href="/som">Som</a><a href="/blog/">Blog</a></div>' +
       (isSoft
-        ? '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/soft-appeals-contact">Contact and due diligence</a><a href="/soft-appeals-start">Start a denial review</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>'
-        : '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="' + BOOK + '">Book a call</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>') +
+        ? '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/soft-appeals-contact">Contact and due diligence</a><a href="/soft-appeals-start">Start a denial review</a><a href="/about">About</a><a href="/data">Your data</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>'
+        : '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/about">About</a><a href="/data">Your data</a><a href="/ugc">For software brands</a><a href="' + BOOK + '">Book a call</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>') +
       '<div style="margin-top:14px;font-family:' + MONO + ';font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,244,249,.34)">Watch it work before you pay</div></div>' +
       "</div>";
     body.appendChild(foot);
@@ -394,7 +422,7 @@
       (isSoft
         ? '<a data-navlink href="' + (onSoft === "soft-sample" ? "/soft-appeals-data-security" : "/soft-appeals-sample-assessment") + '" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">' + (onSoft === "soft-sample" ? "Review data and security" : "View a sample assessment") + "</a>"
         : '<button type="button" data-navlink data-fs-chat style="font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;background:none;border:0;padding:0;color:rgba(16,20,38,.58);transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + (isSoft ? SOFT_CTA : BOOK) + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Complimentary review" : "Book a call") + "</a>" +
+      '<a data-navcta href="' + (isSoft ? SOFT_CTA : "/fit") + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Complimentary review" : "Find my fit") + "</a>" +
       "</div>";
     body.appendChild(barEl);
 
