@@ -10,6 +10,16 @@ Guarantee, for SynKasa builds: "Live in 7 days, or you don't pay." Siesie implem
 
 The guarantee covers the agreed system going live. It never promises a number of bookings, because bookings depend on the inquiries the business receives.
 
+## Problem pages
+
+One page per problem, each ending at the right fit path:
+
+- Missed call follow-up: https://frimpomaasync.com/missed-call-follow-up
+- Lead follow-up automation: https://frimpomaasync.com/lead-follow-up-automation
+- Appointment reminders and no-shows: https://frimpomaasync.com/appointment-reminders
+- Quote follow-up: https://frimpomaasync.com/quote-follow-up
+- Operations automation: https://frimpomaasync.com/small-business-operations-automation
+
 ## Visitor path
 
 1. Name the business leak on the homepage.
