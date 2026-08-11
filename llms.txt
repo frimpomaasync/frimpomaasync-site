@@ -6,7 +6,7 @@ There is a second audience with its own product. Soft Appeals recovers denied in
 
 Primary slogan: "Watch it work before you pay."
 
-Guarantee: "Live in 7 days, or you don't pay."
+Guarantee, for SynKasa builds: "Live in 7 days, or you don't pay." Siesie implementations follow the Operations Map, and their launch clock starts once scope, approval, payment, and access are complete.
 
 The guarantee covers the agreed system going live. It never promises a number of bookings, because bookings depend on the inquiries the business receives.
 
@@ -62,7 +62,7 @@ Siesie is the back office above the SynKasa ladder. It covers five roles:
 4. Account management
 5. Reporting
 
-Siesie is $25,000 once. It is for an established business where four or five of those roles still return to the owner.
+Siesie starts at $25,000, once, with the exact scope and price set by the Operations Map. It is for an established business where four or five of those roles still return to the owner.
 
 Before a Siesie build there is a paid diagnostic, the Operations Map: https://frimpomaasync.com/operations-map
 

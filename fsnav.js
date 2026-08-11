@@ -228,7 +228,8 @@
       navLink("Proof", "/portfolio", "proof", on) +
       navLink("How it works", "/method", "method", on) +
       navLink("Resources", "/free", "resources", on) +
-      navLink("About", "/about", "about", on);
+      navLink("About", "/about", "about", on) +
+      navLink("Soft Appeals", "/soft-appeals", "softappeals", on);
     nav.innerHTML =
       '<div class="fs-grid" style="max-width:1180px;margin:0 auto;padding:18px 24px 16px;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:16px">' +
       '<nav style="display:flex;gap:clamp(14px,1.8vw,26px);flex-wrap:wrap;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase">' +
