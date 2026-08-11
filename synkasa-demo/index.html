@@ -742,6 +742,12 @@
     document.querySelectorAll('.b-ownerline').forEach(function(el){ el.textContent = BRAND.ownerLine; });
   }
 
+  /* First-party funnel count: the demo was opened. Anonymous, no cookies,
+     no IP kept, declared on /privacy. Nothing fires under Do Not Track. */
+  if(!(navigator.doNotTrack === "1" || window.doNotTrack === "1")){
+    try{ navigator.sendBeacon && navigator.sendBeacon("/event.php", new Blob([JSON.stringify({e:"demo_opened",p:location.pathname})],{type:"application/json"})); }catch(e){}
+  }
+
   /* rebrandable links: /synkasa-demo/?biz=Lash+Lounge+by+Kim&owner=Kim */
   var qs = new URLSearchParams(location.search);
   if((qs.get('biz')||'').trim() || (qs.get('owner')||'').trim()){

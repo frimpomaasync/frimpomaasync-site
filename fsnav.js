@@ -537,6 +537,39 @@
     nums.forEach(function (el) { cio.observe(el); });
   }
 
+  /* ---------- funnel counter (first-party, anonymous) ----------
+     Five events, counted on this site's own server via /event.php.
+     No cookies, no IDs, no IP kept, no third party, and nothing fires
+     for a browser sending Do Not Track. Declared on /privacy. */
+  (function () {
+    if (navigator.doNotTrack === "1" || window.doNotTrack === "1") return;
+    var send = function (ev) {
+      try {
+        if (!navigator.sendBeacon) return;
+        navigator.sendBeacon("/event.php", new Blob(
+          [JSON.stringify({ e: ev, p: location.pathname })],
+          { type: "application/json" }
+        ));
+      } catch (e) { /* counting must never break a page */ }
+    };
+    var p = location.pathname.replace(/\.html$/, "").replace(/\/$/, "") || "/";
+    if (p === "/fit-thanks" || p === "/thank-you") send("fit_submitted");
+    if (p === "/booked") send("booking_completed");
+    document.addEventListener("click", function (e) {
+      var c = e.target.closest && e.target.closest(".choice[data-leak]");
+      if (c) send("problem_selected");
+      var d = e.target.closest && e.target.closest('a[href^="/synkasa-demo"]');
+      if (d) send("demo_opened");
+    });
+    if (p === "/synkasa-fit" || p === "/siesie-application") {
+      var fired = false;
+      document.addEventListener("focusin", function (e) {
+        if (fired || !e.target) return;
+        if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName)) { fired = true; send("fit_started"); }
+      });
+    }
+  })();
+
   /* ---------- page cross-fade veil ---------- */
   if (!reduce) {
     var veil = document.createElement("div");

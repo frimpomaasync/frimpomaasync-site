@@ -2,5 +2,8 @@ User-agent: *
 Allow: /
 Disallow: /thank-you.html
 Disallow: /intake.html
+Disallow: /event.php
+Disallow: /stats.php
+Disallow: /fs-metrics/
 
 Sitemap: https://frimpomaasync.com/sitemap.xml

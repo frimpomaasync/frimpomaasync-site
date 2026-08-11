@@ -1,0 +1,3 @@
+# The funnel event log lives here. Nothing in this folder is served to a
+# browser; event.php appends to it and stats.php reads it, both server-side.
+Require all denied
