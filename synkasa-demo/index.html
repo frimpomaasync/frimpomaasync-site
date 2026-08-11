@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- v2026-07-23.3 · build=events custom 6-layer panel -->
+<!-- v2026-08-11.1 · three-skin chooser (home / appointments / projects) · build=events panel unchanged -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -107,6 +107,23 @@
     text-decoration:underline;text-underline-offset:3px;
   }
   .rebrand-link:hover{color:var(--ink)}
+
+  /* ---------- three-skin chooser ---------- */
+  .skinpick{margin:0 0 24px}
+  .skinpick-k{
+    display:block;font-family:var(--mono);font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--copper-deep);margin-bottom:10px;
+  }
+  .skinpick-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:660px}
+  .skinpick-b{
+    text-align:left;background:var(--card);border:1px solid var(--hairline);border-radius:14px;
+    padding:11px 13px;transition:border-color .18s ease,transform .18s ease;
+  }
+  .skinpick-b b{display:block;font-size:13.5px;font-weight:600;color:var(--ink)}
+  .skinpick-b span{display:block;font-size:11px;color:var(--muted);margin-top:3px;line-height:1.3}
+  .skinpick-b:hover{border-color:var(--ink);transform:translateY(-1px)}
+  .skinpick-b.on{border-color:var(--copper);box-shadow:inset 0 0 0 1px var(--copper)}
+  .skinpick-b.on b{color:var(--copper-deep)}
 
   .stepper{display:flex;gap:10px;margin:26px 0 0;flex-wrap:wrap}
   .step{
@@ -322,6 +339,7 @@
     main{padding:22px 18px 110px}
     .hero{padding:24px 22px}
     .tiles,.how,.wired-grid{grid-template-columns:1fr}
+    .skinpick-row{grid-template-columns:1fr}
     .day{grid-template-columns:76px 1fr;gap:14px}
     .thread{padding:20px 16px}
     .msg{max-width:88%}
@@ -446,8 +464,21 @@
     <!-- TODAY -->
     <section id="view-today" class="on">
       <div class="hero">
-        <h2>While <span class="b-owner">the owner</span> is with a client, nothing slips.</h2>
-        <p>Every missed call, form fill, and DM gets caught, answered in <span class="b-owner">the owner</span>'s own voice, and walked to a booked appointment. Automatically. Press play and watch one lead go all the way through.</p>
+        <h2 id="heroH">While <span class="b-owner">the owner</span> is with a client, nothing slips.</h2>
+        <p id="heroP">Every missed call, form fill, and DM gets caught, answered in <span class="b-owner">the owner</span>'s own voice, and walked to a booked appointment. Automatically. Press play and watch one lead go all the way through.</p>
+
+        <div class="skinpick" id="skinPick" role="group" aria-label="Choose the kind of business">
+          <span class="skinpick-k">Show me this for</span>
+          <div class="skinpick-row">
+            <button class="skinpick-b on" data-skin="home" onclick="pickSkin('home')">
+              <b>A home service</b><span>Detailing, cleaning, lawns, repairs</span></button>
+            <button class="skinpick-b" data-skin="appointments" onclick="pickSkin('appointments')">
+              <b>An appointment business</b><span>Lashes, hair, nails, treatment rooms</span></button>
+            <button class="skinpick-b" data-skin="projects" onclick="pickSkin('projects')">
+              <b>A project business</b><span>Renovations, builds, events, shoots</span></button>
+          </div>
+        </div>
+
         <button class="run-btn" id="runBtn" onclick="runDemo()"><span class="dot"></span> Run a demo lead <span class="arr">→</span></button>
         <button class="reset-link" id="resetBtn" onclick="resetDemo()" hidden>Reset demo</button>
         <div class="stepper" aria-hidden="true">
@@ -461,7 +492,7 @@
 
       <div class="tiles">
         <div class="tile">
-          <div class="k">Leads caught</div>
+          <div class="k" id="tile1k">Leads caught</div>
           <div class="n" id="statLeads">34</div>
           <div class="s">this month · demo data</div>
           <div class="bar"><i style="width:0" data-w="72%"></i></div>
@@ -473,14 +504,14 @@
           <div class="bar red"><i style="width:0" data-w="94%"></i></div>
         </div>
         <div class="tile">
-          <div class="k">Booked</div>
+          <div class="k" id="tile3k">Booked</div>
           <div class="n" id="statBooked">21</div>
-          <div class="s">appointments on the calendar</div>
+          <div class="s" id="tile3s">appointments on the calendar</div>
           <div class="bar"><i style="width:0" data-w="62%"></i></div>
         </div>
       </div>
 
-      <div class="how">
+      <div class="how" id="howCards">
         <div class="card"><div class="kk">01</div><h3>Catch</h3><p>A missed call, website form, or DM lands in one inbox. Triaged and scored the second it arrives.</p></div>
         <div class="card"><div class="kk">02</div><h3>Follow up</h3><p>A reply goes out in <span class="b-owner">the owner</span>'s voice within seconds. Warm, human, never a robot script.</p></div>
         <div class="card"><div class="kk">03</div><h3>Book</h3><p>The customer picks their own slot on a live booking page. Confirmed, reminder included.</p></div>
@@ -488,7 +519,7 @@
 
       <div class="wired">
         <div class="wt">The custom wiring · what a done-for-you install includes</div>
-        <div class="wired-grid">
+        <div class="wired-grid" id="wiredGrid">
           <div class="wire">
             <h4>The call bridge <span class="wchip">Custom glue</span></h4>
             <p>Off-the-shelf AI packs can't hear your phone ring. The install wires missed calls into the catcher. Every unanswered call becomes an instant, personal text-back before the caller dials your competitor.</p>
@@ -557,17 +588,17 @@
 
     <!-- CALENDAR -->
     <section id="view-calendar">
-      <div class="cal-week">JULY · WEEK 30 · DEMO CALENDAR</div>
+      <div class="cal-week" id="calWeek">JULY · WEEK 30 · DEMO CALENDAR</div>
       <div class="day">
         <div><div class="num">21</div><div class="wd">Tue</div></div>
-        <div class="evts">
+        <div class="evts" id="d21">
           <div class="evt"><span class="tm">9:00</span><span class="tt">Full detail · Missed caller</span><span class="tg auto">Auto-booked</span></div>
           <div class="evt copper"><span class="tm">1:30</span><span class="tt">Exterior wash · Okafor twins</span><span class="tg">Repeat</span></div>
         </div>
       </div>
       <div class="day">
         <div><div class="num">22</div><div class="wd">Wed</div></div>
-        <div class="evts"><div class="evt"><span class="tm">10:00</span><span class="tt">Ceramic coat, day 1 · pickup truck</span><span class="tg">2 days</span></div></div>
+        <div class="evts" id="d22"><div class="evt"><span class="tm">10:00</span><span class="tt">Ceramic coat, day 1 · pickup truck</span><span class="tg">2 days</span></div></div>
       </div>
       <div class="day today">
         <div><div class="num">23</div><div class="wd">Thu</div></div>
@@ -575,14 +606,14 @@
       </div>
       <div class="day">
         <div><div class="num">24</div><div class="wd">Fri</div></div>
-        <div class="evts"><div class="evt copper"><span class="tm">11:00</span><span class="tt">Interior refresh · Instagram lead</span><span class="tg auto">Auto-booked</span></div></div>
+        <div class="evts" id="d24"><div class="evt copper"><span class="tm">11:00</span><span class="tt">Interior refresh · Instagram lead</span><span class="tg auto">Auto-booked</span></div></div>
       </div>
     </section>
     <!-- closing band: the reliable exit on desktop AND mobile -->
     <section class="cc-close">
       <span class="cck">When you close up tonight</span>
       <h2>Nothing slipped. And you didn't do any of it.</h2>
-      <p>Everything you just watched (the missed call caught, the reply sent in
+      <p id="ccP">Everything you just watched (the missed call caught, the reply sent in
         <span class="b-owner">the owner</span>'s own words, the slot the customer booked herself) is the
         install. <b>It's built in your own name, wired around the tools you already use.</b> You don't buy
         software, learn a system, or manage anything. You just stop losing the work you already won.</p>
@@ -613,7 +644,7 @@
   <div class="sheet">
     <span class="sk">Jasmine's screen · live booking page</span>
     <h3>Book with <span class="b-biz">Demo Detailing Co.</span></h3>
-    <div class="sd">Full service · Thursday, July 23</div>
+    <div class="sd" id="sheetSvc">Full service · Thursday, July 23</div>
     <div class="slots">
       <div class="slot taken">9:00 AM</div>
       <div class="slot" id="slot10">10:00 AM</div>
@@ -629,7 +660,7 @@
   <div class="cele-card">
     <div class="check"><svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5l5 5L20 6.5"/></svg></div>
     <h3>Booked ✓</h3>
-    <p><b>Jasmine T.</b> · Full service<br>Thursday the 23rd · 10:00 AM<br>She picked the slot herself. Reminder text scheduled for Wednesday night.</p>
+    <p id="celeP"><b>Jasmine T.</b> · Full service<br>Thursday the 23rd · 10:00 AM<br>She picked the slot herself. Reminder text scheduled for Wednesday night.</p>
     <span class="fine">Caught → followed up → booked · 42 seconds · zero taps from <span class="b-owner">the owner</span></span>
     <div class="cele-actions">
       <a class="cele-go" href="/book-call" target="_blank" rel="noopener">
@@ -724,16 +755,6 @@
 
   function ownerMeta(){ return 'Sent automatically · in ' + esc(BRAND.owner) + '’s voice'; }
 
-  function seedThread(){
-    document.getElementById('threadAva').textContent = 'FU';
-    document.getElementById('threadName').textContent = 'Follow-ups';
-    document.getElementById('threadStatus').textContent = 'Replies go out in ' + BRAND.owner + '’s voice, automatically';
-    document.getElementById('msgs').innerHTML =
-      '<div class="msg cust">Hi! Do you do pet hair removal? My back seat is… a situation.<span class="meta">Website lead · website form · 9:12 AM</span></div>' +
-      '<div class="msg owner">Ha! Pet hair is my nemesis and I win every time. Yes, it’s included in the full service. Want me to send you my openings this week?<span class="meta">' + ownerMeta() + ' · 9:12 AM</span></div>';
-  }
-  seedThread();
-
   function setBrand(biz, owner){
     if(biz) BRAND.biz = biz;
     if(owner){ BRAND.owner = owner; BRAND.ownerLine = owner + ' · solo owner'; }
@@ -742,18 +763,272 @@
     document.querySelectorAll('.b-ownerline').forEach(function(el){ el.textContent = BRAND.ownerLine; });
   }
 
+  /* ---------- the three skins ----------
+     One engine, three coherent stories. A name swap alone would leave a lash
+     studio talking about pet hair, so every business-specific string moves
+     together: the hero, the three steps, the custom wiring, the lead inbox,
+     the seeded thread, the calendar, the booking sheet and the closing line.
+     `home` is the default and matches the base HTML exactly, so the no-script
+     and crawler view of this page stays internally coherent. */
+  var SKINS = {
+    home: {
+      label:'a home service',
+      biz:'Demo Detailing Co.',
+      heroH:'While {owner} is with a client, nothing slips.',
+      heroP:'Every missed call, form fill, and DM gets caught, answered in {owner}’s own voice, and walked to a booked appointment. Automatically. Press play and watch one lead go all the way through.',
+      tile1k:'Leads caught', tile3k:'Booked', tile3s:'appointments on the calendar',
+      leads:34, booked:21,
+      how:[
+        {n:'01', h:'Catch', p:'A missed call, website form, or DM lands in one inbox. Triaged and scored the second it arrives.'},
+        {n:'02', h:'Follow up', p:'A reply goes out in {owner}’s voice within seconds. Warm, human, never a robot script.'},
+        {n:'03', h:'Book', p:'The customer picks their own slot on a live booking page. Confirmed, reminder included.'}
+      ],
+      wires:[
+        {h:'The call bridge', p:'Off-the-shelf AI packs can’t hear your phone ring. The install wires missed calls into the catcher. Every unanswered call becomes an instant, personal text-back before the caller dials your competitor.'},
+        {h:'Self-serve booking', p:'No AI pack books the appointment for you. The install connects a live booking page to the conversation, so customers pick their own slot and it lands straight on the real calendar.'}
+      ],
+      inbox:[
+        {ava:'RG', nm:'Missed caller', src:'Missed call', srcCls:'call', chips:['Returning','Interior refresh'], pill:'Booked ✓', pillCls:'booked', score:88},
+        {ava:'ML', nm:'Instagram lead', src:'Instagram DM', chips:['New customer','Price question'], pill:'Replied ✓', pillCls:'replied', score:64},
+        {ava:'DP', nm:'Website lead', src:'Website form', chips:['New customer','Fleet quote'], pill:'Replied ✓', pillCls:'replied', score:71}
+      ],
+      seedCust:'Hi! Do you do pet hair removal? My back seat is… a situation.',
+      seedCustMeta:'Website lead · website form · 9:12 AM',
+      seedOwner:'Ha! Pet hair is my nemesis and I win every time. Yes, it’s included in the full service. Want me to send you my openings this week?',
+      calWeek:'JULY · WEEK 30 · DEMO CALENDAR',
+      d21:[{tm:'9:00', tt:'Full detail · Missed caller', tg:'Auto-booked', tgCls:'auto'},
+           {tm:'1:30', tt:'Exterior wash · Okafor twins', tg:'Repeat', cls:'copper'}],
+      d22:[{tm:'10:00', tt:'Ceramic coat, day 1 · pickup truck', tg:'2 days'}],
+      d24:[{tm:'11:00', tt:'Interior refresh · Instagram lead', tg:'Auto-booked', tgCls:'auto', cls:'copper'}],
+      thuEmpty:'Nothing booked yet. The day is open.',
+      catchToast:'Missed call · <b>(555) 014-7789</b><br>{owner} is with a client. Instant text-back sent.',
+      runChips:['New customer','Full service','Wants this week'],
+      caughtToast:'<b>Jasmine T.</b> triaged: new customer · full service · wants this week. Score <b>92 · hot</b>.',
+      msg1:'Hey Jasmine! {owner} here from {biz}. So sorry I missed your call. I was mid-appointment. I’d love to take care of you this week!',
+      custReply:'yes please!! do you have anything thursday?',
+      msg2:'Thursday’s open! Here’s my live booking page, grab whichever time works for you. <u>tap to book</u>',
+      bookToast:'<b>Jasmine T.</b> picked her own slot · Thu 10:00 AM. Zero back-and-forth.',
+      custBooked:'booked!! see you thursday',
+      msg3:'You’re all set for Thursday at 10:00 AM. I’ll text you a reminder Wednesday night. See you then!',
+      sheetSvc:'Full service · Thursday, July 23',
+      confirmLabel:'Confirm booking',
+      celeP:'<b>Jasmine T.</b> · Full service<br>Thursday the 23rd · 10:00 AM<br>She picked the slot herself. Reminder text scheduled for Wednesday night.',
+      evtTitle:'Full service · Jasmine T.', evtTag:'Self-booked',
+      closeLine:'the slot the customer booked herself',
+      phBiz:'e.g. Mensah Mobile Detailing', phOwner:'e.g. Kwame'
+    },
+
+    appointments: {
+      label:'an appointment business',
+      biz:'Demo Lash Studio',
+      heroH:'While {owner} has a client in the chair, nothing slips.',
+      heroP:'Every missed call, DM, and booking request gets caught, answered in {owner}’s own voice, and walked to a booked appointment with a deposit on it. Automatically. Press play and watch one client go all the way through.',
+      tile1k:'Leads caught', tile3k:'Booked', tile3s:'appointments on the calendar',
+      leads:41, booked:28,
+      how:[
+        {n:'01', h:'Catch', p:'A missed call, Instagram DM, or booking request lands in one inbox. Triaged and scored the second it arrives.'},
+        {n:'02', h:'Follow up', p:'A reply goes out in {owner}’s voice within seconds. Warm, human, never a robot script.'},
+        {n:'03', h:'Book', p:'The client picks her own slot, leaves the deposit, and gets the night-before reminder that keeps the chair full.'}
+      ],
+      wires:[
+        {h:'The call bridge', p:'Off-the-shelf AI packs can’t hear your phone ring. The install wires missed calls into the catcher. Every unanswered call becomes an instant, personal text-back before the caller books with the studio down the road.'},
+        {h:'Deposits and reminders', p:'No AI pack holds a card for you. The install connects a live booking page that takes the deposit at the moment of booking, then sends the confirmation and the night-before reminder. That pair is what empties a no-show list.'}
+      ],
+      inbox:[
+        {ava:'RG', nm:'Missed caller', src:'Missed call', srcCls:'call', chips:['Returning client','Fill + tint'], pill:'Booked ✓', pillCls:'booked', score:88},
+        {ava:'ML', nm:'Instagram lead', src:'Instagram DM', chips:['New client','Price question'], pill:'Replied ✓', pillCls:'replied', score:64},
+        {ava:'DP', nm:'Website lead', src:'Website form', chips:['New client','Bridal party'], pill:'Replied ✓', pillCls:'replied', score:71}
+      ],
+      seedCust:'Hi! How long does a full set take, and do you have anything Saturday?',
+      seedCustMeta:'Website lead · website form · 9:12 AM',
+      seedOwner:'About two hours for a full set, and Saturday I still have 10:00 and 2:30 open. Want me to send you my booking page?',
+      calWeek:'JULY · WEEK 30 · DEMO CALENDAR',
+      d21:[{tm:'9:00', tt:'Full set · Missed caller', tg:'Auto-booked', tgCls:'auto'},
+           {tm:'1:30', tt:'Fill + tint · Adjei twins', tg:'Repeat', cls:'copper'}],
+      d22:[{tm:'10:00', tt:'Brow lamination · Rita M.', tg:'Deposit paid'}],
+      d24:[{tm:'11:00', tt:'Lash lift · Instagram lead', tg:'Auto-booked', tgCls:'auto', cls:'copper'}],
+      thuEmpty:'Nothing booked yet. The day is open.',
+      catchToast:'Missed call · <b>(555) 014-7789</b><br>{owner} has a client in the chair. Instant text-back sent.',
+      runChips:['New client','Full set','Wants this week'],
+      caughtToast:'<b>Jasmine T.</b> triaged: new client · full set · wants this week. Score <b>92 · hot</b>.',
+      msg1:'Hey Jasmine! {owner} here from {biz}. So sorry I missed your call. I was mid-appointment. I’d love to get you in this week!',
+      custReply:'yes please!! do you have anything thursday?',
+      msg2:'Thursday’s open! Here’s my live booking page, grab whichever time works for you. <u>tap to book</u>',
+      bookToast:'<b>Jasmine T.</b> picked her own slot and left the deposit · Thu 10:00 AM. Zero back-and-forth.',
+      custBooked:'booked!! see you thursday',
+      msg3:'You’re all set for Thursday at 10:00 AM. Your deposit is on file, and I’ll text you a reminder Wednesday night. See you then!',
+      sheetSvc:'Full set · Thursday, July 23',
+      confirmLabel:'Confirm and pay deposit',
+      celeP:'<b>Jasmine T.</b> · Full set<br>Thursday the 23rd · 10:00 AM<br>She picked the slot and left the deposit herself. Reminder text scheduled for Wednesday night.',
+      evtTitle:'Full set · Jasmine T.', evtTag:'Self-booked',
+      closeLine:'the deposit the client left herself',
+      phBiz:'e.g. Lash Lounge by Kim', phOwner:'e.g. Kim'
+    },
+
+    projects: {
+      label:'a project business',
+      biz:'Demo Renovations Co.',
+      heroH:'While {owner} is on site, nothing slips.',
+      heroP:'Every missed call, form fill, and quote request gets caught, answered in {owner}’s own voice, and walked to a booked site visit with the date held. Automatically. Press play and watch one enquiry go all the way through.',
+      tile1k:'Enquiries caught', tile3k:'Site visits booked', tile3s:'held on the calendar',
+      leads:22, booked:14,
+      how:[
+        {n:'01', h:'Catch', p:'A missed call, website form, or DM lands in one inbox. Triaged and scored the second it arrives.'},
+        {n:'02', h:'Follow up', p:'A reply goes out in {owner}’s voice within seconds. Warm, human, never a robot script.'},
+        {n:'03', h:'Hold the date', p:'The client picks a site visit time and holds the date with a deposit. Straight onto the real calendar.'}
+      ],
+      wires:[
+        {h:'The call bridge', p:'Off-the-shelf AI packs can’t hear your phone ring. The install wires missed calls into the catcher. Every unanswered call becomes an instant, personal text-back before the caller works down the list to the next contractor.'},
+        {h:'The quote that chases itself', p:'No AI pack follows up an estimate for you. The install keeps every quote you send warm on its own schedule, in your words, until the client answers yes or no. Nothing sits in “I’ll get back to you” for three weeks.'}
+      ],
+      inbox:[
+        {ava:'RG', nm:'Missed caller', src:'Missed call', srcCls:'call', chips:['Returning client','Kitchen refit'], pill:'Booked ✓', pillCls:'booked', score:88},
+        {ava:'ML', nm:'Instagram lead', src:'Instagram DM', chips:['New client','Budget question'], pill:'Replied ✓', pillCls:'replied', score:64},
+        {ava:'DP', nm:'Website lead', src:'Website form', chips:['New client','Quote sent'], pill:'Replied ✓', pillCls:'replied', score:71}
+      ],
+      seedCust:'Hi! Do you do full bathroom refits? Ours is about six square metres.',
+      seedCustMeta:'Website lead · website form · 9:12 AM',
+      seedOwner:'We do, it’s the job we get asked for most. Want me to send you my openings for a site visit this week?',
+      calWeek:'JULY · WEEK 30 · DEMO CALENDAR',
+      d21:[{tm:'9:00', tt:'Site visit · Missed caller', tg:'Auto-booked', tgCls:'auto'},
+           {tm:'1:30', tt:'Kitchen refit · day 4', tg:'On site', cls:'copper'}],
+      d22:[{tm:'10:00', tt:'Quote walkthrough · Okafor family', tg:'Deposit due'}],
+      d24:[{tm:'11:00', tt:'Consultation · Instagram lead', tg:'Auto-booked', tgCls:'auto', cls:'copper'}],
+      thuEmpty:'Nothing held yet. The day is open.',
+      catchToast:'Missed call · <b>(555) 014-7789</b><br>{owner} is on site. Instant text-back sent.',
+      runChips:['New client','Bathroom refit','Wants a site visit'],
+      caughtToast:'<b>Jasmine T.</b> triaged: new client · bathroom refit · wants a site visit. Score <b>92 · hot</b>.',
+      msg1:'Hey Jasmine! {owner} here from {biz}. So sorry I missed your call. I was on site. I’d love to come take a look this week!',
+      custReply:'yes please!! do you have anything thursday?',
+      msg2:'Thursday’s open! Here’s my live booking page, pick a time and it holds your date. <u>tap to book</u>',
+      bookToast:'<b>Jasmine T.</b> held her own date · Thu 10:00 AM. Zero back-and-forth.',
+      custBooked:'booked!! see you thursday',
+      msg3:'You’re all set for Thursday at 10:00 AM. Your date is held, and I’ll text you a reminder Wednesday night. See you then!',
+      sheetSvc:'Site visit · Thursday, July 23',
+      confirmLabel:'Hold my date',
+      celeP:'<b>Jasmine T.</b> · Site visit<br>Thursday the 23rd · 10:00 AM<br>She picked the time and held the date herself. Reminder text scheduled for Wednesday night.',
+      evtTitle:'Site visit · Jasmine T.', evtTag:'Self-booked',
+      closeLine:'the date the client held herself',
+      phBiz:'e.g. Adom Renovations', phOwner:'e.g. Kofi'
+    }
+  };
+
+  var SKIN_KEY = 'home', SKIN = SKINS.home;
+  var PINNED = {biz:false, owner:false};
+
+  /* {owner} and {biz} become the same live spans setBrand() already paints,
+     so a skin change and a rebrand never fight over the same text node. */
+  function mark(s){
+    return s.replace(/\{owner\}/g, '<span class="b-owner"></span>')
+            .replace(/\{biz\}/g, '<span class="b-biz"></span>');
+  }
+  /* For strings built in script (messages, toasts) the brand goes in escaped. */
+  function plain(s){
+    return s.replace(/\{owner\}/g, esc(BRAND.owner)).replace(/\{biz\}/g, esc(BRAND.biz));
+  }
+
+  function seedThread(){
+    document.getElementById('threadAva').textContent = 'FU';
+    document.getElementById('threadName').textContent = 'Follow-ups';
+    document.getElementById('threadStatus').textContent = 'Replies go out in ' + BRAND.owner + '’s voice, automatically';
+    document.getElementById('msgs').innerHTML =
+      '<div class="msg cust">' + SKIN.seedCust + '<span class="meta">' + SKIN.seedCustMeta + '</span></div>' +
+      '<div class="msg owner">' + SKIN.seedOwner + '<span class="meta">' + ownerMeta() + ' · 9:12 AM</span></div>';
+  }
+
+  function evtHTML(e){
+    return '<div class="evt' + (e.cls ? ' ' + e.cls : '') + '">' +
+      '<span class="tm">' + e.tm + '</span><span class="tt">' + e.tt + '</span>' +
+      '<span class="tg' + (e.tgCls ? ' ' + e.tgCls : '') + '">' + e.tg + '</span></div>';
+  }
+
+  function applySkin(key){
+    SKIN_KEY = SKINS[key] ? key : 'home';
+    SKIN = SKINS[SKIN_KEY];
+
+    /* a pinned ?biz= / ?owner= link always outranks the skin's demo names */
+    if(!PINNED.biz) BRAND.biz = SKIN.biz;
+    if(!PINNED.owner){ BRAND.owner = 'the owner'; BRAND.ownerLine = 'a solo owner · demo data'; }
+
+    document.getElementById('heroH').innerHTML = mark(SKIN.heroH);
+    document.getElementById('heroP').innerHTML = mark(SKIN.heroP);
+    document.getElementById('tile1k').textContent = SKIN.tile1k;
+    document.getElementById('tile3k').textContent = SKIN.tile3k;
+    document.getElementById('tile3s').textContent = SKIN.tile3s;
+    document.getElementById('statLeads').textContent = SKIN.leads;
+    document.getElementById('statBooked').textContent = SKIN.booked;
+
+    document.getElementById('howCards').innerHTML = SKIN.how.map(function(c){
+      return '<div class="card"><div class="kk">' + c.n + '</div><h3>' + c.h + '</h3><p>' + mark(c.p) + '</p></div>';
+    }).join('');
+
+    document.getElementById('wiredGrid').innerHTML = SKIN.wires.map(function(w){
+      return '<div class="wire"><h4>' + w.h + ' <span class="wchip">Custom glue</span></h4><p>' + mark(w.p) + '</p></div>';
+    }).join('');
+
+    document.getElementById('leadList').innerHTML = SKIN.inbox.map(function(l){
+      return '<div class="lead"><div class="ava">' + l.ava + '</div>' +
+        '<div class="who"><div class="nm">' + l.nm +
+        ' <span class="src' + (l.srcCls ? ' ' + l.srcCls : '') + '">' + l.src + '</span></div>' +
+        '<div class="chips">' + l.chips.map(function(c){ return '<span class="chip">' + c + '</span>'; }).join('') + '</div></div>' +
+        '<span class="stat-pill ' + l.pillCls + '">' + l.pill + '</span>' +
+        '<div class="score"><div class="v">' + l.score + '</div><div class="t">Score</div></div></div>';
+    }).join('');
+
+    document.getElementById('calWeek').textContent = SKIN.calWeek;
+    document.getElementById('d21').innerHTML = SKIN.d21.map(evtHTML).join('');
+    document.getElementById('d22').innerHTML = SKIN.d22.map(evtHTML).join('');
+    document.getElementById('d24').innerHTML = SKIN.d24.map(evtHTML).join('');
+    document.getElementById('thuEvts').innerHTML =
+      '<div class="empty" id="thuEmpty">' + SKIN.thuEmpty + '</div>';
+
+    document.getElementById('sheetSvc').textContent = SKIN.sheetSvc;
+    document.getElementById('bookConfirm').textContent = SKIN.confirmLabel;
+    document.getElementById('celeP').innerHTML = SKIN.celeP;
+    document.getElementById('ccP').innerHTML = mark('Everything you just watched (the missed call caught, the reply sent in ' +
+      '{owner}’s own words, ' + SKIN.closeLine + ') is the install. <b>It’s built in your own name, wired around the ' +
+      'tools you already use.</b> You don’t buy software, learn a system, or manage anything. You just stop losing the ' +
+      'work you already won.');
+    document.getElementById('rebBiz').placeholder = SKIN.phBiz;
+    document.getElementById('rebOwner').placeholder = SKIN.phOwner;
+
+    document.querySelectorAll('.skinpick-b').forEach(function(b){
+      b.classList.toggle('on', b.getAttribute('data-skin') === SKIN_KEY);
+    });
+
+    setBrand();
+    seedThread();
+  }
+
+  function pickSkin(key){
+    if(key === SKIN_KEY) return;
+    applySkin(key);
+    resetDemo();
+    try{
+      var u = new URL(location.href);
+      u.searchParams.set('skin', SKIN_KEY);
+      history.replaceState(null, '', u);
+    }catch(e){}
+    toast('Skin changed', 'The demo now runs as <b>' + SKIN.label + '</b>. The inbox, the thread, the calendar and the booking page all moved with it.');
+  }
+
   /* First-party funnel count: the demo was opened. Anonymous, no cookies,
      no IP kept, declared on /privacy. Nothing fires under Do Not Track. */
   if(!(navigator.doNotTrack === "1" || window.doNotTrack === "1")){
     try{ navigator.sendBeacon && navigator.sendBeacon("/event.php", new Blob([JSON.stringify({e:"demo_opened",p:location.pathname})],{type:"application/json"})); }catch(e){}
   }
 
-  /* rebrandable links: /synkasa-demo/?biz=Lash+Lounge+by+Kim&owner=Kim */
+  /* rebrandable links: /synkasa-demo/?biz=Lash+Lounge+by+Kim&owner=Kim
+     skin links:       /synkasa-demo/?skin=appointments */
   var qs = new URLSearchParams(location.search);
-  if((qs.get('biz')||'').trim() || (qs.get('owner')||'').trim()){
-    setBrand((qs.get('biz')||'').trim(), (qs.get('owner')||'').trim());
-    seedThread();
-  }
+  var qBiz = (qs.get('biz')||'').trim(), qOwner = (qs.get('owner')||'').trim();
+  PINNED.biz = !!qBiz; PINNED.owner = !!qOwner;
+  if(qBiz) BRAND.biz = qBiz;
+  if(qOwner){ BRAND.owner = qOwner; BRAND.ownerLine = qOwner + ' · solo owner'; }
+
+  var SKIN_ALIAS = {home:'home', service:'home', appointments:'appointments',
+                    appointment:'appointments', projects:'projects', project:'projects'};
+  applySkin(SKIN_ALIAS[(qs.get('skin')||'').trim().toLowerCase()] || 'home');
   /* ?build=events adds the "your build" scope panel — prospect-specific links only.
      Injected here (not in the base HTML) so the plain demo stays internally
      coherent for visitors and crawlers. */
@@ -780,6 +1055,9 @@
   if(buildPanels[buildKey]){
     document.querySelector('.wired').insertAdjacentHTML('afterend', buildPanels[buildKey]);
     setBrand();
+    /* a prospect on a pinned build link is looking at their own scoped build,
+       not shopping business types. The chooser would only muddy it. */
+    document.getElementById('skinPick').hidden = true;
   }
 
   async function playBookingSheet(){
@@ -803,7 +1081,7 @@
 
     // ---- 1 · CATCH (the call bridge) ----
     setStep(1,'doing');
-    toast('Call bridge', 'Missed call · <b>(555) 014-7789</b><br>' + esc(BRAND.owner) + ' is with a client. Instant text-back sent.', true);
+    toast('Call bridge', plain(SKIN.catchToast), true);
     await wait(2200);
 
     var lead = document.createElement('div');
@@ -812,16 +1090,16 @@
     lead.innerHTML =
       '<div class="ava">JT</div>' +
       '<div class="who"><div class="nm">Jasmine T. <span class="src call">Missed call</span></div>' +
-      '<div class="chips"><span class="chip">New customer</span><span class="chip">Full service</span><span class="chip">Wants this week</span></div></div>' +
+      '<div class="chips">' + SKIN.runChips.map(function(c){ return '<span class="chip">' + c + '</span>'; }).join('') + '</div></div>' +
       '<span class="stat-pill replied" id="demoPill">Caught</span>' +
       '<div class="score hot"><div class="v" id="demoScore">0</div><div class="t">Score</div></div>';
     var list = document.getElementById('leadList');
     list.insertBefore(lead, list.firstChild);
     goView('inbox');
     countUp(document.getElementById('demoScore'), 0, 92, 900);
-    countUp(document.getElementById('statLeads'), 34, 35, 900);
+    countUp(document.getElementById('statLeads'), SKIN.leads, SKIN.leads + 1, 900);
     await wait(1400);
-    toast('Caught', '<b>Jasmine T.</b> triaged: new customer · full service · wants this week. Score <b>92 · hot</b>.');
+    toast('Caught', SKIN.caughtToast);
     setStep(1,'done');
     await wait(2300);
 
@@ -833,23 +1111,23 @@
     document.getElementById('msgs').innerHTML = '';
     goView('messages');
     await typingOn(1800);
-    addMsg('owner', 'Hey Jasmine! ' + esc(BRAND.owner) + ' here from ' + esc(BRAND.biz) + '. So sorry I missed your call. I was mid-appointment. I’d love to take care of you this week!', ownerMeta() + ' · just now');
+    addMsg('owner', plain(SKIN.msg1), ownerMeta() + ' · just now');
     document.getElementById('demoPill').textContent = 'Replied ✓';
     await wait(2600);
-    addMsg('cust', 'yes please!! do you have anything thursday?', 'Jasmine T. · just now');
+    addMsg('cust', SKIN.custReply, 'Jasmine T. · just now');
     await typingOn(1500);
-    addMsg('owner', 'Thursday’s open! Here’s my live booking page, grab whichever time works for you. <u>tap to book</u>', ownerMeta() + ' · just now');
+    addMsg('owner', plain(SKIN.msg2), ownerMeta() + ' · just now');
     setStep(2,'done');
     await wait(1800);
 
     // ---- 3 · BOOK (self-serve booking page) ----
     setStep(3,'doing');
     await playBookingSheet();
-    toast('Self-serve booking', '<b>Jasmine T.</b> picked her own slot · Thu 10:00 AM. Zero back-and-forth.');
+    toast('Self-serve booking', SKIN.bookToast);
     await wait(1200);
-    addMsg('cust', 'booked!! see you thursday', 'Jasmine T. · just now');
+    addMsg('cust', SKIN.custBooked, 'Jasmine T. · just now');
     await typingOn(1300);
-    addMsg('owner', 'You’re all set for Thursday at 10:00 AM. I’ll text you a reminder Wednesday night. See you then!', ownerMeta() + ' · just now');
+    addMsg('owner', plain(SKIN.msg3), ownerMeta() + ' · just now');
     await wait(1800);
     goView('calendar');
     var empty = document.getElementById('thuEmpty');
@@ -857,9 +1135,9 @@
     var evt = document.createElement('div');
     evt.className = 'evt red new';
     evt.id = 'demoEvt';
-    evt.innerHTML = '<span class="tm">10:00</span><span class="tt">Full service · Jasmine T.</span><span class="tg auto">Self-booked</span>';
+    evt.innerHTML = '<span class="tm">10:00</span><span class="tt">' + SKIN.evtTitle + '</span><span class="tg auto">' + SKIN.evtTag + '</span>';
     document.getElementById('thuEvts').appendChild(evt);
-    countUp(document.getElementById('statBooked'), 21, 22, 900);
+    countUp(document.getElementById('statBooked'), SKIN.booked, SKIN.booked + 1, 900);
     await wait(1600);
     setStep(3,'done');
     document.getElementById('cele').classList.add('on');
@@ -879,12 +1157,12 @@
     if(!document.getElementById('thuEmpty')){
       var em = document.createElement('div');
       em.className = 'empty'; em.id = 'thuEmpty';
-      em.textContent = 'Nothing booked yet. The day is open.';
+      em.textContent = SKIN.thuEmpty;
       document.getElementById('thuEvts').appendChild(em);
     }
     seedThread();
-    document.getElementById('statLeads').textContent = '34';
-    document.getElementById('statBooked').textContent = '21';
+    document.getElementById('statLeads').textContent = SKIN.leads;
+    document.getElementById('statBooked').textContent = SKIN.booked;
     [1,2,3].forEach(function(n){ setStep(n, null); });
     demoDone = false; running = false;
     document.getElementById('runBtn').disabled = false;
@@ -902,6 +1180,9 @@
     var biz = document.getElementById('rebBiz').value.trim();
     var owner = document.getElementById('rebOwner').value.trim();
     if(!biz && !owner){ closeRebrand(); return; }
+    /* a typed name now outranks any skin she switches to afterwards */
+    if(biz) PINNED.biz = true;
+    if(owner) PINNED.owner = true;
     setBrand(biz, owner);
     try{
       var u = new URL(location.href);
