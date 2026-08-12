@@ -33,19 +33,37 @@ if (!is_file($file) || filesize($file) < 2000000) {
   file_put_contents($file, $line, FILE_APPEND | LOCK_EX);
 }
 
-// Tell the owner. If the mail ever fails, the lead is still in the log above
-// and on the stats page, so nothing is lost.
-$subject = 'Free shelf: ' . $name . ' took ' . $items[$item];
-$body = "Someone just took a free tool on frimpomaasync.com.\n\n"
-      . 'Name:  ' . $name . "\n"
-      . 'Email: ' . $email . "\n"
-      . 'Took:  ' . $items[$item] . "\n"
-      . 'When:  ' . gmdate('Y-m-d H:i') . " UTC\n\n"
-      . 'Every lead also sits in the Leads table on the stats page.';
-$headers = "From: frimpomaasync.com <hello@frimpomaasync.com>\r\n"
-         . 'Reply-To: ' . $email . "\r\n" // validated above, cannot carry header breaks
-         . "Content-Type: text/plain; charset=UTF-8\r\n";
-@mail('nanafrimpgskc@gmail.com', $subject, $body, $headers);
+// Tell the owner, through the same form relay the fit forms already use
+// (this host's PHP mail() accepts the call and delivers nothing). If the
+// relay ever fails, the lead is still in the log above and on the stats
+// page, so nothing is lost.
+$notify = http_build_query([
+  '_subject' => 'Free shelf: ' . $name . ' took ' . $items[$item],
+  'source'   => 'free-shelf',
+  'item'     => $items[$item],
+  'name'     => $name,
+  'email'    => $email,
+  'when_utc' => gmdate('Y-m-d H:i'),
+]);
+if (function_exists('curl_init')) {
+  $ch = curl_init('https://formspree.io/f/mnjkqydb');
+  curl_setopt_array($ch, [
+    CURLOPT_POST => true,
+    CURLOPT_POSTFIELDS => $notify,
+    CURLOPT_HTTPHEADER => ['Accept: application/json', 'Content-Type: application/x-www-form-urlencoded'],
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_TIMEOUT => 6,
+  ]);
+  curl_exec($ch);
+  curl_close($ch);
+} else {
+  @file_get_contents('https://formspree.io/f/mnjkqydb', false, stream_context_create(['http' => [
+    'method' => 'POST',
+    'header' => "Accept: application/json\r\nContent-Type: application/x-www-form-urlencoded\r\n",
+    'content' => $notify,
+    'timeout' => 6,
+  ]]));
+}
 
 // A one-day token unlocks the real file on the delivery page. The secret is
 // created on the server the first time it is needed; it never sits in the repo.
