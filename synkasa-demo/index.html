@@ -713,9 +713,12 @@
 
   function wait(ms){ return new Promise(function(r){ setTimeout(r, reduced ? 40 : ms); }); }
 
-  function toast(kicker, html, red){
+  /* `key` marks a toast as replaceable: a second one of the same key clears the
+     first, so tapping through the skins can't stack cards over the hero on a phone. */
+  function toast(kicker, html, red, key){
+    if(key) document.querySelectorAll('.toast.k-' + key).forEach(function(o){ o.remove(); });
     var t = document.createElement('div');
-    t.className = 'toast' + (red ? ' red' : '');
+    t.className = 'toast' + (red ? ' red' : '') + (key ? ' k-' + key : '');
     t.innerHTML = '<span class="tk">' + kicker + '</span>' + html;
     document.getElementById('toasts').appendChild(t);
     setTimeout(function(){ t.classList.add('bye'); setTimeout(function(){ t.remove(); }, 450); }, reduced ? 1200 : 4600);
@@ -1009,7 +1012,7 @@
       u.searchParams.set('skin', SKIN_KEY);
       history.replaceState(null, '', u);
     }catch(e){}
-    toast('Skin changed', 'The demo now runs as <b>' + SKIN.label + '</b>. The inbox, the thread, the calendar and the booking page all moved with it.');
+    toast('Skin changed', 'The demo now runs as <b>' + SKIN.label + '</b>. The inbox, the thread, the calendar and the booking page all moved with it.', false, 'skin');
   }
 
   /* First-party funnel count: the demo was opened. Anonymous, no cookies,
