@@ -83,8 +83,11 @@
         doc: 'Take the toolkit, free'
       }
     };
+    // The pretty URL /get/<item> is rewritten server-side, so the query string
+    // never reaches the browser. Read the path first, the query as fallback.
     var q = new URLSearchParams(location.search);
-    var item = q.get('item');
+    var m = location.pathname.match(/^\/get\/([a-z-]+)/);
+    var item = (m && m[1]) || q.get('item');
     if (!item || !ITEMS[item]) { location.replace('/free'); return; }
     var it = ITEMS[item];
     document.getElementById('fg-title').innerHTML = it.title;
