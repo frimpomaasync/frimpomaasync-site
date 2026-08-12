@@ -52,6 +52,24 @@ RewriteRule ^soft-appeals-audit(\.html)?/?$ /soft-appeals-sample-assessment [R=3
 # contact page, which is built for questions without patient information.
 RewriteRule ^soft-appeals-book(\.html)?/?$ /soft-appeals-start [R=301,L,NC]
 
+# The free shelf gate (2026-08-11). Every takeaway on /free asks for a name
+# and an email on one short form, then delivers on /free-thanks.
+RewriteRule ^get/([a-z-]+)/?$ /free-get.html?item=$1 [L,QSA]
+
+# Gated 2026-08-11: the Blueprint PDF moved into /vault and is served by
+# download.php after the form. The bare URL was public and linked from /free
+# and the old planner flow, so it redirects to the gate rather than 404s.
+RewriteRule ^automated-small-business-blueprint\.pdf$ /get/blueprint [R=301,L,NC]
+
+# Retired 2026-08-11: the planner pages were the one old email gate (Formspree,
+# and a "check your inbox" promise nothing ever sent). The new gate replaces
+# them. Files are removed from the repo; these rules keep old links alive.
+RewriteRule ^planner(-thanks)?(\.html)?/?$ /get/blueprint [R=301,L,NC]
+
+# Retired 2026-08-11: /thank-you was the old Som hand-off page, orphaned since
+# the som page stopped linking it. The new delivery page carries Som now.
+RewriteRule ^thank-you(\.html)?/?$ /free-thanks?item=som [R=301,L,NC]
+
 # /index.html -> /
 RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
 RewriteRule ^index\.html$ / [R=301,L]

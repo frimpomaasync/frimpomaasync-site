@@ -54,7 +54,7 @@
             <span class="pill">Cannot see the week</span>
             <h3>A printed week on the wall.</h3>
             <p>Free, and it beats a calendar app for the one thing that matters: seeing the overbooked day before you agree to it.</p>
-            <a class="card-link" href="/planner">Print the free planner →</a>
+            <a class="card-link" href="/get/blueprint">Print the free Blueprint →</a>
           </article>
           <article class="free-card">
             <span class="pill">Cables everywhere</span>
@@ -125,12 +125,26 @@
         <p>Kit solves the small annoyances. The enquiry that arrives while your hands are full is a different problem, and it is the expensive one.</p>
         <div class="actions">
           <a class="button secondary" href="/synkasa-fit">Check my SynKasa fit →</a>
-          <a class="button secondary" href="/planner">Take the free planner →</a>
+          <a class="button secondary" href="/get/blueprint">Take the free Blueprint →</a>
         </div>
       </div>
     </section>
   </main>
 
+  <script>
+  // Counts one anonymous "this page was read" event on the site's own
+  // counter. No cookies, nothing about who, DNT respected.
+  (function () {
+    try {
+      if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+      if (!navigator.sendBeacon) return;
+      navigator.sendBeacon('/event.php', new Blob(
+        [JSON.stringify({ e: 'free_page_opened', p: location.pathname })],
+        { type: 'application/json' }
+      ));
+    } catch (e) {}
+  })();
+  </script>
   <script type="module" src="/assets/journey.js?v=7"></script>
   <script src="/fsnav.js?v=854" defer></script>
 </body>

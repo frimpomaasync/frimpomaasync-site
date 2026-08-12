@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Take it free | frimpomaasync.com</title>
+  <meta name="description" content="Leave your name and email, take the free tool. That is the whole trade.">
+  <meta name="robots" content="noindex,follow">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=26">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#FFFFFF">
+  <style>
+    .fg-trap{position:absolute !important;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
+    .fg-err{color:#C2501C;font-size:14px;margin:0 0 14px}
+    .fg-form-wrap{max-width:640px}
+  </style>
+</head>
+<body data-sk-sections="Gate,Form" data-sk-bar="Free to take. Live in 7 days when you're ready." data-sk-biz="service business">
+  <main>
+    <section class="hero compact-hero" data-screen-label="Gate">
+      <div class="wrap">
+        <div class="eyebrow">The free shelf · one short form, then it's yours</div>
+        <h1 id="fg-title">Take it <em>free.</em></h1>
+        <p class="hero-copy" id="fg-sub">Your name and email is the whole price. You get the tool on the next page.</p>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Form">
+      <div class="wrap fg-form-wrap">
+        <form class="form-shell" name="free-gate" action="/lead.php" method="post">
+          <input type="hidden" name="item" value="" id="fg-item">
+          <label class="fg-trap" aria-hidden="true">Leave this field empty
+            <input type="text" name="notes" tabindex="-1" autocomplete="off">
+          </label>
+          <div class="form-grid-fields">
+            <label class="field">Your name
+              <input type="text" name="name" autocomplete="name" required>
+            </label>
+            <label class="field">Best email
+              <input type="email" name="email" autocomplete="email" required>
+            </label>
+          </div>
+          <p class="fg-err" id="fg-err" hidden>That send did not go through. Check the email address and press the button once more.</p>
+          <button class="button" type="submit" id="fg-btn">Take it →</button>
+          <p class="small-note">No account gets made and nothing is charged. Your name and email tell me a real person took this, which is how I decide what stays free.</p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  (function () {
+    var ITEMS = {
+      blueprint: {
+        title: 'Take the <em>Blueprint.</em>',
+        sub: 'A printable PDF: what to automate first, what should wait, and how the pieces connect. Leave your name and email and the download is on the next page.',
+        btn: 'Send me to the download →',
+        doc: 'Take the Blueprint, free'
+      },
+      som: {
+        title: 'Take <em>Som.</em>',
+        sub: 'The free capture app. One tap, works offline, installs from your phone browser in under a minute. Leave your name and email and the install steps are on the next page.',
+        btn: 'Take Som →',
+        doc: 'Take Som, free'
+      },
+      intake: {
+        title: 'Take the <em>intake system.</em>',
+        sub: 'The eight questions that decide a quote, asked once, landing in one place. Leave your name and email and the full system opens on the next page.',
+        btn: 'Open the intake system →',
+        doc: 'Take the intake system, free'
+      },
+      followup: {
+        title: 'Take the <em>follow-up system.</em>',
+        sub: 'Six emails written once and sent on a schedule, including the invoice nudge on day eight. Leave your name and email and the full system opens on the next page.',
+        btn: 'Open the follow-up system →',
+        doc: 'Take the follow-up system, free'
+      },
+      toolkit: {
+        title: 'Take the <em>toolkit.</em>',
+        sub: 'What earns its place in a one-person business, and what to buy last. Leave your name and email and the full list opens on the next page.',
+        btn: 'Open the toolkit →',
+        doc: 'Take the toolkit, free'
+      }
+    };
+    var q = new URLSearchParams(location.search);
+    var item = q.get('item');
+    if (!item || !ITEMS[item]) { location.replace('/free'); return; }
+    var it = ITEMS[item];
+    document.getElementById('fg-title').innerHTML = it.title;
+    document.getElementById('fg-sub').textContent = it.sub;
+    document.getElementById('fg-btn').textContent = it.btn;
+    document.getElementById('fg-item').value = item;
+    document.title = it.doc + ' | frimpomaasync.com';
+    if (q.get('err')) { document.getElementById('fg-err').hidden = false; }
+    // Same first-party counter as the rest of the site. Anonymous, DNT respected.
+    try {
+      if (navigator.doNotTrack !== '1' && window.doNotTrack !== '1' && navigator.sendBeacon) {
+        navigator.sendBeacon('/event.php', new Blob(
+          [JSON.stringify({ e: 'free_gate_opened', p: '/get/' + item })],
+          { type: 'application/json' }
+        ));
+      }
+    } catch (e) {}
+  })();
+  </script>
+  <script type="module" src="/assets/journey.js?v=7"></script>
+  <script src="/fsnav.js?v=854" defer></script>
+</body>
+</html>

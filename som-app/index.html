@@ -763,5 +763,19 @@
   paintDate(); setupBrand(); setupBrandline(); setupNudge(); renderAll(); showInstall();
 })();
 </script>
+<script>
+// One anonymous "Som was opened" count on the site's own counter.
+// No cookies, nothing about who, DNT respected, offline-safe.
+(function () {
+  try {
+    if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+    if (!navigator.onLine || !navigator.sendBeacon) return;
+    navigator.sendBeacon('/event.php', new Blob(
+      [JSON.stringify({ e: 'som_opened', p: '/som-app/' })],
+      { type: 'application/json' }
+    ));
+  } catch (e) {}
+})();
+</script>
 </body>
 </html>

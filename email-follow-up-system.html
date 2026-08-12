@@ -108,7 +108,7 @@
             <span class="pill">The free version</span>
             <h3>Saved replies and a reminder.</h3>
             <p>Write the six emails in a notes file. Send them by hand off a weekly reminder. It is unglamorous and it works, right up until you get busy.</p>
-            <a class="card-link" href="/planner">Get the free planner →</a>
+            <a class="card-link" href="/get/blueprint">Get the free Blueprint →</a>
           </article>
           <article class="free-card">
             <span class="pill">The tool I use</span>
@@ -134,12 +134,26 @@
         <p>Email is right for the slow follow-ups. The fast ones, the missed call and the out-of-hours enquiry, need something answering while you work.</p>
         <div class="actions">
           <a class="button secondary" href="/synkasa-fit">Check my SynKasa fit →</a>
-          <a class="button secondary" href="/planner">Take the free planner →</a>
+          <a class="button secondary" href="/get/blueprint">Take the free Blueprint →</a>
         </div>
       </div>
     </section>
   </main>
 
+  <script>
+  // Counts one anonymous "this page was read" event on the site's own
+  // counter. No cookies, nothing about who, DNT respected.
+  (function () {
+    try {
+      if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+      if (!navigator.sendBeacon) return;
+      navigator.sendBeacon('/event.php', new Blob(
+        [JSON.stringify({ e: 'free_page_opened', p: location.pathname })],
+        { type: 'application/json' }
+      ));
+    } catch (e) {}
+  })();
+  </script>
   <script type="module" src="/assets/journey.js?v=7"></script>
   <script src="/fsnav.js?v=854" defer></script>
 </body>

@@ -116,7 +116,7 @@
             <span class="pill">The free version</span>
             <h3>One page and a spreadsheet.</h3>
             <p>Print the eight questions. Keep a sheet with one row per enquiry and a status of new, quoted or booked. This works, and plenty of businesses never need more.</p>
-            <a class="card-link" href="/planner">Get the free planner →</a>
+            <a class="card-link" href="/get/blueprint">Get the free Blueprint →</a>
           </article>
           <article class="free-card">
             <span class="pill">The tool I use</span>
@@ -142,12 +142,26 @@
         <p>If the enquiries are arriving and the delay is you, the intake form is not the fix. The front desk is.</p>
         <div class="actions">
           <a class="button secondary" href="/synkasa-fit">Check my SynKasa fit →</a>
-          <a class="button secondary" href="/planner">Take the free planner →</a>
+          <a class="button secondary" href="/get/blueprint">Take the free Blueprint →</a>
         </div>
       </div>
     </section>
   </main>
 
+  <script>
+  // Counts one anonymous "this page was read" event on the site's own
+  // counter. No cookies, nothing about who, DNT respected.
+  (function () {
+    try {
+      if (navigator.doNotTrack === '1' || window.doNotTrack === '1') return;
+      if (!navigator.sendBeacon) return;
+      navigator.sendBeacon('/event.php', new Blob(
+        [JSON.stringify({ e: 'free_page_opened', p: location.pathname })],
+        { type: 'application/json' }
+      ));
+    } catch (e) {}
+  })();
+  </script>
   <script type="module" src="/assets/journey.js?v=7"></script>
   <script src="/fsnav.js?v=854" defer></script>
 </body>

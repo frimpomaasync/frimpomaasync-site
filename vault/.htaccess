@@ -1,0 +1,3 @@
+# Gated originals. Nothing in this folder is served directly; download.php
+# streams a file only when the visitor's token from lead.php checks out.
+Require all denied

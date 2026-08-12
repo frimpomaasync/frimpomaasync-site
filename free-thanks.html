@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>It's yours | frimpomaasync.com</title>
+  <meta name="description" content="Delivery page for the free shelf.">
+  <meta name="robots" content="noindex,nofollow">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=26">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#FFFFFF">
+  <style>
+    .ft-wrap{max-width:640px}
+    .ft-card{background:#FFFFFF;border:1px solid rgba(16,20,38,.10);border-radius:12px;padding:26px 24px}
+    .ft-steps{margin:18px 0 0;padding:0;list-style:none}
+    .ft-steps li{display:flex;gap:12px;margin-top:12px;font-size:14.5px;line-height:1.55;color:rgba(16,20,38,.72)}
+    .ft-steps .ft-n{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:.1em;color:#C2501C;padding-top:3px;flex:none}
+    .ft-note{margin-top:14px;font-size:13px;color:rgba(16,20,38,.55)}
+    .ft-next{margin-top:26px}
+  </style>
+</head>
+<body data-sk-sections="Delivered,Next" data-sk-bar="Free to keep. Live in 7 days when you're ready." data-sk-biz="service business">
+  <main>
+    <section class="hero compact-hero" data-screen-label="Delivered">
+      <div class="wrap">
+        <div class="eyebrow">The free shelf · delivered</div>
+        <h1 id="ft-title">Done. <em>It's yours.</em></h1>
+        <p class="hero-copy" id="ft-sub">Take it below and start using it today.</p>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Next">
+      <div class="wrap ft-wrap">
+        <div class="ft-card">
+          <h2 class="section-title" id="ft-card-title" style="font-size:24px"><span>Here it is.</span></h2>
+          <ul class="ft-steps" id="ft-steps" hidden></ul>
+          <div class="ft-next">
+            <a class="button" href="/free" id="ft-btn">Back to the free shelf →</a>
+          </div>
+          <p class="ft-note" id="ft-note" hidden></p>
+        </div>
+        <div class="ft-card" style="margin-top:16px">
+          <h2 class="section-title" style="font-size:24px"><span>When the free version</span> stops being enough.</h2>
+          <p class="section-intro" style="margin-top:10px">SynKasa runs the whole front desk for you: every call, text and DM answered, qualified and booked. Live in 7 days, or you don't pay.</p>
+          <div class="ft-next">
+            <a class="button secondary" href="/synkasa">See the SynKasa tiers →</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  (function () {
+    var q = new URLSearchParams(location.search);
+    var item = q.get('item');
+    var name = (q.get('n') || '').replace(/[<>&"']/g, '').slice(0, 40);
+    var exp = q.get('exp') || '';
+    var t = q.get('t') || '';
+    var ITEMS = {
+      blueprint: {
+        head: 'Your Blueprint is ready' + (name ? ', ' + name : '') + '.',
+        sub: 'One button, one PDF. Print it and work from top to bottom.',
+        card: 'Download the Blueprint.',
+        btn: 'Download the Blueprint (PDF) →',
+        href: '/download.php?item=blueprint&exp=' + encodeURIComponent(exp) + '&t=' + encodeURIComponent(t),
+        note: 'The download link on this page works for 24 hours. If it expires, the gate takes ten seconds to pass again.'
+      },
+      som: {
+        head: 'Som is yours' + (name ? ', ' + name : '') + '.',
+        sub: 'It installs from your phone browser. Three steps and it lives on your home screen.',
+        card: 'Install Som on your phone.',
+        btn: 'Open Som →',
+        href: '/som-app/',
+        steps: [
+          'Open Som with the button below, on your phone.',
+          'iPhone: tap Share, then "Add to Home Screen". Android: tap the browser menu, then "Install app" or "Add to Home screen".',
+          'Open it from your home screen once. From then on it works offline, signal or not.'
+        ]
+      },
+      intake: {
+        head: 'The intake system is yours' + (name ? ', ' + name : '') + '.',
+        sub: 'Eight questions, ready to copy into your own form or notes.',
+        card: 'Open the intake system.',
+        btn: 'Open the intake system →',
+        href: '/client-intake-system'
+      },
+      followup: {
+        head: 'The follow-up system is yours' + (name ? ', ' + name : '') + '.',
+        sub: 'Six emails on a schedule, ready to copy and make your own.',
+        card: 'Open the follow-up system.',
+        btn: 'Open the follow-up system →',
+        href: '/email-follow-up-system'
+      },
+      toolkit: {
+        head: 'The toolkit is yours' + (name ? ', ' + name : '') + '.',
+        sub: 'What earns its place in a one-person business, and what to buy last.',
+        card: 'Open the toolkit.',
+        btn: 'Open the toolkit →',
+        href: '/one-person-business-toolkit'
+      }
+    };
+    if (!item || !ITEMS[item]) { location.replace('/free'); return; }
+    var it = ITEMS[item];
+    document.getElementById('ft-title').innerHTML = 'Done' + (name ? ', <em>' + name + '.</em>' : '. <em>It\'s yours.</em>');
+    document.getElementById('ft-sub').textContent = it.sub;
+    document.getElementById('ft-card-title').innerHTML = '<span>' + it.card + '</span>';
+    var btn = document.getElementById('ft-btn');
+    btn.textContent = it.btn;
+    btn.setAttribute('href', it.href);
+    document.title = it.head + ' | frimpomaasync.com';
+    if (it.steps) {
+      var ul = document.getElementById('ft-steps');
+      it.steps.forEach(function (s, i) {
+        var li = document.createElement('li');
+        var n = document.createElement('span'); n.className = 'ft-n'; n.textContent = '0' + (i + 1);
+        var p = document.createElement('span'); p.textContent = s;
+        li.appendChild(n); li.appendChild(p); ul.appendChild(li);
+      });
+      ul.hidden = false;
+    }
+    if (it.note) { var nt = document.getElementById('ft-note'); nt.textContent = it.note; nt.hidden = false; }
+    // Same first-party counter as the rest of the site. Anonymous, DNT respected.
+    try {
+      if (navigator.doNotTrack !== '1' && window.doNotTrack !== '1' && navigator.sendBeacon) {
+        navigator.sendBeacon('/event.php', new Blob(
+          [JSON.stringify({ e: 'free_delivered', p: '/free-thanks#' + item })],
+          { type: 'application/json' }
+        ));
+      }
+    } catch (e) {}
+  })();
+  </script>
+  <script type="module" src="/assets/journey.js?v=7"></script>
+  <script src="/fsnav.js?v=854" defer></script>
+</body>
+</html>
