@@ -33,36 +33,56 @@ if (!is_file($file) || filesize($file) < 2000000) {
   file_put_contents($file, $line, FILE_APPEND | LOCK_EX);
 }
 
-// Tell the owner, through the same form relay the fit forms already use
-// (this host's PHP mail() accepts the call and delivers nothing). If the
-// relay ever fails, the lead is still in the log above and on the stats
-// page, so nothing is lost.
-$notify = http_build_query([
-  '_subject' => 'Free shelf: ' . $name . ' took ' . $items[$item],
-  'source'   => 'free-shelf',
-  'item'     => $items[$item],
-  'name'     => $name,
-  'email'    => $email,
-  'when_utc' => gmdate('Y-m-d H:i'),
-]);
-if (function_exists('curl_init')) {
-  $ch = curl_init('https://formspree.io/f/mnjkqydb');
-  curl_setopt_array($ch, [
-    CURLOPT_POST => true,
-    CURLOPT_POSTFIELDS => $notify,
-    CURLOPT_HTTPHEADER => ['Accept: application/json', 'Content-Type: application/x-www-form-urlencoded'],
-    CURLOPT_RETURNTRANSFER => true,
-    CURLOPT_TIMEOUT => 6,
+// Tell the owner. First choice: the site's own sender, notify@frimpomaasync.com
+// over SMTP (wired via fs-metrics/smtp.json; this host's PHP mail() accepts the
+// call and delivers nothing, so it is never used). Fallback: the same form
+// relay the fit forms use. Either way the lead is already in the log above
+// and on the stats page, so nothing is lost.
+$sent = false;
+require __DIR__ . '/fs-mail.php';
+$cfg = fs_mail_config();
+if ($cfg) {
+  $sent = fs_smtp_send(
+    $cfg,
+    'nanafrimpgskc@gmail.com',
+    'Free shelf: ' . $name . ' took ' . $items[$item],
+    "Someone just took a free tool on frimpomaasync.com.\n\n"
+      . 'Name:  ' . $name . "\n"
+      . 'Email: ' . $email . "\n"
+      . 'Took:  ' . $items[$item] . "\n"
+      . 'When:  ' . gmdate('Y-m-d H:i') . " UTC\n\n"
+      . 'Every lead also sits in the Leads table on the stats page.',
+    $email
+  );
+}
+if (!$sent) {
+  $notify = http_build_query([
+    '_subject' => 'Free shelf: ' . $name . ' took ' . $items[$item],
+    'source'   => 'free-shelf',
+    'item'     => $items[$item],
+    'name'     => $name,
+    'email'    => $email,
+    'when_utc' => gmdate('Y-m-d H:i'),
   ]);
-  curl_exec($ch);
-  curl_close($ch);
-} else {
-  @file_get_contents('https://formspree.io/f/mnjkqydb', false, stream_context_create(['http' => [
-    'method' => 'POST',
-    'header' => "Accept: application/json\r\nContent-Type: application/x-www-form-urlencoded\r\n",
-    'content' => $notify,
-    'timeout' => 6,
-  ]]));
+  if (function_exists('curl_init')) {
+    $ch = curl_init('https://formspree.io/f/mnjkqydb');
+    curl_setopt_array($ch, [
+      CURLOPT_POST => true,
+      CURLOPT_POSTFIELDS => $notify,
+      CURLOPT_HTTPHEADER => ['Accept: application/json', 'Content-Type: application/x-www-form-urlencoded'],
+      CURLOPT_RETURNTRANSFER => true,
+      CURLOPT_TIMEOUT => 6,
+    ]);
+    curl_exec($ch);
+    curl_close($ch);
+  } else {
+    @file_get_contents('https://formspree.io/f/mnjkqydb', false, stream_context_create(['http' => [
+      'method' => 'POST',
+      'header' => "Accept: application/json\r\nContent-Type: application/x-www-form-urlencoded\r\n",
+      'content' => $notify,
+      'timeout' => 6,
+    ]]));
+  }
 }
 
 // A one-day token unlocks the real file on the delivery page. The secret is
