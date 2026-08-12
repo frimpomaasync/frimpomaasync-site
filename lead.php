@@ -42,7 +42,7 @@ $body = "Someone just took a free tool on frimpomaasync.com.\n\n"
       . 'Took:  ' . $items[$item] . "\n"
       . 'When:  ' . gmdate('Y-m-d H:i') . " UTC\n\n"
       . 'Every lead also sits in the Leads table on the stats page.';
-$headers = "From: frimpomaasync.com <noreply@frimpomaasync.com>\r\n"
+$headers = "From: frimpomaasync.com <hello@frimpomaasync.com>\r\n"
          . 'Reply-To: ' . $email . "\r\n" // validated above, cannot carry header breaks
          . "Content-Type: text/plain; charset=UTF-8\r\n";
 @mail('nanafrimpgskc@gmail.com', $subject, $body, $headers);
