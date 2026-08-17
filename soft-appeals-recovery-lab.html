@@ -9,6 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=30">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <link rel="stylesheet" href="/assets/soft-appeals.css?v=1">
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
@@ -18,242 +19,188 @@
   <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
   <meta name="twitter:card" content="summary_large_image">
   <style>
-    /* The Recovery Lab. Scoped to this page, system fonts only, no remote requests.
-       Every figure on this page is computed at runtime from the LAB_CLAIMS array
-       at the bottom of the file. Nothing numeric is hand-typed into the markup,
-       so the views cannot disagree with each other or with the dataset. The
-       dataset itself reconciles to the published sample assessment: same twenty
-       claims, same $14,850, same disposition totals. Change one without the
-       other and tests/lab_reconcile.mjs fails. */
-    .lab {
-      max-width: 1040px; margin: 0 auto;
-      border: 1px solid var(--line); border-radius: 20px;
-      background: var(--paper); overflow: hidden;
-      box-shadow: 0 26px 60px rgba(16, 20, 38, .07);
-    }
-    .lab-top {
-      display: flex; align-items: baseline; justify-content: space-between;
-      gap: 14px; flex-wrap: wrap;
-      padding: 20px clamp(18px, 4vw, 34px);
-      border-bottom: 1px solid var(--line);
-      font-family: var(--mono, ui-monospace, Menlo, monospace);
-      font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--ink-faint);
-    }
-    .lab-top b { color: var(--copper, #C2501C); font-weight: 400; }
-    .lab-tabs {
-      display: flex; gap: 4px; padding: 12px clamp(18px, 4vw, 34px) 0;
-      border-bottom: 1px solid var(--line); flex-wrap: wrap;
-    }
-    .lab-tabs [role=tab] {
-      appearance: none; border: 0; background: none; cursor: pointer;
-      padding: 12px 16px 14px; margin-bottom: -1px;
-      font: inherit; font-size: 14px; color: var(--ink-soft);
-      border-bottom: 2px solid transparent; border-radius: 8px 8px 0 0;
-    }
-    .lab-tabs [role=tab][aria-selected=true] {
-      color: var(--ink); border-bottom-color: var(--copper, #C2501C); font-weight: 600;
-    }
-    .lab-tabs [role=tab]:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
-    .lab-body { padding: clamp(20px, 4vw, 36px); }
-    .lab-sub { margin: 30px 0 12px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .lab-sub:first-child { margin-top: 0; }
+    /* The Recovery Lab, reshelled 2026-08-17 onto the console shell in
+       /assets/soft-appeals.css. What is left here is only what this one page
+       needs on top of the shell.
 
-    /* Executive view */
-    .lab-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); gap: 14px; }
-    .lab-tile { padding: 18px; border: 1px solid var(--line); border-radius: 16px; }
-    .lab-tile .k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .lab-tile .v { margin: 8px 0 4px; font-family: var(--serif); font-size: 28px; line-height: 1; }
-    .lab-tile .c { font-size: 12px; color: var(--ink-faint); }
-    .lab-tile.lead .v { color: var(--copper, #C2501C); }
-    .lab-bars { display: grid; gap: 14px; }
-    .lab-barrow .t { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; margin-bottom: 6px; }
-    .lab-barrow .t b { font-weight: 600; font-variant-numeric: tabular-nums; }
-    .lab-barrow .t span span { color: var(--ink-faint); font-size: 12px; }
-    .lab-bar { height: 10px; border-radius: 5px; background: var(--panel-2, #F8F8F9); border: 1px solid var(--line); overflow: hidden; }
-    .lab-bar i { display: block; height: 100%; background: var(--copper, #C2501C); border-radius: 4px; min-width: 3px; }
-    .lab-note { margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: var(--ink-soft); border-top: 1px solid var(--line); padding-top: 12px; }
+       Unchanged from the first build: every figure on this page is computed at
+       runtime from the LAB_CLAIMS array at the bottom of the file. Nothing
+       numeric is hand-typed into the markup, so the views cannot disagree with
+       each other or with the dataset, and the dataset still reconciles to the
+       published sample assessment. Change one without the other and
+       tests/lab_reconcile.test.mjs fails. */
 
-    /* Worklist */
-    .lab-filters {
-      display: flex; flex-wrap: wrap; gap: 10px; align-items: end;
-      padding: 0 0 16px; border-bottom: 1px solid var(--line); margin-bottom: 4px;
-    }
-    .lab-filters label { display: grid; gap: 4px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); }
-    .lab-filters select {
-      font: inherit; font-size: 16px; font-family: var(--sans, system-ui);
-      color: var(--ink); letter-spacing: 0; text-transform: none;
-      padding: 8px 10px; border: 1px solid var(--line); border-radius: 10px; background: var(--paper);
-      min-width: 130px;
-    }
-    .lab-filters select:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 1px; }
-    .lab-filters .reset {
-      appearance: none; font: inherit; font-size: 13px; cursor: pointer;
-      border: 1px solid var(--line); border-radius: 10px; background: none;
-      color: var(--ink-soft); padding: 9px 14px;
-    }
-    .lab-count { font-size: 13px; color: var(--ink-soft); margin: 12px 0; font-variant-numeric: tabular-nums; }
-    .lab-count b { color: var(--ink); font-weight: 600; }
-    .lab-scroll { overflow-x: auto; }
-    .lab-tbl { width: 100%; border-collapse: collapse; font-size: 13.5px; }
-    .lab-tbl th {
-      text-align: left; font-family: var(--mono, ui-monospace, Menlo, monospace);
-      font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
-      color: var(--ink-faint); font-weight: 400;
-      padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap;
-    }
-    .lab-tbl th button {
-      appearance: none; border: 0; background: none; cursor: pointer;
-      font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit;
-      padding: 0; display: inline-flex; align-items: center; gap: 4px;
-    }
-    .lab-tbl th button:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
-    .lab-tbl th button::after { content: "↕"; opacity: .45; }
-    .lab-tbl th[aria-sort=ascending] button::after { content: "↑"; opacity: 1; }
-    .lab-tbl th[aria-sort=descending] button::after { content: "↓"; opacity: 1; }
-    .lab-tbl td { padding: 11px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
-    .lab-tbl tr[data-id] { cursor: pointer; }
-    .lab-tbl tr[data-id]:hover td, .lab-tbl tr[data-id]:focus-within td { background: rgba(194, 80, 28, .045); }
-    .lab-tbl .id button {
-      appearance: none; border: 0; background: none; cursor: pointer; padding: 0;
-      font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 12.5px;
-      color: var(--copper, #C2501C); text-decoration: underline; text-underline-offset: 3px;
-    }
-    .lab-tbl .id button:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
-    .lab-tbl .num { font-variant-numeric: tabular-nums; white-space: nowrap; }
+    /* Priority letter. A is not red: red on this page means a deadline is
+       known and close, and priority A only means it sits at the top of the
+       queue. Conflating the two would tell a buyer something untrue. */
     .lab-pr {
-      display: inline-grid; place-items: center; width: 24px; height: 24px;
-      border-radius: 50%; font-family: var(--mono, ui-monospace, Menlo, monospace);
-      font-size: 11.5px; border: 1px solid var(--line); color: var(--ink-soft);
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 26px; height: 26px; border-radius: 7px;
+      font-family: var(--mono); font-size: 12px; font-weight: 700;
+      border: 1px solid var(--sa-line-strong); color: var(--sa-slate);
+      background: var(--sa-surface-2);
     }
-    .lab-pr.a { background: var(--copper, #C2501C); border-color: var(--copper, #C2501C); color: #fff; }
-    .lab-pr.b { border-color: var(--copper, #C2501C); color: var(--copper-deep, #9D3F16); }
-    .lab-own { font-size: 12px; white-space: nowrap; }
-    .lab-own.you { color: var(--copper-deep, #9D3F16); font-weight: 600; }
+    .lab-pr.a { border-color: rgba(194, 80, 28, .45); color: #963c14; background: var(--sa-action-soft); }
+    .lab-pr.b { border-color: rgba(42, 95, 168, .3); color: #204b85; background: var(--sa-info-soft); }
+
+    /* The owner cell. Your team is the only owner a reader must not miss. */
+    .lab-own.you { font-weight: 700; color: var(--sa-ink); }
+
+    /* Show me why, inside the drawer. */
+    .lab-why { margin-top: 18px; border: 1px solid var(--sa-line); border-radius: var(--sa-r); overflow: hidden; }
+    .lab-why > summary {
+      list-style: none; cursor: pointer; padding: 12px 14px;
+      background: var(--sa-surface-2); font-size: 14px; font-weight: 600;
+    }
+    .lab-why > summary::-webkit-details-marker { display: none; }
+    .lab-why > summary::after { content: " +"; font-family: var(--mono); color: var(--sa-action); }
+    .lab-why[open] > summary::after { content: " \2212"; }
+    .lab-why .in { padding: 14px; border-top: 1px solid var(--sa-line); }
+    .lab-why ul { margin: 0; padding-left: 20px; font-size: 14px; line-height: 1.7; color: var(--sa-slate); }
+    .lab-why li + li { margin-top: 8px; }
+    .lab-why .no-score {
+      margin: 14px 0 0; padding-top: 12px; border-top: 1px solid var(--sa-line);
+      font-size: 13px; line-height: 1.6; color: var(--sa-mute);
+    }
+
+    /* Status history rail inside the drawer. */
+    .lab-hist { display: grid; gap: 0; }
+    .lab-hist .h { position: relative; padding: 0 0 16px 22px; }
+    .lab-hist .h::before {
+      content: ""; position: absolute; left: 0; top: 4px; width: 11px; height: 11px;
+      border-radius: 50%; border: 1.5px solid var(--sa-line-strong); background: var(--sa-surface); z-index: 2;
+    }
+    .lab-hist .h::after {
+      content: ""; position: absolute; left: 5px; top: 14px; bottom: 0; width: 1.5px; background: var(--sa-line); z-index: 1;
+    }
+    .lab-hist .h:last-child { padding-bottom: 0; }
+    .lab-hist .h:last-child::after { display: none; }
+    .lab-hist .h.now::before { border-color: var(--sa-action); background: var(--sa-action); }
+    .lab-hist .h b { display: block; font-size: 13.5px; font-weight: 600; }
+    .lab-hist .h span { display: block; margin-top: 2px; font-size: 13px; line-height: 1.55; color: var(--sa-slate); }
+
+    /* Patterns. */
+    .lab-pat { display: grid; gap: 12px; }
+    .lab-patrow { padding: 16px 18px; border: 1px solid var(--sa-line); border-radius: var(--sa-r-lg); background: var(--sa-surface); box-shadow: var(--sa-shadow); }
+    .lab-patrow h3 { margin: 0 0 4px; font-family: var(--serif); font-weight: 400; font-size: 19px; }
+    .lab-patrow .n { font-family: var(--mono); font-size: 10px; letter-spacing: .13em; text-transform: uppercase; color: var(--sa-mute); }
+    .lab-patrow p { margin: 8px 0 0; font-size: 14px; line-height: 1.65; color: var(--sa-slate); }
+    .lab-patrow .q { margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--sa-line); color: var(--sa-ink); }
+
+    /* The worklist on a phone. A nine-column table cannot be read at 390px, so
+       each row becomes a stacked record with its own labels. */
     @media (max-width: 760px) {
-      .lab-tbl thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
-      .lab-tbl, .lab-tbl tbody, .lab-tbl tr, .lab-tbl td { display: block; }
-      .lab-tbl tr { border: 1px solid var(--line); border-radius: 14px; margin-bottom: 12px; padding: 6px 0; }
-      .lab-tbl td { border: 0; padding: 6px 16px; display: flex; justify-content: space-between; gap: 12px; align-items: baseline; }
-      .lab-tbl td::before {
-        content: attr(data-l);
-        font-family: var(--mono, ui-monospace, Menlo, monospace);
-        font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint);
-        flex-shrink: 0;
-      }
-    }
-
-    /* Claim detail */
-    .lab-detail { margin-top: 18px; border: 1px solid var(--copper, #C2501C); border-radius: 16px; overflow: hidden; }
-    .lab-detail-top {
-      display: flex; justify-content: space-between; align-items: center; gap: 12px;
-      padding: 14px 18px; background: rgba(194, 80, 28, .06); border-bottom: 1px solid var(--line);
-    }
-    .lab-detail-top h3 { margin: 0; font-family: var(--serif); font-weight: 400; font-size: 20px; }
-    .lab-detail-top .x {
-      appearance: none; border: 1px solid var(--line); background: var(--paper); cursor: pointer;
-      border-radius: 10px; font: inherit; font-size: 13px; color: var(--ink-soft); padding: 7px 12px;
-    }
-    .lab-detail-in { padding: 18px; }
-    .lab-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 13px; color: var(--ink-soft); margin-bottom: 4px; }
-    .lab-meta b { color: var(--ink); font-weight: 600; }
-    .lab-detail dl { margin: 14px 0 0; display: grid; gap: 10px; }
-    .lab-detail dt { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .lab-detail dd { margin: 2px 0 0; font-size: 14px; line-height: 1.65; }
-    .lab-why { margin-top: 18px; border: 1px solid var(--line); border-radius: 14px; }
-    .lab-why summary {
-      cursor: pointer; list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 10px;
-      padding: 13px 16px; font-size: 14px; font-weight: 600;
-    }
-    .lab-why summary::-webkit-details-marker { display: none; }
-    .lab-why summary::after { content: "+"; font-family: var(--mono, ui-monospace, Menlo, monospace); color: var(--copper, #C2501C); font-size: 18px; }
-    .lab-why[open] summary::after { content: "–"; }
-    .lab-why summary:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
-    .lab-why .in { padding: 0 16px 14px; }
-    .lab-why ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 9px; }
-    .lab-why li { position: relative; padding-left: 18px; font-size: 13.5px; line-height: 1.6; }
-    .lab-why li::before { content: ""; position: absolute; left: 0; top: 8px; width: 7px; height: 7px; border-radius: 2px; background: var(--copper, #C2501C); }
-    .lab-why .no-score { margin: 12px 0 0; padding-top: 11px; border-top: 1px solid var(--line); font-size: 12.5px; color: var(--ink-soft); line-height: 1.6; }
-    .lab-hist { margin-top: 16px; display: grid; gap: 0; }
-    .lab-hist .h { position: relative; padding: 0 0 14px 22px; font-size: 13px; line-height: 1.5; }
-    .lab-hist .h::before { content: ""; position: absolute; left: 5px; top: 5px; width: 8px; height: 8px; border-radius: 50%; background: var(--line); }
-    .lab-hist .h.now::before { background: var(--copper, #C2501C); }
-    .lab-hist .h:not(:last-child)::after { content: ""; position: absolute; left: 8px; top: 16px; bottom: 0; width: 1px; background: var(--line); }
-    .lab-hist .h b { display: block; font-weight: 600; }
-    .lab-hist .h span { color: var(--ink-faint); font-size: 12px; }
-
-    /* Patterns */
-    .lab-pat { display: grid; gap: 18px; }
-    .lab-patrow p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); }
-    .lab-patrow .q { color: var(--ink); border-left: 3px solid var(--copper, #C2501C); padding: 2px 0 2px 12px; }
-    .lab-foot { padding: 18px clamp(18px, 4vw, 34px); border-top: 1px solid var(--line); background: var(--panel-2, #F8F8F9); }
-    .lab-foot p { margin: 0 0 8px; font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); }
-    .lab-foot p:last-child { margin: 0; }
-
-    @media (prefers-reduced-motion: no-preference) {
-      .lab-detail { animation: lab-in .25s ease; }
-      @keyframes lab-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+      .sa-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); }
+      .sa-table tr { display: block; margin-bottom: 10px; border: 1px solid var(--sa-line); border-radius: var(--sa-r); background: var(--sa-surface); overflow: hidden; }
+      .sa-table td { display: flex; gap: 12px; align-items: baseline; justify-content: space-between; padding: 9px 13px; border-bottom: 1px solid var(--sa-line); text-align: left; }
+      .sa-table td:last-child { border-bottom: 0; }
+      .sa-table td::before { content: attr(data-l); flex: none; font-family: var(--mono); font-size: 9px; letter-spacing: .12em; text-transform: uppercase; color: var(--sa-mute); }
+      .sa-table td.sa-money { text-align: right; }
+      .sa-table tbody tr.is-urgent td:first-child { box-shadow: inset 3px 0 0 var(--sa-urgent); }
     }
   </style>
 </head>
-<body data-sk-sections="Hero,The Lab,How to read it,Close" data-sk-bar="Work twenty fictional denials with the real method. No sign-up, no patient information." data-sk-biz="healthcare organization">
+<body data-sk-sections="The Lab,How to read it,Close" data-sk-bar="Work twenty fictional denials with the real method. No sign-up, no patient information." data-sk-biz="healthcare organization">
   <main>
 
-    <section class="hero compact-hero" data-screen-label="Hero">
-      <div class="wrap">
-        <div class="eyebrow">Soft Appeals · The Recovery Lab</div>
-        <h1>Twenty denials, worked <em>in the open.</em></h1>
-        <p class="hero-copy">The Recovery Lab is a working denial portfolio you can explore before you send anything. The same twenty fictional claims from the sample assessment, live: an executive view for the money questions, a worklist you can sort and filter, and a full record behind every claim. Open any claim and press Show me why to read the reasoning behind its recommendation.</p>
-        <p class="hero-copy"><b>Every claim in the Lab is fictional.</b> No patient information appears here, and none is requested. What is real is the method.</p>
-        <div class="actions">
-          <a class="button" href="/soft-appeals-start">Request your complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
-          <a class="button secondary" href="/soft-appeals-sample-assessment">View a sample assessment <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
-          <a class="button secondary" href="/soft-appeals-denial-health-score">Check your Denial Health Score <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
-        </div>
-      </div>
-    </section>
+    <!-- Reshelled 2026-08-17. The Lab used to be a card sitting inside a
+         marketing page, which made a working denial worklist look like another
+         website section. It is now the console shell: a rail on the left, a
+         workspace on the right, and a fictional-data ribbon that stays visible
+         the whole way down instead of appearing once at the top. -->
+    <section class="sa" data-screen-label="The Lab">
 
-    <section class="section soft" id="lab" data-screen-label="The Lab">
-      <div class="wrap">
+      <p class="sa-fiction">
+        <b>Sample</b>
+        <span>Every claim, payer, amount and date in this Lab is fictional. No patient information appears here and none is requested.</span>
+      </p>
 
-        <div class="lab" data-reveal>
-          <div class="lab-top">
-            <span>Soft Appeals · Recovery Lab</span>
-            <span><b>Sample</b> · fictional data</span>
+      <div class="sa-console">
+
+        <nav class="sa-rail" aria-label="Recovery Lab">
+          <span class="sa-rail-brand">Recovery Lab</span>
+          <p class="sa-rail-sub">Soft Appeals &#183; demonstration portfolio</p>
+
+          <p class="sa-rail-group">Views</p>
+          <ul class="sa-rail-nav" id="rail-views" data-sa-seg role="tablist" aria-label="Lab views">
+            <li><button role="tab" id="tab-exec" aria-controls="view-exec" aria-selected="true" class="is-on">Executive <span class="sa-count" id="rail-n-exec"></span></button></li>
+            <li><button role="tab" id="tab-work" aria-controls="view-work" aria-selected="false">Worklist <span class="sa-count" id="rail-n-work"></span></button></li>
+            <li><button role="tab" id="tab-pat" aria-controls="view-pat" aria-selected="false">Patterns <span class="sa-count" id="rail-n-pat"></span></button></li>
+          </ul>
+
+          <p class="sa-rail-group">Elsewhere</p>
+          <ul class="sa-rail-nav">
+            <li><a href="/soft-appeals-sample-assessment">Sample assessment</a></li>
+            <li><a href="/soft-appeals-denial-health-score">Denial Health Score</a></li>
+            <li><a href="/soft-appeals-trust-room">Trust Room</a></li>
+          </ul>
+
+          <div class="sa-rail-foot">
+            <span class="sa-rail-stamp">Fictional data</span>
+            <p style="margin:0">The method is real. The claims are not. <a href="/soft-appeals-start">Run it on twenty of your own denials</a>.</p>
           </div>
+        </nav>
 
-          <div class="lab-tabs" role="tablist" aria-label="Lab views">
-            <button role="tab" id="tab-exec" aria-controls="view-exec" aria-selected="true">Executive view</button>
-            <button role="tab" id="tab-work" aria-controls="view-work" aria-selected="false" tabindex="-1">Worklist</button>
-            <button role="tab" id="tab-pat" aria-controls="view-pat" aria-selected="false" tabindex="-1">Patterns</button>
-          </div>
+        <div class="sa-work">
 
-          <div class="lab-body">
+          <header class="sa-work-top">
+            <div>
+              <!-- Was "worked in the open" until 2026-08-17. Same family as the
+                   retired "building in public" theme, so it was replaced with
+                   the thing the page actually does. -->
+              <p class="sa-label">Twenty denials &#183; <span class="sa-label-b">every recommendation explained</span></p>
+              <h1>The Recovery Lab</h1>
+            </div>
+            <div class="sa-work-actions">
+              <a class="sa-btn is-action" href="/soft-appeals-start">Request your review</a>
+            </div>
+          </header>
+
+          <div class="sa-work-body">
 
             <div id="view-exec" role="tabpanel" aria-labelledby="tab-exec" tabindex="0">
-              <div class="lab-sub">The portfolio at a glance</div>
-              <div class="lab-tiles" id="exec-tiles"></div>
+              <div class="sa-metrics" id="exec-tiles"></div>
 
-              <div class="lab-sub">Denied value by recommended action</div>
-              <div class="lab-bars" id="exec-actions"></div>
-              <p class="lab-note"><b>Denied amount is not the same as expected recovery.</b> These figures are the amounts attached to the reviewed claims and their recommended dispositions, not projected reimbursement. No recovery projection appears anywhere in the Lab.</p>
+              <div class="sa-panel">
+                <div class="sa-panel-h"><h2>Denied value by recommended action</h2></div>
+                <div class="sa-panel-b">
+                  <div class="sa-bars" id="exec-actions"></div>
+                  <p class="sa-note"><b>Denied amount is not the same as expected recovery.</b> These figures are the amounts attached to the reviewed claims and their recommended dispositions, not projected reimbursement. No recovery projection appears anywhere in the Lab.</p>
+                </div>
+              </div>
 
-              <div class="lab-sub">Where the next action sits</div>
-              <div class="lab-tiles" id="exec-owners"></div>
-              <p class="lab-note">Two statuses put a claim with your team: Additional information needed and Client review. Everything else is owned by Soft Appeals or sits with the payer. That split is the point: at any moment, each claim has exactly one owner and one next action.</p>
+              <div class="sa-panel">
+                <div class="sa-panel-h"><h2>Where the next action sits</h2></div>
+                <div class="sa-panel-b">
+                  <div class="sa-metrics" id="exec-owners"></div>
+                  <p class="sa-note">Two statuses put a claim with your team: Additional information needed and Client review. Everything else is owned by Soft Appeals or sits with the payer. That split is the point: at any moment, each claim has exactly one owner and one next action.</p>
+                </div>
+              </div>
 
-              <div class="lab-sub">Denied value by payer</div>
-              <div class="lab-bars" id="exec-payers"></div>
+              <div class="sa-panel">
+                <div class="sa-panel-h"><h2>Denied value by payer</h2></div>
+                <div class="sa-panel-b"><div class="sa-bars" id="exec-payers"></div></div>
+              </div>
 
-              <div class="lab-sub">Denials by category</div>
-              <div class="lab-bars" id="exec-cats"></div>
-              <p class="lab-note">Payer names in the Lab are fictional. In a real assessment this section names your actual payers, and the category mix comes from your own denials.</p>
+              <div class="sa-panel">
+                <div class="sa-panel-h"><h2>Denials by category</h2></div>
+                <div class="sa-panel-b">
+                  <div class="sa-bars" id="exec-cats"></div>
+                  <p class="sa-note">Payer names in the Lab are fictional. In a real assessment this section names your actual payers, and the category mix comes from your own denials.</p>
+                </div>
+              </div>
             </div>
 
             <div id="view-work" role="tabpanel" aria-labelledby="tab-work" tabindex="0" hidden>
-              <div class="lab-filters" role="group" aria-label="Worklist filters">
-                <label>Action
-                  <select id="f-action">
+              <div class="sa-seg" id="quick" role="group" aria-label="Quick views">
+                <button type="button" data-quick="all" class="is-on">All twenty</button>
+                <button type="button" data-quick="you">Waiting on you</button>
+                <button type="button" data-quick="a">Priority A</button>
+              </div>
+
+              <div class="sa-filters" role="group" aria-label="Worklist filters">
+                <label class="sa-field"><span>Action</span>
+                  <select class="sa-select" id="f-action">
                     <option value="">All actions</option>
                     <option>Appeal</option>
                     <option>Correct / resubmit</option>
@@ -261,11 +208,11 @@
                     <option>Close / deprioritize</option>
                   </select>
                 </label>
-                <label>Status
-                  <select id="f-status"><option value="">All statuses</option></select>
+                <label class="sa-field"><span>Status</span>
+                  <select class="sa-select" id="f-status"><option value="">All statuses</option></select>
                 </label>
-                <label>Owner
-                  <select id="f-owner">
+                <label class="sa-field"><span>Owner</span>
+                  <select class="sa-select" id="f-owner">
                     <option value="">All owners</option>
                     <option>Soft Appeals</option>
                     <option>Your team</option>
@@ -273,58 +220,82 @@
                     <option>Closed</option>
                   </select>
                 </label>
-                <label>Payer
-                  <select id="f-payer"><option value="">All payers</option></select>
+                <label class="sa-field"><span>Payer</span>
+                  <select class="sa-select" id="f-payer"><option value="">All payers</option></select>
                 </label>
-                <label>Priority
-                  <select id="f-priority">
+                <label class="sa-field"><span>Priority</span>
+                  <select class="sa-select" id="f-priority">
                     <option value="">All priorities</option>
                     <option>A</option><option>B</option><option>C</option><option>D</option>
                   </select>
                 </label>
-                <button class="reset" id="f-reset" type="button">Clear filters</button>
+                <div class="sa-filters-end">
+                  <button class="sa-btn is-quiet is-sm" id="f-reset" type="button">Clear filters</button>
+                </div>
               </div>
 
-              <p class="lab-count" id="work-count" aria-live="polite"></p>
+              <p class="sa-note" id="work-count" aria-live="polite" style="margin:0"></p>
 
-              <div class="lab-scroll">
-                <table class="lab-tbl" id="work-tbl">
-                  <thead>
-                    <tr>
-                      <th scope="col" data-sort="priority"><button type="button">Priority</button></th>
-                      <th scope="col" data-sort="id"><button type="button">Claim</button></th>
-                      <th scope="col" data-sort="amount"><button type="button">Denied</button></th>
-                      <th scope="col">Payer</th>
-                      <th scope="col">Category</th>
-                      <th scope="col">Recommended action</th>
-                      <th scope="col">Status</th>
-                      <th scope="col">Owner</th>
-                      <th scope="col">Next action</th>
-                    </tr>
-                  </thead>
-                  <tbody id="work-rows"></tbody>
-                </table>
+              <div class="sa-panel">
+                <div class="sa-tablewrap">
+                  <table class="sa-table" id="work-tbl">
+                    <thead>
+                      <tr>
+                        <th scope="col" data-sort="priority"><button type="button">Priority</button></th>
+                        <th scope="col" data-sort="id"><button type="button">Claim</button></th>
+                        <th scope="col" data-sort="amount"><button type="button">Denied</button></th>
+                        <th scope="col"><span class="sa-th">Payer</span></th>
+                        <th scope="col"><span class="sa-th">Category</span></th>
+                        <th scope="col"><span class="sa-th">Recommended action</span></th>
+                        <th scope="col"><span class="sa-th">Status</span></th>
+                        <th scope="col"><span class="sa-th">Owner</span></th>
+                        <th scope="col"><span class="sa-th">Next action</span></th>
+                      </tr>
+                    </thead>
+                    <tbody id="work-rows"></tbody>
+                  </table>
+                </div>
               </div>
-              <p class="lab-note">Select any claim reference to open the full record, including the reasoning behind its recommendation. Timing marked with * is sample timing for demonstration only. Actual deadlines must be determined from the applicable payer, plan, claim circumstances and governing requirements.</p>
-
-              <div id="claim-detail" aria-live="polite"></div>
+              <p class="sa-note">Select any claim to open the full record, including the reasoning behind its recommendation. Timing marked with * is sample timing for demonstration only. Actual deadlines must be determined from the applicable payer, plan, claim circumstances and governing requirements.</p>
             </div>
 
             <div id="view-pat" role="tabpanel" aria-labelledby="tab-pat" tabindex="0" hidden>
-              <div class="lab-sub">Recurring themes in this portfolio</div>
-              <div class="lab-pat" id="pat-rows"></div>
-              <p class="lab-note">Pattern observations are directional and describe only the claims in the reviewed sample. A limited sample should not be treated as a complete revenue-cycle analysis. In a real engagement, these observations become upstream questions for your team, because a denial category that keeps recurring is usually cheaper to prevent than to recover.</p>
+              <div class="sa-panel">
+                <div class="sa-panel-h"><h2>Recurring themes in this portfolio</h2></div>
+                <div class="sa-panel-b">
+                  <div class="lab-pat" id="pat-rows"></div>
+                  <p class="sa-note">Pattern observations are directional and describe only the claims in the reviewed sample. A limited sample should not be treated as a complete revenue-cycle analysis. In a real engagement, these observations become upstream questions for your team, because a denial category that keeps recurring is usually cheaper to prevent than to recover.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="sa-note" style="border-top:1px solid var(--sa-line);padding-top:16px">
+              <p style="margin:0 0 8px"><b>About this Lab.</b> Everything above is fictional and exists to demonstrate how Soft Appeals reviews, prioritizes, tracks and resolves denied claims. The claims, payers, amounts, statuses and timing are invented, and they match the published sample assessment so the numbers you see here and there are the same numbers.</p>
+              <p style="margin:0">A recommendation to pursue a claim does not guarantee reimbursement or reversal of a payer determination. Soft Appeals does not independently make clinical, coding, legal or coverage determinations outside the agreed scope of service. Soft Appeals is a service of frimpomaasync.com.</p>
             </div>
 
           </div>
-
-          <div class="lab-foot">
-            <p><b>About this Lab.</b> Everything above is fictional and exists to demonstrate how Soft Appeals reviews, prioritizes, tracks and resolves denied claims. The claims, payers, amounts, statuses and timing are invented, and they match the published sample assessment so the numbers you see here and there are the same numbers.</p>
-            <p>A recommendation to pursue a claim does not guarantee reimbursement or reversal of a payer determination. Soft Appeals does not independently make clinical, coding, legal or coverage determinations outside the agreed scope of service. Soft Appeals is a service of frimpomaasync.com.</p>
-          </div>
         </div>
-
       </div>
+
+      <!-- The claim record. A drawer, not an inline block: opening a record
+           used to push the whole worklist down the page, so you lost your place
+           in the list you were working. -->
+      <aside class="sa-drawer" id="claim-drawer" role="dialog" aria-modal="true" aria-labelledby="claim-drawer-t" aria-hidden="true">
+        <div class="sa-drawer-h">
+          <div>
+            <p class="sa-label" id="claim-drawer-k">Claim record</p>
+            <h2 id="claim-drawer-t">No claim open</h2>
+          </div>
+          <button type="button" class="sa-close" data-sa-close aria-label="Close claim record">&#215;</button>
+        </div>
+        <div class="sa-drawer-b" id="claim-drawer-b"></div>
+        <div class="sa-drawer-f">
+          <a class="sa-btn is-action" href="/soft-appeals-start">Run this on your denials</a>
+          <button type="button" class="sa-btn" data-sa-close>Close</button>
+        </div>
+      </aside>
+
     </section>
 
     <section class="section" data-screen-label="How to read it">
@@ -640,15 +611,13 @@
         return out;
       }
       function barRows(container, groups, order) {
-        var total = sum(LAB_CLAIMS);
+        var top = Math.max.apply(null, order.map(function (n) { return sum(groups[n] || []); }));
         container.innerHTML = order.map(function (name) {
-          var list = groups[name] || [];
-          var v = sum(list);
-          var pct = Math.round((v / total) * 1000) / 10;
-          return '<div class="lab-barrow"><div class="t"><span>' + esc(name) +
-            ' <span>· ' + list.length + (list.length === 1 ? " claim" : " claims") + '</span></span><b>' + usd(v) +
-            '</b></div><div class="lab-bar" role="img" aria-label="' + esc(name) + ": " + usd(v) + " across " + list.length +
-            ' claims, ' + pct + ' percent of the portfolio"><i style="width:' + pct + '%"></i></div></div>';
+          var list = groups[name] || [], v = sum(list);
+          return '<div class="sa-barrow">' +
+            '<div class="sa-barrow-t"><span>' + esc(name) + ' <span class="sa-sub">' + list.length + ' claim' + (list.length === 1 ? "" : "s") + '</span></span><b>' + usd(v) + '</b></div>' +
+            '<div class="sa-bar"><i style="width:' + (top ? Math.round((v / top) * 100) : 0) + '%"></i></div>' +
+            '</div>';
         }).join("");
       }
 
@@ -663,16 +632,16 @@
       var clientReview = LAB_CLAIMS.filter(function (c) { return c.status === "Client review"; });
 
       el("exec-tiles").innerHTML =
-        '<div class="lab-tile"><div class="k">Total denied in scope</div><div class="v">' + usd(sum(LAB_CLAIMS)) + '</div><div class="c">' + LAB_CLAIMS.length + ' claims</div></div>' +
-        '<div class="lab-tile lead"><div class="k">Priority attention</div><div class="v">' + usd(sum(priorityA)) + '</div><div class="c">' + priorityA.length + ' claims with known timing or recovery considerations</div></div>' +
-        '<div class="lab-tile"><div class="k">With your team</div><div class="v">' + withYou.length + '</div><div class="c">' + infoNeeded.length + ' need information · ' + clientReview.length + ' need a decision</div></div>' +
-        '<div class="lab-tile"><div class="k">With the payer</div><div class="v">' + withPayer.length + '</div><div class="c">submitted, follow-up scheduled</div></div>';
+        '<div class="sa-metric"><div class="sa-metric-k">Total denied in scope</div><div class="sa-metric-v">' + usd(sum(LAB_CLAIMS)) + '</div><div class="sa-metric-c">' + LAB_CLAIMS.length + ' claims</div></div>' +
+        '<div class="sa-metric is-lead"><div class="sa-metric-k">Priority attention</div><div class="sa-metric-v">' + usd(sum(priorityA)) + '</div><div class="sa-metric-c">' + priorityA.length + ' claims with known timing or recovery considerations</div></div>' +
+        '<div class="sa-metric"><div class="sa-metric-k">With your team</div><div class="sa-metric-v">' + withYou.length + '</div><div class="sa-metric-c">' + infoNeeded.length + ' need information · ' + clientReview.length + ' need a decision</div></div>' +
+        '<div class="sa-metric"><div class="sa-metric-k">With the payer</div><div class="sa-metric-v">' + withPayer.length + '</div><div class="sa-metric-c">submitted, follow-up scheduled</div></div>';
 
       barRows(el("exec-actions"), byAction, ["Appeal", "Investigate", "Correct / resubmit", "Close / deprioritize"]);
 
       el("exec-owners").innerHTML = ["Soft Appeals", "Your team", "Payer", "Closed"].map(function (o) {
         var list = LAB_CLAIMS.filter(function (c) { return c.owner === o; });
-        return '<div class="lab-tile"><div class="k">' + esc(o) + '</div><div class="v">' + list.length + '</div><div class="c">' + usd(sum(list)) + ' denied value</div></div>';
+        return '<div class="sa-metric' + (o === "Your team" ? " is-lead" : "") + '"><div class="sa-metric-k">' + esc(o) + '</div><div class="sa-metric-v">' + list.length + '</div><div class="sa-metric-c">' + usd(sum(list)) + ' denied value</div></div>';
       }).join("");
 
       barRows(el("exec-payers"), byPayer, Object.keys(byPayer).sort(function (a, b) { return sum(byPayer[b]) - sum(byPayer[a]); }));
@@ -707,20 +676,24 @@
       function renderWork() {
         var list = filtered();
         el("work-count").innerHTML = "Showing <b>" + list.length + "</b> of " + LAB_CLAIMS.length +
-          " claims · <b>" + usd(sum(list)) + "</b> denied value in view";
+          " claims &#183; <b>" + usd(sum(list)) + "</b> denied value in view";
         el("work-rows").innerHTML = list.map(function (c) {
-          return '<tr data-id="' + c.id + '">' +
+          /* Red on a row means one thing only: this claim is waiting on the
+             client team, so it is the row that stops moving if nobody looks. */
+          var stuck = c.owner === "Your team";
+          return '<tr data-id="' + c.id + '" tabindex="0"' + (stuck ? ' class="is-urgent"' : '') + '>' +
             '<td data-l="Priority"><span class="lab-pr ' + c.priority.toLowerCase() + '">' + c.priority + '</span></td>' +
-            '<td class="id" data-l="Claim"><button type="button" data-open="' + c.id + '" aria-label="Open claim ' + c.id + '">' + c.id + '</button></td>' +
-            '<td class="num" data-l="Denied">' + usd(c.amount) + '</td>' +
+            '<td class="sa-strong" data-l="Claim">' + c.id + '</td>' +
+            '<td class="sa-money" data-l="Denied">' + usd(c.amount) + '</td>' +
             '<td data-l="Payer">' + esc(c.payer) + '</td>' +
             '<td data-l="Category">' + esc(c.category) + '</td>' +
             '<td data-l="Action">' + esc(c.actionLabel) + '</td>' +
             '<td data-l="Status">' + esc(c.status) + '</td>' +
-            '<td data-l="Owner"><span class="lab-own' + (c.owner === "Your team" ? " you" : "") + '">' + esc(c.owner) + '</span></td>' +
+            '<td data-l="Owner"><span class="sa-pill ' + (stuck ? "is-urgent" : c.owner === "Closed" ? "" : "is-info") + ' lab-own' + (stuck ? " you" : "") + '"><i></i>' + esc(c.owner) + '</span></td>' +
             '<td data-l="Next action">' + esc(c.next) + '</td>' +
             '</tr>';
         }).join("");
+        el("rail-n-work").textContent = list.length === LAB_CLAIMS.length ? String(LAB_CLAIMS.length) : list.length + "/" + LAB_CLAIMS.length;
       }
 
       document.querySelectorAll("#work-tbl th[data-sort]").forEach(function (th) {
@@ -736,67 +709,75 @@
       [["f-action", "action"], ["f-status", "status"], ["f-owner", "owner"], ["f-payer", "payer"], ["f-priority", "priority"]].forEach(function (pair) {
         el(pair[0]).addEventListener("change", function () {
           state.filters[pair[1]] = this.value;
-          closeDetail();
+          window.SoftAppealsShell.closeDrawer();
           renderWork();
         });
       });
       el("f-reset").addEventListener("click", function () {
+        [].slice.call(el("quick").children).forEach(function (x, i) { x.classList.toggle("is-on", i === 0); });
         state.filters = {};
         ["f-action", "f-status", "f-owner", "f-payer", "f-priority"].forEach(function (id) { el(id).value = ""; });
-        closeDetail();
+        window.SoftAppealsShell.closeDrawer();
         renderWork();
       });
 
-      /* ---------- claim detail ---------- */
-      function closeDetail() { el("claim-detail").innerHTML = ""; }
-
+      /* ---------- claim record ---------- */
+      /* The record used to render inline under the table, which pushed the
+         worklist down the page and lost the reader's place in it. It is a
+         drawer now: the list stays where it was, and Escape or the scrim
+         closes it. */
       function openDetail(id) {
         var c = null;
         LAB_CLAIMS.forEach(function (x) { if (x.id === id) c = x; });
         if (!c) return;
+
         var hist = c.history.map(function (h, i) {
           return '<div class="h' + (i === c.history.length - 1 ? " now" : "") + '"><b>' + esc(h[0]) + '</b><span>' + esc(h[1]) + '</span></div>';
         }).join("");
-        el("claim-detail").innerHTML =
-          '<div class="lab-detail" role="region" aria-label="Claim ' + c.id + ' detail">' +
-            '<div class="lab-detail-top"><h3>' + c.id + ' · ' + esc(c.category.toLowerCase()) + ' denial</h3>' +
-            '<button type="button" class="x" data-close>Close</button></div>' +
-            '<div class="lab-detail-in">' +
-              '<div class="lab-meta"><span>' + esc(c.payer) + '</span><span>Denied <b>' + usd(c.amount) + '</b></span>' +
-              '<span>Priority <b>' + c.priority + '</b></span><span><b>' + esc(c.actionLabel) + '</b></span>' +
-              '<span>Status: <b>' + esc(c.status) + '</b></span><span>Owner: <b>' + esc(c.owner) + '</b></span>' +
-              (c.blocker ? '<span>Blocker: <b>' + esc(c.blocker) + '</b></span>' : '') + '</div>' +
-              '<dl>' +
-                '<dt>What happened</dt><dd>' + esc(c.happened) + '</dd>' +
-                '<dt>What was reviewed</dt><dd>' + esc(c.reviewed) + '</dd>' +
-                '<dt>Information readiness</dt><dd>' + esc(c.readiness) + '</dd>' +
-                '<dt>What is missing</dt><dd>' + esc(c.missing) + '</dd>' +
-                '<dt>Next step</dt><dd>' + esc(c.next) + '</dd>' +
-                '<dt>Timing</dt><dd>' + esc(c.timing) + (/\d+ days/.test(c.timing) ? " · sample timing for demonstration only" : "") + '</dd>' +
-              '</dl>' +
-              '<details class="lab-why"><summary>Show me why</summary><div class="in"><ul>' +
-                c.why.map(function (w) { return "<li>" + esc(w) + "</li>"; }).join("") +
-              '</ul><p class="no-score">' + NO_SCORE + '</p></div></details>' +
-              '<div class="lab-sub" style="margin-top:20px">Status history</div>' +
-              '<div class="lab-hist">' + hist + '</div>' +
-            '</div>' +
-          '</div>';
-        var region = el("claim-detail").firstChild;
-        region.scrollIntoView({ block: "nearest", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
-        region.querySelector("[data-close]").focus();
+
+        var ownerPill = c.owner === "Your team" ? "is-urgent" : c.owner === "Closed" ? "" : "is-info";
+
+        el("claim-drawer-k").innerHTML = 'Claim record &#183; <span class="sa-label-b">fictional</span>';
+        el("claim-drawer-t").textContent = c.id + " \u00b7 " + c.category.toLowerCase() + " denial";
+        el("claim-drawer-b").innerHTML =
+          '<div class="sa-metrics" style="grid-template-columns:repeat(auto-fit,minmax(120px,1fr));margin-bottom:16px">' +
+            '<div class="sa-metric"><div class="sa-metric-k">Denied</div><div class="sa-metric-v">' + usd(c.amount) + '</div></div>' +
+            '<div class="sa-metric"><div class="sa-metric-k">Priority</div><div class="sa-metric-v">' + c.priority + '</div></div>' +
+          '</div>' +
+          '<p style="margin:0 0 14px;display:flex;gap:8px;flex-wrap:wrap">' +
+            '<span class="sa-pill is-action">' + esc(c.actionLabel) + '</span>' +
+            '<span class="sa-pill">' + esc(c.status) + '</span>' +
+            '<span class="sa-pill ' + ownerPill + '"><i></i>' + esc(c.owner) + '</span>' +
+            (c.blocker ? '<span class="sa-pill is-urgent"><i></i>' + esc(c.blocker) + '</span>' : '') +
+          '</p>' +
+          '<dl class="sa-dl">' +
+            '<dt>Payer</dt><dd>' + esc(c.payer) + '</dd>' +
+            '<dt>What happened</dt><dd>' + esc(c.happened) + '</dd>' +
+            '<dt>What was reviewed</dt><dd>' + esc(c.reviewed) + '</dd>' +
+            '<dt>Readiness</dt><dd>' + esc(c.readiness) + '</dd>' +
+            '<dt>What is missing</dt><dd>' + esc(c.missing) + '</dd>' +
+            '<dt>Next step</dt><dd>' + esc(c.next) + '</dd>' +
+            '<dt>Timing</dt><dd>' + esc(c.timing) + (/\d+ days/.test(c.timing) ? " \u00b7 sample timing for demonstration only" : "") + '</dd>' +
+          '</dl>' +
+          '<details class="lab-why"><summary>Show me why</summary><div class="in"><ul>' +
+            c.why.map(function (w) { return "<li>" + esc(w) + "</li>"; }).join("") +
+          '</ul><p class="no-score">' + NO_SCORE + '</p></div></details>' +
+          '<p class="sa-label" style="margin:22px 0 12px">Status history</p>' +
+          '<div class="lab-hist">' + hist + '</div>';
+
+        window.SoftAppealsShell.openDrawer("claim-drawer", document.activeElement);
       }
 
       el("work-tbl").addEventListener("click", function (e) {
-        var btn = e.target.closest("[data-open]");
         var row = e.target.closest("tr[data-id]");
-        if (btn) openDetail(btn.getAttribute("data-open"));
-        else if (row && !e.target.closest("a,button")) openDetail(row.getAttribute("data-id"));
+        if (row && !e.target.closest("a,button")) openDetail(row.getAttribute("data-id"));
       });
-      el("claim-detail").addEventListener("click", function (e) {
-        if (e.target.closest("[data-close]")) closeDetail();
-      });
-      el("claim-detail").addEventListener("keydown", function (e) {
-        if (e.key === "Escape") closeDetail();
+      el("work-tbl").addEventListener("keydown", function (e) {
+        if (e.key !== "Enter" && e.key !== " ") return;
+        var row = e.target.closest("tr[data-id]");
+        if (!row) return;
+        e.preventDefault();
+        openDetail(row.getAttribute("data-id"));
       });
 
       /* ---------- patterns ---------- */
@@ -817,33 +798,39 @@
       ];
       el("pat-rows").innerHTML = PATTERNS.map(function (p) {
         var pct = Math.round((p.claims.length / LAB_CLAIMS.length) * 100);
-        return '<div class="lab-patrow"><div class="lab-barrow"><div class="t"><span>' + esc(p.name) +
-          '</span><b>' + p.claims.length + ' of ' + LAB_CLAIMS.length + ' claims · ' + usd(sum(p.claims)) + '</b></div>' +
-          '<div class="lab-bar" role="img" aria-label="' + esc(p.name) + ": " + p.claims.length + " of " + LAB_CLAIMS.length + ' claims"><i style="width:' + pct + '%"></i></div></div>' +
+        return '<div class="lab-patrow"><div class="sa-barrow"><div class="sa-barrow-t"><span>' + esc(p.name) +
+          '</span><b>' + p.claims.length + ' of ' + LAB_CLAIMS.length + ' claims &#183; ' + usd(sum(p.claims)) + '</b></div>' +
+          '<div class="sa-bar" role="img" aria-label="' + esc(p.name) + ": " + p.claims.length + " of " + LAB_CLAIMS.length + ' claims"><i style="width:' + pct + '%"></i></div></div>' +
           '<p>' + esc(p.note) + '</p><p class="q">' + esc(p.q) + '</p></div>';
       }).join("");
 
-      /* ---------- tabs ---------- */
-      var tabs = [].slice.call(document.querySelectorAll(".lab-tabs [role=tab]"));
-      function selectTab(tab) {
-        tabs.forEach(function (t) {
-          var on = t === tab;
-          t.setAttribute("aria-selected", on ? "true" : "false");
-          t.tabIndex = on ? 0 : -1;
-          el(t.getAttribute("aria-controls")).hidden = !on;
+      /* ---------- rail counts and quick views ---------- */
+      /* The rail is the tablist. soft-appeals.js wires the roving tabindex and
+         the arrow keys from data-sa-seg, so all this file does is keep the
+         counts honest and mirror the highlight the rail draws. */
+      el("rail-n-exec").textContent = LAB_CLAIMS.length;
+      el("rail-n-pat").textContent = PATTERNS.length;
+
+      var railTabs = [].slice.call(document.querySelectorAll("#rail-views [role=tab]"));
+      railTabs.forEach(function (t) {
+        t.addEventListener("click", function () {
+          railTabs.forEach(function (x) { x.classList.toggle("is-on", x === t); });
         });
-        tab.focus();
-      }
-      tabs.forEach(function (t, i) {
-        t.addEventListener("click", function () { selectTab(t); });
-        t.addEventListener("keydown", function (e) {
-          var next = e.key === "ArrowRight" ? i + 1 : e.key === "ArrowLeft" ? i - 1 : null;
-          if (e.key === "Home") next = 0;
-          if (e.key === "End") next = tabs.length - 1;
-          if (next === null) return;
-          e.preventDefault();
-          selectTab(tabs[(next + tabs.length) % tabs.length]);
-        });
+      });
+
+      /* Quick views set the same filter state the chips do, so the two controls
+         can never show different lists. */
+      var quick = el("quick");
+      quick.addEventListener("click", function (e) {
+        var b = e.target.closest("[data-quick]");
+        if (!b) return;
+        [].slice.call(quick.children).forEach(function (x) { x.classList.toggle("is-on", x === b); });
+        var k = b.getAttribute("data-quick");
+        state.filters = {};
+        ["f-action", "f-status", "f-owner", "f-payer", "f-priority"].forEach(function (id) { el(id).value = ""; });
+        if (k === "you") { state.filters.owner = "Your team"; el("f-owner").value = "Your team"; }
+        if (k === "a") { state.filters.priority = "A"; el("f-priority").value = "A"; }
+        renderWork();
       });
 
       renderWork();
@@ -852,5 +839,6 @@
 
   <script type="module" src="/assets/journey.js?v=7"></script>
   <script src="/fsnav.js?v=854" defer></script>
+  <script src="/assets/soft-appeals.js?v=1" defer></script>
 </body>
 </html>

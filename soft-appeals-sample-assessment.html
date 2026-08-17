@@ -9,6 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=30">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <link rel="stylesheet" href="/assets/soft-appeals.css?v=1">
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
@@ -18,127 +19,108 @@
   <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
   <meta name="twitter:card" content="summary_large_image">
   <style>
-    /* The sample assessment. Scoped to this page, system fonts only, no remote requests. */
-    .rep {
-      max-width: 880px;
-      margin: 0 auto;
-      border: 1px solid var(--line);
-      border-radius: 20px;
-      background: var(--paper);
-      overflow: hidden;
-      box-shadow: 0 26px 60px rgba(16, 20, 38, .07);
+    /* The Sample Assessment, reshelled 2026-08-17 onto the document shell in
+       /assets/soft-appeals.css. Cover, contents, seven white sheets on a grey
+       canvas, page numbers, a print button and a watermark on every sheet.
+
+       Retired with the old shell: .rep (the card), .rep-top, .rep-in,
+       .rep-head, .rep-sub (now real h3s), .rep-foot. What is left here is the
+       report's own furniture. */
+
+    /* Disposition and financial figure sets. */
+    .rep-piles { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin: 0 0 18px; }
+    .rep-pile {
+      padding: 15px 16px; border: 1px solid var(--sa-line); border-radius: var(--sa-r);
+      background: var(--sa-surface-2);
     }
-    .rep-top {
-      display: flex; align-items: baseline; justify-content: space-between;
-      gap: 14px; flex-wrap: wrap;
-      padding: 22px clamp(20px, 4vw, 38px);
-      border-bottom: 1px solid var(--line);
-      font-family: var(--mono, ui-monospace, Menlo, monospace);
-      font-size: 10px; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--ink-faint);
+    .rep-pile.win { border-color: rgba(194, 80, 28, .35); background: #fff8f3; }
+    .rep-pile .k { font-family: var(--mono); font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--sa-mute); }
+    .rep-pile .v { margin: 8px 0 2px; font-family: var(--serif); font-size: 26px; line-height: 1; font-variant-numeric: tabular-nums; }
+    .rep-pile.win .v { color: var(--sa-action); }
+    .rep-pile .c { font-family: var(--mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--sa-mute); }
+    .rep-pile p { margin: 9px 0 0; font-size: 13px; line-height: 1.55; color: var(--sa-slate); }
+
+    /* The one figure the reader must not skim past. */
+    .rep-flag {
+      margin: 0 0 18px; padding: 15px 17px; border-left: 3px solid var(--sa-urgent);
+      background: #fdf3f3; border-radius: 0 var(--sa-r) var(--sa-r) 0;
     }
-    .rep-top b { color: var(--copper, #C2501C); font-weight: 400; }
-    .rep-in { padding: clamp(24px, 4vw, 40px); }
-    .rep-for {
-      display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 14px 26px; padding-bottom: 22px; border-bottom: 1px solid var(--line);
+    .rep-flag p { margin: 0 0 8px; font-size: 14.5px; line-height: 1.65; color: var(--sa-slate); }
+    .rep-flag p:last-child { margin: 0; }
+    .rep-flag b { color: var(--sa-ink); }
+
+    .rep-basis ul { margin: 0 0 18px; padding-left: 20px; }
+    .rep-basis li b { color: var(--sa-ink); }
+
+    /* Claim worklist. A report table: rules, not cards. */
+    .rep-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 0 0 8px; }
+    .rep-tbl { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .rep-tbl th {
+      text-align: left; padding: 9px 10px; white-space: nowrap;
+      border-bottom: 1.5px solid var(--sa-ink); font-family: var(--mono);
+      font-size: 9px; letter-spacing: .12em; text-transform: uppercase; font-weight: 400;
     }
-    .rep-for span { display: block; font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 5px; font-family: var(--mono, ui-monospace, Menlo, monospace); }
-    .rep-for p { margin: 0; font-size: 14.5px; line-height: 1.5; }
-    .rep-head { margin: 26px 0 0; font-family: var(--serif); font-weight: 400; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.14; letter-spacing: -.015em; }
-    .rep-head b { font-weight: 400; color: var(--copper, #C2501C); }
-    .rep-flag { margin: 22px 0 0; padding: 16px 18px; border-left: 3px solid var(--copper, #C2501C); background: rgba(194, 80, 28, .06); border-radius: 0 12px 12px 0; }
-    .rep-flag p { margin: 0; font-size: 14.5px; line-height: 1.6; }
-    .rep-flag p + p { margin-top: 8px; color: var(--ink-soft); font-size: 13px; }
-    .rep-piles { display: grid; grid-template-columns: repeat(auto-fit, minmax(178px, 1fr)); gap: 14px; margin: 22px 0 0; }
-    .rep-pile { padding: 18px; border: 1px solid var(--line); border-radius: 16px; }
-    .rep-pile .k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .rep-pile .v { margin: 8px 0 4px; font-family: var(--serif); font-size: 28px; line-height: 1; }
-    .rep-pile .c { font-size: 12px; color: var(--ink-faint); margin-bottom: 9px; }
-    .rep-pile.win .v { color: var(--copper, #C2501C); }
-    .rep-pile p { margin: 0; font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
-    .rep-sub { margin: 34px 0 12px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .rep-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; border: 1px solid var(--line); border-radius: 16px; }
-    /* 760, not 880. The card is 880 wide with 40px of padding a side, so a table
-       wider than 800 scrolls inside its own container and the Status column, the
-       last one, sits clipped at the right edge on a laptop. At 760 all eight
-       columns fit the card without a sideways swipe. */
-    .rep-tbl { width: 100%; min-width: 760px; border-collapse: collapse; font-size: 12.5px; }
-    .rep-tbl th, .rep-tbl td { padding: 11px 11px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
-    .rep-tbl td.id { white-space: nowrap; font-variant-numeric: tabular-nums; }
-    .rep-tbl th { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); font-weight: 400; }
-    .rep-tbl tr:last-child td { border-bottom: 0; }
-    .rep-tbl td.num { font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .rep-tbl td.due { font-variant-numeric: tabular-nums; white-space: nowrap; color: var(--copper, #C2501C); }
-    /* Recovery priority pill. A is copper, B and C are ink-soft, D recedes. */
-    .pr { display: inline-block; min-width: 20px; padding: 3px 8px; border-radius: 100px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .1em; text-align: center; }
-    .pr.a { background: rgba(194, 80, 28, .12); color: #B4460F; }
-    .pr.b { background: rgba(16, 20, 38, .07); color: rgba(16, 20, 38, .74); }
-    .pr.c { background: rgba(16, 20, 38, .05); color: rgba(16, 20, 38, .58); }
-    .pr.d { background: rgba(16, 20, 38, .04); color: rgba(16, 20, 38, .42); }
-    .rep-note { margin: 24px 0 0; padding-top: 20px; border-top: 1px solid var(--line); font-size: 13px; line-height: 1.7; color: var(--ink-soft); }
-    .rep-note b { color: var(--ink); font-weight: 400; }
-    /* Claim detail block. */
-    .rep-dd { margin: 14px 0 0; padding: 22px clamp(18px, 3vw, 26px); border: 1px solid var(--line); border-radius: 18px; background: var(--paper-soft, #F8F8F9); }
-    .rep-dd h3 { margin: 0 0 4px; font-family: var(--serif); font-weight: 400; font-size: clamp(19px, 2.4vw, 24px); line-height: 1.2; }
-    .rep-dd .meta { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0 0 18px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); }
-    .rep-dd .meta b { color: var(--copper, #C2501C); font-weight: 400; }
-    .rep-dd dl { margin: 0; }
-    .rep-dd dt { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-top: 16px; }
-    .rep-dd dt:first-child { margin-top: 0; }
-    .rep-dd dd { margin: 6px 0 0; font-size: 14px; line-height: 1.65; }
-    /* Recommendation basis checklist. */
-    .rep-basis { margin: 18px 0 0; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; background: var(--paper); }
-    .rep-basis ul { margin: 8px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 7px 22px; }
-    .rep-basis li { position: relative; padding-left: 22px; font-size: 13.5px; line-height: 1.55; }
-    .rep-basis li::before { content: "\2713"; position: absolute; left: 0; top: 0; color: var(--copper, #C2501C); }
-    /* Pattern bars. */
-    .rep-pat { display: grid; gap: 16px; margin: 14px 0 0; }
-    .rep-patrow { padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; }
-    .rep-patrow .t { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .rep-patrow .t b { color: var(--ink); font-weight: 400; }
-    .rep-bar { height: 7px; margin: 10px 0 12px; border-radius: 100px; background: rgba(16, 20, 38, .07); overflow: hidden; }
-    .rep-bar i { display: block; height: 100%; border-radius: 100px; background: var(--copper, #C2501C); }
-    .rep-patrow p { margin: 0; font-size: 13.5px; line-height: 1.6; }
-    .rep-patrow p.q { margin-top: 8px; color: var(--ink-soft); font-size: 13px; }
-    /* Two-column ownership. */
-    .rep-own { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin: 14px 0 0; }
-    .rep-owncol { padding: 20px; border: 1px solid var(--line); border-radius: 16px; }
-    .rep-owncol > .k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .rep-owncol.mine { border-color: rgba(194, 80, 28, .3); background: rgba(194, 80, 28, .04); }
-    .rep-owncol.mine > .k { color: #B4460F; }
-    .rep-owncol dl { margin: 12px 0 0; }
-    .rep-owncol dt { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 11px; letter-spacing: .08em; color: var(--ink); margin-top: 12px; }
-    .rep-owncol dt:first-child { margin-top: 0; }
-    .rep-owncol dd { margin: 3px 0 0; font-size: 13.5px; line-height: 1.55; color: var(--ink-soft); }
-    .rep-foot { padding: 20px clamp(20px, 4vw, 38px); border-top: 1px solid var(--line); background: var(--paper-soft, #F8F8F9); font-size: 11.5px; line-height: 1.7; color: var(--ink-faint); }
-    .rep-foot b { color: rgba(16, 20, 38, .68); font-weight: 400; }
-    .rep-foot p { margin: 0 0 9px; }
-    .rep-foot p:last-child { margin-bottom: 0; }
-    /* Status chain, used outside the document. */
-    .chain { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
-    .chain span { padding: 7px 13px; border: 1px solid var(--line); border-radius: 100px; background: var(--paper); font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 11px; letter-spacing: .06em; }
-    .chain span.hot { border-color: rgba(194, 80, 28, .34); background: rgba(194, 80, 28, .07); color: #B4460F; }
-    @media (max-width: 620px) { .rep-head { font-size: 24px; } }
-    /* On a phone eight columns push Recommended action and Timing off the right
-       edge, and those are the two the whole worklist exists to deliver. Below 620
-       each claim becomes its own labelled block, so nothing depends on a sideways
-       swipe a reader may never make. */
-    @media (max-width: 620px) {
-      .rep-scroll { overflow-x: visible; }
-      .rep-tbl { min-width: 0; }
-      .rep-tbl thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%); }
-      .rep-tbl tr { display: block; padding: 15px 16px; border-bottom: 1px solid var(--line); }
-      .rep-tbl tr:last-child { border-bottom: 0; }
-      .rep-tbl td { display: flex; align-items: baseline; justify-content: space-between; gap: 18px; padding: 4px 0; border: 0; text-align: right; }
-      .rep-tbl td::before {
-        content: attr(data-l);
-        flex: none;
-        font-family: var(--mono, ui-monospace, Menlo, monospace);
-        font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase;
-        color: var(--ink-faint); text-align: left;
-      }
+    .rep-tbl td { padding: 10px; border-bottom: 1px solid var(--sa-line); color: var(--sa-slate); vertical-align: top; font-variant-numeric: tabular-nums; }
+    .pr {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 24px; height: 24px; border-radius: 6px; font-family: var(--mono);
+      font-size: 11px; font-weight: 700; border: 1px solid var(--sa-line-strong);
+      color: var(--sa-slate); background: var(--sa-surface-2);
     }
+    .pr.a { border-color: rgba(194, 80, 28, .45); color: #963c14; background: var(--sa-action-soft); }
+
+    /* Claim-by-claim analysis. */
+    .rep-dd { display: grid; gap: 14px; margin: 0 0 18px; }
+    .chain {
+      padding: 16px 18px; border: 1px solid var(--sa-line);
+      border-radius: var(--sa-r); background: var(--sa-surface-2);
+    }
+    .chain h4 { margin: 0 0 10px; font-family: var(--serif); font-weight: 400; font-size: 19px; }
+    .chain dl { margin: 0; display: grid; grid-template-columns: minmax(120px, 30%) minmax(0, 1fr); }
+    .chain dt {
+      margin: 0; padding: 8px 0; font-family: var(--mono); font-size: 9px;
+      letter-spacing: .12em; text-transform: uppercase; color: var(--sa-mute);
+      border-top: 1px solid var(--sa-line);
+    }
+    .chain dd { margin: 0; padding: 8px 0; font-size: 14px; line-height: 1.6; color: var(--sa-slate); border-top: 1px solid var(--sa-line); }
+    @media (max-width: 560px) {
+      .chain dl { grid-template-columns: minmax(0, 1fr); }
+      .chain dd { border-top: 0; padding-top: 0; }
+    }
+
+    /* Pattern rows. */
+    .rep-pat { display: grid; gap: 14px; margin: 0 0 8px; }
+    .rep-patrow { padding: 15px 17px; border: 1px solid var(--sa-line); border-radius: var(--sa-r); }
+    .rep-patrow .t { display: flex; justify-content: space-between; gap: 12px; font-size: 14.5px; margin-bottom: 8px; }
+    .rep-patrow .t b { font-weight: 600; font-variant-numeric: tabular-nums; }
+    .rep-patrow p { margin: 9px 0 0; font-size: 13.5px; line-height: 1.65; color: var(--sa-slate); }
+    .rep-patrow p.q { margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--sa-line); color: var(--sa-ink); }
+    .rep-bar { height: 8px; border-radius: 4px; background: var(--sa-canvas-2); border: 1px solid var(--sa-line); overflow: hidden; }
+    .rep-bar i { display: block; height: 100%; background: var(--sa-action); border-radius: 3px; }
+
+    /* Action items. Her prompt-editor reference: a numbered gutter, one claim
+       per row, and the owner carried as the column heading rather than repeated
+       on every line. */
+    .rep-own { display: grid; grid-template-columns: repeat(auto-fit, minmax(258px, 1fr)); gap: 14px; }
+    .rep-owncol { border: 1px solid var(--sa-line); border-radius: var(--sa-r); overflow: hidden; }
+    .rep-owncol .k {
+      padding: 11px 14px; background: var(--sa-surface-2); border-bottom: 1px solid var(--sa-line);
+      font-family: var(--mono); font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--sa-mute);
+    }
+    .rep-owncol.mine .k { color: #963c14; background: #fff8f3; border-bottom-color: rgba(194, 80, 28, .25); }
+    .rep-owncol dl { margin: 0; display: grid; grid-template-columns: 86px minmax(0, 1fr); }
+    .rep-owncol dt {
+      margin: 0; padding: 11px 0 11px 14px; border-bottom: 1px solid var(--sa-line);
+      border-right: 1px solid var(--sa-line); background: var(--sa-surface-2);
+      font-family: var(--mono); font-size: 11px; color: var(--sa-action); font-variant-numeric: tabular-nums;
+    }
+    .rep-owncol dd {
+      margin: 0; padding: 11px 14px; border-bottom: 1px solid var(--sa-line);
+      font-size: 13.5px; line-height: 1.55; color: var(--sa-slate);
+    }
+    .rep-owncol dl > :nth-last-child(1), .rep-owncol dl > :nth-last-child(2) { border-bottom: 0; }
+
+    .rep-for { display: none; }
   </style>
 </head>
 <body data-sk-sections="Hero,What you receive,The assessment,Recovery priority,Claim status,Recovery and prevention,If you continue,Close" data-sk-bar="Complimentary review of 20 denials · the assessment is yours either way." data-sk-biz="healthcare organization">
@@ -182,26 +164,66 @@
       </div>
     </section>
 
-    <section class="section soft" id="assessment" data-screen-label="The assessment">
-      <div class="wrap">
+    <!-- Reshelled 2026-08-17 into the document shell. This is the deliverable a
+         client receives, and it was painted like the rest of the website, so a
+         buyer could not tell it apart from a sales page. It is a document now:
+         a cover, a contents, white sheets on a grey canvas, page numbers, a
+         print button that prints properly, and the fictional watermark on
+         every sheet rather than one line at the top.
 
-        <div class="rep" data-reveal>
-          <div class="rep-top">
-            <span>Soft Appeals · Denial Recovery Assessment</span>
-            <span><b>Sample</b> · fictional data</span>
-          </div>
+         The content is unchanged. Only the vessel moved. -->
+    <section class="sa" id="assessment" data-screen-label="The assessment">
+      <div class="sa-doc">
 
-          <div class="rep-in">
-            <div class="rep-for">
-              <div><span>Organization</span><p>Example Specialty Group</p></div>
-              <div><span>Review period</span><p>Sample 90-day period</p></div>
-              <div><span>Claims reviewed</span><p>20 denials</p></div>
-              <div><span>Total denied amount</span><p>$14,850</p></div>
+        <div class="sa-doc-bar">
+          <p class="sa-doc-id"><b>Denial Recovery Assessment</b> <span>Soft Appeals &#183; sample</span></p>
+          <p class="sa-doc-id" style="margin-left:auto">7 pages &#183; fictional claims</p>
+          <button type="button" class="sa-btn is-primary is-sm" data-sa-print>Print or save as PDF</button>
+        </div>
+
+        <div class="sa-sheets">
+
+          <!-- 1. Cover -->
+          <article class="sa-sheet sa-cover" data-watermark="Fictional sample">
+            <div>
+              <p class="sa-cover-top">Soft Appeals &#183; a service of frimpomaasync.com</p>
+              <h1>Denial Recovery Assessment</h1>
+              <p class="sa-cover-lede">The whole deliverable a client receives, published in full. Every claim, payer, amount and date below is fictional. The method, the reasoning and the format are exactly what an actual review produces.</p>
             </div>
+            <div>
+              <div class="sa-cover-meta">
+                <div><span>Prepared for</span><b>Example Specialty Group</b></div>
+                <div><span>Review period</span><b>Sample 90-day period</b></div>
+                <div><span>Claims reviewed</span><b>20 denials</b></div>
+                <div><span>Total denied amount</span><b>$14,850</b></div>
+              </div>
+            </div>
+            <p class="sa-sheet-n">Page 01 &#183; cover</p>
+          </article>
 
-            <h2 class="rep-head">Executive summary</h2>
+          <!-- 2. Contents -->
+          <article class="sa-sheet" data-watermark="Fictional sample">
+            <p class="sa-doc-eyebrow">Contents</p>
+            <h2>What is in this assessment.</h2>
+            <ol class="sa-toc">
+              <li><a href="#p-summary">Executive summary<span class="sa-toc-dots"></span><span class="sa-toc-p">03</span></a></li>
+              <li><a href="#p-worklist">Claim worklist<span class="sa-toc-dots"></span><span class="sa-toc-p">04</span></a></li>
+              <li><a href="#p-claims">Sample claim analysis<span class="sa-toc-dots"></span><span class="sa-toc-p">05</span></a></li>
+              <li><a href="#p-patterns">Pattern observations<span class="sa-toc-dots"></span><span class="sa-toc-p">06</span></a></li>
+              <li><a href="#p-actions">Action items<span class="sa-toc-dots"></span><span class="sa-toc-p">06</span></a></li>
+              <li><a href="#p-notes">Notes and limitations<span class="sa-toc-dots"></span><span class="sa-toc-p">07</span></a></li>
+            </ol>
+            <div class="sa-callout">
+              <p style="margin:0"><b>Read the worklist first.</b> Every claim in this review carries one recommended action, one owner and one next step. The rest of the document explains how each of those was decided.</p>
+            </div>
+            <p class="sa-sheet-n">Page 02 &#183; contents</p>
+          </article>
 
-            <div class="rep-sub">Recommended disposition</div>
+          <!-- 3. Executive summary -->
+          <article class="sa-sheet" id="p-summary" data-watermark="Fictional sample">
+            <p class="sa-doc-eyebrow">Section one</p>
+            <h2>Executive summary</h2>
+                        <h3>Recommended disposition</h3>
             <div class="rep-piles">
               <div class="rep-pile">
                 <div class="k">Correct / resubmit</div>
@@ -234,9 +256,23 @@
               <p>Priority is assigned using the Recovery Priority method set out below this assessment, not by claim age alone.</p>
             </div>
 
-            <p class="rep-note"><b>Initial observation.</b> This review identifies a combination of correction opportunities, claims that may warrant formal appeal, items needing additional information, and claims where further recovery effort may not be appropriate. The purpose of the assessment is not to assume every denial should be appealed. It is to help determine where recovery effort should be directed first.</p>
+                        <p class="sa-note"><b>Initial observation.</b> This review identifies a combination of correction opportunities, claims that may warrant formal appeal, items needing additional information, and claims where further recovery effort may not be appropriate. The purpose of the assessment is not to assume every denial should be appealed. It is to help determine where recovery effort should be directed first.</p>
+                        <h3>Financial snapshot</h3>
+            <div class="rep-piles">
+              <div class="rep-pile"><div class="k">Total denied reviewed</div><div class="v">$14,850</div><div class="c">20 claims</div></div>
+              <div class="rep-pile win"><div class="k">Appeal recommended</div><div class="v">$6,400</div><div class="c">7 claims</div></div>
+              <div class="rep-pile"><div class="k">Correction recommended</div><div class="v">$2,750</div><div class="c">5 claims</div></div>
+              <div class="rep-pile"><div class="k">Further investigation</div><div class="v">$3,100</div><div class="c">4 claims</div></div>
+            </div>
+            <p class="sa-note"><b>Denied amount is not the same as expected recovery.</b> These figures represent the amounts associated with the reviewed denied claims and their recommended dispositions. They should not be read as guaranteed or projected reimbursement. Actual recovery depends on claim-specific facts, documentation, payer determinations, applicable requirements and other circumstances.</p>
+            <p class="sa-sheet-n">Page 03 &#183; executive summary</p>
+          </article>
 
-            <div class="rep-sub">How to read the assessment</div>
+          <!-- 4. Claim worklist -->
+          <article class="sa-sheet" id="p-worklist" data-watermark="Fictional sample">
+            <p class="sa-doc-eyebrow">Section two</p>
+            <h2>Claim worklist</h2>
+                        <h3>How to read the assessment</h3>
             <div class="rep-basis">
               <ul>
                 <li><b>Priority</b> tells you what deserves attention first.</li>
@@ -246,8 +282,7 @@
                 <li><b>Status</b> shows where the claim currently sits in the recovery process.</li>
               </ul>
             </div>
-
-            <div class="rep-sub">Claim worklist</div>
+                        <h3>Claim worklist</h3>
             <div class="rep-scroll">
               <table class="rep-tbl">
                 <thead>
@@ -284,18 +319,15 @@
                 </tbody>
               </table>
             </div>
-            <p class="rep-note" style="border-top:0;padding-top:12px;margin-top:12px">*Sample timing shown for demonstration only. Actual deadlines must be determined from the applicable payer, plan, claim circumstances and governing requirements. Six of the twenty reviewed claims are shown here. A real assessment lists every claim reviewed.</p>
+            <p class="sa-note" style="border-top:0;padding-top:12px;margin-top:12px">*Sample timing shown for demonstration only. Actual deadlines must be determined from the applicable payer, plan, claim circumstances and governing requirements. Six of the twenty reviewed claims are shown here. A real assessment lists every claim reviewed.</p>
+            <p class="sa-sheet-n">Page 04 &#183; claim worklist</p>
+          </article>
 
-            <div class="rep-sub">Financial snapshot</div>
-            <div class="rep-piles">
-              <div class="rep-pile"><div class="k">Total denied reviewed</div><div class="v">$14,850</div><div class="c">20 claims</div></div>
-              <div class="rep-pile win"><div class="k">Appeal recommended</div><div class="v">$6,400</div><div class="c">7 claims</div></div>
-              <div class="rep-pile"><div class="k">Correction recommended</div><div class="v">$2,750</div><div class="c">5 claims</div></div>
-              <div class="rep-pile"><div class="k">Further investigation</div><div class="v">$3,100</div><div class="c">4 claims</div></div>
-            </div>
-            <p class="rep-note"><b>Denied amount is not the same as expected recovery.</b> These figures represent the amounts associated with the reviewed denied claims and their recommended dispositions. They should not be read as guaranteed or projected reimbursement. Actual recovery depends on claim-specific facts, documentation, payer determinations, applicable requirements and other circumstances.</p>
-
-            <div class="rep-sub">Sample claim analysis</div>
+          <!-- 5. Sample claim analysis -->
+          <article class="sa-sheet" id="p-claims" data-watermark="Fictional sample">
+            <p class="sa-doc-eyebrow">Section three</p>
+            <h2>Sample claim analysis</h2>
+                        <h3>Sample claim analysis</h3>
             <div class="rep-dd">
               <h3>SA-002 · medical necessity denial</h3>
               <div class="meta">
@@ -320,7 +352,7 @@
                 <dd>The applicable appeal deadline should be confirmed against the governing plan and payer requirements before submission.</dd>
               </dl>
               <div class="rep-basis">
-                <div class="rep-sub" style="margin:0">Recommendation basis</div>
+                <h3>Recommendation basis</h3>
                 <ul>
                   <li>Denial reason reviewed</li>
                   <li>Available claim documentation reviewed</li>
@@ -331,9 +363,15 @@
                 </ul>
               </div>
             </div>
+            <p class="sa-sheet-n">Page 05 &#183; claim analysis</p>
+          </article>
 
-            <div class="rep-sub">Pattern observations</div>
-            <p class="rep-note" style="border-top:0;padding-top:0;margin-top:0">Individual denials can reveal operational patterns. Alongside the claim-level recommendations, the assessment records recurring themes visible within the reviewed sample.</p>
+          <!-- 6. Patterns and action items -->
+          <article class="sa-sheet" id="p-patterns" data-watermark="Fictional sample">
+            <p class="sa-doc-eyebrow">Section four</p>
+            <h2>Pattern observations</h2>
+                        <h3>Pattern observations</h3>
+            <p class="sa-note" style="border-top:0;padding-top:0;margin-top:0">Individual denials can reveal operational patterns. Alongside the claim-level recommendations, the assessment records recurring themes visible within the reviewed sample.</p>
             <div class="rep-pat">
               <div class="rep-patrow">
                 <div class="t"><span>Authorization</span><b>4 of 20 claims</b></div>
@@ -354,9 +392,9 @@
                 <p class="q">Operational question: are recurring correction reasons tracked upstream, so the same issue shows up less often in future submissions?</p>
               </div>
             </div>
-            <p class="rep-note">These observations are directional and based only on the claims included in the review. A limited sample should not be treated as a complete revenue-cycle analysis.</p>
-
-            <div class="rep-sub">Action items</div>
+            <p class="sa-note">These observations are directional and based only on the claims included in the review. A limited sample should not be treated as a complete revenue-cycle analysis.</p>
+            <div id="p-actions" style="scroll-margin-top:120px">
+                        <h3>Action items</h3>
             <div class="rep-own">
               <div class="rep-owncol">
                 <div class="k">Your team</div>
@@ -377,20 +415,30 @@
                 </dl>
               </div>
             </div>
-          </div>
+            </div>
+            <p class="sa-sheet-n">Page 06 &#183; patterns and actions</p>
+          </article>
 
-          <div class="rep-foot">
-            <p><b>About this sample.</b> This sample contains fictional information and exists solely to demonstrate the format of a Soft Appeals Denial Recovery Assessment.</p>
+          <!-- 7. Notes -->
+          <article class="sa-sheet" id="p-notes" data-watermark="Fictional sample">
+            <p class="sa-doc-eyebrow">Section five</p>
+            <h2>Notes and limitations</h2>
+                        <p><b>About this sample.</b> This sample contains fictional information and exists solely to demonstrate the format of a Soft Appeals Denial Recovery Assessment.</p>
             <p>Actual assessments are based on the information made available for the claims reviewed. Recommendations reflect the information available at the time of review and may change if additional claim, payer, plan, clinical, contractual, regulatory or other relevant information becomes available.</p>
             <p>A recommendation to pursue a claim does not guarantee reimbursement or reversal of a payer determination. Soft Appeals does not independently make clinical, coding, legal or coverage determinations outside the agreed scope of service.</p>
             <p>Soft Appeals is a service of frimpomaasync.com.</p>
-          </div>
+            <div class="sa-callout is-urgent">
+              <p style="margin:0"><b>This document is fictional.</b> It exists to show the format and the depth of a real assessment. No patient identifiers appear anywhere in it, and no real client, payer or claim is described.</p>
+            </div>
+            <p class="sa-sheet-n">Page 07 &#183; notes and limitations</p>
+          </article>
+
         </div>
 
-        <div class="actions" style="margin-top:26px;justify-content:center">
-          <a class="button secondary" href="/soft-appeals-recovery-lab">Explore the Recovery Lab <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
-        </div>
-        <p class="small-note" style="text-align:center;margin-top:10px">The Recovery Lab is this same portfolio, live: sort the worklist, filter it, open any claim and read why each recommendation was made.</p>
+        <p style="text-align:center;margin:26px auto 0;width:min(880px,calc(100% - 28px))">
+          <a class="sa-btn" href="/soft-appeals-recovery-lab">Open this same portfolio as a live worklist &#8594;</a>
+        </p>
+        <p class="sa-note" style="text-align:center;max-width:62ch;margin:12px auto 0">The Recovery Lab is these same twenty claims, live: sort the worklist, filter it, open any claim and read why each recommendation was made.</p>
 
       </div>
     </section>
@@ -520,5 +568,6 @@
 
   <script type="module" src="/assets/journey.js?v=7"></script>
   <script src="/fsnav.js?v=854" defer></script>
+  <script src="/assets/soft-appeals.js?v=1" defer></script>
 </body>
 </html>

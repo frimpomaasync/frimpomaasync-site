@@ -9,6 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=30">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <link rel="stylesheet" href="/assets/soft-appeals.css?v=1">
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
@@ -123,22 +124,39 @@
           <h2 class="section-title"><span>Decide,</span> recover, resolve.</h2>
           <p class="section-intro">Three phases, seventeen steps. The pathway is claim-specific, because not every denial becomes an appeal and the ones that do not all follow the same route.</p>
         </div>
-        <div class="card-grid" data-reveal data-stagger data-stagger-step="50">
-          <article class="path-card">
-            <span class="pill">Phase 01</span>
-            <h3>Decide</h3>
-            <p>Understand the denial, determine the appropriate next action, and decide which claims deserve recovery effort at all.</p>
-          </article>
-          <article class="path-card">
-            <span class="pill">Phase 02</span>
-            <h3>Recover</h3>
-            <p>Research the applicable pathway, organize the evidence, prepare the required action, obtain your approval, and submit.</p>
-          </article>
-          <article class="path-card">
-            <span class="pill">Phase 03</span>
-            <h3>Resolve</h3>
-            <p>Track the payer response, manage the next steps, reconcile the outcome, and close the recovery record with a disposition.</p>
-          </article>
+        <!-- The flow map, added 2026-08-17 from her wired node-map reference.
+             Three phases became three cards in a row, which said nothing about
+             the fact that a denial MOVES through them and that the owner
+             changes on the way. The connector is the point. -->
+        <div class="sa">
+          <div class="sa-flow" data-reveal>
+
+            <div class="sa-flownode is-on">
+              <span class="sa-flow-dot" aria-hidden="true"></span>
+              <span class="sa-flow-k">Phase</span>
+              <h3>Decide</h3>
+              <p>Understand the denial, determine the appropriate next action, and decide which claims deserve recovery effort at all.</p>
+              <span class="sa-pill is-action sa-flow-who"><i></i>Soft Appeals</span>
+            </div>
+
+            <div class="sa-flownode is-urgent">
+              <span class="sa-flow-dot" aria-hidden="true"></span>
+              <span class="sa-flow-k">Phase</span>
+              <h3>Recover</h3>
+              <p>Research the applicable pathway, organize the evidence, prepare the required action, obtain your approval, and submit.</p>
+              <span class="sa-pill is-urgent sa-flow-who"><i></i>Your approval, every time</span>
+            </div>
+
+            <div class="sa-flownode is-on">
+              <span class="sa-flow-dot" aria-hidden="true"></span>
+              <span class="sa-flow-k">Phase</span>
+              <h3>Resolve</h3>
+              <p>Track the payer response, manage the next steps, reconcile the outcome, and close the recovery record with a disposition.</p>
+              <span class="sa-pill is-info sa-flow-who"><i></i>Payer, then reconciled</span>
+            </div>
+
+          </div>
+          <p class="sa-note" style="max-width:70ch">Seventeen steps sit inside those three phases. The one that never moves is the approval: nothing is submitted in your organization's name until you have said yes to it.</p>
         </div>
       </div>
     </section>

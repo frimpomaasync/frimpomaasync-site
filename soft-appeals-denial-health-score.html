@@ -9,6 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=30">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <link rel="stylesheet" href="/assets/soft-appeals.css?v=1">
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
@@ -18,151 +19,108 @@
   <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
   <meta name="twitter:card" content="summary_large_image">
   <style>
-    /* The Denial Health Score. Scoped to this page, system fonts only, no
-       remote requests. The scoring lives in /assets/denial-health-score.js so
-       it can be tested directly; this file renders it and nothing else. */
-    .dhs {
-      max-width: 860px; margin: 0 auto;
-      border: 1px solid var(--line); border-radius: 20px;
-      background: var(--paper); overflow: hidden;
-      box-shadow: 0 26px 60px rgba(16, 20, 38, .07);
-    }
-    .dhs-top {
-      display: flex; align-items: baseline; justify-content: space-between;
-      gap: 14px; flex-wrap: wrap;
-      padding: 18px clamp(18px, 4vw, 34px);
-      border-bottom: 1px solid var(--line);
-      font-family: var(--mono, ui-monospace, Menlo, monospace);
-      font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint);
-    }
-    .dhs-top b { color: var(--copper, #C2501C); font-weight: 400; }
-    .dhs-prog { height: 3px; background: var(--panel-2, #F8F8F9); }
-    .dhs-prog i { display: block; height: 100%; background: var(--copper, #C2501C); width: 0; transition: width .3s ease; }
-    @media (prefers-reduced-motion: reduce) { .dhs-prog i { transition: none; } }
-    .dhs-body { padding: clamp(22px, 4vw, 38px); }
+    /* The Denial Health Score, reshelled 2026-08-17 onto the app shell in
+       /assets/soft-appeals.css. The assessment itself was already one question
+       per screen; what it lacked was a stage of its own. It used to sit in a
+       card with a marketing hero above it and two sections below, so it read
+       as a page feature rather than a thing you use.
 
-    .dhs-q { border: 0; padding: 0; margin: 0; }
-    .dhs-q .n { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .dhs-q legend { padding: 0; }
-    .dhs-q .qt { display: block; margin: 8px 0 0; font-family: var(--serif); font-weight: 400; font-size: clamp(21px, 3vw, 27px); line-height: 1.22; letter-spacing: -.01em; }
-    .dhs-q .qh { margin: 10px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); }
-    .dhs-opts { display: grid; gap: 10px; margin: 22px 0 0; }
-    .dhs-opt {
-      display: flex; gap: 12px; align-items: flex-start;
-      padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px;
-      cursor: pointer; font-size: 14.5px; line-height: 1.55;
-    }
-    .dhs-opt:hover { border-color: var(--copper, #C2501C); background: rgba(194, 80, 28, .035); }
-    .dhs-opt input { margin: 3px 0 0; width: 17px; height: 17px; accent-color: var(--copper, #C2501C); flex-shrink: 0; }
-    .dhs-opt:focus-within { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
-    .dhs-opt.on { border-color: var(--copper, #C2501C); background: rgba(194, 80, 28, .06); }
-    .dhs-nav { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line); }
-    .dhs-nav button {
-      appearance: none; font: inherit; font-size: 15px; cursor: pointer;
-      border-radius: 12px; padding: 12px 20px; border: 1px solid var(--line);
-      background: var(--paper); color: var(--ink);
-    }
-    .dhs-nav button[data-next] { background: var(--ink); border-color: var(--ink); color: #fff; }
-    .dhs-nav button:disabled { opacity: .4; cursor: not-allowed; }
-    .dhs-nav button:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
-    .dhs-nav .step { margin-left: auto; font-size: 13px; color: var(--ink-faint); font-variant-numeric: tabular-nums; }
+       The scoring still lives in /assets/denial-health-score.js so it can be
+       tested directly. This file renders it and nothing else.
 
-    /* Result */
-    .dhs-score { display: flex; gap: clamp(18px, 4vw, 34px); align-items: center; flex-wrap: wrap; }
-    .dhs-dial { position: relative; width: 132px; height: 132px; flex-shrink: 0; }
-    .dhs-dial svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-    .dhs-dial .track { fill: none; stroke: var(--line); stroke-width: 10; }
-    .dhs-dial .val { fill: none; stroke: var(--copper, #C2501C); stroke-width: 10; stroke-linecap: round; }
-    .dhs-dial .mid { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; }
-    .dhs-dial .mid b { font-family: var(--serif); font-size: 38px; font-weight: 400; line-height: 1; }
-    .dhs-dial .mid span { display: block; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-top: 4px; }
-    .dhs-score .said { flex: 1 1 260px; min-width: 240px; }
-    .dhs-score .said .band { font-family: var(--serif); font-size: clamp(22px, 3vw, 28px); line-height: 1.2; }
-    .dhs-score .said p { margin: 10px 0 0; font-size: 14.5px; line-height: 1.65; color: var(--ink-soft); }
-    .dhs-sub { margin: 32px 0 12px; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .dhs-two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
-    .dhs-card { padding: 18px; border: 1px solid var(--line); border-radius: 16px; }
-    .dhs-card.lead { border-color: var(--copper, #C2501C); background: rgba(194, 80, 28, .05); }
-    .dhs-card .k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); }
-    .dhs-card h3 { margin: 8px 0 0; font-family: var(--serif); font-weight: 400; font-size: 19px; }
-    .dhs-card p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); }
-    .dhs-rows { display: grid; gap: 13px; }
-    .dhs-row .t { display: flex; justify-content: space-between; gap: 10px; font-size: 13.5px; margin-bottom: 5px; }
-    .dhs-row .t b { font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .dhs-row .t .w { color: var(--ink-faint); font-size: 12px; }
-    .dhs-meter { height: 9px; border-radius: 5px; background: var(--panel-2, #F8F8F9); border: 1px solid var(--line); overflow: hidden; }
-    .dhs-meter i { display: block; height: 100%; background: var(--copper, #C2501C); border-radius: 4px; min-width: 2px; }
-    .dhs-meter.low i { background: var(--ink-faint, #6E7280); }
-    .dhs-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
-    .dhs-list li { position: relative; padding-left: 20px; font-size: 14px; line-height: 1.6; }
-    .dhs-list li::before { content: ""; position: absolute; left: 0; top: 8px; width: 7px; height: 7px; border-radius: 2px; background: var(--copper, #C2501C); }
-    .dhs-list li b { display: block; font-weight: 600; }
-    .dhs-plan { display: grid; gap: 12px; counter-reset: step; }
-    .dhs-step { display: flex; gap: 14px; padding: 16px 18px; border: 1px solid var(--line); border-radius: 14px; align-items: flex-start; }
-    .dhs-step .d { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--copper-deep, #9D3F16); white-space: nowrap; padding-top: 2px; min-width: 82px; }
-    .dhs-step .a b { display: block; font-size: 14px; }
-    .dhs-step .a p { margin: 5px 0 0; font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); }
-    .dhs-note { margin: 16px 0 0; padding-top: 14px; border-top: 1px solid var(--line); font-size: 12.5px; line-height: 1.65; color: var(--ink-soft); }
-    .dhs-actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 26px; }
-    .dhs-actions a, .dhs-actions button {
-      appearance: none; font: inherit; font-size: 14.5px; cursor: pointer; text-decoration: none;
-      border-radius: 12px; padding: 13px 20px; border: 1px solid var(--line);
-      background: var(--paper); color: var(--ink); display: inline-flex; align-items: center; gap: 8px;
+       Her Step 2 of 4 reference is applied here: the step counter, the thin
+       progress track, and Back / Next at the foot. The choices stay as cards
+       rather than the reference's pills, because these options are full
+       sentences and a pill row would wrap into an unreadable mess. */
+
+    /* Published weighting table, below the app. */
+    .dhs-rows { display: grid; gap: 12px; max-width: 720px; }
+    .dhs-row .t { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; margin-bottom: 6px; }
+    .dhs-row .t b { font-weight: 600; }
+    .dhs-row .t .w { color: var(--sa-mute, rgba(16,20,38,.42)); font-size: 12.5px; }
+    .dhs-meter { height: 8px; border-radius: 4px; background: #e6eaf2; border: 1px solid #dbe1ec; overflow: hidden; }
+    .dhs-meter i { display: block; height: 100%; background: var(--copper, #C2501C); border-radius: 3px; min-width: 3px; }
+    .dhs-meter.low i { background: #e4222c; }
+
+    /* Result-only pieces the shell does not carry. */
+    .dhs-sub {
+      margin: 34px 0 12px; font-family: var(--mono); font-size: 10px;
+      letter-spacing: .14em; text-transform: uppercase; color: #6d7789;
     }
-    .dhs-actions a.go { background: var(--ink); border-color: var(--ink); color: #fff; }
-    .dhs-actions a:focus-visible, .dhs-actions button:focus-visible { outline: 2px solid var(--copper, #C2501C); outline-offset: 2px; }
-    .dhs-guard { margin: 22px 0 0; padding: 16px 18px; border-left: 3px solid var(--copper, #C2501C); background: rgba(194, 80, 28, .05); border-radius: 0 12px 12px 0; }
-    .dhs-guard .k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #B4460F; }
-    .dhs-guard p { margin: 8px 0 0; font-size: 13.5px; line-height: 1.6; }
-    .dhs-foot { padding: 18px clamp(18px, 4vw, 34px); border-top: 1px solid var(--line); background: var(--panel-2, #F8F8F9); }
-    .dhs-foot p { margin: 0 0 8px; font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); }
-    .dhs-foot p:last-child { margin: 0; }
+    .dhs-sub:first-child { margin-top: 0; }
+    .dhs-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+    .dhs-list li {
+      padding: 14px 16px; background: #fff; border: 1px solid #dbe1ec;
+      border-radius: 10px; font-size: 14.5px; line-height: 1.6; color: #4a5468;
+    }
+    .dhs-list li b { display: block; margin-bottom: 4px; color: #101426; font-weight: 600; }
+
+    /* Seven-day plan. */
+    .dhs-plan { display: grid; gap: 10px; }
+    .dhs-step { display: grid; grid-template-columns: 96px minmax(0, 1fr); border: 1px solid #dbe1ec; border-radius: 10px; overflow: hidden; background: #fff; }
+    .dhs-step .d {
+      padding: 14px; background: #f7f9fc; border-right: 1px solid #dbe1ec;
+      font-family: var(--mono); font-size: 10px; letter-spacing: .12em;
+      text-transform: uppercase; color: var(--copper, #C2501C);
+    }
+    .dhs-step .a { padding: 14px 16px; }
+    .dhs-step .a b { display: block; font-size: 14.5px; font-weight: 600; margin-bottom: 3px; }
+    .dhs-step .a p { margin: 0; font-size: 14px; line-height: 1.6; color: #4a5468; }
+    @media (max-width: 520px) {
+      .dhs-step { grid-template-columns: minmax(0, 1fr); }
+      .dhs-step .d { border-right: 0; border-bottom: 1px solid #dbe1ec; }
+    }
+
+    /* The guard rail on the result: what the number is not. */
+    .dhs-guard {
+      margin-top: 30px; padding: 16px 18px; border: 1px solid #dbe1ec;
+      border-left: 3px solid #101426; border-radius: 0 10px 10px 0; background: #f7f9fc;
+    }
+    .dhs-guard .k { font-family: var(--mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #6d7789; margin-bottom: 8px; }
+    .dhs-guard p { margin: 0; font-size: 13.5px; line-height: 1.65; color: #4a5468; }
+
+    .dhs-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 30px; padding-top: 22px; border-top: 1px solid #dbe1ec; }
+
+    /* Print the result the way a report prints: no chrome, no canvas. */
     @media print {
-      #fs-nav, #fs-bar, .hero, .site-close, .section:not(#score), .dhs-actions { display: none !important; }
-      .dhs { border: 0; box-shadow: none; }
+      .sa-app-top, .sa-progress, .dhs-actions, #fs-nav, footer { display: none !important; }
+      .sa-app, .sa-stage { background: #fff !important; padding: 0 !important; }
     }
   </style>
 </head>
-<body data-sk-sections="Hero,The questions,What it measures,Close" data-sk-bar="Twelve process questions. A score, your gaps, and a seven-day plan. No patient information." data-sk-biz="healthcare organization">
+<body data-sk-sections="The assessment,What it measures,Close" data-sk-bar="Twelve process questions. A score, your gaps, and a seven-day plan. No patient information." data-sk-biz="healthcare organization">
   <main>
 
-    <section class="hero compact-hero" data-screen-label="Hero">
-      <div class="wrap">
-        <div class="eyebrow">Soft Appeals · The Denial Health Score</div>
-        <h1>How well does your denial process <em>hold up?</em></h1>
-        <p class="hero-copy">Twelve questions about how denied claims move through your organization. Not about any patient, any claim or any diagnosis: about who owns a denial, how deadlines get tracked, what your records could prove, and what happens after a submission goes out. You get a score out of 100, your strongest and weakest areas, your top three gaps, and a seven-day plan built from your own answers.</p>
-        <p class="hero-copy"><b>It runs entirely in your browser.</b> Nothing is sent anywhere, no email is required to see your result, and no patient information is requested at any point.</p>
-        <div class="actions">
-          <a class="button" href="#score">Start the twelve questions <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
-          <a class="button secondary" href="/soft-appeals-recovery-lab">Explore the Recovery Lab <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+    <!-- Reshelled 2026-08-17. The hero that used to sit here was moved into
+         the app's own first screen, so the assessment starts at the top of the
+         page instead of below a wall of selling. The screen still carries the
+         h1 and the runs-in-your-browser promise, so nothing was lost to search
+         or to a cold visitor. -->
+    <section class="sa" id="score" data-screen-label="The assessment">
+      <div class="sa-app">
+
+        <header class="sa-app-top">
+          <p class="sa-app-name"><b>Denial Health Score</b> <span>Soft Appeals</span></p>
+          <p class="sa-app-status">
+            <span id="dhs-step-label">Twelve questions</span>
+            <span id="dhs-answered"></span>
+          </p>
+        </header>
+        <div class="sa-progress" aria-hidden="true"><i id="dhs-prog"></i></div>
+
+        <div class="sa-stage">
+          <form id="dhs-form" novalidate style="width:100%;display:flex;justify-content:center">
+            <div id="dhs-stage" aria-live="polite" style="width:min(760px,100%)"></div>
+          </form>
+          <noscript>
+            <div class="sa-screen">
+              <h1 class="sa-q">How well does your denial process hold up?</h1>
+              <p class="sa-qhelp">The Denial Health Score runs in your browser, so it needs JavaScript enabled. The twelve areas it scores are listed below, and the complimentary review applies the same framework to twenty of your actual denied claims.</p>
+              <a class="sa-btn is-action" href="/soft-appeals-start">Request your complimentary review</a>
+            </div>
+          </noscript>
         </div>
-      </div>
-    </section>
 
-    <section class="section soft" id="score" data-screen-label="The questions">
-      <div class="wrap">
-        <div class="dhs" data-reveal>
-          <div class="dhs-top">
-            <span>Soft Appeals · Denial Health Score</span>
-            <span><b>Process diagnostic</b> · no patient information</span>
-          </div>
-          <div class="dhs-prog" aria-hidden="true"><i id="dhs-prog"></i></div>
-
-          <div class="dhs-body">
-            <form id="dhs-form" novalidate>
-              <div id="dhs-stage" aria-live="polite"></div>
-            </form>
-            <noscript>
-              <p style="font-size:15px;line-height:1.7">The Denial Health Score runs in your browser, so it needs JavaScript enabled. The twelve areas it scores are listed below this panel, and the complimentary review applies the same framework to twenty of your actual denied claims.</p>
-              <p style="margin-top:14px"><a class="button" href="/soft-appeals-start">Request your complimentary review &#8594;</a></p>
-            </noscript>
-          </div>
-
-          <div class="dhs-foot">
-            <p><b>What this is.</b> A process diagnostic covering how denied claims are owned, tracked, evidenced, routed, prioritized, followed up, reconciled and reported. The weighting behind the score is published below, so the result can be checked rather than taken on trust.</p>
-            <p><b>What this is not.</b> It does not assess regulatory or legal compliance, does not evaluate your privacy or security program, does not review coding, and makes no statement about any specific claim or the reimbursement any claim might produce. It is an operational read of a workflow, based only on what you selected.</p>
-          </div>
-        </div>
       </div>
     </section>
 
@@ -216,30 +174,61 @@
         '"><i style="width:' + Math.round((d.weight / max) * 100) + '%"></i></div></div>';
     }).join("");
 
+    var stepLabel = document.getElementById("dhs-step-label");
+    var answeredLabel = document.getElementById("dhs-answered");
+
+    /* Screen zero. The marketing hero used to carry this, above the tool. It is
+       the tool's own first screen now, so the assessment owns the top of the
+       page and a cold visitor still gets told what this is before answering. */
+    function renderIntro() {
+      prog.style.width = "0%";
+      stepLabel.textContent = "Twelve questions";
+      answeredLabel.textContent = "";
+      stage.innerHTML =
+        '<div class="sa-screen">' +
+          '<p class="sa-qnum">Soft Appeals &#183; process diagnostic</p>' +
+          '<h1 class="sa-q">How well does your denial process hold up?</h1>' +
+          '<p class="sa-qhelp">Twelve questions about how denied claims move through your organization. Not about any patient, any claim or any diagnosis: about who owns a denial, how deadlines get tracked, what your records could prove, and what happens after a submission goes out.</p>' +
+          '<p class="sa-qhelp">You get a score out of 100, your strongest and weakest areas, your top three gaps, and a seven-day plan built from your own answers. <b>It runs entirely in your browser.</b> Nothing is sent anywhere, no email is required to see your result, and no patient information is requested at any point.</p>' +
+          '<div class="sa-nav">' +
+            '<span class="sa-nav-hint">About four minutes</span>' +
+            '<button type="button" class="sa-btn is-action" data-begin>Start the twelve questions</button>' +
+          '</div>' +
+        '</div>';
+    }
+
     function renderQuestion() {
       var d = DIMENSIONS[step];
       var chosen = answers[d.key];
       prog.style.width = Math.round((step / DIMENSIONS.length) * 100) + "%";
+      stepLabel.textContent = "Step " + (step + 1) + " of " + DIMENSIONS.length;
+      answeredLabel.textContent = Object.keys(answers).length + " answered";
       stage.innerHTML =
-        '<fieldset class="dhs-q"><legend>' +
-          '<span class="n">Question ' + (step + 1) + ' of ' + DIMENSIONS.length + ' · ' + esc(d.name) + '</span>' +
-          '<span class="qt">' + esc(d.question) + '</span>' +
-        '</legend>' +
-        (d.help ? '<p class="qh">' + esc(d.help) + '</p>' : '') +
-        '<div class="dhs-opts">' +
-          d.options.map(function (o) {
-            var on = chosen === o.points;
-            return '<label class="dhs-opt' + (on ? " on" : "") + '">' +
-              '<input type="radio" name="q" value="' + o.points + '"' + (on ? " checked" : "") + '>' +
-              '<span>' + esc(o.label) + '</span></label>';
-          }).join("") +
-        '</div>' +
-        '<div class="dhs-nav">' +
-          (step > 0 ? '<button type="button" data-back>Back</button>' : '') +
-          '<button type="button" data-next' + (chosen === undefined ? " disabled" : "") + '>' +
-          (step === DIMENSIONS.length - 1 ? "See my score" : "Next") + '</button>' +
-          '<span class="step">' + Object.keys(answers).length + ' of ' + DIMENSIONS.length + ' answered</span>' +
-        '</div></fieldset>';
+        '<div class="sa-screen">' +
+          '<fieldset style="border:0;padding:0;margin:0">' +
+            '<legend style="padding:0;width:100%">' +
+              '<span class="sa-qnum">' + esc(d.name) + '</span>' +
+              '<span class="sa-q" style="display:block">' + esc(d.question) + '</span>' +
+            '</legend>' +
+            (d.help ? '<p class="sa-qhelp">' + esc(d.help) + '</p>' : '') +
+            '<div class="sa-choices">' +
+              d.options.map(function (o) {
+                var on = chosen === o.points;
+                return '<label class="sa-choice' + (on ? " is-picked" : "") + '">' +
+                  '<input type="radio" name="q" value="' + o.points + '"' + (on ? " checked" : "") + '>' +
+                  '<span class="sa-choice-mark" aria-hidden="true">&#10003;</span>' +
+                  '<span class="sa-choice-t">' + esc(o.label) + '</span></label>';
+              }).join("") +
+            '</div>' +
+            '<div class="sa-nav">' +
+              (step > 0
+                ? '<button type="button" class="sa-btn" data-back>Back</button>'
+                : '<button type="button" class="sa-btn" data-intro>Back</button>') +
+              '<button type="button" class="sa-btn is-action" data-next' + (chosen === undefined ? " disabled" : "") + '>' +
+              (step === DIMENSIONS.length - 1 ? "See my score" : "Next") + '</button>' +
+            '</div>' +
+          '</fieldset>' +
+        '</div>';
       var first = stage.querySelector("input");
       if (first) first.focus();
     }
@@ -254,27 +243,24 @@
       var weak = r.weakest;
 
       stage.innerHTML =
-        '<div class="dhs-score">' +
-          '<div class="dhs-dial">' +
-            '<svg viewBox="0 0 128 128" aria-hidden="true">' +
-              '<circle class="track" cx="64" cy="64" r="56"></circle>' +
-              '<circle class="val" cx="64" cy="64" r="56" stroke-dasharray="' + C + '" stroke-dashoffset="' + (C - (C * pct(r.score)) / 100) + '"></circle>' +
-            '</svg>' +
-            '<div class="mid"><div><b>' + r.score + '</b><span>out of 100</span></div></div>' +
+        '<div class="sa-result">' +
+        '<div class="sa-score">' +
+          '<div class="sa-dial" style="--sa-pct:' + pct(r.score) + '" role="img" aria-label="Score ' + r.score + ' out of 100">' +
+            '<div class="sa-dial-v"><b>' + r.score + '</b><span>out of 100</span></div>' +
           '</div>' +
-          '<div class="said">' +
-            '<div class="band">' + esc(r.band) + '</div>' +
-            '<p>' + esc(r.bandBlurb) + '</p>' +
-            '<p style="font-size:13px">Based on all ' + r.answered + ' answers you selected. Your answers stay in this browser.</p>' +
+          '<div>' +
+            '<h2 class="sa-band">' + esc(r.band) + '</h2>' +
+            '<p style="margin:0 0 10px;font-size:15.5px;line-height:1.65;color:#4a5468">' + esc(r.bandBlurb) + '</p>' +
+            '<p style="margin:0;font-size:13px;color:#6d7789">Based on all ' + r.answered + ' answers you selected. Your answers stay in this browser.</p>' +
           '</div>' +
         '</div>' +
 
         '<div class="dhs-sub">Where you are strongest, and where you are weakest</div>' +
-        '<div class="dhs-two">' +
+        '<div class="sa-cards">' +
           (strong
-            ? '<div class="dhs-card"><div class="k">Strongest area</div><h3>' + esc(strong.name) + '</h3><p>' + esc(strong.note) + '</p></div>'
-            : '<div class="dhs-card"><div class="k">Strongest area</div><h3>Nothing scored as a strength yet</h3><p>No area reached the strength threshold on these answers. That makes the sequence below matter more than usual: start at the top and work down.</p></div>') +
-          '<div class="dhs-card lead"><div class="k">Weakest area</div><h3>' + esc(weak.name) + '</h3><p>' + esc(weak.note) + '</p></div>' +
+            ? '<div class="sa-card is-strength"><p class="sa-label">Strongest area</p><h3>' + esc(strong.name) + '</h3><p>' + esc(strong.note) + '</p></div>'
+            : '<div class="sa-card is-strength"><p class="sa-label">Strongest area</p><h3>Nothing scored as a strength yet</h3><p>No area reached the strength threshold on these answers. That makes the sequence below matter more than usual: start at the top and work down.</p></div>') +
+          '<div class="sa-card is-gap"><p class="sa-label">Weakest area</p><h3>' + esc(weak.name) + '</h3><p>' + esc(weak.note) + '</p></div>' +
         '</div>' +
 
         '<div class="dhs-sub">Your top ' + (r.topGaps.length || "priorities") + (r.topGaps.length ? " gaps, in the order they cost you most" : "") + '</div>' +
@@ -285,7 +271,7 @@
           : '<p style="font-size:14.5px;line-height:1.65;margin:0">No area scored in the gap range. At this level the useful work is usually upstream: take your largest denial category and change the step that produces it, rather than getting better at recovering it.</p>') +
 
         '<div class="dhs-sub">Highest-priority recommendation</div>' +
-        '<div class="dhs-card lead"><div class="k">' + esc(r.priority.area) + '</div><p style="color:var(--ink);font-size:14.5px">' + esc(r.priority.action) + '</p></div>' +
+        '<div class="sa-card is-gap"><p class="sa-label">' + esc(r.priority.area) + '</p><p style="color:#101426;font-size:15px">' + esc(r.priority.action) + '</p></div>' +
 
         '<div class="dhs-sub">Your seven-day plan</div>' +
         '<div class="dhs-plan">' +
@@ -294,7 +280,7 @@
               '<div class="a"><b>' + esc(p.area) + '</b><p>' + esc(p.action) + '</p></div></div>';
           }).join("") +
         '</div>' +
-        '<p class="dhs-note">Each step is scoped to fit around existing work. None of them requires new software, and none of them requires patient information to leave your organization.</p>' +
+        '<p class="sa-note">Each step is scoped to fit around existing work. None of them requires new software, and none of them requires patient information to leave your organization.</p>' +
 
         '<div class="dhs-sub">Every area, scored</div>' +
         '<div class="dhs-rows">' +
@@ -317,49 +303,78 @@
         '</div>' +
 
         '<div class="dhs-actions">' +
-          '<a class="go" href="/soft-appeals-start">Request your complimentary review &#8594;</a>' +
-          '<button type="button" data-print>Save or print this result</button>' +
-          '<button type="button" data-restart>Start over</button>' +
+          '<a class="sa-btn is-action" href="/soft-appeals-start">Request your complimentary review &#8594;</a>' +
+          '<button type="button" class="sa-btn" data-print>Save or print this result</button>' +
+          '<button type="button" class="sa-btn is-quiet" data-restart>Start over</button>' +
         '</div>' +
-        '<p class="dhs-note">Saving or printing keeps the result on your machine. Nothing is transmitted, and there is no form here to send it anywhere.</p>';
+        '<p class="sa-note">Saving or printing keeps the result on your machine. Nothing is transmitted, and there is no form here to send it anywhere.</p>' +
+        '</div>';
 
       stage.querySelector("[data-print]").addEventListener("click", function () { window.print(); });
+      stepLabel.textContent = "Your result";
+      answeredLabel.textContent = DIMENSIONS.length + " of " + DIMENSIONS.length + " answered";
       stage.querySelector("[data-restart]").addEventListener("click", function () {
         answers = {};
         step = 0;
-        renderQuestion();
-        document.querySelector(".dhs").scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+        renderIntro();
+        toTop();
       });
-      document.querySelector(".dhs").scrollIntoView({ block: "start", behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth" });
+      toTop();
     }
 
     stage.addEventListener("change", function (e) {
       if (e.target.name !== "q") return;
       answers[DIMENSIONS[step].key] = Number(e.target.value);
-      stage.querySelectorAll(".dhs-opt").forEach(function (l) { l.classList.toggle("on", !!l.querySelector("input:checked")); });
+      stage.querySelectorAll(".sa-choice").forEach(function (l) { l.classList.toggle("is-picked", !!l.querySelector("input:checked")); });
       var next = stage.querySelector("[data-next]");
       if (next) next.disabled = false;
-      var counter = stage.querySelector(".step");
-      if (counter) counter.textContent = Object.keys(answers).length + " of " + DIMENSIONS.length + " answered";
+      answeredLabel.textContent = Object.keys(answers).length + " answered";
     });
 
+    /* Every screen change puts the reader back at the top of the stage. The
+       app is taller than a phone, and without this the next question opens
+       already scrolled past its own heading. */
+    function toTop() {
+      /* scrollIntoView puts the section flush with the viewport top, which on a
+         phone parks it underneath the site bar: the first line of every
+         question was hidden. Measure the bar and stop short of it instead. */
+      var section = document.getElementById("score");
+      var nav = document.getElementById("fs-nav");
+      var navH = nav && /sticky|fixed/.test(getComputedStyle(nav).position)
+        ? nav.getBoundingClientRect().height : 0;
+      var y = window.scrollY + section.getBoundingClientRect().top - navH;
+      window.scrollTo({
+        top: Math.max(0, y),
+        behavior: matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
+      });
+    }
+
     stage.addEventListener("click", function (e) {
-      if (e.target.closest("[data-next]")) {
+      if (e.target.closest("[data-begin]")) {
+        step = 0;
+        renderQuestion();
+        toTop();
+      } else if (e.target.closest("[data-intro]")) {
+        renderIntro();
+        toTop();
+      } else if (e.target.closest("[data-next]")) {
         if (answers[DIMENSIONS[step].key] === undefined) return;
         if (step === DIMENSIONS.length - 1) renderResult();
-        else { step++; renderQuestion(); }
+        else { step++; renderQuestion(); toTop(); }
       } else if (e.target.closest("[data-back]")) {
         step = Math.max(0, step - 1);
         renderQuestion();
+        toTop();
       }
     });
 
     document.getElementById("dhs-form").addEventListener("submit", function (e) { e.preventDefault(); });
 
-    renderQuestion();
+    renderIntro();
   </script>
 
   <script type="module" src="/assets/journey.js?v=7"></script>
   <script src="/fsnav.js?v=854" defer></script>
+  <script src="/assets/soft-appeals.js?v=1" defer></script>
 </body>
 </html>

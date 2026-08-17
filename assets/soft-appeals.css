@@ -1,0 +1,3167 @@
+/* ===========================================================================
+   SOFT APPEALS DESIGN SYSTEM
+   ---------------------------------------------------------------------------
+   Why this file exists
+   --------------------
+   Every Soft Appeals asset was built on the marketing rhythm in journey.css:
+   white paper, .section / .section soft alternating, serif .section-title,
+   rounded cards, one long scroll. The builds are real, but a buyer scrolling
+   through them cannot tell a working tool from a sales page from a client
+   deliverable, because all three are painted the same. The problem was never
+   missing product. It was missing visual ROLE.
+
+   This file adds four experience shells on top of the one brand. The brand
+   tokens do not move: ink #101426, copper #C2501C for action, red #E4222C for
+   urgent-only, serif headlines, mono eyebrows, system fonts, no remote
+   requests. What changes is the stage each experience stands on.
+
+     .sa-console   operational command centre   dashboards, worklists
+     .sa-app       focused application          assessments, lookups
+     .sa-doc       formal documentation         client deliverables, reports
+     .sa-portal    due-diligence portal         trust room, compliance
+
+   Rules for anything added here
+   -----------------------------
+   1. Every class is prefixed sa-. journey.css and modules.css own the
+      unprefixed names, and modules.css specifically owns .who .ico .t .n .l
+      .mark. (soft-appeals-book.html has legacy inline .sa-terms / .sa-bring
+      that predate this file and do not load it. Do not reuse those two names.)
+   2. System fonts only. A remote font request crashes her iPhone.
+   3. No emoji anywhere. Typographic marks only: -> checkmark middot, written
+      as HTML entities in the markup, never as pictographs.
+   4. Inputs are 16px or larger on touch, or iOS zooms the page on focus.
+   5. Anything that overlays sits on a POSITIVE z-index. Negative z-index in an
+      isolated stacking context renders as a flat block on older iOS.
+   6. Fictional-data notices are STICKY, not one-time. A buyer who lands
+      mid-page must still see it.
+   =========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   1. TOKENS
+   The clinical layer. Warmer greys read consumer; these are blue-greys, the
+   register healthcare operations software actually uses, and they sit under
+   the same ink and copper the rest of the brand uses.
+   --------------------------------------------------------------------------- */
+.sa {
+  /* Surfaces.
+     Repainted 2026-08-17 after she looked at the first three layers and said
+     the references were not showing up. They were not: the structure had been
+     taken and the LOOK had been left behind. Every picture she chose sits on a
+     soft neutral grey with rounded panels floating on it, and the first pass
+     used a blue-grey clinical ground with tight hairline panels. Neutral grey
+     now, and the panels lift off it. */
+  --sa-canvas: #ececed; /* soft neutral working ground, from her references */
+  --sa-canvas-2: #e4e4e7; /* recessed ground, doc canvas */
+  --sa-surface: #ffffff;
+  --sa-surface-2: #f6f6f8;
+  --sa-deep: #0c1020; /* console rail, cooler and deeper than ink */
+  --sa-deep-2: #151a30; /* raised block inside the rail */
+
+  /* Lines */
+  --sa-line: #e2e2e6;
+  --sa-line-strong: #cfcfd6;
+  --sa-line-dark: rgba(232, 237, 247, 0.14);
+
+  /* Type */
+  --sa-ink: #101426;
+  --sa-slate: #4a5468;
+  --sa-mute: #6d7789;
+  --sa-onDeep: #eef1f8;
+  --sa-onDeep-soft: rgba(238, 241, 248, 0.66);
+  --sa-onDeep-faint: rgba(238, 241, 248, 0.42);
+
+  /* Accents. Copper means act. Red means urgent, and nothing else. */
+  --sa-action: #c2501c;
+  --sa-action-soft: rgba(194, 80, 28, 0.1);
+  --sa-urgent: #e4222c;
+  --sa-urgent-soft: rgba(228, 34, 44, 0.1);
+
+  /* Status. Used for pills and badges only, never for surfaces. */
+  --sa-ok: #1f7a4d;
+  --sa-ok-soft: rgba(31, 122, 77, 0.11);
+  --sa-wait: #b4770b;
+  --sa-wait-soft: rgba(180, 119, 11, 0.12);
+  --sa-info: #2a5fa8;
+  --sa-info-soft: rgba(42, 95, 168, 0.1);
+  --sa-idle: #6d7789;
+  --sa-idle-soft: rgba(109, 119, 137, 0.11);
+
+  /* Geometry. The references are soft and round, not tight and clinical:
+     large radii, and a wide low-contrast shadow that reads as a panel lifted a
+     few millimetres off the grey rather than a box drawn on it. Controls are
+     fully rounded, which is the single loudest visual signature in the set. */
+  --sa-r: 14px;
+  --sa-r-lg: 20px;
+  --sa-r-pill: 999px;
+  --sa-shadow: 0 1px 1px rgba(16, 20, 38, 0.03), 0 10px 28px -16px rgba(16, 20, 38, 0.22);
+  --sa-shadow-lift: 0 22px 50px -24px rgba(16, 20, 38, 0.3);
+
+  /* Set by soft-appeals.js from the live height of #fs-nav so sticky chrome
+     inside a shell parks under the site bar instead of sliding beneath it. */
+  --sa-navh: 64px;
+
+  color: var(--sa-ink);
+  font-family: var(--sans);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Data anywhere in a shell is tabular. Money that jitters column to column
+   reads as a mock-up, not a system. */
+.sa [data-num],
+.sa .sa-num,
+.sa .sa-table td,
+.sa .sa-metric-v {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* ---------------------------------------------------------------------------
+   2. SHELL PRIMITIVES
+   Chrome shared by all four shells.
+   --------------------------------------------------------------------------- */
+
+/* The eyebrow / label voice, carried over from the brand. */
+.sa-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+  margin: 0;
+}
+
+.sa-label-b {
+  color: var(--sa-action);
+  font-weight: 400;
+}
+
+/* The persistent fictional-data ribbon. Sticks under the site bar for the
+   whole page, on every shell that shows invented numbers. */
+.sa-fiction {
+  position: sticky;
+  top: var(--sa-navh);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 9px clamp(14px, 3vw, 26px);
+  background: #fff7ed;
+  border-bottom: 1px solid rgba(194, 80, 28, 0.28);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: #8a3b14;
+  line-height: 1.5;
+}
+
+.sa-fiction b {
+  font-weight: 400;
+  color: var(--sa-action);
+  border: 1px solid rgba(194, 80, 28, 0.4);
+  border-radius: 999px;
+  padding: 3px 9px;
+  white-space: nowrap;
+}
+
+/* Pills. One shape, six meanings. */
+.sa-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  font-size: 11.5px;
+  line-height: 1.35;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  background: var(--sa-idle-soft);
+  border-color: rgba(109, 119, 137, 0.24);
+  color: var(--sa-idle);
+}
+
+.sa-pill.is-urgent {
+  background: var(--sa-urgent-soft);
+  border-color: rgba(228, 34, 44, 0.3);
+  color: #b4141c;
+}
+.sa-pill.is-action {
+  background: var(--sa-action-soft);
+  border-color: rgba(194, 80, 28, 0.3);
+  color: #963c14;
+}
+.sa-pill.is-ok {
+  background: var(--sa-ok-soft);
+  border-color: rgba(31, 122, 77, 0.28);
+  color: #17603c;
+}
+.sa-pill.is-wait {
+  background: var(--sa-wait-soft);
+  border-color: rgba(180, 119, 11, 0.3);
+  color: #8c5c08;
+}
+.sa-pill.is-info {
+  background: var(--sa-info-soft);
+  border-color: rgba(42, 95, 168, 0.26);
+  color: #204b85;
+}
+
+/* A dot in front, for the statuses that carry one. */
+.sa-pill i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+
+/* Buttons for application chrome. Marketing pages keep .button from
+   journey.css; this is the tighter, squarer software equivalent. */
+.sa-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 20px;
+  min-height: 44px;
+  border-radius: var(--sa-r-pill);
+  border: 1px solid var(--sa-line-strong);
+  background: var(--sa-surface);
+  color: var(--sa-ink);
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition:
+    background var(--motion-fast, 180ms) ease,
+    border-color var(--motion-fast, 180ms) ease,
+    color var(--motion-fast, 180ms) ease;
+}
+
+@media (hover: hover) {
+  .sa-btn:hover {
+    border-color: var(--sa-ink);
+    color: var(--sa-ink);
+  }
+}
+
+.sa-btn.is-primary {
+  background: var(--sa-ink);
+  border-color: var(--sa-ink);
+  color: #ffffff;
+}
+
+@media (hover: hover) {
+  .sa-btn.is-primary:hover {
+    background: var(--sa-action);
+    border-color: var(--sa-action);
+    color: #ffffff;
+  }
+}
+
+.sa-btn.is-action {
+  background: var(--sa-action);
+  border-color: var(--sa-action);
+  color: #ffffff;
+}
+
+@media (hover: hover) {
+  .sa-btn.is-action:hover {
+    background: #a5410f;
+    border-color: #a5410f;
+    color: #ffffff;
+  }
+}
+
+.sa-btn.is-quiet {
+  background: transparent;
+  border-color: transparent;
+  color: var(--sa-slate);
+  padding-inline: 8px;
+}
+
+@media (hover: hover) {
+  .sa-btn.is-quiet:hover {
+    color: var(--sa-ink);
+    background: rgba(16, 20, 38, 0.05);
+  }
+}
+
+.sa-btn.is-sm {
+  min-height: 34px;
+  padding: 6px 16px;
+  font-size: 13px;
+}
+
+.sa-btn[disabled],
+.sa-btn[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.sa :focus-visible {
+  outline: 3px solid var(--sa-action);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* Fields. 16px minimum so iOS does not zoom on focus. */
+.sa-field {
+  display: block;
+}
+
+.sa-field > span,
+.sa-fieldlabel {
+  display: block;
+  margin-bottom: 6px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+}
+
+.sa-input,
+.sa-select,
+.sa-textarea {
+  width: 100%;
+  padding: 11px 13px;
+  min-height: 46px;
+  font-size: 16px;
+  line-height: 1.4;
+  color: var(--sa-ink);
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line-strong);
+  border-radius: var(--sa-r);
+  appearance: none;
+  box-shadow: inset 0 1px 2px rgba(16, 20, 38, 0.03);
+}
+
+.sa-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.sa-select {
+  padding-right: 34px;
+  background-image: linear-gradient(45deg, transparent 50%, var(--sa-slate) 50%),
+    linear-gradient(135deg, var(--sa-slate) 50%, transparent 50%);
+  background-position:
+    right 16px center,
+    right 11px center;
+  background-size:
+    5px 5px,
+    5px 5px;
+  background-repeat: no-repeat;
+}
+
+.sa-input:focus,
+.sa-select:focus,
+.sa-textarea:focus {
+  border-color: var(--sa-action);
+}
+
+/* Panels. The universal white block inside a shell. */
+.sa-panel {
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  box-shadow: var(--sa-shadow);
+  overflow: hidden;
+}
+
+.sa-panel-h {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--sa-line);
+  background: var(--sa-surface-2);
+}
+
+.sa-panel-h h2,
+.sa-panel-h h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+}
+
+.sa-panel-b {
+  padding: 18px;
+}
+
+.sa-panel-b > :first-child {
+  margin-top: 0;
+}
+.sa-panel-b > :last-child {
+  margin-bottom: 0;
+}
+
+/* Small print under a panel: the caveat voice. */
+.sa-note {
+  margin: 12px 0 0;
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--sa-slate);
+}
+
+.sa-note b {
+  color: var(--sa-ink);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   3. CONSOLE SHELL
+   Operational command centre. Navy rail, pale canvas, metric row, worklist,
+   slide-out record. This is what the Recovery Lab stands on.
+   --------------------------------------------------------------------------- */
+.sa-console {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  /* The rail is sticky and sizes to its own content, so on a long workspace it
+     ended partway down the page and read as a floating navy block. Painting
+     the rail's column onto the grid itself carries the dark ground to the
+     bottom whatever the rail's own height is. */
+  background: linear-gradient(90deg, var(--sa-deep) 0 248px, var(--sa-canvas) 248px);
+  min-height: 70vh;
+}
+
+/* --- rail --- */
+.sa-rail {
+  background: var(--sa-deep);
+  color: var(--sa-onDeep);
+  padding: 22px 18px 28px;
+  position: sticky;
+  top: var(--sa-navh);
+  align-self: start;
+  max-height: calc(100vh - var(--sa-navh));
+  overflow-y: auto;
+}
+
+.sa-rail-brand {
+  display: block;
+  font-family: var(--serif);
+  font-size: 18px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sa-onDeep);
+  text-decoration: none;
+  line-height: 1.3;
+}
+
+.sa-rail-sub {
+  margin: 6px 0 22px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sa-onDeep-faint);
+}
+
+.sa-rail-group {
+  margin: 0 0 8px;
+  padding-top: 16px;
+  border-top: 1px solid var(--sa-line-dark);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sa-onDeep-faint);
+}
+
+.sa-rail-group:first-of-type {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.sa-rail-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin: 0 0 18px;
+  padding: 0;
+  list-style: none;
+}
+
+.sa-rail-nav a,
+.sa-rail-nav button {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  text-align: left;
+  padding: 9px 11px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sa-onDeep-soft);
+  font: inherit;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--motion-fast, 180ms) ease, color var(--motion-fast, 180ms) ease;
+}
+
+@media (hover: hover) {
+  .sa-rail-nav a:hover,
+  .sa-rail-nav button:hover {
+    background: var(--sa-deep-2);
+    color: var(--sa-onDeep);
+  }
+}
+
+.sa-rail-nav a.is-on,
+.sa-rail-nav button.is-on,
+.sa-rail-nav [aria-selected="true"],
+.sa-rail-nav [aria-current="page"] {
+  background: var(--sa-deep-2);
+  color: #ffffff;
+  font-weight: 600;
+  box-shadow: inset 2px 0 0 var(--sa-action);
+}
+
+.sa-rail-nav .sa-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--sa-onDeep-faint);
+}
+
+.sa-rail-nav .is-on .sa-count {
+  color: var(--sa-onDeep-soft);
+}
+
+.sa-rail-foot {
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--sa-line-dark);
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--sa-onDeep-faint);
+}
+
+.sa-rail-foot a {
+  color: var(--sa-onDeep-soft);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (hover: hover) {
+  .sa-rail-foot a:hover {
+    color: #ffffff;
+  }
+}
+
+.sa-rail-stamp {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid rgba(194, 80, 28, 0.55);
+  color: #f0a071;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+}
+
+/* --- workspace --- */
+.sa-work {
+  min-width: 0;
+}
+
+.sa-work-top {
+  position: sticky;
+  top: var(--sa-navh);
+  z-index: 20;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 18px clamp(16px, 3vw, 30px);
+  background: rgba(255, 255, 255, 0.94);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--sa-line);
+}
+
+.sa-work-top h1,
+.sa-work-top h2 {
+  margin: 4px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(21px, 2.4vw, 27px);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.sa-work-top .sa-work-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sa-work-body {
+  padding: clamp(18px, 3vw, 30px);
+  display: grid;
+  gap: clamp(16px, 2.4vw, 24px);
+}
+
+/* Metric row */
+.sa-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(184px, 1fr));
+  gap: 12px;
+}
+
+.sa-metric {
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  padding: 16px 16px 14px;
+  box-shadow: var(--sa-shadow);
+}
+
+.sa-metric-k {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+}
+
+.sa-metric-v {
+  margin: 9px 0 4px;
+  font-family: var(--serif);
+  font-size: clamp(26px, 3.2vw, 32px);
+  line-height: 1;
+  letter-spacing: -0.01em;
+}
+
+.sa-metric-c {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--sa-mute);
+}
+
+.sa-metric.is-lead {
+  border-color: rgba(194, 80, 28, 0.35);
+  box-shadow: var(--sa-shadow), inset 0 2px 0 var(--sa-action);
+}
+
+.sa-metric.is-lead .sa-metric-v {
+  color: var(--sa-action);
+}
+
+.sa-metric.is-urgent {
+  border-color: rgba(228, 34, 44, 0.35);
+  box-shadow: var(--sa-shadow), inset 0 2px 0 var(--sa-urgent);
+}
+
+.sa-metric.is-urgent .sa-metric-v {
+  color: var(--sa-urgent);
+}
+
+/* Filter bar that stays put above a worklist */
+.sa-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  align-items: flex-end;
+  padding: 14px 16px;
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  box-shadow: var(--sa-shadow);
+}
+
+.sa-filters .sa-field {
+  min-width: 158px;
+  flex: 1 1 158px;
+}
+
+.sa-filters .sa-input,
+.sa-filters .sa-select {
+  min-height: 42px;
+  padding-block: 9px;
+}
+
+.sa-filters-end {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--sa-mute);
+}
+
+/* Worklist table */
+.sa-tablewrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sa-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.sa-table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--sa-surface-2);
+  text-align: left;
+  padding: 0;
+  border-bottom: 1px solid var(--sa-line-strong);
+  white-space: nowrap;
+}
+
+.sa-table th button,
+.sa-table th .sa-th {
+  display: block;
+  width: 100%;
+  appearance: none;
+  border: 0;
+  background: none;
+  padding: 11px 14px;
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+  text-align: left;
+  cursor: pointer;
+}
+
+.sa-table th .sa-th {
+  cursor: default;
+}
+
+.sa-table th button[aria-sort="ascending"]::after {
+  content: " \2191";
+  color: var(--sa-action);
+}
+.sa-table th button[aria-sort="descending"]::after {
+  content: " \2193";
+  color: var(--sa-action);
+}
+
+.sa-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--sa-line);
+  vertical-align: middle;
+  color: var(--sa-slate);
+}
+
+.sa-table td.sa-strong {
+  color: var(--sa-ink);
+  font-weight: 600;
+}
+
+.sa-table td.sa-money {
+  text-align: right;
+  color: var(--sa-ink);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.sa-table tbody tr {
+  cursor: pointer;
+  transition: background var(--motion-fast, 180ms) ease;
+}
+
+@media (hover: hover) {
+  .sa-table tbody tr:hover {
+    background: var(--sa-surface-2);
+  }
+}
+
+.sa-table tbody tr.is-urgent td:first-child {
+  box-shadow: inset 3px 0 0 var(--sa-urgent);
+}
+
+.sa-table tbody tr:focus-within {
+  background: var(--sa-surface-2);
+}
+
+.sa-empty {
+  padding: 34px 18px;
+  text-align: center;
+  color: var(--sa-mute);
+  font-size: 14px;
+}
+
+/* Horizontal bar rows, for distribution panels */
+.sa-bars {
+  display: grid;
+  gap: 13px;
+}
+
+.sa-barrow-t {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 13.5px;
+  margin-bottom: 6px;
+  color: var(--sa-slate);
+}
+
+.sa-barrow-t b {
+  color: var(--sa-ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.sa-barrow-t .sa-sub {
+  color: var(--sa-mute);
+  font-size: 12px;
+}
+
+.sa-bar {
+  height: 9px;
+  border-radius: 5px;
+  background: var(--sa-canvas-2);
+  border: 1px solid var(--sa-line);
+  overflow: hidden;
+}
+
+.sa-bar i {
+  display: block;
+  height: 100%;
+  min-width: 3px;
+  border-radius: 4px;
+  background: var(--sa-action);
+}
+
+.sa-bar.is-urgent i {
+  background: var(--sa-urgent);
+}
+.sa-bar.is-idle i {
+  background: var(--sa-idle);
+}
+
+/* Slide-out record */
+.sa-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  background: rgba(12, 16, 32, 0.42);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--motion-panel, 280ms) ease;
+}
+
+.sa-scrim.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.sa-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 80;
+  width: min(520px, 100vw);
+  display: flex;
+  flex-direction: column;
+  background: var(--sa-surface);
+  border-left: 1px solid var(--sa-line-strong);
+  box-shadow: var(--sa-shadow-lift);
+  transform: translateX(102%);
+  transition: transform var(--motion-panel, 280ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+  visibility: hidden;
+}
+
+.sa-drawer.is-open {
+  transform: none;
+  visibility: visible;
+}
+
+.sa-drawer-h {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--sa-line);
+  background: var(--sa-surface-2);
+}
+
+.sa-drawer-h h2,
+.sa-drawer-h h3 {
+  margin: 5px 0 0;
+  font-family: var(--serif);
+  font-size: 21px;
+  font-weight: 400;
+  line-height: 1.25;
+}
+
+.sa-drawer-b {
+  padding: 18px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+}
+
+.sa-drawer-f {
+  padding: 14px 18px;
+  border-top: 1px solid var(--sa-line);
+  background: var(--sa-surface-2);
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.sa-close {
+  appearance: none;
+  border: 1px solid var(--sa-line-strong);
+  background: var(--sa-surface);
+  color: var(--sa-slate);
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  flex: none;
+}
+
+@media (hover: hover) {
+  .sa-close:hover {
+    border-color: var(--sa-ink);
+    color: var(--sa-ink);
+  }
+}
+
+/* Definition rows inside a record */
+.sa-dl {
+  margin: 0;
+  display: grid;
+  grid-template-columns: minmax(120px, 38%) minmax(0, 1fr);
+  gap: 0;
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r);
+  overflow: hidden;
+}
+
+.sa-dl dt,
+.sa-dl dd {
+  margin: 0;
+  padding: 10px 13px;
+  border-bottom: 1px solid var(--sa-line);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.sa-dl dt {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+  background: var(--sa-surface-2);
+  display: flex;
+  align-items: center;
+}
+
+.sa-dl dd {
+  color: var(--sa-ink);
+}
+
+.sa-dl > :nth-last-child(1),
+.sa-dl > :nth-last-child(2) {
+  border-bottom: 0;
+}
+
+/* Console on a phone: the rail becomes a scrolling chip strip. */
+@media (max-width: 900px) {
+  .sa-console {
+    grid-template-columns: minmax(0, 1fr);
+    background: var(--sa-canvas);
+  }
+
+  .sa-rail {
+    position: sticky;
+    top: var(--sa-navh);
+    z-index: 25;
+    max-height: none;
+    overflow: visible;
+    padding: 14px 0 12px;
+  }
+
+  .sa-rail-brand,
+  .sa-rail-sub,
+  .sa-rail-group,
+  .sa-rail-foot {
+    padding-inline: 16px;
+  }
+
+  .sa-rail-sub {
+    margin-bottom: 12px;
+  }
+
+  .sa-rail-group {
+    padding-top: 12px;
+  }
+
+  .sa-rail-nav {
+    flex-direction: row;
+    gap: 8px;
+    margin-bottom: 0;
+    padding: 0 16px 2px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .sa-rail-nav::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sa-rail-nav li {
+    flex: none;
+  }
+
+  .sa-rail-nav a,
+  .sa-rail-nav button {
+    white-space: nowrap;
+    border: 1px solid var(--sa-line-dark);
+    border-radius: 999px;
+    padding: 8px 14px;
+  }
+
+  .sa-rail-nav a.is-on,
+  .sa-rail-nav button.is-on,
+  .sa-rail-nav [aria-selected="true"] {
+    box-shadow: none;
+    border-color: var(--sa-action);
+  }
+
+  .sa-rail-foot {
+    display: none;
+  }
+
+  .sa-work-top {
+    position: static;
+  }
+
+  .sa-drawer {
+    width: 100vw;
+    top: auto;
+    height: 92svh;
+    border-left: 0;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    transform: translateY(102%);
+  }
+
+  .sa-drawer.is-open {
+    transform: none;
+  }
+
+  .sa-dl {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sa-dl dt {
+    border-bottom: 0;
+    padding-bottom: 2px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   4. APP SHELL
+   A focused application: quiet chrome, one thing on screen, nothing to scroll
+   past. Carries the Denial Health Score and the Denial Code Reference.
+   --------------------------------------------------------------------------- */
+.sa-app {
+  background: var(--sa-canvas);
+  min-height: 72vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.sa-app-top {
+  position: sticky;
+  top: var(--sa-navh);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 12px clamp(14px, 3vw, 28px);
+  background: rgba(255, 255, 255, 0.95);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--sa-line);
+}
+
+.sa-app-name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+}
+
+.sa-app-name b {
+  font-family: var(--serif);
+  font-size: 15px;
+  letter-spacing: 0.1em;
+  color: var(--sa-ink);
+  font-weight: 400;
+}
+
+.sa-app-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+}
+
+.sa-progress {
+  height: 4px;
+  background: var(--sa-canvas-2);
+  overflow: hidden;
+}
+
+.sa-progress i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--sa-action);
+  transition: width var(--motion-panel, 280ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+/* The stage: one screen, centred, nothing else competing. */
+.sa-stage {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(28px, 6vw, 72px) clamp(16px, 4vw, 28px) clamp(40px, 6vw, 80px);
+}
+
+/* The stage card. Straight from her Step 2 of 4 reference: the whole screen is
+   one white panel lifted off the grey, with generous padding, so a question
+   reads as a thing you are inside rather than text on a page. */
+.sa-screen {
+  width: min(720px, 100%);
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: 24px;
+  box-shadow: var(--sa-shadow-lift);
+  padding: clamp(24px, 4.4vw, 44px);
+}
+
+/* Inside a white card the choices need their own edge back, and the lift they
+   carried on grey now reads as noise. */
+.sa-screen .sa-choice {
+  border-color: var(--sa-line-strong);
+  box-shadow: none;
+}
+
+.sa-screen .sa-choice:has(input:checked),
+.sa-screen .sa-choice.is-picked {
+  box-shadow: 0 0 0 1px var(--sa-action);
+}
+
+.sa-qnum {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sa-action);
+  margin: 0 0 14px;
+}
+
+.sa-q {
+  margin: 0 0 10px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(26px, 4.2vw, 40px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.sa-qhelp {
+  margin: 0 0 26px;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--sa-slate);
+  max-width: 60ch;
+}
+
+.sa-choices {
+  display: grid;
+  gap: 10px;
+  margin: 0 0 28px;
+}
+
+.sa-choice {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 16px 20px;
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  box-shadow: var(--sa-shadow);
+  cursor: pointer;
+  transition:
+    border-color var(--motion-fast, 180ms) ease,
+    box-shadow var(--motion-fast, 180ms) ease,
+    background var(--motion-fast, 180ms) ease;
+}
+
+@media (hover: hover) {
+  .sa-choice:hover {
+    border-color: var(--sa-ink);
+  }
+}
+
+.sa-choice input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.sa-choice-mark {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 999px;
+  border: 1.5px solid var(--sa-line-strong);
+  background: var(--sa-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  color: transparent;
+  transition:
+    border-color var(--motion-fast, 180ms) ease,
+    background var(--motion-fast, 180ms) ease;
+}
+
+.sa-choice-t {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--sa-ink);
+}
+
+.sa-choice-t small {
+  display: block;
+  margin-top: 4px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--sa-mute);
+}
+
+.sa-choice:has(input:checked),
+.sa-choice.is-picked {
+  border-color: var(--sa-action);
+  background: #fffaf6;
+  box-shadow: 0 0 0 1px var(--sa-action);
+}
+
+.sa-choice:has(input:checked) .sa-choice-mark,
+.sa-choice.is-picked .sa-choice-mark {
+  border-color: var(--sa-action);
+  background: var(--sa-action);
+  color: #ffffff;
+}
+
+.sa-choice:has(input:focus-visible) {
+  outline: 3px solid var(--sa-action);
+  outline-offset: 3px;
+}
+
+.sa-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding-top: 20px;
+  border-top: 1px solid var(--sa-line);
+}
+
+.sa-nav-hint {
+  font-size: 13px;
+  color: var(--sa-mute);
+}
+
+/* The results reveal: a full stage of its own, not a section further down. */
+.sa-result {
+  width: min(880px, 100%);
+}
+
+.sa-score {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: clamp(20px, 4vw, 40px);
+  align-items: center;
+  padding: clamp(22px, 4vw, 36px);
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: 18px;
+  box-shadow: var(--sa-shadow);
+}
+
+.sa-dial {
+  position: relative;
+  width: clamp(132px, 22vw, 172px);
+  height: clamp(132px, 22vw, 172px);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: conic-gradient(var(--sa-action) calc(var(--sa-pct, 0) * 1%), var(--sa-canvas-2) 0);
+}
+
+.sa-dial::after {
+  content: "";
+  position: absolute;
+  inset: 12px;
+  border-radius: 50%;
+  background: var(--sa-surface);
+}
+
+.sa-dial-v {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.sa-dial-v b {
+  display: block;
+  font-family: var(--serif);
+  font-size: clamp(40px, 7vw, 54px);
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.sa-dial-v span {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+}
+
+.sa-band {
+  margin: 0 0 8px;
+  font-family: var(--serif);
+  font-size: clamp(22px, 3.4vw, 30px);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.sa-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+  gap: 12px;
+}
+
+.sa-card {
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  padding: 16px 18px;
+  box-shadow: var(--sa-shadow);
+}
+
+.sa-card h3 {
+  margin: 0 0 8px;
+  font-size: 14.5px;
+  font-weight: 600;
+}
+
+.sa-card p {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--sa-slate);
+}
+
+.sa-card.is-gap {
+  border-left: 3px solid var(--sa-urgent);
+}
+.sa-card.is-strength {
+  border-left: 3px solid var(--sa-ok);
+}
+
+/* Reference-app variant: a search that owns the screen. */
+.sa-ref-hero {
+  padding: clamp(34px, 7vw, 74px) clamp(16px, 4vw, 28px) clamp(22px, 4vw, 38px);
+  text-align: center;
+  background: linear-gradient(180deg, var(--sa-surface), var(--sa-canvas));
+  border-bottom: 1px solid var(--sa-line);
+}
+
+.sa-ref-hero h1 {
+  margin: 0 auto 10px;
+  max-width: 20ch;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(28px, 4.6vw, 44px);
+  line-height: 1.14;
+  letter-spacing: -0.015em;
+}
+
+.sa-ref-hero p {
+  margin: 0 auto 26px;
+  max-width: 62ch;
+  font-size: 15.5px;
+  line-height: 1.65;
+  color: var(--sa-slate);
+}
+
+.sa-searchbox {
+  position: relative;
+  width: min(620px, 100%);
+  margin: 0 auto;
+}
+
+.sa-searchbox .sa-input {
+  min-height: 58px;
+  padding: 16px 52px 16px 20px;
+  font-size: 17px;
+  border-radius: 999px;
+  border-color: var(--sa-line-strong);
+  box-shadow: var(--sa-shadow);
+}
+
+.sa-searchbox .sa-input:focus {
+  border-color: var(--sa-action);
+  box-shadow: 0 0 0 3px var(--sa-action-soft), var(--sa-shadow);
+}
+
+.sa-searchbox-mark {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--sa-mute);
+  pointer-events: none;
+}
+
+.sa-chips {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin: 18px auto 0;
+  width: min(720px, 100%);
+}
+
+.sa-chip {
+  appearance: none;
+  padding: 7px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--sa-line-strong);
+  background: var(--sa-surface);
+  color: var(--sa-slate);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    border-color var(--motion-fast, 180ms) ease,
+    color var(--motion-fast, 180ms) ease,
+    background var(--motion-fast, 180ms) ease;
+}
+
+@media (hover: hover) {
+  .sa-chip:hover {
+    border-color: var(--sa-ink);
+    color: var(--sa-ink);
+  }
+}
+
+.sa-chip.is-on,
+.sa-chip[aria-pressed="true"] {
+  background: var(--sa-ink);
+  border-color: var(--sa-ink);
+  color: #ffffff;
+}
+
+.sa-ref-body {
+  padding: clamp(22px, 4vw, 40px) clamp(16px, 4vw, 28px) clamp(40px, 6vw, 76px);
+}
+
+.sa-ref-grid {
+  width: min(1040px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(258px, 320px);
+  gap: clamp(18px, 3vw, 30px);
+  align-items: start;
+}
+
+.sa-side {
+  position: sticky;
+  top: calc(var(--sa-navh) + 76px);
+  display: grid;
+  gap: 14px;
+}
+
+/* A two-column definition list has nowhere to go in a 300px rail, so in the
+   side column the term sits above its own definition. */
+.sa-side .sa-dl {
+  grid-template-columns: minmax(0, 1fr);
+  border: 0;
+}
+
+.sa-side .sa-dl dt {
+  background: none;
+  border-bottom: 0;
+  padding: 12px 0 3px;
+}
+
+.sa-side .sa-dl dd {
+  padding: 0 0 12px;
+  border-bottom: 1px solid var(--sa-line);
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--sa-slate);
+}
+
+.sa-side .sa-dl > :first-child {
+  padding-top: 0;
+}
+
+.sa-results {
+  display: grid;
+  gap: 12px;
+}
+
+.sa-rescard {
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  padding: 18px 20px;
+  box-shadow: var(--sa-shadow);
+}
+
+.sa-rescard-h {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.sa-code {
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--sa-ink);
+}
+
+.sa-rescard p {
+  margin: 0 0 10px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--sa-slate);
+}
+
+.sa-rescard p:last-child {
+  margin-bottom: 0;
+}
+
+.sa-asklist {
+  margin: 10px 0 0;
+  padding: 12px 14px 12px 30px;
+  background: var(--sa-surface-2);
+  border-left: 3px solid var(--sa-action);
+  border-radius: 0 var(--sa-r) var(--sa-r) 0;
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--sa-slate);
+}
+
+.sa-asklist li + li {
+  margin-top: 6px;
+}
+
+@media (max-width: 860px) {
+  .sa-ref-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sa-side {
+    position: static;
+  }
+
+  .sa-score {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    text-align: center;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   5. DOC SHELL
+   A client deliverable. Grey canvas, white sheets with real margins, a cover,
+   a table of contents, page numbers, a print button and a watermark that does
+   not leave the page. This is the Sample Assessment.
+   --------------------------------------------------------------------------- */
+.sa-doc {
+  background: var(--sa-canvas-2);
+  padding-bottom: clamp(40px, 6vw, 80px);
+}
+
+.sa-doc-bar {
+  position: sticky;
+  top: var(--sa-navh);
+  z-index: 25;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 11px clamp(14px, 3vw, 28px);
+  background: rgba(16, 20, 38, 0.96);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  color: var(--sa-onDeep);
+}
+
+.sa-doc-bar .sa-doc-id {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sa-onDeep-faint);
+  min-width: 0;
+}
+
+.sa-doc-bar .sa-doc-id b {
+  font-family: var(--serif);
+  font-size: 14.5px;
+  letter-spacing: 0.09em;
+  color: #ffffff;
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.sa-doc-bar .sa-btn {
+  background: transparent;
+  border-color: rgba(238, 241, 248, 0.3);
+  color: var(--sa-onDeep);
+}
+
+@media (hover: hover) {
+  .sa-doc-bar .sa-btn:hover {
+    background: rgba(238, 241, 248, 0.12);
+    border-color: rgba(238, 241, 248, 0.6);
+    color: #ffffff;
+  }
+}
+
+.sa-doc-bar .sa-btn.is-primary {
+  background: var(--sa-action);
+  border-color: var(--sa-action);
+  color: #ffffff;
+}
+
+.sa-sheets {
+  width: min(880px, calc(100% - 28px));
+  margin: clamp(20px, 4vw, 40px) auto 0;
+  display: grid;
+  gap: clamp(16px, 3vw, 28px);
+}
+
+.sa-sheet {
+  position: relative;
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: 4px;
+  padding: clamp(26px, 5.4vw, 62px) clamp(20px, 5vw, 62px) clamp(52px, 5vw, 62px);
+  box-shadow: 0 1px 2px rgba(16, 20, 38, 0.06), 0 22px 46px -26px rgba(16, 20, 38, 0.4);
+  overflow: hidden;
+}
+
+/* Watermark. Rotated text on a positive layer with pointer-events off, not a
+   negative-z pseudo-element: negative z inside an isolated stacking context
+   paints as a solid block on older iOS. */
+.sa-sheet::before {
+  content: attr(data-watermark);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 1;
+  transform: translate(-50%, -50%) rotate(-32deg);
+  font-family: var(--mono);
+  font-size: clamp(28px, 6vw, 52px);
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(16, 20, 38, 0.045);
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+
+.sa-sheet > * {
+  position: relative;
+  z-index: 2;
+}
+
+.sa-sheet-n {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(18px, 2.4vw, 26px);
+  z-index: 2;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+}
+
+/* Cover sheet */
+.sa-cover {
+  min-height: min(560px, 76svh);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-top: 5px solid var(--sa-action);
+}
+
+.sa-cover-top {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+}
+
+.sa-cover h1 {
+  margin: clamp(30px, 6vw, 60px) 0 16px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(30px, 5.4vw, 52px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  max-width: 18ch;
+}
+
+.sa-cover-lede {
+  margin: 0;
+  max-width: 54ch;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--sa-slate);
+}
+
+.sa-cover-meta {
+  margin-top: clamp(30px, 6vw, 56px);
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 14px 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--sa-line);
+}
+
+.sa-cover-meta div span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+  margin-bottom: 5px;
+}
+
+.sa-cover-meta div b {
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+/* Table of contents */
+.sa-toc {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: sa-toc;
+}
+
+.sa-toc li {
+  counter-increment: sa-toc;
+  border-bottom: 1px solid var(--sa-line);
+}
+
+.sa-toc a {
+  display: flex;
+  align-items: baseline;
+  gap: 14px;
+  padding: 13px 2px;
+  color: var(--sa-ink);
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.sa-toc a::before {
+  content: counter(sa-toc, decimal-leading-zero);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: var(--sa-action);
+  flex: none;
+}
+
+.sa-toc a .sa-toc-dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--sa-line-strong);
+  transform: translateY(-4px);
+}
+
+.sa-toc a .sa-toc-p {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--sa-mute);
+  flex: none;
+}
+
+@media (hover: hover) {
+  .sa-toc a:hover {
+    color: var(--sa-action);
+  }
+}
+
+/* Document typography inside a sheet */
+.sa-doc-eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sa-action);
+  margin: 0 0 12px;
+}
+
+.sa-sheet h2 {
+  margin: 0 0 18px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid var(--sa-ink);
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(24px, 3.6vw, 34px);
+  line-height: 1.16;
+  letter-spacing: -0.015em;
+}
+
+.sa-sheet h3 {
+  margin: 30px 0 10px;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.005em;
+}
+
+.sa-sheet h3:first-of-type {
+  margin-top: 0;
+}
+
+.sa-sheet p {
+  margin: 0 0 14px;
+  font-size: 15.5px;
+  line-height: 1.72;
+  color: var(--sa-slate);
+}
+
+.sa-sheet p.sa-lede {
+  font-size: 17px;
+  line-height: 1.68;
+  color: var(--sa-ink);
+}
+
+.sa-sheet ul,
+.sa-sheet ol {
+  margin: 0 0 16px;
+  padding-left: 22px;
+  font-size: 15.5px;
+  line-height: 1.72;
+  color: var(--sa-slate);
+}
+
+.sa-sheet li + li {
+  margin-top: 7px;
+}
+
+/* Report table: rules, not cards. */
+.sa-rtable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+  margin: 0 0 14px;
+}
+
+.sa-rtable caption {
+  caption-side: top;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+  padding-bottom: 9px;
+}
+
+.sa-rtable th {
+  text-align: left;
+  padding: 9px 10px;
+  border-bottom: 1.5px solid var(--sa-ink);
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sa-ink);
+  font-weight: 400;
+}
+
+.sa-rtable td {
+  padding: 10px;
+  border-bottom: 1px solid var(--sa-line);
+  color: var(--sa-slate);
+  vertical-align: top;
+  font-variant-numeric: tabular-nums;
+}
+
+.sa-rtable td.sa-money,
+.sa-rtable th.sa-money {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.sa-rtable td.sa-strong {
+  color: var(--sa-ink);
+  font-weight: 600;
+}
+
+.sa-rtable tfoot td {
+  border-top: 1.5px solid var(--sa-ink);
+  border-bottom: 0;
+  color: var(--sa-ink);
+  font-weight: 700;
+}
+
+/* Callout inside a report */
+.sa-callout {
+  margin: 0 0 16px;
+  padding: 16px 18px;
+  background: var(--sa-surface-2);
+  border-left: 3px solid var(--sa-action);
+  border-radius: 0 var(--sa-r) var(--sa-r) 0;
+}
+
+.sa-callout p:last-child {
+  margin-bottom: 0;
+}
+
+.sa-callout.is-urgent {
+  border-left-color: var(--sa-urgent);
+  background: #fdf3f3;
+}
+
+/* Figure block: a number set the reader is meant to compare. */
+.sa-figures {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0;
+  margin: 0 0 20px;
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r);
+  overflow: hidden;
+}
+
+.sa-figures div {
+  padding: 15px 16px;
+  border-right: 1px solid var(--sa-line);
+}
+
+.sa-figures div:last-child {
+  border-right: 0;
+}
+
+.sa-figures span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+  margin-bottom: 7px;
+}
+
+.sa-figures b {
+  font-family: var(--serif);
+  font-size: clamp(23px, 3vw, 28px);
+  font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 620px) {
+  .sa-figures div {
+    border-right: 0;
+    border-bottom: 1px solid var(--sa-line);
+  }
+
+  .sa-figures div:last-child {
+    border-bottom: 0;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   6. PORTAL SHELL
+   A vendor due-diligence portal. Search, topic rail, status badges,
+   collapsible answers, a documents panel and a security contact that never
+   scrolls out of reach. This is the Trust Room.
+   --------------------------------------------------------------------------- */
+.sa-portal {
+  background: var(--sa-canvas);
+  min-height: 72vh;
+}
+
+.sa-portal-top {
+  background: var(--sa-surface);
+  border-bottom: 1px solid var(--sa-line);
+  padding: clamp(22px, 4vw, 40px) clamp(16px, 4vw, 28px) clamp(18px, 3vw, 26px);
+}
+
+.sa-portal-top-in {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+}
+
+.sa-portal-top h1 {
+  margin: 8px 0 10px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(27px, 4.2vw, 42px);
+  line-height: 1.14;
+  letter-spacing: -0.015em;
+  max-width: 22ch;
+}
+
+.sa-portal-top p {
+  margin: 0 0 20px;
+  max-width: 66ch;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: var(--sa-slate);
+}
+
+.sa-portal-tools {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.sa-portal-tools .sa-searchbox {
+  margin: 0;
+  flex: 1 1 320px;
+  max-width: 460px;
+}
+
+.sa-portal-tools .sa-searchbox .sa-input {
+  min-height: 48px;
+  font-size: 16px;
+  padding: 12px 20px;
+}
+
+.sa-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.sa-portal-grid {
+  width: min(1120px, 100%);
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(196px, 236px) minmax(0, 1fr);
+  gap: clamp(18px, 3vw, 34px);
+  align-items: start;
+  padding: clamp(20px, 3.4vw, 34px) clamp(16px, 4vw, 28px) clamp(44px, 6vw, 80px);
+}
+
+.sa-topics {
+  position: sticky;
+  top: calc(var(--sa-navh) + 16px);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sa-topics li + li {
+  margin-top: 1px;
+}
+
+.sa-topics a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  color: var(--sa-slate);
+  text-decoration: none;
+  font-size: 14px;
+  border-left: 2px solid transparent;
+  transition:
+    background var(--motion-fast, 180ms) ease,
+    color var(--motion-fast, 180ms) ease;
+}
+
+@media (hover: hover) {
+  .sa-topics a:hover {
+    background: rgba(16, 20, 38, 0.045);
+    color: var(--sa-ink);
+  }
+}
+
+.sa-topics a.is-on {
+  background: var(--sa-surface);
+  color: var(--sa-ink);
+  font-weight: 600;
+  border-left-color: var(--sa-action);
+  box-shadow: var(--sa-shadow);
+}
+
+.sa-topics .sa-count {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--sa-mute);
+}
+
+.sa-topics-foot {
+  margin-top: 18px;
+  padding: 14px 14px 15px;
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--sa-slate);
+  box-shadow: var(--sa-shadow);
+}
+
+.sa-topics-foot b {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+  margin-bottom: 7px;
+  font-weight: 400;
+}
+
+.sa-topics-foot a {
+  color: var(--sa-action);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  word-break: break-word;
+}
+
+/* Q and A blocks */
+.sa-qa-group {
+  margin: 0 0 clamp(22px, 3vw, 34px);
+  scroll-margin-top: calc(var(--sa-navh) + 20px);
+}
+
+.sa-qa-group > h2 {
+  margin: 0 0 4px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: clamp(21px, 2.8vw, 27px);
+  line-height: 1.2;
+}
+
+.sa-qa-group > p {
+  margin: 0 0 14px;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--sa-slate);
+  max-width: 68ch;
+}
+
+.sa-qa {
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  box-shadow: var(--sa-shadow);
+  overflow: hidden;
+}
+
+.sa-qa + .sa-qa {
+  margin-top: 8px;
+}
+
+.sa-qa > summary {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 15px 18px;
+  cursor: pointer;
+  list-style: none;
+  font-size: 15.5px;
+  line-height: 1.5;
+  font-weight: 600;
+  color: var(--sa-ink);
+}
+
+.sa-qa > summary::-webkit-details-marker {
+  display: none;
+}
+
+.sa-qa > summary::after {
+  content: "+";
+  margin-left: auto;
+  flex: none;
+  font-family: var(--mono);
+  font-size: 17px;
+  line-height: 1.2;
+  color: var(--sa-mute);
+}
+
+.sa-qa[open] > summary::after {
+  content: "\2212";
+  color: var(--sa-action);
+}
+
+.sa-qa[open] > summary {
+  border-bottom: 1px solid var(--sa-line);
+}
+
+.sa-qa-b {
+  padding: 16px 18px 18px;
+}
+
+.sa-qa-b p {
+  margin: 0 0 12px;
+  font-size: 15px;
+  line-height: 1.72;
+  color: var(--sa-slate);
+}
+
+.sa-qa-b p:last-child {
+  margin-bottom: 0;
+}
+
+.sa-qa-b ul,
+.sa-qa-b ol {
+  margin: 0 0 12px;
+  padding-left: 20px;
+  font-size: 15px;
+  line-height: 1.72;
+  color: var(--sa-slate);
+}
+
+/* Status badge. Four words, and each means exactly one thing. */
+.sa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+  padding: 3px 9px;
+  border-radius: 5px;
+  border: 1px solid;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin-top: 3px;
+}
+
+.sa-badge.is-documented {
+  background: var(--sa-ok-soft);
+  border-color: rgba(31, 122, 77, 0.3);
+  color: #17603c;
+}
+.sa-badge.is-agreement {
+  background: var(--sa-info-soft);
+  border-color: rgba(42, 95, 168, 0.28);
+  color: #204b85;
+}
+.sa-badge.is-request {
+  background: var(--sa-action-soft);
+  border-color: rgba(194, 80, 28, 0.3);
+  color: #963c14;
+}
+.sa-badge.is-review {
+  background: var(--sa-wait-soft);
+  border-color: rgba(180, 119, 11, 0.32);
+  color: #8c5c08;
+}
+
+/* Document request panel */
+.sa-docpanel {
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  box-shadow: var(--sa-shadow);
+  overflow: hidden;
+}
+
+.sa-docs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sa-docs li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 13px 18px;
+  border-bottom: 1px solid var(--sa-line);
+  font-size: 14.5px;
+}
+
+.sa-docs li:last-child {
+  border-bottom: 0;
+}
+
+.sa-docs li b {
+  font-weight: 600;
+}
+
+.sa-docs li .sa-badge {
+  margin: 0 0 0 auto;
+}
+
+.sa-contactstrip {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 15px 18px;
+  background: var(--sa-ink);
+  color: var(--sa-onDeep);
+  border-radius: var(--sa-r-lg);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.sa-contactstrip a {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  word-break: break-word;
+}
+
+.sa-contactstrip .sa-label {
+  color: var(--sa-onDeep-faint);
+}
+
+@media (max-width: 900px) {
+  .sa-portal-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .sa-topics {
+    position: sticky;
+    top: var(--sa-navh);
+    z-index: 20;
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    margin: 0 calc(clamp(16px, 4vw, 28px) * -1);
+    padding: 10px clamp(16px, 4vw, 28px);
+    background: var(--sa-canvas);
+    border-bottom: 1px solid var(--sa-line);
+  }
+
+  .sa-topics::-webkit-scrollbar {
+    display: none;
+  }
+
+  .sa-topics li + li {
+    margin-top: 0;
+  }
+
+  .sa-topics li {
+    flex: none;
+  }
+
+  .sa-topics a {
+    white-space: nowrap;
+    border: 1px solid var(--sa-line-strong);
+    border-left-width: 1px;
+    border-radius: 999px;
+    background: var(--sa-surface);
+  }
+
+  .sa-topics a.is-on {
+    border-color: var(--sa-action);
+    box-shadow: none;
+  }
+
+  .sa-topics-foot {
+    display: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   7. PRODUCT DIRECTORY
+   The map of the ecosystem, used on the Soft Appeals overview so a buyer can
+   see the six builds as six things rather than six links in a paragraph.
+   --------------------------------------------------------------------------- */
+.sa-dir {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(268px, 1fr));
+  gap: 14px;
+}
+
+/* Six cards. auto-fit gives four columns on a wide screen, which leaves a row
+   of four and an orphaned row of two. Three columns reads as two even rows. */
+@media (min-width: 1060px) {
+  .sa-dir {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* The card layout follows her SIMPLIFY BUILDS #2 reference exactly: a mono
+   eyebrow on the left with the item number on the right, then the visual, then
+   the title, then a hairline divider, then the body copy. The first pass had
+   the visual at the bottom and the text left-aligned, which is why the
+   reference did not read at all. */
+.sa-dircard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px 18px 20px;
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  box-shadow: var(--sa-shadow);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    border-color var(--motion-fast, 180ms) ease,
+    transform var(--motion-fast, 180ms) ease,
+    box-shadow var(--motion-fast, 180ms) ease;
+}
+
+@media (hover: hover) {
+  .sa-dircard:hover {
+    border-color: var(--sa-ink);
+    transform: translateY(-2px);
+    box-shadow: var(--sa-shadow-lift);
+    color: inherit;
+  }
+}
+
+.sa-dircard-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.sa-dirkind {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid;
+}
+
+.sa-dirkind.is-tool {
+  color: #204b85;
+  border-color: rgba(42, 95, 168, 0.3);
+  background: var(--sa-info-soft);
+}
+.sa-dirkind.is-console {
+  color: #963c14;
+  border-color: rgba(194, 80, 28, 0.32);
+  background: var(--sa-action-soft);
+}
+.sa-dirkind.is-doc {
+  color: #17603c;
+  border-color: rgba(31, 122, 77, 0.3);
+  background: var(--sa-ok-soft);
+}
+.sa-dirkind.is-portal {
+  color: #4a5468;
+  border-color: rgba(74, 84, 104, 0.28);
+  background: var(--sa-idle-soft);
+}
+
+.sa-dircard h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 22px;
+  line-height: 1.24;
+  text-align: center;
+}
+
+/* The hairline under the title, from the reference. */
+.sa-dircard h3::after {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin-top: 14px;
+  background: var(--sa-line);
+}
+
+.sa-dircard p {
+  margin: 0;
+  font-size: 14.5px;
+  line-height: 1.62;
+  color: var(--sa-slate);
+  text-align: center;
+  flex: 1;
+}
+
+.sa-dirgo {
+  align-self: center;
+  padding: 8px 18px;
+  border-radius: var(--sa-r-pill);
+  border: 1px solid var(--sa-line-strong);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sa-action);
+  transition:
+    border-color var(--motion-fast, 180ms) ease,
+    background var(--motion-fast, 180ms) ease,
+    color var(--motion-fast, 180ms) ease;
+}
+
+@media (hover: hover) {
+  .sa-dircard:hover .sa-dirgo {
+    background: var(--sa-action);
+    border-color: var(--sa-action);
+    color: #ffffff;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   8. PRINT
+   The doc shell is the only thing anyone prints, and it should print as a
+   document: no chrome, no shadows, no canvas, page breaks between sheets.
+   --------------------------------------------------------------------------- */
+@media print {
+  #fs-nav,
+  .sa-doc-bar,
+  .sa-fiction,
+  .sa-btn,
+  [data-sa-print],
+  footer {
+    display: none !important;
+  }
+
+  .sa,
+  .sa-doc {
+    background: #ffffff !important;
+  }
+
+  .sa-sheets {
+    width: 100%;
+    margin: 0;
+    gap: 0;
+  }
+
+  .sa-sheet {
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 0 0 24px;
+    break-after: page;
+    page-break-after: always;
+  }
+
+  .sa-sheet:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .sa-sheet::before {
+    color: rgba(16, 20, 38, 0.06);
+  }
+
+  .sa-sheet-n {
+    position: static;
+    text-align: right;
+    margin-top: 18px;
+  }
+
+  .sa-cover {
+    min-height: auto;
+  }
+
+  .sa-panel,
+  .sa-card,
+  .sa-metric,
+  .sa-qa {
+    box-shadow: none;
+  }
+
+  .sa-qa[open] > summary::after,
+  .sa-qa > summary::after {
+    display: none;
+  }
+
+  .sa-qa-b {
+    display: block !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   9. REFERENCE COMPONENTS
+   ---------------------------------------------------------------------------
+   Seven interface references were chosen on 2026-08-17. Three of them are
+   green, and green is not this brand, so what is taken from each one is the
+   STRUCTURE. The paint is always ink, copper and red.
+
+     Map / List app          -> .sa-seg          segmented control, chip filters
+     Brainwave sidebar       -> .sa-rail         (section 3, above)
+     Step 2 of 4 form        -> .sa-choice.is-pill, .sa-steps
+     Prompt editor           -> .sa-rows, .sa-metastrip
+     SIMPLIFY BUILDS #2 card -> .sa-dircard numbering and preview
+     Stacked code cards      -> .sa-stack
+     Neumorphic flow map     -> .sa-flow
+   --------------------------------------------------------------------------- */
+
+/* --- Segmented control. From the Map / List pill, repainted ink. ----------- */
+.sa-seg {
+  display: inline-flex;
+  padding: 3px;
+  gap: 2px;
+  background: var(--sa-canvas-2);
+  border: 1px solid var(--sa-line);
+  border-radius: 999px;
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.sa-seg::-webkit-scrollbar {
+  display: none;
+}
+
+.sa-seg button,
+.sa-seg [role="tab"] {
+  appearance: none;
+  flex: none;
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  padding: 8px 18px;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sa-slate);
+  cursor: pointer;
+  white-space: nowrap;
+  transition:
+    background var(--motion-fast, 180ms) ease,
+    color var(--motion-fast, 180ms) ease;
+}
+
+@media (hover: hover) {
+  .sa-seg button:hover,
+  .sa-seg [role="tab"]:hover {
+    color: var(--sa-ink);
+  }
+}
+
+.sa-seg [aria-selected="true"],
+.sa-seg .is-on {
+  background: var(--sa-ink);
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(16, 20, 38, 0.28);
+}
+
+/* Same control on a dark rail. */
+.sa-rail .sa-seg {
+  background: rgba(238, 241, 248, 0.08);
+  border-color: var(--sa-line-dark);
+}
+
+.sa-rail .sa-seg button {
+  color: var(--sa-onDeep-soft);
+}
+
+.sa-rail .sa-seg [aria-selected="true"] {
+  background: var(--sa-action);
+  color: #ffffff;
+}
+
+/* --- Stepped wizard. From the Step 2 of 4 form, green swapped for copper. -- */
+.sa-steps {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+}
+
+.sa-steps-track {
+  flex: 1;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--sa-canvas-2);
+  overflow: hidden;
+  max-width: 340px;
+}
+
+.sa-steps-track i {
+  display: block;
+  height: 100%;
+  width: 0;
+  border-radius: 999px;
+  background: var(--sa-action);
+  transition: width var(--motion-panel, 280ms) var(--ease-out, cubic-bezier(0.22, 1, 0.36, 1));
+}
+
+/* Pill choices. The reference sets them in a row and marks the picked one with
+   a check. Copper here, and the check is a typographic mark, never a glyph. */
+.sa-choices.is-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 9px;
+}
+
+.sa-choice.is-pill {
+  flex: 0 1 auto;
+  align-items: center;
+  gap: 9px;
+  padding: 11px 18px;
+  border-radius: 999px;
+}
+
+.sa-choice.is-pill .sa-choice-mark {
+  width: 18px;
+  height: 18px;
+  margin-top: 0;
+  font-size: 10px;
+}
+
+.sa-choice.is-pill .sa-choice-t {
+  font-size: 15px;
+}
+
+/* --- Document rows. From the prompt editor: a numbered gutter, one idea per
+   row, and a meta strip along the bottom of the block. -------------------- */
+.sa-rows {
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r);
+  overflow: hidden;
+  background: var(--sa-surface);
+}
+
+.sa-row {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  border-bottom: 1px solid var(--sa-line);
+}
+
+.sa-row:last-child {
+  border-bottom: 0;
+}
+
+.sa-row-n {
+  padding: 12px 0 12px 14px;
+  border-right: 1px solid var(--sa-line);
+  background: var(--sa-surface-2);
+  font-family: var(--mono);
+  font-size: 11px;
+  line-height: 1.6;
+  color: var(--sa-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+.sa-row-b {
+  padding: 12px 14px;
+  min-width: 0;
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--sa-slate);
+}
+
+.sa-row-b > :first-child {
+  margin-top: 0;
+}
+.sa-row-b > :last-child {
+  margin-bottom: 0;
+}
+
+.sa-row.is-active {
+  outline: 1.5px solid var(--sa-action);
+  outline-offset: -1.5px;
+  background: #fffaf6;
+}
+
+.sa-row.is-active .sa-row-n {
+  color: var(--sa-action);
+  background: #fff4ec;
+}
+
+/* An inline token, the way the reference marks a variable. */
+.sa-token {
+  display: inline-block;
+  padding: 1px 7px;
+  border-radius: 5px;
+  background: var(--sa-action-soft);
+  border: 1px solid rgba(194, 80, 28, 0.24);
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #963c14;
+  white-space: nowrap;
+}
+
+/* The footer meta strip: small facts, divided, under a block. */
+.sa-metastrip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+  padding: 11px 14px;
+  border: 1px solid var(--sa-line);
+  border-top: 0;
+  border-radius: 0 0 var(--sa-r) var(--sa-r);
+  background: var(--sa-surface-2);
+  font-size: 12.5px;
+  color: var(--sa-mute);
+}
+
+.sa-metastrip b {
+  color: var(--sa-ink);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.sa-metastrip > span {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.sa-metastrip > span + span {
+  padding-left: 18px;
+  border-left: 1px solid var(--sa-line-strong);
+}
+
+@media (max-width: 560px) {
+  .sa-metastrip > span + span {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+/* --- Stacked cards. From the stacked code windows: a deck, with the live one
+   on top and the rest showing as edges behind it. ------------------------- */
+.sa-stack {
+  position: relative;
+  padding-top: 10px;
+}
+
+.sa-stack::before,
+.sa-stack::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  background: var(--sa-surface);
+  pointer-events: none;
+}
+
+.sa-stack::before {
+  top: 0;
+  height: 26px;
+  opacity: 0.55;
+}
+
+.sa-stack::after {
+  top: 5px;
+  left: 8px;
+  right: 8px;
+  height: 26px;
+  opacity: 0.8;
+}
+
+.sa-stack > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* The lit edge on the live card, the one colour moment in the deck. */
+.sa-rescard.is-lead {
+  border-color: rgba(194, 80, 28, 0.4);
+  box-shadow: var(--sa-shadow), inset 3px 0 0 var(--sa-action);
+}
+
+/* --- Flow map. From the wired node map: stages, connectors, status dots.
+   Straight rules with rounded joins rather than SVG curves, so it reflows on a
+   phone into a vertical spine instead of scrolling sideways. --------------- */
+.sa-flow {
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  counter-reset: sa-flow;
+  background: var(--sa-surface-2);
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  padding: clamp(18px, 3vw, 30px) clamp(14px, 2.5vw, 22px);
+}
+
+.sa-flownode {
+  position: relative;
+  counter-increment: sa-flow;
+  padding: 0 14px;
+}
+
+/* The wire. It has to land on the dots, not on the column centres: the dot is
+   left-aligned inside each node, so a 50%-to--50% span drew a line that floated
+   past the last dot and met none of them. The dot sits at 14px of padding plus
+   its own 9px radius, so the wire starts at 23px and runs exactly one column
+   width, which is the next dot's centre. */
+.sa-flownode::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  left: 23px;
+  width: 100%;
+  height: 1.5px;
+  background: var(--sa-line-strong);
+  z-index: 1;
+}
+
+.sa-flownode:last-child::before {
+  display: none;
+}
+
+.sa-flow-dot {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid var(--sa-line-strong);
+  background: var(--sa-surface);
+  margin-bottom: 14px;
+}
+
+.sa-flow-dot::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  border-radius: 50%;
+  background: var(--sa-line-strong);
+}
+
+.sa-flownode.is-on .sa-flow-dot {
+  border-color: var(--sa-action);
+}
+
+.sa-flownode.is-on .sa-flow-dot::after {
+  background: var(--sa-action);
+}
+
+.sa-flownode.is-urgent .sa-flow-dot {
+  border-color: var(--sa-urgent);
+}
+
+.sa-flownode.is-urgent .sa-flow-dot::after {
+  background: var(--sa-urgent);
+}
+
+.sa-flow-k {
+  display: block;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+  margin-bottom: 6px;
+}
+
+.sa-flow-k::before {
+  content: counter(sa-flow, decimal-leading-zero) " \00b7 ";
+  color: var(--sa-action);
+}
+
+.sa-flownode h3 {
+  margin: 0 0 6px;
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.25;
+}
+
+.sa-flownode p {
+  margin: 0;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--sa-slate);
+}
+
+.sa-flow-who {
+  display: inline-block;
+  margin-top: 10px;
+}
+
+@media (max-width: 720px) {
+  .sa-flow {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .sa-flownode {
+    padding: 0 0 0 32px;
+  }
+
+  /* The wire turns into a vertical spine. */
+  .sa-flownode::before {
+    top: 20px;
+    bottom: -30px;
+    left: 8px;
+    right: auto;
+    width: 1.5px;
+    height: auto;
+  }
+
+  .sa-flow-dot {
+    position: absolute;
+    left: 0;
+    top: 1px;
+    margin: 0;
+  }
+}
+
+/* --- Directory card numbering. From the SIMPLIFY BUILDS #2 card: a mono
+   eyebrow on the left, the item number on the right, and a real detail from
+   the build sitting above the words. -------------------------------------- */
+/* The directory gets its own ground so it separates from the marketing
+   sections above and below it, which are paper and near-paper. */
+.sa-dirsection {
+  background: var(--sa-canvas);
+  border-top: 1px solid var(--sa-line);
+  border-bottom: 1px solid var(--sa-line);
+}
+
+.sa-dirnum {
+  font-family: var(--mono);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: var(--sa-mute);
+}
+
+.sa-dircard-preview {
+  display: block;
+  border: 1px solid var(--sa-line);
+  border-radius: var(--sa-r);
+  background: var(--sa-canvas);
+  padding: 18px 16px;
+  overflow: hidden;
+}
+
+/* A miniature of the thing itself: a worklist row, a score dial, a page edge.
+   Small, honest, and drawn from the same tokens as the real build. */
+.sa-mini {
+  display: grid;
+  gap: 6px;
+}
+
+.sa-mini-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--sa-mute);
+  font-variant-numeric: tabular-nums;
+}
+
+.sa-mini-row i {
+  display: block;
+  height: 6px;
+  border-radius: 3px;
+  background: var(--sa-line-strong);
+  flex: 1;
+}
+
+.sa-mini-row i.is-on {
+  background: var(--sa-action);
+}
+
+.sa-mini-row i.is-urgent {
+  background: var(--sa-urgent);
+}
+
+.sa-mini-row b {
+  color: var(--sa-ink);
+  font-weight: 600;
+}
+
+/* ---------------------------------------------------------------------------
+   10. MOTION
+   --------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  .sa *,
+  .sa-drawer,
+  .sa-scrim,
+  .sa-progress i,
+  .sa-steps-track i {
+    transition-duration: 1ms !important;
+    animation-duration: 1ms !important;
+  }
+}

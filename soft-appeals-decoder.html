@@ -9,6 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=30">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <link rel="stylesheet" href="/assets/soft-appeals.css?v=1">
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
@@ -18,99 +19,133 @@
   <meta property="og:image" content="https://frimpomaasync.com/og-soft-appeals.png">
   <meta name="twitter:card" content="summary_large_image">
   <style>
-    /* The code reference. Scoped to this page, system fonts only, no remote requests. */
-    .dec { max-width: 820px; margin: 0 auto; }
-    .dec-box {
-      border: 1px solid var(--line); border-radius: 20px; background: var(--paper);
-      padding: clamp(22px, 4vw, 34px);
-      box-shadow: 0 26px 60px rgba(16, 20, 38, .07);
+    /* The Denial Code Reference, reshelled 2026-08-17 onto the reference-app
+       shell in /assets/soft-appeals.css. The lookup itself is unchanged and
+       still runs entirely in the browser.
+
+       Retired with the old shell: .dec, .dec-box, .dec-label, .dec-input,
+       .dec-chips, .dec-note, .dec-out. The search, the chips and the results
+       column are the shell's now. */
+
+    /* Result card internals. The stack behind it is the shell's .sa-stack. */
+    .dec-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 14px; }
+    .dec-code { font-family: var(--mono); font-size: 16px; font-weight: 700; letter-spacing: .02em; }
+    .dec-pill {
+      padding: 4px 11px; border-radius: var(--sa-r-pill); border: 1px solid var(--sa-line-strong);
+      font-family: var(--mono); font-size: 9.5px; letter-spacing: .11em; text-transform: uppercase;
+      color: var(--sa-mute); background: var(--sa-surface-2); white-space: nowrap;
     }
-    .dec-label { display: block; font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 10px; }
-    .dec-input {
-      width: 100%; box-sizing: border-box;
-      font: 400 18px/1.4 var(--serif);
-      color: var(--ink); background: var(--paper-soft, #F8F8F9);
-      border: 1px solid var(--line); border-radius: 12px;
-      padding: 15px 18px; outline: none;
+    .dec-pill.act { border-color: rgba(194, 80, 28, .38); background: var(--sa-action-soft); color: #963c14; }
+    .dec-pill.chk { border-color: rgba(42, 95, 168, .28); background: var(--sa-info-soft); color: #204b85; }
+    .dec-pill.pat { border-color: rgba(31, 122, 77, .28); background: var(--sa-ok-soft); color: #17603c; }
+
+    .dec-plain { font-size: 16px; line-height: 1.65; color: var(--sa-ink); margin: 0 0 16px; }
+    .dec-row { padding-top: 13px; border-top: 1px solid var(--sa-line); margin-top: 13px; }
+    .dec-k { font-family: var(--mono); font-size: 9.5px; letter-spacing: .13em; text-transform: uppercase; color: var(--sa-mute); margin-bottom: 6px; }
+    .dec-v { margin: 0; font-size: 14.5px; line-height: 1.65; color: var(--sa-slate); }
+
+    /* The sample appeal opening. It is the one block on the card a user copies,
+       so it looks like something to copy. */
+    .dec-letter {
+      margin-top: 16px; padding: 15px 17px; background: var(--sa-surface-2);
+      border-left: 3px solid var(--sa-action); border-radius: 0 var(--sa-r) var(--sa-r) 0;
     }
-    .dec-input:focus { border-color: var(--copper, #C2501C); }
-    .dec-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
-    .dec-chip {
-      font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 11px; letter-spacing: .08em;
-      color: var(--ink-soft); background: none; border: 1px solid var(--line); border-radius: 999px;
-      padding: 7px 13px; cursor: pointer; transition: border-color .2s ease, color .2s ease;
+    .dec-letter p { margin: 0; font-size: 14.5px; line-height: 1.7; color: var(--sa-ink); font-style: italic; }
+
+    .dec-cta {
+      margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--sa-line);
+      display: flex; gap: 14px; align-items: center; flex-wrap: wrap;
     }
-    .dec-chip:hover, .dec-chip:focus-visible { border-color: var(--copper, #C2501C); color: var(--copper, #C2501C); }
-    .dec-note { margin: 14px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--ink-faint); }
-    .dec-out { margin-top: 18px; }
-    .dec-card { border: 1px solid var(--line); border-radius: 20px; background: var(--paper); overflow: hidden; }
-    .dec-card-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 18px clamp(18px, 3.5vw, 28px); border-bottom: 1px solid var(--line); }
-    .dec-code { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 13px; letter-spacing: .1em; color: var(--ink); }
-    .dec-pill { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
-    .dec-pill.correct { color: #FFFFFF; background: var(--copper, #C2501C); }
-    .dec-pill.appeal { color: #FFFFFF; background: var(--ink, #101426); }
-    .dec-pill.review { color: var(--ink-soft); background: var(--paper-soft, #F8F8F9); border: 1px solid var(--line); }
-    .dec-pill.depends { color: var(--copper, #C2501C); background: rgba(194, 80, 28, .08); }
-    .dec-card-in { padding: clamp(18px, 3.5vw, 28px); }
-    .dec-plain { margin: 0; font-family: var(--serif); font-size: clamp(21px, 2.8vw, 27px); line-height: 1.25; letter-spacing: -.01em; }
-    .dec-row { margin: 18px 0 0; }
-    .dec-k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 6px; }
-    .dec-v { margin: 0; font-size: 14.5px; line-height: 1.65; color: var(--ink-soft); }
-    .dec-letter { margin: 18px 0 0; padding: 16px 18px; border-left: 3px solid var(--copper, #C2501C); background: rgba(194, 80, 28, .05); border-radius: 0 12px 12px 0; }
-    .dec-letter p { margin: 0; font-size: 13.5px; line-height: 1.7; color: var(--ink-soft); font-style: italic; }
-    .dec-cta { padding: 18px clamp(18px, 3.5vw, 28px); border-top: 1px solid var(--line); background: var(--paper-soft, #F8F8F9); }
-    .dec-cta p { margin: 0 0 12px; font-size: 13.5px; line-height: 1.65; color: var(--ink-soft); }
-    .dec-miss { border: 1px dashed var(--line); border-radius: 16px; padding: 20px; font-size: 14px; line-height: 1.65; color: var(--ink-soft); }
-    /* Where an appeal window actually comes from. Ordered, because the order is
-       the point: the notice in your hand outranks anything published here. */
-    .src { max-width: 780px; margin: 0 auto; padding: 0; list-style: none; counter-reset: src; }
-    .src li {
-      position: relative; counter-increment: src;
-      padding: 18px 0 18px 56px; border-bottom: 1px solid var(--line);
+    .dec-cta p { margin: 0; flex: 1 1 260px; font-size: 13.5px; line-height: 1.6; color: var(--sa-slate); }
+
+    .dec-miss {
+      padding: 22px; border: 1px dashed var(--sa-line-strong); border-radius: var(--sa-r-lg);
+      background: var(--sa-surface); font-size: 15px; line-height: 1.65; color: var(--sa-slate);
     }
-    .src li:last-child { border-bottom: 0; }
-    .src li::before {
-      content: counter(src, decimal-leading-zero);
-      position: absolute; left: 0; top: 20px;
-      font-family: var(--mono, ui-monospace, Menlo, monospace);
-      font-size: 11px; letter-spacing: .1em; color: var(--copper, #C2501C);
-    }
-    .src h3 { margin: 0 0 6px; font-family: var(--serif); font-weight: 400; font-size: clamp(18px, 2.1vw, 21px); line-height: 1.25; }
-    .src p { margin: 0; font-size: 14.5px; line-height: 1.62; color: var(--ink-soft); }
-    @media (max-width: 480px) { .src li { padding-left: 42px; } }
   </style>
 </head>
-<body data-sk-sections="Hero,The reference,Prefixes,Deadlines,What this is,Close" data-sk-bar="Look up any denial code · plain English · no patient information needed." data-sk-biz="healthcare organization">
+<body data-sk-sections="The reference,Prefixes,Deadlines,What this is,Close" data-sk-bar="Look up any denial code · plain English · no patient information needed." data-sk-biz="healthcare organization">
   <main>
 
-    <section class="hero compact-hero" data-screen-label="Hero">
-      <div class="wrap">
-        <div class="eyebrow">Soft Appeals · the denial code reference · free</div>
-        <h1>Read me one code <em>off any denial on your desk.</em></h1>
-        <p class="hero-copy">A denial code tells you the reason the payer states. It does not settle what happens next on its own. The plan, the contract, the documentation behind the claim, the timing and the circumstances of that particular claim all bear on whether anything is recoverable. What a code gives you is a starting point and a short list of things worth checking. Look one up below. No patient information is needed and none is asked for.</p>
-      </div>
-    </section>
+    <!-- Reshelled 2026-08-17 into the reference-app shell. The lookup worked
+         already: search, chips, result card, what-to-check-next. What it did
+         not have was a stage. The search sat below a hero, in a card, in a
+         marketing section, so the one thing a user came to do was the third
+         thing on the page. It owns the screen now. -->
+    <section class="sa" data-screen-label="The reference">
+      <div class="sa-app">
 
-    <section class="section soft" data-screen-label="The reference">
-      <div class="wrap">
-        <div class="dec">
-          <div class="dec-box" data-reveal>
-            <label class="dec-label" for="dec-q">The code on the EOB or remittance · like CO-16 or PR-204</label>
-            <input class="dec-input" id="dec-q" type="text" inputmode="search" autocomplete="off" spellcheck="false" placeholder="Type a code, or words like &quot;prior authorization&quot;">
-            <div class="dec-chips" aria-label="Common denial codes">
-              <button class="dec-chip" type="button">CO-16</button>
-              <button class="dec-chip" type="button">CO-29</button>
-              <button class="dec-chip" type="button">CO-50</button>
-              <button class="dec-chip" type="button">CO-97</button>
-              <button class="dec-chip" type="button">CO-197</button>
-              <button class="dec-chip" type="button">CO-119</button>
-              <button class="dec-chip" type="button">PR-204</button>
-              <button class="dec-chip" type="button">CO-45</button>
-            </div>
-            <p class="dec-note">Codes only, never patient details. This page runs the lookup in your browser. What you type is not transmitted, stored or logged, and the page loads no analytics or third-party tracking scripts.</p>
+        <div class="sa-ref-hero">
+          <p class="sa-label" style="margin-bottom:12px">Soft Appeals &#183; <span class="sa-label-b">free denial code reference</span></p>
+          <h1>Read me one code off any denial on your desk.</h1>
+          <p>A denial code tells you the reason the payer states. It does not settle what happens next on its own. What a code gives you is a starting point and a short list of things worth checking.</p>
+
+          <div class="sa-searchbox">
+            <label class="sr-only" for="dec-q">The code on the EOB or remittance</label>
+            <input class="sa-input" id="dec-q" type="search" inputmode="search" autocomplete="off" spellcheck="false"
+                   placeholder="CO-16, PR-204, or words like prior authorization">
+            <span class="sa-searchbox-mark" aria-hidden="true">23 codes</span>
           </div>
-          <div class="dec-out" id="dec-out" aria-live="polite"></div>
+
+          <div class="sa-chips" aria-label="Common denial codes">
+            <button class="sa-chip dec-chip" type="button">CO-16</button>
+            <button class="sa-chip dec-chip" type="button">CO-29</button>
+            <button class="sa-chip dec-chip" type="button">CO-50</button>
+            <button class="sa-chip dec-chip" type="button">CO-97</button>
+            <button class="sa-chip dec-chip" type="button">CO-197</button>
+            <button class="sa-chip dec-chip" type="button">CO-119</button>
+            <button class="sa-chip dec-chip" type="button">PR-204</button>
+            <button class="sa-chip dec-chip" type="button">CO-45</button>
+          </div>
+
+          <p class="sa-note" style="max-width:64ch;margin:20px auto 0">Codes only, never patient details. The lookup runs in your browser. What you type is not transmitted, stored or logged, and this page loads no analytics or third-party tracking.</p>
         </div>
+
+        <div class="sa-ref-body">
+          <div class="sa-ref-grid">
+
+            <div>
+              <div class="sa-stack" id="dec-out" aria-live="polite"></div>
+              <div class="sa-panel" id="dec-empty">
+                <div class="sa-panel-h"><h2>Start with a code</h2></div>
+                <div class="sa-panel-b">
+                  <p class="sa-note" style="margin:0 0 14px">Type a code above, or pick one of these. Every entry gives you the plain-English meaning, what usually decides the outcome, and what to check next.</p>
+                  <div class="sa-chips" style="justify-content:flex-start;margin:0" id="dec-all"></div>
+                </div>
+              </div>
+            </div>
+
+            <aside class="sa-side">
+              <div class="sa-panel">
+                <div class="sa-panel-h"><h2>What the prefix means</h2></div>
+                <div class="sa-panel-b">
+                  <dl class="sa-dl">
+                    <dt>CO</dt><dd>Contractual obligation. The payer is attributing the amount to your participation agreement.</dd>
+                    <dt>PR</dt><dd>Patient responsibility, as coded. PR-1, PR-2 and PR-3 are ordinary cost sharing, not denials.</dd>
+                    <dt>OA &#183; PI</dt><dd>Other adjustment and payer initiated. PI is often a reason to look closer rather than accept the posting.</dd>
+                  </dl>
+                  <p class="sa-note">The prefix is the payer's classification. What it actually permits is governed by your contract and the member's plan.</p>
+                </div>
+              </div>
+
+              <div class="sa-panel">
+                <div class="sa-panel-h"><h2>What a code cannot tell you</h2></div>
+                <div class="sa-panel-b">
+                  <p class="sa-note" style="margin:0">Your filing deadline. That comes from the payer, the plan, the contract and the circumstances of that claim, never from a website. Confirm it before anything is submitted.</p>
+                </div>
+              </div>
+
+              <div class="sa-panel">
+                <div class="sa-panel-b">
+                  <p style="margin:0 0 14px;font-size:14.5px;line-height:1.6;color:var(--sa-slate)">Reading the code is the first step. Pulling the payer policy, citing the record, submitting with your approval and tracking the deadline is the work.</p>
+                  <a class="sa-btn is-action" href="/soft-appeals-start" style="width:100%">Review 20 denials free &#8594;</a>
+                </div>
+              </div>
+            </aside>
+
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -370,12 +405,12 @@
 
     function render(d) {
       var html =
-        '<div class="dec-card" data-code="' + esc(d.code) + '">' +
+        '<div class="sa-rescard is-lead" data-code="' + esc(d.code) + '">' +
         '<div class="dec-card-top">' +
-        '<span class="dec-code">' + esc(d.code) + ' · ' + esc(d.name) + '</span>' +
+        '<span class="dec-code">' + esc(d.code) + ' &#183; ' + esc(d.name) + '</span>' +
         '<span class="dec-pill ' + d.bucket + '">' + esc(d.label) + '</span>' +
         '</div>' +
-        '<div class="dec-card-in">' +
+        '<div>' +
         '<p class="dec-plain">' + esc(d.plain) + '</p>' +
         '<div class="dec-row"><div class="dec-k">What determines the outcome</div><p class="dec-v">' + esc(d.decides) + '</p></div>' +
         '<div class="dec-row"><div class="dec-k">What to check next</div><p class="dec-v">' + esc(d.move) + '</p></div>' +
@@ -386,7 +421,7 @@
         '</div>' +
         '<div class="dec-cta">' +
         '<p>Pulling the payer\'s policy, citing the record, submitting with your approval and proof of delivery, tracking the deadlines and reconciling the outcome: that is the service. The complimentary review of your 20 most recent denials costs nothing, and the assessment is yours whether or not you continue.</p>' +
-        '<a class="button" href="/soft-appeals-start">Request your complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></a>' +
+        '<a class="sa-btn is-action" href="/soft-appeals-start">Request your complimentary review &#8594;</a>' +
         '</div>' +
         '</div>';
       out.innerHTML = html;
@@ -422,9 +457,14 @@
     }
 
     var timer = null;
+    var emptyPanel = document.getElementById("dec-empty");
+
     function run() {
       var q = input.value.trim();
-      if (!q) { out.innerHTML = ""; return; }
+      /* The starting panel and the result are never on screen together: one of
+         them is always the answer to "what am I looking at". */
+      if (!q) { out.innerHTML = ""; emptyPanel.hidden = false; return; }
+      emptyPanel.hidden = true;
       var hit = findByCode(q);
       if (!hit) {
         var words = findByWords(q);
@@ -439,7 +479,18 @@
     });
     input.addEventListener("keydown", function (e) { if (e.key === "Enter") { if (timer) clearTimeout(timer); run(); } });
 
-    var chips = document.querySelectorAll(".dec-chips .dec-chip");
+    /* Built from CODES, not typed, so the list on screen is always exactly
+       what the lookup can answer. */
+    var allBox = document.getElementById("dec-all");
+    if (allBox) {
+      allBox.innerHTML = DATA.map(function (d) {
+        return '<button class="sa-chip dec-chip" type="button">' + esc(d.code) + "</button>";
+      }).join("");
+      var mark = document.querySelector(".sa-searchbox-mark");
+      if (mark) mark.textContent = DATA.length + " codes";
+    }
+
+    var chips = document.querySelectorAll(".dec-chip");
     for (var c = 0; c < chips.length; c++) {
       chips[c].addEventListener("click", function () {
         input.value = this.textContent;
@@ -452,5 +503,6 @@
 
   <script type="module" src="/assets/journey.js?v=7"></script>
   <script src="/fsnav.js?v=854" defer></script>
+  <script src="/assets/soft-appeals.js?v=1" defer></script>
 </body>
 </html>

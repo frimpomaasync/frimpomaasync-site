@@ -76,7 +76,10 @@ test("the privacy contact is a domain address, never a personal mailbox", () => 
 });
 
 test("every status badge uses one of the four declared labels", () => {
-  const badges = [...trust.matchAll(/<span class="st[^"]*">([^<]+)<\/span>/g)].map((m) => m[1].trim());
+  /* Selector updated 2026-08-17 with the portal shell: the status chip moved
+     from <span class="st doc"> to <span class="sa-badge is-documented">. Same
+     four labels, same rule that all four must appear. */
+  const badges = [...trust.matchAll(/<span class="sa-badge [^"]*">([^<]+)<\/span>/g)].map((m) => m[1].trim());
   const allowed = new Set(["Documented", "In the agreement", "On request", "Under review"]);
   assert.ok(badges.length >= 20, "badges present: " + badges.length);
   for (const b of badges) assert.ok(allowed.has(b), "unexpected status label: " + b);
@@ -84,9 +87,10 @@ test("every status badge uses one of the four declared labels", () => {
 });
 
 test("every Under review item names what settles it", () => {
-  const items = [...trust.matchAll(/<div class="tr-item">([\s\S]*?)<\/div>\s*<\/div>|<div class="tr-item">([\s\S]*?)(?=<div class="tr-item">|<\/div>\s*<\/div>)/g)]
+  /* Selector updated 2026-08-17: each item is a <details> now, not a div. */
+  const items = [...trust.matchAll(/<details class="sa-qa"[\s\S]*?<\/details>/g)]
     .map((m) => m[0])
-    .filter((chunk) => chunk.includes("st rev"));
+    .filter((chunk) => chunk.includes("is-review"));
   assert.ok(items.length >= 2, "found the under-review items: " + items.length);
   for (const item of items) {
     const body = item.replace(/<[^>]+>/g, " ").toLowerCase();
@@ -119,7 +123,19 @@ test("the deep-link handler matches existing checkboxes rather than injecting", 
 test("the page collects nothing and accepts no uploads", () => {
   assert.ok(!/<form/i.test(trust), "no form on the Trust Room itself");
   assert.ok(!/type="file"/i.test(trust), "no upload field");
-  assert.ok(!/<input/i.test(trust), "no input of any kind");
+  /* Loosened 2026-08-17, deliberately and narrowly. The portal shell added a
+     search box so a reviewer can find one of 26 answers without scrolling the
+     whole page. The original rule was "no <input> at all", which was a proxy
+     for the real contract: nothing on this page can send anything anywhere.
+     That contract is now stated directly. A search field with no name, no
+     form around it and nothing to submit to cannot collect. Anything else
+     still fails. */
+  const inputs = [...trust.matchAll(/<input\b[^>]*>/gi)].map((m) => m[0]);
+  for (const el of inputs) {
+    assert.match(el, /type="search"/i, "the only input allowed is the client-side search: " + el);
+    assert.ok(!/\bname=/i.test(el), "a search field must carry no name: " + el);
+  }
+  assert.ok(!/<button[^>]*type="submit"/i.test(trust), "nothing to submit");
   assert.ok(lower.includes("no patient information"), "states that no PHI is needed");
 });
 

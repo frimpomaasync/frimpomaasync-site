@@ -9,6 +9,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=30">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <link rel="stylesheet" href="/assets/soft-appeals.css?v=1">
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
@@ -204,8 +205,15 @@
         <form class="form-shell" name="soft-appeals-start" data-qual-form data-phi-guard data-success="/soft-appeals-start-thanks" action="https://formspree.io/f/mnjkqydb" method="post">
           <input type="hidden" name="_subject" value="Soft Appeals denial review request">
           <input type="hidden" name="source" value="soft-appeals-start">
+          <p class="sa-steps" id="wz-head">
+            <span id="wz-n">Step 1 of 4</span>
+            <span class="sa-steps-track" aria-hidden="true"><i id="wz-bar"></i></span>
+            <span id="wz-name">Your organization</span>
+          </p>
+
           <div class="form-grid-fields">
 
+            <div class="wz-step" data-step="1">
             <label class="field">Organization name
               <input type="text" name="organization" autocomplete="organization" required>
             </label>
@@ -241,6 +249,7 @@
                 <option>Other healthcare provider</option>
               </select>
             </label>
+            </div><div class="wz-step" data-step="2" hidden>
             <label class="field">Roughly how many denied claims are unresolved?
               <select name="denial_volume" required>
                 <option value="">Choose a range</option>
@@ -288,6 +297,7 @@
               <p class="field-note">Payer names only. No patient or claim-specific information.</p>
             </label>
 
+            </div><div class="wz-step" data-step="3" hidden>
             <fieldset class="field full">
               <legend>What types of denials are you seeing?</legend>
               <div class="checkgrid">
@@ -341,6 +351,7 @@
               <p class="field-note">Flag it here rather than by sending a claim. Deadlines get looked at first.</p>
             </fieldset>
 
+            </div><div class="wz-step" data-step="4" hidden>
             <fieldset class="field full">
               <legend>What would make this review useful to you?</legend>
               <div class="checkgrid">
@@ -359,12 +370,18 @@
               <textarea name="context" data-phi-check placeholder="Business-level context only. What has been tried, what keeps stalling, who owns the work today."></textarea>
               <p class="field-note">No patient information, and no claim documents. There is no upload field on this page on purpose.</p>
             </label>
+            </div>
 
           </div>
 
           <div class="guard" data-phi-guard-msg aria-live="polite"></div>
 
-          <button class="button" type="submit" style="margin-top:26px">Request my complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></button>
+          <div class="sa-nav" id="wz-nav">
+            <button class="sa-btn" type="button" id="wz-back" hidden>Back</button>
+            <span class="sa-nav-hint" id="wz-hint">Business-level answers only</span>
+            <button class="sa-btn is-action" type="button" id="wz-next">Next</button>
+            <button class="button" type="submit" id="wz-send" hidden>Request my complimentary review <span class="button-arrow" aria-hidden="true">&#8594;</span></button>
+          </div>
           <p class="form-status" data-form-status aria-live="polite"></p>
           <p class="small-note">Submitting this form requests an initial business-level review of fit. It does not create a recovery engagement, and it does not authorize Soft Appeals to access or submit patient information.</p>
           <noscript>Email <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a> with your organization name, role and a business-level description of the denial situation. Do not attach patient information.</noscript>
@@ -667,6 +684,104 @@
         return hits.filter(function (h, i) { return hits.indexOf(h) === i; });
       }
 
+      /* -------------------------------------------------------------------
+         The wizard, added 2026-08-17.
+
+         Three things had to stay exactly as they were, and this is built
+         around them rather than over them.
+
+         1. Every field stays in the DOM the whole time. Steps are hidden, never
+            removed, because journey.js builds a FormData from the whole form at
+            submit. Remove a step and its answers vanish from the email.
+         2. The PHI guard above still runs first. It is registered on submit in
+            the CAPTURE phase, this block registers after it in the same phase,
+            and journey.js listens in the bubble phase. That order is what lets
+            the guard stop a submission before anything is sent.
+         3. A required field that is empty AND hidden makes the browser refuse
+            to submit with nothing on screen to explain why. Two defences: Next
+            will not advance past an incomplete step, and if a submit somehow
+            arrives invalid, every step is revealed first so the browser can
+            point at the field it is unhappy with.
+         ------------------------------------------------------------------- */
+      var steps = [].slice.call(form.querySelectorAll('.wz-step'));
+      if (steps.length) {
+        var NAMES = ['Your organization', 'The denials', 'Patterns and timing', 'What you want back'];
+        var at = 0;
+        var nEl = document.getElementById('wz-n');
+        var barEl = document.getElementById('wz-bar');
+        var nameEl = document.getElementById('wz-name');
+        var backEl = document.getElementById('wz-back');
+        var nextEl = document.getElementById('wz-next');
+        var sendEl = document.getElementById('wz-send');
+        var hintEl = document.getElementById('wz-hint');
+
+        function paint() {
+          steps.forEach(function (st, i) { st.hidden = i !== at; });
+          nEl.textContent = 'Step ' + (at + 1) + ' of ' + steps.length;
+          nameEl.textContent = NAMES[at] || '';
+          barEl.style.width = Math.round(((at + 1) / steps.length) * 100) + '%';
+          backEl.hidden = at === 0;
+          nextEl.hidden = at === steps.length - 1;
+          sendEl.hidden = at !== steps.length - 1;
+          hintEl.textContent = at === steps.length - 1
+            ? 'Nothing is sent until you press the button'
+            : 'Business-level answers only';
+        }
+
+        /* Only the visible step is validated, and only its own controls. */
+        function stepOk() {
+          var bad = null;
+          [].slice.call(steps[at].querySelectorAll('input, select, textarea')).forEach(function (f) {
+            if (!bad && !f.checkValidity()) bad = f;
+          });
+          if (bad) { bad.reportValidity(); return false; }
+          return true;
+        }
+
+        function goTo(i) {
+          at = Math.max(0, Math.min(steps.length - 1, i));
+          paint();
+          var top = document.getElementById('form');
+          var nav = document.getElementById('fs-nav');
+          var navH = nav && /sticky|fixed/.test(getComputedStyle(nav).position)
+            ? nav.getBoundingClientRect().height : 0;
+          window.scrollTo({
+            top: Math.max(0, window.scrollY + top.getBoundingClientRect().top - navH),
+            behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+          });
+        }
+
+        nextEl.addEventListener('click', function () { if (stepOk()) goTo(at + 1); });
+        backEl.addEventListener('click', function () { goTo(at - 1); });
+
+        /* Enter inside a field advances rather than submitting from step one. */
+        form.addEventListener('keydown', function (e) {
+          if (e.key !== 'Enter') return;
+          if (e.target.tagName === 'TEXTAREA') return;
+          if (at === steps.length - 1) return;
+          e.preventDefault();
+          if (stepOk()) goTo(at + 1);
+        });
+
+        /* The real safety net, and it has to be a CLICK handler rather than a
+           submit handler. When a required field is empty the browser never
+           fires submit at all: it runs its own validation first and tries to
+           focus the offending control. If that control is inside a hidden step
+           it cannot be focused, so the button does nothing and says nothing.
+           Catching the click first means every step is on screen by the time
+           the browser looks, and the message lands next to the real field. */
+        sendEl.addEventListener('click', function () {
+          if (form.checkValidity()) return;
+          steps.forEach(function (st) { st.hidden = false; });
+          nEl.textContent = 'All four steps';
+          nameEl.textContent = 'Something is still missing';
+          backEl.hidden = true;
+          nextEl.hidden = true;
+        }, true);
+
+        paint();
+      }
+
       form.addEventListener('submit', function (e) {
         var ok = msg.querySelector('input[type=checkbox]');
         if (ok && ok.checked) return;
@@ -687,5 +802,6 @@
 
   <script type="module" src="/assets/journey.js?v=7"></script>
   <script src="/fsnav.js?v=854" defer></script>
+  <script src="/assets/soft-appeals.js?v=1" defer></script>
 </body>
 </html>
