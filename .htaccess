@@ -86,6 +86,12 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.+)$ $1.html [L]
 
+# The hero loop ships as WebM as well as MP4; make sure the host labels it.
+<IfModule mod_mime.c>
+  AddType video/webm .webm
+  AddType image/webp .webp
+</IfModule>
+
 # Custom 404. Replaces the host's generic error page, keeps visitors on the site.
 ErrorDocument 404 /404.html
 
@@ -102,7 +108,7 @@ ErrorDocument 404 /404.html
 
   # The reverse for everything a page pulls in. Each reference carries a ?v=, so
   # a change always arrives as a new URL and the old one can be held for good.
-  <FilesMatch "\.(css|js|jpg|jpeg|png|svg|webp|mp4|vtt|pdf|woff2?)$">
+  <FilesMatch "\.(css|js|jpg|jpeg|png|svg|webp|mp4|webm|vtt|pdf|woff2?)$">
     Header set Cache-Control "public, max-age=31536000"
   </FilesMatch>
 </IfModule>

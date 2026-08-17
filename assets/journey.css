@@ -2190,6 +2190,134 @@ button.button.secondary {
   }
 }
 
+/* ---------- 2b. the cinematic loop hero (home only), 2026-08-17 ---------- */
+
+/* The frame carries the entrance zoom and the poster as a background, so the
+   hero is never blank: no script, no video, slow network, the still is there. */
+.vh-frame {
+  overflow: hidden;
+  background-image: url("/assets/hero/maze-hero-desktop.jpg");
+  background-position: 50% 50%;
+}
+
+@media (max-width: 760px) {
+  .vh-frame {
+    background-image: url("/assets/hero/maze-hero-mobile.jpg");
+  }
+}
+
+.vh-video {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  background: transparent;
+}
+
+/* Headline in the heavy condensed caps she picked: white, tight, no italics.
+   System faces only. Mac + iPhone get Helvetica Neue Condensed Black or Avenir
+   Next Condensed Heavy, Windows gets Impact, Android gets its condensed sans. */
+.photo-hero .vh-title {
+  margin: 0 0 clamp(18px, 2.2vw, 28px);
+  color: #ffffff;
+  font-family: "HelveticaNeue-CondensedBlack", "Helvetica Neue Condensed Black",
+    "Avenir Next Condensed", "AvenirNextCondensed-Heavy", Impact,
+    "Roboto Condensed", "Arial Narrow", "Franklin Gothic Medium",
+    system-ui, sans-serif;
+  font-weight: 900;
+  font-stretch: condensed;
+  font-style: normal;
+  font-synthesis: none;
+  font-size: clamp(64px, 8.6vw, 132px);
+  letter-spacing: -.01em;
+  line-height: .9;
+  text-transform: uppercase;
+  text-shadow: 0 6px 44px rgba(6, 10, 22, .55);
+}
+
+.photo-hero .vh-title .hero-line {
+  display: block;
+  font-style: normal;
+}
+
+/* Wider column than the photo hero: condensed caps need the room to hold two lines.
+   Wide screens only, so the site's own 100% column below 1120px keeps winning. */
+@media (min-width: 1121px) {
+  .vh-hero .photo-hero-copy {
+    width: min(920px, 78%);
+  }
+}
+
+.vh-hero .photo-hero-sub {
+  max-width: 30em;
+  color: rgba(255, 255, 255, .84);
+  font-family: var(--sans);
+  font-size: clamp(17px, 1.5vw, 21px);
+  font-style: normal;
+  font-weight: 400;
+  line-height: 1.5;
+  text-shadow:
+    0 1px 16px rgba(6, 10, 22, .85),
+    0 0 2px rgba(6, 10, 22, .6);
+}
+
+.vh-hero .photo-hero-sub .solid {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* The one control the loop must have: pause it. Sits in the clean corner. */
+.vh-motion {
+  position: absolute;
+  top: 18px;
+  right: 22px;
+  z-index: 8;
+  padding: 8px 14px;
+  border: 1px solid rgba(255, 255, 255, .3);
+  border-radius: 999px;
+  background: rgba(6, 10, 20, .45);
+  color: rgba(255, 255, 255, .86);
+  font: 11px/1 var(--mono);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+}
+
+.vh-motion:hover,
+.vh-motion:focus-visible {
+  border-color: #ffffff;
+  color: #ffffff;
+  outline: none;
+}
+
+.vh-motion[hidden] {
+  display: none;
+}
+
+@media (max-width: 660px) {
+  .photo-hero .vh-title {
+    font-size: clamp(50px, 15vw, 84px);
+  }
+
+  .vh-motion {
+    top: 14px;
+    right: 14px;
+    padding: 7px 11px;
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vh-frame {
+    animation: none;
+  }
+}
+
 /* ---------- 3. the nine seconds proof replay ---------- */
 
 .proof-replay {

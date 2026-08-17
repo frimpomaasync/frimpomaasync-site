@@ -8,7 +8,9 @@
   <meta name="description" content="Done-for-you automation for owner-run service businesses. Find where work is slipping, take one useful fix, and see whether SynKasa or Siesie is the right next step. Live in 7 days, or you don't pay.">
   <link rel="canonical" href="https://frimpomaasync.com/">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/assets/journey.css?v=26">
+  <link rel="preload" as="image" href="/assets/hero/maze-hero-desktop.jpg" media="(min-width: 761px)">
+  <link rel="preload" as="image" href="/assets/hero/maze-hero-mobile.jpg" media="(max-width: 760px)">
+  <link rel="stylesheet" href="/assets/journey.css?v=27">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
   <meta name="theme-color" content="#FFFFFF">
   <style>#page-leak-tool,#proof{scroll-margin-top:130px}</style>
@@ -17,7 +19,7 @@
   <meta property="og:title" content="Stop being the system">
   <meta property="og:description" content="Find the first leak, take one useful fix, and watch the right system work before you pay.">
   <meta property="og:url" content="https://frimpomaasync.com/">
-  <meta property="og:image" content="https://frimpomaasync.com/assets/hero-scene-wide.jpg">
+  <meta property="og:image" content="https://frimpomaasync.com/assets/hero/maze-hero-desktop.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">
     {
@@ -33,18 +35,31 @@
 </head>
 <body data-cinematic data-sk-sections="Hero,First fix,Nine seconds,Two systems,Different,Proof,About,Free,Practices,Guarantee,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
   <main>
-    <section class="photo-hero home-photo-hero" data-photo-hero data-screen-label="Hero">
+    <section class="photo-hero home-photo-hero vh-hero" data-photo-hero data-screen-label="Hero">
       <div class="photo-hero-parallax" data-hero-parallax aria-hidden="true">
-        <div class="photo-hero-media" style="background-image:url('/assets/hero-scene-wide.jpg')"></div>
+        <!-- The cinematic loop. Sources are assigned by JS so phones never download the desktop file.
+             autoplay muted loop playsinline stay in the markup: iOS reads them at parse time. -->
+        <div class="photo-hero-media vh-frame">
+          <video class="vh-video" id="vh-video"
+            autoplay muted loop playsinline
+            preload="metadata"
+            aria-hidden="true" tabindex="-1"
+            data-desktop-webm="/assets/hero/maze-hero-desktop.webm"
+            data-desktop-mp4="/assets/hero/maze-hero-desktop.mp4"
+            data-desktop-poster="/assets/hero/maze-hero-desktop.jpg"
+            data-mobile-webm="/assets/hero/maze-hero-mobile.webm"
+            data-mobile-mp4="/assets/hero/maze-hero-mobile.mp4"
+            data-mobile-poster="/assets/hero/maze-hero-mobile.jpg"></video>
+        </div>
       </div>
       <div class="photo-hero-angle" aria-hidden="true"></div>
       <div class="photo-hero-vert" aria-hidden="true"></div>
       <div class="photo-hero-plate" aria-hidden="true"></div>
       <div class="photo-hero-well">
         <div class="photo-hero-copy">
-          <h1>
-            <span class="hero-line" data-rise="1"><span class="copper">Stop</span> being</span>
-            <em class="hero-line" data-rise="2">the system<span class="copper">.</span></em>
+          <h1 class="vh-title">
+            <span class="hero-line" data-rise="1">Stop being</span>
+            <span class="hero-line" data-rise="2">the system<span class="copper">.</span></span>
           </h1>
           <p class="photo-hero-sub" data-rise="3">You are the booking desk, the follow-up team, and the after-hours inbox, all at once. <span class="solid">I build the one connected system that takes all three off your hands.</span> Done for you. Live in 7 days. Yours forever.</p>
           <div class="photo-hero-actions" data-rise="4">
@@ -53,6 +68,7 @@
           </div>
         </div>
       </div>
+      <button class="vh-motion" id="vh-motion" type="button" aria-pressed="true" hidden>Pause motion</button>
     </section>
 
     <section class="section soft" data-screen-label="First fix">
@@ -297,5 +313,6 @@
 
   <script type="module" src="/assets/journey.js?v=7"></script>
   <script src="/fsnav.js?v=854" defer></script>
+  <script src="/assets/hero/vh.js?v=1" defer></script>
 </body>
 </html>
