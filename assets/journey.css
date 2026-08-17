@@ -2220,18 +2220,18 @@ button.button.secondary {
 /* Headline and sub in the clean grotesk look she picked (2026-08-17, second
    pass): system sans, tight tracking, mixed case, second line softened. */
 .photo-hero .vh-title {
-  max-width: 15ch;
-  margin: 0 0 clamp(18px, 2.2vw, 28px);
+  max-width: 14ch;
+  margin: 0 0 clamp(20px, 2.6vw, 34px);
   color: #ffffff;
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Inter, "Segoe UI", Roboto, Arial, sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   font-style: normal;
-  font-size: clamp(38px, 5vw, 72px);
-  letter-spacing: -.04em;
-  line-height: 1.02;
+  font-size: clamp(52px, 7.4vw, 116px);
+  letter-spacing: -.045em;
+  line-height: .98;
   text-transform: none;
   text-shadow: 0 6px 44px rgba(6, 10, 22, .55);
-  text-wrap: balance;
+  text-wrap: normal;
 }
 
 .photo-hero .vh-title .hero-line {
@@ -2239,10 +2239,10 @@ button.button.secondary {
   font-style: normal;
 }
 
-.photo-hero .vh-title .vh-soft {
-  color: rgba(255, 255, 255, .62);
-  font-weight: 300;
-  letter-spacing: -.03em;
+/* Sampled from the route light in the footage, so the word and the line the
+   ball is following are the same red. Large bold text, 4.3:1 on the stone. */
+.photo-hero .vh-title .vh-red {
+  color: #F33229;
 }
 
 /* Wider column than the photo hero, wide screens only, so the site's own 100%
@@ -2308,8 +2308,8 @@ button.button.secondary {
 @media (max-width: 660px) {
   .photo-hero .vh-title {
     max-width: none;
-    font-size: clamp(34px, 10vw, 44px);
-    letter-spacing: -.035em;
+    font-size: clamp(46px, 14vw, 72px);
+    letter-spacing: -.04em;
   }
 
   .vh-motion {
