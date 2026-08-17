@@ -2226,7 +2226,7 @@ button.button.secondary {
   font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Inter, "Segoe UI", Roboto, Arial, sans-serif;
   font-weight: 700;
   font-style: normal;
-  font-size: clamp(52px, 7.4vw, 116px);
+  font-size: clamp(64px, 9.4vw, 152px);
   letter-spacing: -.045em;
   line-height: .98;
   text-transform: none;
@@ -2308,7 +2308,7 @@ button.button.secondary {
 @media (max-width: 660px) {
   .photo-hero .vh-title {
     max-width: none;
-    font-size: clamp(46px, 14vw, 72px);
+    font-size: clamp(52px, 16.5vw, 88px);
     letter-spacing: -.04em;
   }
 
