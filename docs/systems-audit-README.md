@@ -285,24 +285,49 @@ Two supporting fixes went with it:
   zero and every caption check silently read the first cue forever. It answers
   ranges now, which is what made the verification real rather than decorative.
 
-### The demo video itself is out of date
+### The demo video was recaptured, not re-rendered
 
-Separate from captions, and worth knowing before that video is shown to anyone
-else. On screen it still says:
+The old file was a recording of the app as it stood in July. It carried the
+retired product name on the title card, in the sidebar the whole way through
+and in its closing URL, the retired spelling of her name in the build credit,
+emojis and em dashes in the demo messages, an unsourced "industry avg is 5
+hours" on the first-reply card, and a closing line that read as a guarantee of
+a number of bookings rather than the real one.
 
-| On screen | The problem |
-|---|---|
-| "The Client Catcher" on the title card, in the app sidebar throughout, and in the closing URL | Retired product name. It is SynKasa. |
-| `FRIMPOMAASYNC.COM/CLIENT-CATCHER-DEMO` on the end card | That address 301s to `/synkasa-demo/` now, so the card sends people to a redirect. |
-| "Built, wired, and cared for by NaNa Frimpomaa" on the end card and inside the app sidebar | Retired spelling, and build credit is the domain rather than a person. |
-| Sparkle, pointing hand and raised hands in the demo messages | No emojis anywhere. |
-| Em dashes on the title card and in the messages | No em dashes anywhere. |
-| "median · industry avg is 5 hours" on the first-reply card | A statistic with no source shown. |
-| "Live in 7 days. Booking in 30. Or you don't pay." | The guarantee is live in 7 days. This reads as a guarantee of a number of bookings. |
+**Re-rendering it was not possible, and would have been the wrong fix anyway.**
+The Remotion project that made it is not on this Mac, and more to the point the
+app it filmed no longer exists: the live demo was rebuilt on 2026-08-11 and now
+says SynKasa, credits the domain, and uses a generic worked example rather than
+a named person.
 
-The captions record what the video says rather than what the site says now, and
-the file carries a NOTE at the top saying so. Rewrite it whenever the video is
-re-rendered.
+So it was recaptured from the live demo instead, which means the video is the
+real product rather than a picture of it.
+
+| | Old | New |
+|---|---|---|
+| File | `client-catcher-demo-run.mp4` | `synkasa-demo-run.mp4` |
+| Length | 49.5s | 30.5s |
+| Size | 5.1 MB | 773 KB |
+| Audio | A silent track | None at all |
+| Name on screen | Client Catcher | SynKasa |
+| Build credit | A person, retired spelling | The domain |
+
+How it was made, in case it needs doing again:
+
+1. `tests/systems_audit_server.py` serves the site locally.
+2. A Chrome CDP screencast captures real frames of a live run, with their own
+   timestamps. Playwright's own recorder wants an ffmpeg download and this Mac
+   already has one inside Remotion, so it is not used.
+3. Frames are sorted by timestamp, because CDP delivers them out of order, then
+   laid out at a constant 30fps. Any hold longer than 2.5 seconds is capped:
+   the demo pauses so a viewer can read, and those pauses are dead air in a
+   video. That alone took it from 41.5s to 30.5s.
+4. The title and end cards are rendered as real PNGs in a browser, because the
+   Remotion ffmpeg ships with most filters disabled and has no `drawtext`.
+5. The three segments are joined with the concat demuxer.
+
+The old URL is kept alive by a redirect in `.htaccess`, since the deploy
+deletes files that leave the repo.
 
 ---
 

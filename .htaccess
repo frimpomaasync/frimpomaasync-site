@@ -15,6 +15,14 @@ RewriteRule ^Som\.zip$ /som-app/ [R=301,L,NC]
 # query strings, which the redirect passes through untouched.
 RewriteRule ^client-catcher-demo(/.*)?$ /synkasa-demo/ [R=301,L,NC]
 
+# Recaptured 2026-08-17. The old demo video was a recording of the app as it
+# stood in July, before the 08-11 rebuild: it still said Client Catcher, carried
+# the retired spelling of her name, and closed on a URL that redirects. The app
+# it filmed no longer exists, so it was recaptured from the live demo rather
+# than patched. The file is removed from the repo and the deploy deletes it from
+# the server, so this rule is what keeps any old direct link working.
+RewriteRule ^synkasa-demo/client-catcher-demo-run\.mp4$ /synkasa-demo/synkasa-demo-run.mp4 [R=301,L,NC]
+
 # Retired pages (2026-07 one-ladder rebuild): everything the Client Catcher and
 # the old catalog pages used to say now lives on /synkasa. Files stay in the
 # repo (the FTPS deploy deletes removed files); these rules retire the URLs.

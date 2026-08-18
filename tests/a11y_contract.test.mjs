@@ -119,14 +119,15 @@ test("every proof video on a reachable page carries a caption track", () => {
 });
 
 test("caption files stay inside their video and keep the house style", () => {
-  // Durations read off each file with ffprobe. The demo run was added
-  // 2026-08-17 and is the one player whose video sits outside /videos/.
+  // Durations read off each file with ffprobe. The demo run is the one
+  // player whose video sits outside /videos/. It was recaptured from the live
+  // demo on 2026-08-17, replacing a recording of an app that no longer exists.
   const lengths = {
     "01-receptionist": 35.8,
     "03-soma": 47.0,
     "04-som": 46.85,
     "05-tracker": 46.53,
-    "client-catcher-demo-run": 49.45,
+    "synkasa-demo-run": 30.47,
   };
   for (const [name, seconds] of Object.entries(lengths)) {
     const vtt = read(`videos/captions/${name}.en.vtt`);
