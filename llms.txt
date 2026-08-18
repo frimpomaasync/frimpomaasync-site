@@ -149,13 +149,16 @@ Free starting points:
 
 - Missed inquiries: the four-message response script and follow-up cadence.
 - Unsure what comes first: the Automated Small Business Blueprint.
+- Want to see where the work leaks: the Blueprint Command Center, a free browser tool that scores how much of the business still runs through the owner and walks through installing 12 systems.
 - Ideas disappear: Som, the free capture app that works offline.
 - Need proof: the working SynKasa demo.
 - Need a human diagnosis: the 15-minute call.
 
 Som: https://frimpomaasync.com/som
 
-Blueprint: https://frimpomaasync.com/automated-small-business-blueprint.pdf
+Blueprint (PDF, name and email): https://frimpomaasync.com/get/blueprint
+
+Blueprint Command Center (free, nothing to sign up for): https://frimpomaasync.com/blueprint
 
 Live demo: https://frimpomaasync.com/synkasa-demo/
 
