@@ -103,6 +103,17 @@ RewriteRule ^(.+)$ $1.html [L]
 # Custom 404. Replaces the host's generic error page, keeps visitors on the site.
 ErrorDocument 404 /404.html
 
+# Security headers, added 2026-08-17 site audit. The host already forces
+# https, so HSTS just makes the browser skip the insecure hop. nosniff and
+# the frame rule are free hardening; the referrer policy keeps full URLs
+# from leaking to other sites while analytics still sees the domain.
+<IfModule mod_headers.c>
+  Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+
 # Cache policy, added 2026-07-30. The site sent no Cache-Control at all, so
 # browsers guessed, and iOS guessed "keep it". A page holds the list of which
 # asset versions to fetch, which means a bumped ?v= inside a cached page reaches
