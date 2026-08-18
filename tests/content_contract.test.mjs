@@ -125,7 +125,7 @@ test("journey and reference pages share one palette", () => {
     "blog/post.css",
     "som-app/index.html",
     "som-app/icon.svg",
-    "client-catcher-demo/index.html",
+    "synkasa-demo/index.html",
     ...readdirSync(`${ROOT}/blog`)
       .filter((name) => name.endsWith(".html"))
       .map((name) => `blog/${name}`),

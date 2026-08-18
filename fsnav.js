@@ -201,7 +201,7 @@
        under one Services menu, then Proof, the method, Resources, About. Soft
        Appeals left the site bar: it sells to a different buyer, keeps its own
        bar on its own pages, and stays one tap away in the footer and on the
-       homepage. The Services menu reuses the More panel machinery below —
+       homepage. The Services menu reuses the More panel machinery below,
        exactly one of the two menus exists per page, so the single-instance
        binding holds. */
     var SERVICES_ITEMS = [

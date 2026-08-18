@@ -7,7 +7,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); exit('POST
 $raw = file_get_contents('php://input', false, null, 0, 300);
 $in = json_decode($raw, true);
 $allowed = ['problem_selected','demo_opened','fit_started','fit_submitted','booking_completed',
-            'free_gate_opened','free_delivered','free_page_opened','script_copied','som_opened'];
+            'free_gate_opened','free_delivered','free_page_opened','script_copied','som_opened',
+            'audit_started','audit_completed','audit_emailed'];
 if (!is_array($in) || !isset($in['e']) || !in_array($in['e'], $allowed, true)) { http_response_code(204); exit; }
 $path = isset($in['p']) ? substr(preg_replace('/[^a-zA-Z0-9\/\-_#]/', '', (string)$in['p']), 0, 80) : '';
 $line = gmdate('Y-m-d') . "\t" . $in['e'] . "\t" . $path . "\n";

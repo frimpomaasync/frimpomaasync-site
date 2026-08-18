@@ -10,6 +10,10 @@
   <link rel="stylesheet" href="/assets/journey.css?v=30">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
   <link rel="stylesheet" href="/assets/soft-appeals.css?v=1">
+  <!-- Carries the shared lead form and its print rules. Added 2026-08-17 when
+       the result gained a way to leave with it. Nothing else on this page uses
+       it, and every class in it is prefixed sya-. -->
+  <link rel="stylesheet" href="/assets/systems-audit.css?v=1">
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
@@ -32,6 +36,183 @@
        progress track, and Back / Next at the foot. The choices stay as cards
        rather than the reference's pills, because these options are full
        sentences and a pill row would wrap into an unreadable mess. */
+
+    /* ------------------------------------------------------------------
+       The published weighting, rebuilt 2026-08-17 as an inspectable tree.
+
+       It used to be twelve labels with a bar each, which told a buyer the
+       weight and nothing else. A weight is only checkable if you can see the
+       question it is attached to and the five answers it scores, so every row
+       opens onto exactly that. The panel beside it carries the totals, so the
+       arithmetic on the page and the arithmetic in the module are the same
+       numbers, both generated from DIMENSIONS.
+
+       Prefix dhsp- so nothing here can reach the app shell or the result. */
+    .dhsp {
+      --dhsp-ink: #101426;
+      --dhsp-slate: #4a5468;
+      --dhsp-mute: #6d7789;
+      --dhsp-line: #dbe1ec;
+      --dhsp-line-soft: #e6eaf2;
+      --dhsp-surface: #ffffff;
+      --dhsp-canvas: #f7f9fc;
+      --dhsp-red: #e4222c;
+      --dhsp-copper: var(--copper, #C2501C);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 292px;
+      gap: 22px;
+      align-items: start;
+    }
+    @media (max-width: 900px) { .dhsp { grid-template-columns: minmax(0, 1fr); } }
+
+    /* The tree ------------------------------------------------------- */
+    .dhsp-tree {
+      background: var(--dhsp-surface);
+      border: 1px solid var(--dhsp-line);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .dhsp-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 14px; flex-wrap: wrap;
+      padding: 15px 18px;
+      background: var(--dhsp-canvas);
+      border-bottom: 1px solid var(--dhsp-line);
+    }
+    .dhsp-head h3 {
+      margin: 0 0 3px; font-size: 15.5px; font-weight: 600; color: var(--dhsp-ink);
+    }
+    .dhsp-head p { margin: 0; font-size: 13px; color: var(--dhsp-mute); }
+    .dhsp-toggle-all {
+      appearance: none; min-height: 36px; padding: 7px 15px;
+      border: 1px solid var(--dhsp-ink); border-radius: 999px;
+      background: var(--dhsp-ink); color: #fff;
+      font: inherit; font-size: 13px; font-weight: 600; cursor: pointer;
+    }
+    .dhsp-toggle-all:focus-visible { outline: 2px solid var(--dhsp-copper); outline-offset: 2px; }
+
+    .dhsp-list { padding: 12px; display: grid; gap: 8px; }
+
+    .dhsp-item { border: 1px solid var(--dhsp-line); border-radius: 11px; background: var(--dhsp-surface); }
+    .dhsp-item.is-open { border-color: #c3ccdd; box-shadow: 0 10px 26px -20px rgba(16, 20, 38, .5); }
+
+    .dhsp-row {
+      appearance: none; width: 100%; display: flex; align-items: center; gap: 11px;
+      padding: 14px 16px; min-height: 56px;
+      background: none; border: 0; border-radius: 11px;
+      font: inherit; text-align: left; cursor: pointer;
+    }
+    .dhsp-row:focus-visible { outline: 2px solid var(--dhsp-copper); outline-offset: -2px; }
+    @media (hover: hover) { .dhsp-row:hover { background: var(--dhsp-canvas); } }
+
+    .dhsp-caret {
+      flex: none; width: 18px; height: 18px; display: grid; place-items: center;
+      color: var(--dhsp-mute); font-size: 10px; line-height: 1;
+      transition: transform 180ms var(--ease-out, ease);
+    }
+    .dhsp-item.is-open .dhsp-caret { transform: rotate(90deg); }
+
+    .dhsp-name { flex: 1; min-width: 0; font-size: 15px; font-weight: 600; color: var(--dhsp-ink); }
+    /* The marker on the two heaviest areas. It is the one thing on this page
+       that borrows the shape of a required-field mark, and it is explained in
+       the legend rather than left to be guessed at. */
+    .dhsp-req { color: var(--dhsp-red); font-weight: 400; margin-left: 5px; }
+
+    .dhsp-type {
+      flex: none; font-family: var(--mono); font-size: 11.5px;
+      letter-spacing: .06em; color: var(--dhsp-mute); white-space: nowrap;
+    }
+    .dhsp-type b { color: var(--dhsp-ink); font-weight: 600; }
+
+    .dhsp-body { display: none; padding: 0 16px 16px 45px; }
+    .dhsp-item.is-open .dhsp-body { display: block; }
+
+    .dhsp-q {
+      margin: 0 0 4px; font-size: 10px; font-family: var(--mono);
+      letter-spacing: .14em; text-transform: uppercase; color: var(--dhsp-mute);
+    }
+    .dhsp-qt { margin: 0 0 14px; font-size: 15px; line-height: 1.55; color: var(--dhsp-ink); }
+
+    /* The five answers, drawn as children of the row above them. */
+    .dhsp-kids { margin: 0; padding: 0 0 0 16px; list-style: none; border-left: 1px solid var(--dhsp-line-soft); }
+    .dhsp-kid {
+      position: relative; display: flex; align-items: flex-start; gap: 11px;
+      padding: 9px 12px; margin-bottom: 6px;
+      background: var(--dhsp-canvas); border: 1px solid var(--dhsp-line-soft); border-radius: 9px;
+    }
+    .dhsp-kid::before {
+      content: ""; position: absolute; left: -16px; top: 22px;
+      width: 12px; height: 1px; background: var(--dhsp-line-soft);
+    }
+    .dhsp-pts {
+      flex: none; width: 22px; height: 22px; border-radius: 6px; display: grid; place-items: center;
+      background: #fff; border: 1px solid var(--dhsp-line);
+      font-family: var(--mono); font-size: 11px; color: var(--dhsp-slate);
+    }
+    .dhsp-kid.is-worst .dhsp-pts { border-color: var(--dhsp-red); color: var(--dhsp-red); }
+    .dhsp-kid.is-best .dhsp-pts { border-color: var(--dhsp-copper); color: var(--dhsp-copper); }
+    .dhsp-kt { font-size: 14px; line-height: 1.55; color: var(--dhsp-slate); }
+
+    .dhsp-note {
+      margin: 12px 0 0; padding: 11px 13px;
+      background: var(--dhsp-canvas); border: 1px solid var(--dhsp-line-soft);
+      border-left: 2px solid var(--dhsp-copper); border-radius: 0 9px 9px 0;
+      font-size: 13.5px; line-height: 1.6; color: var(--dhsp-slate);
+    }
+    .dhsp-note b { display: block; color: var(--dhsp-ink); font-weight: 600; margin-bottom: 2px; }
+
+    /* The panel ------------------------------------------------------ */
+    .dhsp-panel { display: grid; gap: 12px; position: sticky; top: 96px; }
+    @media (max-width: 900px) { .dhsp-panel { position: static; } }
+
+    .dhsp-card {
+      background: var(--dhsp-surface); border: 1px solid var(--dhsp-line);
+      border-radius: 14px; padding: 15px 17px;
+    }
+    .dhsp-k {
+      margin: 0 0 8px; font-family: var(--mono); font-size: 10px;
+      letter-spacing: .14em; text-transform: uppercase; color: var(--dhsp-mute);
+    }
+    .dhsp-big {
+      margin: 0 0 10px; font-family: var(--serif); font-weight: 400;
+      font-size: 30px; line-height: 1; color: var(--dhsp-ink);
+    }
+    .dhsp-big span { font-family: var(--sans); font-size: 13px; color: var(--dhsp-mute); margin-left: 6px; }
+    .dhsp-bar { height: 7px; border-radius: 4px; background: var(--dhsp-line-soft); overflow: hidden; }
+    .dhsp-bar i { display: block; height: 100%; border-radius: 4px; background: var(--dhsp-copper); }
+    .dhsp-bar.is-red i { background: var(--dhsp-red); }
+
+    .dhsp-props { display: grid; gap: 9px; }
+    .dhsp-prop { display: flex; justify-content: space-between; gap: 12px; font-size: 13.5px; }
+    .dhsp-prop span { color: var(--dhsp-mute); }
+    .dhsp-prop b { color: var(--dhsp-ink); font-weight: 600; font-variant-numeric: tabular-nums; }
+
+    .dhsp-tags { display: flex; flex-wrap: wrap; gap: 7px; }
+    .dhsp-tag {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 5px 11px; border-radius: 999px;
+      border: 1px solid var(--dhsp-line); background: var(--dhsp-canvas);
+      font-size: 12.5px; color: var(--dhsp-slate);
+    }
+    .dhsp-tag i { width: 6px; height: 6px; border-radius: 999px; background: var(--dhsp-copper); }
+    .dhsp-tag.is-heavy i { background: var(--dhsp-red); }
+    .dhsp-tag.is-light i { background: #aab3c4; }
+
+    .dhsp-legend { margin: 14px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--dhsp-mute); }
+    .dhsp-legend b { color: var(--dhsp-red); font-weight: 400; }
+
+    /* The 45px indent lines the body up under the row name on a desktop. On a
+       phone that indent is a tenth of the screen and the answers wrap to three
+       lines each, so it goes. */
+    @media (max-width: 560px) {
+      .dhsp-body { padding-left: 16px; }
+      .dhsp-kids { padding-left: 13px; }
+      .dhsp-kid::before { left: -13px; }
+      .dhsp-row { padding: 13px 14px; gap: 9px; }
+      .dhsp-type { font-size: 11px; }
+    }
+
+    @media print { .dhsp-toggle-all { display: none !important; } .dhsp-body { display: block !important; } }
 
     /* Published weighting table, below the app. */
     .dhs-rows { display: grid; gap: 12px; max-width: 720px; }
@@ -109,9 +290,14 @@
         <div class="sa-progress" aria-hidden="true"><i id="dhs-prog"></i></div>
 
         <div class="sa-stage">
-          <form id="dhs-form" novalidate style="width:100%;display:flex;justify-content:center">
+          <!-- Changed from a form to a div 2026-08-17. The result now renders a
+               lead capture form inside this element, and a form nested inside
+               another form is dropped by the browser without a word. Nothing
+               here needed a form: the questions are radio groups, and the only
+               thing that submits is the emailed-copy form at the very end. -->
+          <div class="dhs-stage-wrap" style="width:100%;display:flex;justify-content:center">
             <div id="dhs-stage" aria-live="polite" style="width:min(760px,100%)"></div>
-          </form>
+          </div>
           <noscript>
             <div class="sa-screen">
               <h1 class="sa-q">How well does your denial process hold up?</h1>
@@ -131,7 +317,19 @@
           <h2 class="section-title"><span>The weighting is published</span> because a score you cannot check is a score you cannot use.</h2>
           <p class="section-intro">Each question is worth 0 to 4 points, multiplied by the weight below. Deadline tracking and submission evidence carry the heaviest weight because a missed window or a receipt dispute can close a claim outright, whichever way the underlying argument would have gone. Reporting carries less because thin reporting costs visibility rather than claims.</p>
         </div>
-        <div class="dhs-rows" id="weights"></div>
+        <div class="dhsp">
+          <div class="dhsp-tree">
+            <div class="dhsp-head">
+              <div>
+                <h3>The twelve scored areas</h3>
+                <p>Open any one to see the question and the five answers it scores.</p>
+              </div>
+              <button type="button" class="dhsp-toggle-all" id="dhsp-all" aria-expanded="false">Open all twelve</button>
+            </div>
+            <div class="dhsp-list" id="weights"></div>
+          </div>
+          <aside class="dhsp-panel" id="dhsp-panel" aria-label="How the score is put together"></aside>
+        </div>
       </div>
     </section>
 
@@ -152,6 +350,14 @@
 
   <script type="module">
     import { DIMENSIONS, MAX_POINTS, scoreDenialHealth } from "/assets/denial-health-score.js?v=1";
+    /* Added 2026-08-17. The assessment already worked and was not rebuilt. What
+       it lacked was a way to leave with the result: an emailed copy, and a
+       downloadable one. Both come from the shared engine, so the screen, the
+       download and the email cannot say three different things. The form sits
+       UNDER the finished result. It never stands in front of it. */
+    import { DHS_CONFIG } from "/assets/audit-config.js?v=1";
+    import { leadFormHTML, wireLeadForm } from "/assets/audit-ui.js?v=1";
+    import { summaryText } from "/assets/audit-engine.js?v=1";
 
     var answers = {};
     var step = 0;
@@ -164,15 +370,114 @@
       });
     }
 
-    /* The weighting table under the panel is generated from the same array the
-       scoring uses, so the published weights cannot drift from the real ones. */
-    document.getElementById("weights").innerHTML = DIMENSIONS.map(function (d) {
-      var max = Math.max.apply(null, DIMENSIONS.map(function (x) { return x.weight; }));
-      return '<div class="dhs-row"><div class="t"><span>' + esc(d.name) +
-        '</span><b class="w">weight ' + d.weight + '</b></div>' +
-        '<div class="dhs-meter" role="img" aria-label="' + esc(d.name) + ', weight ' + d.weight + ' of ' + max +
-        '"><i style="width:' + Math.round((d.weight / max) * 100) + '%"></i></div></div>';
+    /* The published weighting is generated from the same array the scoring
+       uses, so what this section claims and what the module does cannot drift
+       apart. Every number below is computed, none of it is typed. */
+    var WEIGHTS = DIMENSIONS.map(function (d) { return d.weight; });
+    var MAX_W = Math.max.apply(null, WEIGHTS);
+    var MIN_W = Math.min.apply(null, WEIGHTS);
+    var TOTAL_W = WEIGHTS.reduce(function (a, b) { return a + b; }, 0);
+    var AVAILABLE = TOTAL_W * MAX_POINTS;
+
+    document.getElementById("weights").innerHTML = DIMENSIONS.map(function (d, i) {
+      var heaviest = d.weight === MAX_W;
+      var panelId = "dhsp-b-" + d.key;
+      return '<div class="dhsp-item" data-item>' +
+        '<button type="button" class="dhsp-row" aria-expanded="false" aria-controls="' + panelId + '">' +
+          '<span class="dhsp-caret" aria-hidden="true">&#9654;</span>' +
+          '<span class="dhsp-name">' + esc(d.name) +
+            (heaviest ? '<span class="dhsp-req" aria-hidden="true">*</span>' : '') +
+          '</span>' +
+          '<span class="dhsp-type">weight <b>' + d.weight + '</b> of ' + MAX_W + '</span>' +
+        '</button>' +
+        '<div class="dhsp-body" id="' + panelId + '">' +
+          '<p class="dhsp-q">The question</p>' +
+          '<p class="dhsp-qt">' + esc(d.question) + '</p>' +
+          '<p class="dhsp-q">The five answers, and what each one scores</p>' +
+          '<ul class="dhsp-kids">' +
+            d.options.map(function (o) {
+              var tone = o.points === 0 ? " is-worst" : (o.points === MAX_POINTS ? " is-best" : "");
+              return '<li class="dhsp-kid' + tone + '">' +
+                '<span class="dhsp-pts" aria-hidden="true">' + o.points + '</span>' +
+                '<span class="dhsp-kt"><span class="sr-only">Scores ' + o.points +
+                  ' of ' + MAX_POINTS + '. </span>' + esc(o.label) + '</span></li>';
+            }).join("") +
+          '</ul>' +
+          '<p class="dhsp-note"><b>Why it carries weight ' + d.weight + '</b>' +
+            esc(heaviest ? d.gap : d.strength) + '</p>' +
+        '</div>' +
+      '</div>';
     }).join("");
+
+    /* One open at a time is wrong here: a buyer checking the weighting wants to
+       compare two areas side by side, so rows open independently and the header
+       button opens or closes the lot. */
+    var list = document.getElementById("weights");
+    list.addEventListener("click", function (e) {
+      var btn = e.target.closest(".dhsp-row");
+      if (!btn) return;
+      var item = btn.closest("[data-item]");
+      var open = item.classList.toggle("is-open");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      syncToggleAll();
+    });
+
+    var allBtn = document.getElementById("dhsp-all");
+    function syncToggleAll() {
+      var items = list.querySelectorAll("[data-item]");
+      var open = list.querySelectorAll("[data-item].is-open").length;
+      var everyone = open === items.length;
+      allBtn.textContent = everyone ? "Close all twelve" : "Open all twelve";
+      allBtn.setAttribute("aria-expanded", everyone ? "true" : "false");
+    }
+    allBtn.addEventListener("click", function () {
+      var items = list.querySelectorAll("[data-item]");
+      var openAll = list.querySelectorAll("[data-item].is-open").length !== items.length;
+      items.forEach(function (item) {
+        item.classList.toggle("is-open", openAll);
+        item.querySelector(".dhsp-row").setAttribute("aria-expanded", openAll ? "true" : "false");
+      });
+      syncToggleAll();
+    });
+    syncToggleAll();
+
+    /* The panel beside the tree. Same numbers, same source. */
+    var heavy = DIMENSIONS.filter(function (d) { return d.weight === MAX_W; });
+    var light = DIMENSIONS.filter(function (d) { return d.weight === MIN_W; });
+    var mid = DIMENSIONS.length - heavy.length - light.length;
+    document.getElementById("dhsp-panel").innerHTML =
+      '<div class="dhsp-card">' +
+        '<p class="dhsp-k">Points available</p>' +
+        '<p class="dhsp-big">' + AVAILABLE + '<span>across ' + DIMENSIONS.length + ' answers</span></p>' +
+        '<div class="dhsp-bar" role="img" aria-label="Every question answered at its best is ' + AVAILABLE + ' points"><i style="width:100%"></i></div>' +
+      '</div>' +
+      '<div class="dhsp-card">' +
+        '<p class="dhsp-k">Carried by the heaviest areas</p>' +
+        '<p class="dhsp-big">' + Math.round((heavy.length * MAX_W / TOTAL_W) * 100) + '%<span>of the total weight</span></p>' +
+        '<div class="dhsp-bar is-red" role="img" aria-label="The heaviest areas carry ' +
+          Math.round((heavy.length * MAX_W / TOTAL_W) * 100) + ' percent of the weight"><i style="width:' +
+          Math.round((heavy.length * MAX_W / TOTAL_W) * 100) + '%"></i></div>' +
+      '</div>' +
+      '<div class="dhsp-card">' +
+        '<p class="dhsp-k">Properties</p>' +
+        '<div class="dhsp-props">' +
+          '<div class="dhsp-prop"><span>Questions</span><b>' + DIMENSIONS.length + '</b></div>' +
+          '<div class="dhsp-prop"><span>Points per answer</span><b>0 to ' + MAX_POINTS + '</b></div>' +
+          '<div class="dhsp-prop"><span>Weights used</span><b>' + MIN_W + ' to ' + MAX_W + '</b></div>' +
+          '<div class="dhsp-prop"><span>Total weight</span><b>' + TOTAL_W + '</b></div>' +
+          '<div class="dhsp-prop"><span>Points available</span><b>' + AVAILABLE + '</b></div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="dhsp-card">' +
+        '<p class="dhsp-k">Weight groups</p>' +
+        '<div class="dhsp-tags">' +
+          '<span class="dhsp-tag is-heavy"><i aria-hidden="true"></i>weight ' + MAX_W + ' &#183; ' + heavy.length + ' areas</span>' +
+          (mid > 0 ? '<span class="dhsp-tag"><i aria-hidden="true"></i>weight ' + (MAX_W - 1) + ' &#183; ' + mid + ' areas</span>' : '') +
+          '<span class="dhsp-tag is-light"><i aria-hidden="true"></i>weight ' + MIN_W + ' &#183; ' + light.length + ' areas</span>' +
+        '</div>' +
+        '<p class="dhsp-legend"><b>*</b> marks the areas at weight ' + MAX_W +
+          '. A miss there can close a claim outright, whichever way the underlying argument would have gone.</p>' +
+      '</div>';
 
     var stepLabel = document.getElementById("dhs-step-label");
     var answeredLabel = document.getElementById("dhs-answered");
@@ -189,7 +494,7 @@
           '<p class="sa-qnum">Soft Appeals &#183; process diagnostic</p>' +
           '<h1 class="sa-q">How well does your denial process hold up?</h1>' +
           '<p class="sa-qhelp">Twelve questions about how denied claims move through your organization. Not about any patient, any claim or any diagnosis: about who owns a denial, how deadlines get tracked, what your records could prove, and what happens after a submission goes out.</p>' +
-          '<p class="sa-qhelp">You get a score out of 100, your strongest and weakest areas, your top three gaps, and a seven-day plan built from your own answers. <b>It runs entirely in your browser.</b> Nothing is sent anywhere, no email is required to see your result, and no patient information is requested at any point.</p>' +
+          '<p class="sa-qhelp">You get a score out of 100, your strongest and weakest areas, your top three gaps, and a seven-day plan built from your own answers. <b>It runs entirely in your browser.</b> No email is required to see your result, nothing is sent anywhere unless you ask for a copy at the end, and no patient information is requested at any point.</p>' +
           '<div class="sa-nav">' +
             '<span class="sa-nav-hint">About four minutes</span>' +
             '<button type="button" class="sa-btn is-action" data-begin>Start the twelve questions</button>' +
@@ -302,15 +607,36 @@
           '<p>This is a read of process, based only on the twelve answers you selected. It is not a compliance, privacy, security, legal or coding determination, it does not evaluate any individual claim, and it does not predict what any denial would recover.</p>' +
         '</div>' +
 
+        leadFormHTML(DHS_CONFIG.lead) +
+
         '<div class="dhs-actions">' +
           '<a class="sa-btn is-action" href="/soft-appeals-start">Request your complimentary review &#8594;</a>' +
           '<button type="button" class="sa-btn" data-print>Save or print this result</button>' +
+          '<button type="button" class="sa-btn" data-download>Download as a text file</button>' +
           '<button type="button" class="sa-btn is-quiet" data-restart>Start over</button>' +
         '</div>' +
-        '<p class="sa-note">Saving or printing keeps the result on your machine. Nothing is transmitted, and there is no form here to send it anywhere.</p>' +
+        '<p class="sa-note">Saving, printing and downloading all keep the result on your machine. Nothing is transmitted unless you ask for the emailed copy above.</p>' +
         '</div>';
 
       stage.querySelector("[data-print]").addEventListener("click", function () { window.print(); });
+
+      /* The downloaded file is the same text the emailed copy carries. */
+      stage.querySelector("[data-download]").addEventListener("click", function () {
+        var d = new Date();
+        var p = function (n) { return n < 10 ? "0" + n : String(n); };
+        var day = d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+        var blob = new Blob([summaryText(DHS_CONFIG, r, { when: day })], { type: "text/plain;charset=utf-8" });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement("a");
+        a.href = url;
+        a.download = "denial-health-score-" + day + ".txt";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(function () { URL.revokeObjectURL(url); }, 4000);
+      });
+
+      wireLeadForm(stage, DHS_CONFIG, r, answers);
       stepLabel.textContent = "Your result";
       answeredLabel.textContent = DIMENSIONS.length + " of " + DIMENSIONS.length + " answered";
       stage.querySelector("[data-restart]").addEventListener("click", function () {
@@ -367,8 +693,6 @@
         toTop();
       }
     });
-
-    document.getElementById("dhs-form").addEventListener("submit", function (e) { e.preventDefault(); });
 
     renderIntro();
   </script>

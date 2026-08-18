@@ -104,7 +104,9 @@ test("every proof video on a reachable page carries a caption track", () => {
     const players = [...html.matchAll(/<video\b[\s\S]*?<\/video>/gi)].map((m) => m[0]);
     assert.ok(players.length, `${page} should still hold its proof videos`);
     for (const player of players) {
-      const src = (player.match(/\/videos\/([\w-]+)\.mp4/) || [])[1];
+      // Any folder, not just /videos/. The live demo run is played from the
+      // demo folder it belongs to, and it still owes a caption track.
+      const src = (player.match(/src="[^"]*\/([\w-]+)\.mp4/) || [])[1];
       assert.ok(src, `a player in ${page} lost its source`);
       assert.match(
         player,
@@ -117,7 +119,15 @@ test("every proof video on a reachable page carries a caption track", () => {
 });
 
 test("caption files stay inside their video and keep the house style", () => {
-  const lengths = { "01-receptionist": 35.8, "03-soma": 47.0, "04-som": 46.85, "05-tracker": 46.53 };
+  // Durations read off each file with ffprobe. The demo run was added
+  // 2026-08-17 and is the one player whose video sits outside /videos/.
+  const lengths = {
+    "01-receptionist": 35.8,
+    "03-soma": 47.0,
+    "04-som": 46.85,
+    "05-tracker": 46.53,
+    "client-catcher-demo-run": 49.45,
+  };
   for (const [name, seconds] of Object.entries(lengths)) {
     const vtt = read(`videos/captions/${name}.en.vtt`);
     assert.match(vtt, /^WEBVTT/, `${name} must start with the WEBVTT header`);

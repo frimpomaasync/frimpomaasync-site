@@ -1,0 +1,652 @@
+/* The Systems Audit shell.
+ *
+ * Every class here is prefixed sya- so it cannot collide with journey.css,
+ * modules.css or soft-appeals.css, all of which are loaded on the same pages.
+ *
+ * Palette: warm white paper, deep navy, near black, one restrained red used
+ * for the accent and nothing else. The red is darker than the site's live-now
+ * red on purpose. This is a document a decision-maker reads, not a signal.
+ */
+
+/* The tokens sit on the shell AND on the lead form, because the lead form is
+   also used on its own, dropped into the bottom of the older Denial Health
+   Score result, where there is no .sya shell around it. */
+.sya,
+.sya-lead {
+  --sya-paper: #fcfbf8;
+  --sya-canvas: #f5f4f0;
+  --sya-surface: #ffffff;
+  --sya-navy: #101426;
+  --sya-black: #0a0c14;
+  --sya-slate: #49536a;
+  --sya-mute: rgba(16, 20, 38, 0.46);
+  --sya-line: rgba(16, 20, 38, 0.11);
+  --sya-line-2: rgba(16, 20, 38, 0.2);
+  --sya-red: #a8171f;
+  --sya-red-soft: rgba(168, 23, 31, 0.08);
+  --sya-r: 12px;
+  --sya-r-lg: 18px;
+  --sya-shadow: 0 1px 2px rgba(16, 20, 38, 0.04);
+  --sya-lift: 0 18px 48px -28px rgba(16, 20, 38, 0.34);
+  --sya-serif: var(--serif, "Iowan Old Style", Palatino, Georgia, serif);
+  --sya-sans: var(--sans, -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif);
+  --sya-mono: var(--mono, ui-monospace, "SF Mono", Menlo, Consolas, monospace);
+  --sya-navh: 0px;
+
+  font-family: var(--sya-sans);
+}
+
+.sya {
+  background: var(--sya-canvas);
+  color: var(--sya-navy);
+}
+
+/* The app frame ---------------------------------------------------------- */
+
+.sya-app {
+  display: flex;
+  flex-direction: column;
+  min-height: 76vh;
+}
+
+.sya-top {
+  position: sticky;
+  top: var(--sya-navh);
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  padding: 12px clamp(14px, 3vw, 28px);
+  background: rgba(252, 251, 248, 0.94);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--sya-line);
+}
+
+.sya-name {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0;
+  font-family: var(--sya-mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sya-mute);
+}
+.sya-name b {
+  font-family: var(--sya-serif);
+  font-weight: 400;
+  font-size: 15px;
+  letter-spacing: 0.08em;
+  color: var(--sya-navy);
+}
+
+.sya-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0;
+  font-family: var(--sya-mono);
+  font-size: 10px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--sya-mute);
+}
+
+.sya-progress {
+  height: 3px;
+  background: rgba(16, 20, 38, 0.08);
+  overflow: hidden;
+}
+.sya-progress i {
+  display: block;
+  height: 100%;
+  width: 0;
+  background: var(--sya-red);
+  transition: width 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.sya-stage {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(26px, 5vw, 64px) clamp(14px, 4vw, 28px) clamp(44px, 6vw, 84px);
+}
+
+.sya-screen {
+  width: min(760px, 100%);
+  background: var(--sya-surface);
+  border: 1px solid var(--sya-line);
+  border-radius: var(--sya-r-lg);
+  box-shadow: var(--sya-lift);
+  padding: clamp(22px, 4.2vw, 46px);
+}
+
+/* Question type ---------------------------------------------------------- */
+
+.sya-eyebrow {
+  margin: 0 0 14px;
+  font-family: var(--sya-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--sya-red);
+}
+
+.sya-q {
+  display: block;
+  margin: 0 0 12px;
+  font-family: var(--sya-serif);
+  font-weight: 400;
+  font-size: clamp(25px, 4vw, 38px);
+  line-height: 1.16;
+  letter-spacing: -0.015em;
+  color: var(--sya-black);
+}
+
+.sya-help {
+  margin: 0 0 22px;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: var(--sya-slate);
+  max-width: 62ch;
+}
+.sya-help b { color: var(--sya-navy); font-weight: 600; }
+
+.sya-body {
+  margin: 0 0 8px;
+  font-size: 15px;
+  line-height: 1.7;
+  color: var(--sya-slate);
+  max-width: 68ch;
+}
+
+.sya-fs { border: 0; padding: 0; margin: 0; min-width: 0; }
+.sya-legend { padding: 0; width: 100%; }
+
+/* Answers ---------------------------------------------------------------- */
+
+.sya-choices {
+  display: grid;
+  gap: 9px;
+  margin: 0 0 26px;
+}
+
+.sya-choice {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 15px 18px;
+  background: var(--sya-surface);
+  border: 1px solid var(--sya-line-2);
+  border-radius: var(--sya-r);
+  box-shadow: var(--sya-shadow);
+  cursor: pointer;
+  transition: border-color 160ms ease, box-shadow 160ms ease, background 160ms ease;
+}
+.sya-choice input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+.sya-mark {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  border: 1px solid var(--sya-line-2);
+  background: var(--sya-paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--sya-mono);
+  font-size: 11px;
+  color: var(--sya-mute);
+  transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+.sya-choice-t {
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--sya-navy);
+}
+@media (hover: hover) {
+  .sya-choice:hover { border-color: rgba(16, 20, 38, 0.34); }
+}
+.sya-choice:has(input:focus-visible) {
+  outline: 2px solid var(--sya-red);
+  outline-offset: 2px;
+}
+.sya-choice.is-picked {
+  border-color: var(--sya-red);
+  background: var(--sya-red-soft);
+  box-shadow: 0 0 0 1px var(--sya-red);
+}
+.sya-choice.is-picked .sya-mark {
+  background: var(--sya-red);
+  border-color: var(--sya-red);
+  color: #ffffff;
+}
+
+/* Buttons ---------------------------------------------------------------- */
+
+.sya-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.sya-nav-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.sya-hint {
+  font-family: var(--sya-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sya-mute);
+}
+
+.sya-btn {
+  appearance: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  padding: 11px 22px;
+  border: 1px solid var(--sya-line-2);
+  border-radius: 999px;
+  background: var(--sya-surface);
+  color: var(--sya-navy);
+  font: inherit;
+  font-size: 14.5px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 160ms ease, border-color 160ms ease, color 160ms ease;
+}
+@media (hover: hover) {
+  .sya-btn:hover { border-color: var(--sya-navy); }
+}
+.sya-btn.is-action {
+  background: var(--sya-navy);
+  border-color: var(--sya-navy);
+  color: #ffffff;
+}
+@media (hover: hover) {
+  .sya-btn.is-action:hover { background: var(--sya-black); border-color: var(--sya-black); }
+}
+.sya-btn.is-quiet {
+  background: transparent;
+  border-color: transparent;
+  color: var(--sya-slate);
+  padding-inline: 10px;
+}
+.sya-btn[disabled] { opacity: 0.4; cursor: not-allowed; }
+.sya-btn:focus-visible { outline: 2px solid var(--sya-red); outline-offset: 2px; }
+
+/* The result ------------------------------------------------------------- */
+
+.sya-screen.is-result { padding-bottom: clamp(26px, 4vw, 40px); }
+
+.sya-scoreblock {
+  display: grid;
+  grid-template-columns: 148px minmax(0, 1fr);
+  gap: clamp(18px, 4vw, 34px);
+  align-items: center;
+  padding-bottom: 26px;
+  border-bottom: 1px solid var(--sya-line);
+}
+@media (max-width: 560px) {
+  .sya-scoreblock { grid-template-columns: minmax(0, 1fr); }
+}
+
+.sya-dial { position: relative; width: 148px; height: 148px; }
+.sya-dial svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+.sya-dial circle { fill: none; stroke-width: 9; }
+.sya-dial-track { stroke: rgba(16, 20, 38, 0.09); }
+.sya-dial-value {
+  stroke: var(--sya-red);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+.sya-dial-v {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+.sya-dial-v b {
+  font-family: var(--sya-serif);
+  font-weight: 400;
+  font-size: 46px;
+  line-height: 1;
+  color: var(--sya-black);
+}
+.sya-dial-v span {
+  font-family: var(--sya-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--sya-mute);
+}
+
+.sya-band {
+  margin: 0 0 10px;
+  font-family: var(--sya-serif);
+  font-weight: 400;
+  font-size: clamp(24px, 3.6vw, 34px);
+  line-height: 1.18;
+  letter-spacing: -0.015em;
+  color: var(--sya-black);
+}
+.sya-band-blurb {
+  margin: 0 0 10px;
+  font-size: 15.5px;
+  line-height: 1.68;
+  color: var(--sya-slate);
+}
+.sya-meta { margin: 0; font-size: 13px; color: var(--sya-mute); }
+
+.sya-sub {
+  margin: 34px 0 12px;
+  font-family: var(--sya-mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sya-mute);
+}
+
+.sya-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+.sya-card {
+  padding: 18px 20px;
+  background: var(--sya-paper);
+  border: 1px solid var(--sya-line);
+  border-radius: var(--sya-r);
+}
+.sya-card h3 {
+  margin: 6px 0 8px;
+  font-family: var(--sya-serif);
+  font-weight: 400;
+  font-size: 19px;
+  line-height: 1.25;
+  color: var(--sya-black);
+}
+.sya-card p { margin: 0; font-size: 14.5px; line-height: 1.65; color: var(--sya-slate); }
+.sya-card-k {
+  margin: 0;
+  font-family: var(--sya-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sya-mute);
+}
+.sya-card.is-strength { border-left: 3px solid var(--sya-navy); }
+.sya-card.is-gap { border-left: 3px solid var(--sya-red); }
+.sya-card.is-priority {
+  border-left: 3px solid var(--sya-red);
+  background: var(--sya-surface);
+}
+.sya-card.is-priority p { color: var(--sya-navy); font-size: 15.5px; }
+.sya-card.is-priority .sya-card-k { color: var(--sya-red); margin-bottom: 8px; }
+
+.sya-list { margin: 0; padding: 0 0 0 0; list-style: none; display: grid; gap: 10px; }
+.sya-list li {
+  padding: 14px 16px;
+  background: var(--sya-paper);
+  border: 1px solid var(--sya-line);
+  border-radius: var(--sya-r);
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--sya-slate);
+}
+.sya-list li b {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--sya-black);
+  font-weight: 600;
+}
+
+.sya-plan { display: grid; gap: 10px; }
+.sya-step {
+  display: grid;
+  grid-template-columns: 108px minmax(0, 1fr);
+  border: 1px solid var(--sya-line);
+  border-radius: var(--sya-r);
+  overflow: hidden;
+  background: var(--sya-surface);
+}
+.sya-step .d {
+  padding: 14px;
+  background: var(--sya-paper);
+  border-right: 1px solid var(--sya-line);
+  font-family: var(--sya-mono);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--sya-red);
+}
+.sya-step .a { padding: 14px 16px; }
+.sya-step .a b { display: block; font-size: 14.5px; font-weight: 600; margin-bottom: 3px; }
+.sya-step .a p { margin: 0; font-size: 14px; line-height: 1.65; color: var(--sya-slate); }
+@media (max-width: 520px) {
+  .sya-step { grid-template-columns: minmax(0, 1fr); }
+  .sya-step .d { border-right: 0; border-bottom: 1px solid var(--sya-line); }
+}
+
+.sya-note { margin: 12px 0 0; font-size: 13px; line-height: 1.65; color: var(--sya-mute); }
+
+.sya-rows { display: grid; gap: 12px; }
+.sya-row .t {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+.sya-row .t b { font-weight: 600; }
+.sya-row .t .w {
+  font-family: var(--sya-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sya-mute);
+}
+.sya-meter {
+  height: 8px;
+  border-radius: 4px;
+  background: #eceae4;
+  border: 1px solid var(--sya-line);
+  overflow: hidden;
+}
+.sya-meter i {
+  display: block;
+  height: 100%;
+  min-width: 3px;
+  border-radius: 3px;
+  background: var(--sya-navy);
+}
+.sya-meter.is-low i { background: var(--sya-red); }
+
+.sya-guard {
+  margin-top: 32px;
+  padding: 16px 18px;
+  background: var(--sya-paper);
+  border: 1px solid var(--sya-line);
+  border-left: 3px solid var(--sya-navy);
+  border-radius: 0 var(--sya-r) var(--sya-r) 0;
+}
+.sya-guard .k {
+  margin-bottom: 8px;
+  font-family: var(--sya-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sya-mute);
+}
+.sya-guard p { margin: 0; font-size: 13.5px; line-height: 1.68; color: var(--sya-slate); }
+
+/* Lead capture ----------------------------------------------------------- */
+
+.sya-lead {
+  margin-top: 32px;
+  padding: clamp(20px, 3.4vw, 30px);
+  background: var(--sya-navy);
+  border-radius: var(--sya-r-lg);
+  color: #ffffff;
+}
+.sya-lead-t {
+  margin: 0 0 8px;
+  font-family: var(--sya-serif);
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 1.2;
+  color: #ffffff;
+}
+.sya-lead-b {
+  margin: 0 0 18px;
+  font-size: 14.5px;
+  line-height: 1.68;
+  color: rgba(255, 255, 255, 0.74);
+  max-width: 58ch;
+}
+/* display:grid below beats the hidden attribute on its own, and the fields are
+   hidden that way once the result has been sent. */
+.sya-lead [hidden] { display: none !important; }
+
+.sya-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.sya-field { display: grid; gap: 6px; }
+.sya-field span {
+  font-family: var(--sya-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+}
+.sya-field span i { font-style: normal; color: rgba(255, 255, 255, 0.38); }
+.sya-field input {
+  /* 16px keeps iOS Safari from zooming the page when a field takes focus. */
+  font-size: 16px;
+  padding: 12px 14px;
+  min-height: 46px;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--sya-r);
+}
+.sya-field input:focus {
+  outline: 2px solid #ffffff;
+  outline-offset: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+.sya-lead .sya-btn.is-action {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: var(--sya-navy);
+}
+@media (hover: hover) {
+  .sya-lead .sya-btn.is-action:hover { background: #f0eeea; border-color: #f0eeea; }
+}
+.sya-lead-go { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.sya-lead-status { margin: 0; font-size: 14px; color: rgba(255, 255, 255, 0.78); }
+.sya-lead-status.is-done { color: #ffffff; font-weight: 600; }
+.sya-lead-status.is-warn { color: #ffb9bd; }
+.sya-lead-c {
+  margin: 16px 0 0;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.5);
+  max-width: 62ch;
+}
+.sya-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* Closing call to action -------------------------------------------------- */
+
+.sya-cta {
+  margin-top: 28px;
+  padding: clamp(20px, 3.4vw, 30px);
+  background: var(--sya-paper);
+  border: 1px solid var(--sya-line);
+  border-radius: var(--sya-r-lg);
+}
+.sya-cta-k {
+  margin: 0 0 10px;
+  font-family: var(--sya-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sya-red);
+}
+.sya-cta h2 {
+  margin: 0 0 10px;
+  font-family: var(--sya-serif);
+  font-weight: 400;
+  font-size: clamp(22px, 3.2vw, 30px);
+  line-height: 1.2;
+  color: var(--sya-black);
+}
+.sya-cta p { margin: 0 0 18px; font-size: 15px; line-height: 1.68; color: var(--sya-slate); max-width: 62ch; }
+.sya-cta-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+
+.sya-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 28px;
+  padding-top: 22px;
+  border-top: 1px solid var(--sya-line);
+}
+
+/* Print: the result becomes a document, and everything that is not the
+   document leaves the page. */
+@media print {
+  .sya-top,
+  .sya-progress,
+  .sya-actions,
+  .sya-lead,
+  #fs-nav,
+  footer,
+  .sya-cta-actions { display: none !important; }
+  .sya,
+  .sya-app,
+  .sya-stage { background: #ffffff !important; padding: 0 !important; min-height: 0 !important; }
+  .sya-screen {
+    border: 0 !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+  }
+  .sya-step, .sya-card, .sya-list li { break-inside: avoid; }
+  .sya-sub { break-after: avoid; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sya-progress i,
+  .sya-dial-value { transition: none; }
+}

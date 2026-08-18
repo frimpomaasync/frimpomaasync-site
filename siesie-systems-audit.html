@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Systems Audit · how much of your business runs through you | frimpomaasync.com</title>
+  <meta name="description" content="Twelve questions about how work moves from an inquiry to money in the bank. Get a 0 to 100 score, the area holding you back most, and a seven-day plan. Free, no sign-up to see your result.">
+  <link rel="canonical" href="https://frimpomaasync.com/siesie-systems-audit">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=30">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <link rel="stylesheet" href="/assets/systems-audit.css?v=1">
+  <meta name="theme-color" content="#101426">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="frimpomaasync.com">
+  <meta property="og:title" content="The Systems Audit · twelve questions, one score">
+  <meta property="og:description" content="How much of your business still runs through you? Twelve questions, a 0 to 100 score, your top three gaps and a seven-day plan.">
+  <meta property="og:url" content="https://frimpomaasync.com/siesie-systems-audit">
+  <meta property="og:image" content="https://frimpomaasync.com/assets/siesie-hero.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "The Siesie Systems Audit",
+      "url": "https://frimpomaasync.com/siesie-systems-audit",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Any",
+      "description": "A twelve-question operations diagnostic for established service businesses. Scores how much of the work still routes through the owner and returns a seven-day plan.",
+      "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+      "provider": {"@type": "ProfessionalService", "name": "frimpomaasync.com"}
+    }
+  </script>
+  <style>
+    /* Page-level only. Everything the app itself uses lives in
+       /assets/systems-audit.css, prefixed sya-. */
+    .sya-weights { display: grid; gap: 12px; max-width: 760px; }
+    .sya-w-row .t {
+      display: flex; justify-content: space-between; gap: 12px;
+      font-size: 14px; margin-bottom: 6px; color: #101426;
+    }
+    .sya-w-row .t .w {
+      font-family: var(--mono); font-size: 10px; letter-spacing: .1em;
+      text-transform: uppercase; color: rgba(16,20,38,.46);
+    }
+    .sya-w-bar {
+      height: 8px; border-radius: 4px; background: #eceae4;
+      border: 1px solid rgba(16,20,38,.11); overflow: hidden;
+    }
+    .sya-w-bar i { display: block; height: 100%; border-radius: 3px; background: #101426; }
+    .sya-w-bar.is-top i { background: #a8171f; }
+    .sya-math {
+      max-width: 760px; margin-top: 26px; padding: 18px 20px;
+      background: #fcfbf8; border: 1px solid rgba(16,20,38,.11);
+      border-left: 3px solid #101426; border-radius: 0 12px 12px 0;
+    }
+    .sya-math p { margin: 0 0 10px; font-size: 14.5px; line-height: 1.7; color: #49536a; }
+    .sya-math p:last-child { margin-bottom: 0; }
+    .sya-math code {
+      font-family: var(--mono); font-size: 13px; color: #101426;
+      background: #f0eee8; padding: 2px 6px; border-radius: 4px;
+    }
+  </style>
+</head>
+<body data-sk-sections="The audit,How the score works,Close" data-sk-bar="Twelve questions. A score, your gaps, and a seven-day plan." data-sk-biz="service business">
+  <main>
+
+    <section class="sya" id="audit" data-screen-label="The audit">
+      <div class="sya-app">
+
+        <header class="sya-top">
+          <p class="sya-name"><b>Systems Audit</b> <span>Siesie</span></p>
+          <p class="sya-status">
+            <span id="sya-step">Twelve questions</span>
+            <span id="sya-count"></span>
+          </p>
+        </header>
+        <div class="sya-progress" aria-hidden="true"><i id="sya-prog"></i></div>
+
+        <div class="sya-stage">
+          <!-- A div, not a form. The result renders its own lead capture form
+               inside this element, and a form nested inside another form is
+               dropped by the browser without a word. The questions do not need
+               a form element: they are radio groups, and nothing is submitted
+               until the lead capture at the very end. -->
+          <div class="sya-mount-wrap" style="width:100%;display:flex;justify-content:center">
+            <div id="sya-mount" aria-live="polite" style="width:min(760px,100%)"></div>
+          </div>
+          <noscript>
+            <div class="sya-screen">
+              <h1 class="sya-q">How much of this business still runs through you?</h1>
+              <p class="sya-help">The Systems Audit runs in your browser, so it needs JavaScript switched on. The twelve areas it scores are listed further down this page, and the Operations Map applies the same thinking to your real business rather than to twelve answers.</p>
+              <a class="sya-btn is-action" href="/operations-map">Read what the Operations Map produces</a>
+            </div>
+          </noscript>
+        </div>
+
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="How the score works">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">The twelve areas, and what each one is worth</div>
+          <h2 class="section-title"><span>The weighting is published</span> because a score you cannot check is a score you cannot use.</h2>
+          <p class="section-intro">Each question is worth 0 to 4 points, multiplied by the weight below. Owner dependence and invoicing carry the heaviest weight because both stop money: work that halts when you are away, and work already finished that never gets paid for. Follow-up and re-entered information carry less, because those cost time and margin rather than the job itself.</p>
+        </div>
+        <div class="sya-weights" id="sya-weights"></div>
+
+        <div class="sya-math">
+          <p><b>The arithmetic.</b> Your score is the points you earned divided by the points that were available, as a percentage. A question you skip is left out of both halves, so a partial run is scored against what you actually answered rather than marked down for what you did not reach.</p>
+          <p><code>score = earned &divide; available &times; 100</code></p>
+          <p>Gaps are ranked by what each one costs, which is <code>(4 &minus; your points) &times; weight</code>. That is why a heavy area answered badly always sits above a light one, and why two people with the same score can get a different first move.</p>
+          <p>Nothing here is a benchmark against other businesses. There is no dataset behind this and it would be dishonest to imply one. It is a structured read of twelve answers you gave, and the value is in the order it puts them in.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Close">
+      <div class="wrap">
+        <div class="eyebrow">The Operations Map · $2,500 · two weeks</div>
+        <h2>Twelve answers show you the shape. The map shows you the business.</h2>
+        <p>The audit works from what you can recall in four minutes. The Operations Map works from what actually happens: every handoff drawn, every task that still waits on you named, timed and costed, and the build that removes them, in the order it should happen. It is credited in full against a Siesie build.</p>
+        <div class="actions">
+          <a class="button" href="/siesie-application">Start with the map <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/operations-map">Read what the map produces <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+          <a class="button secondary" href="/book-call">Book 15 minutes first <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module">
+    import { SIESIE_AUDIT } from "/assets/audit-config.js?v=1";
+    import { mountAudit, esc } from "/assets/audit-ui.js?v=1";
+
+    /* The sticky app header parks under the site bar. fsnav.js builds that bar
+       after this runs, so the height is measured on load and on resize rather
+       than assumed. */
+    var section = document.getElementById("audit");
+    function navHeight() {
+      var nav = document.getElementById("fs-nav");
+      var h = nav && /sticky|fixed/.test(getComputedStyle(nav).position)
+        ? nav.getBoundingClientRect().height : 0;
+      section.style.setProperty("--sya-navh", Math.round(h) + "px");
+    }
+    navHeight();
+    window.addEventListener("load", navHeight);
+    window.addEventListener("resize", navHeight);
+
+    /* The published weighting table is generated from the same array the
+       scoring uses, so what the page claims and what the engine does cannot
+       drift apart. */
+    var max = Math.max.apply(null, SIESIE_AUDIT.dimensions.map(function (d) { return d.weight; }));
+    document.getElementById("sya-weights").innerHTML = SIESIE_AUDIT.dimensions.map(function (d) {
+      return '<div class="sya-w-row">' +
+        '<div class="t"><span>' + esc(d.name) + '</span><span class="w">weight ' + d.weight + '</span></div>' +
+        '<div class="sya-w-bar' + (d.weight === max ? ' is-top' : '') + '" role="img" aria-label="' +
+          esc(d.name) + ', weight ' + d.weight + ' of ' + max + '">' +
+          '<i style="width:' + Math.round((d.weight / max) * 100) + '%"></i></div>' +
+        '</div>';
+    }).join("");
+
+    mountAudit({
+      config: SIESIE_AUDIT,
+      stage: document.getElementById("sya-mount"),
+      progress: document.getElementById("sya-prog"),
+      stepLabel: document.getElementById("sya-step"),
+      countLabel: document.getElementById("sya-count"),
+      scrollTarget: section
+    });
+  </script>
+
+  <script type="module" src="/assets/journey.js?v=7"></script>
+  <script src="/fsnav.js?v=854" defer></script>
+</body>
+</html>
