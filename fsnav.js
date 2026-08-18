@@ -1,4 +1,4 @@
-/* fsnav.js v852 · site chrome, six-group nav (2026-08-10 hierarchy rebuild).
+/* fsnav.js v855 · site chrome, six-group nav (2026-08-10 hierarchy rebuild).
    Ships the sticky nav, footer, sticky CTA bar, section rail, chat widget,
    page cross-fade veil, and the motion engine (data-reveal / data-stagger / data-count).
    Every page includes this once before </body>. Design source: design_handoff_frimpomaasync_site.
@@ -754,7 +754,11 @@
   var replaySection = document.querySelector("[data-proof-replay]");
   if (replaySection) {
     var thread = replaySection.querySelector("[data-proof-thread]");
-    var msgs = thread ? Array.prototype.slice.call(thread.querySelectorAll(".proof-msg")) : [];
+    /* Named replayMsgs, not msgs: `var` hoists to the whole IIFE, and the chat
+       widget above already owns `msgs` as its message container. Reusing the
+       name overwrote that element with an array and killed the chat on the
+       home page, the only page with this section. Fixed 2026-08-18. */
+    var replayMsgs = thread ? Array.prototype.slice.call(thread.querySelectorAll(".proof-msg")) : [];
     var againBtn = replaySection.querySelector("[data-proof-replay-again]");
     var timers = [];
     var GAPS = [300, 400, 900, 1500, 1100, 1300, 900, 1200];
@@ -764,20 +768,20 @@
       timers = [];
     };
     var showAll = function () {
-      msgs.forEach(function (m) { m.classList.add("is-in"); });
+      replayMsgs.forEach(function (m) { m.classList.add("is-in"); });
       replaySection.classList.add("is-done");
     };
     var runReplay = function () {
       clearTimers();
       replaySection.classList.remove("is-done");
-      msgs.forEach(function (m) { m.classList.remove("is-in"); });
+      replayMsgs.forEach(function (m) { m.classList.remove("is-in"); });
       if (reduce) { showAll(); return; }
       var at = 0;
-      msgs.forEach(function (m, i) {
+      replayMsgs.forEach(function (m, i) {
         at += GAPS[i];
         timers.push(setTimeout(function () {
           m.classList.add("is-in");
-          if (i === msgs.length - 1) {
+          if (i === replayMsgs.length - 1) {
             timers.push(setTimeout(function () {
               replaySection.classList.add("is-done");
             }, 500));
@@ -802,7 +806,7 @@
       /* If the section is already past the observer band on load, or the
          observer never fires, the thread still ends up readable. */
       setTimeout(function () {
-        var anyIn = msgs.some(function (m) { return m.classList.contains("is-in"); });
+        var anyIn = replayMsgs.some(function (m) { return m.classList.contains("is-in"); });
         var box = replaySection.getBoundingClientRect();
         if (!anyIn && box.top < 0 && box.bottom < window.innerHeight) showAll();
       }, 1200);
