@@ -1,7 +1,8 @@
 /* ---------------------------------------------------------------------------
-   Soft Appeals · Maryland overview page  (/soft-appeals)
+   Soft Appeals · the Maryland additions
+   Loaded by /soft-appeals and /soft-appeals-start.
    ---------------------------------------------------------------------------
-   Everything on that page that an existing component already covers uses the
+   Everything on those pages that an existing component already covers uses the
    existing component: .section, .wrap, .section-head, .eyebrow, .section-title,
    .section-intro, .card-grid, .path-card, .pill, .m-stats, .srcs/.src,
    .faq-list, .form-shell, .field, .form-status, .check-option, .small-note,

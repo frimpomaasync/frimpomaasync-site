@@ -75,10 +75,12 @@
        name. */
     "@media (max-width:359px){#fs-nav .fs-grid > a[data-navmark]{font-size:13px!important;letter-spacing:.08em!important}}",
     /* "Complimentary review" replaced "Free review" on 2026-08-07 so the button
-       says the same thing the page buttons say. It is nine characters longer,
-       and at 10.5px with .15em of tracking it does not share a 320px row with
-       the wordmark. The tracking is what goes, not the words: uppercase at
-       .06em is still legible at this size, and it is only the phone bar. */
+       said the same thing the page buttons said. Reversed 2026-08-21 for the
+       same reason, in the other direction: the Maryland rebuild says "free"
+       everywhere, so every Soft Appeals page now says free and the button
+       follows. The shorter word also gives the 320px row back the space the
+       2026-08-07 note was worried about. The tracking rules below stay: they
+       still have to hold next to the wordmark on a phone. */
     "@media (max-width:700px){#fs-nav [data-navcta]{font-size:9.5px!important;letter-spacing:.06em!important;padding:10px 12px!important}}",
     "@media (max-width:359px){#fs-nav [data-navcta]{font-size:9px!important;letter-spacing:.03em!important;padding:9px 10px!important}}",
     /* Same button on the sticky bar, which has 92px of right padding reserved
@@ -240,7 +242,7 @@
       (isSoft
         ? '<a data-navlink data-fs-by href="/" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">by frimpomaasync</a>'
         : '<button type="button" data-navlink data-fs-chat style="background:none;border:0;padding:0;font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);cursor:pointer;transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + (isSoft ? SOFT_CTA : "/fit") + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Complimentary review" : "Find my fit") + "</a>" +
+      '<a data-navcta href="' + (isSoft ? SOFT_CTA : "/fit") + '" style="background:#101426;color:#FFFFFF;padding:10px 15px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:background .25s ease">' + (isSoft ? "Free denial review" : "Find my fit") + "</a>" +
       "</div></div>";
     body.insertBefore(nav, body.firstChild);
 
@@ -423,7 +425,7 @@
       (isSoft
         ? '<a data-navlink href="' + (onSoft === "soft-sample" ? "/soft-appeals-data-security" : "/soft-appeals-sample-assessment") + '" style="font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;color:rgba(16,20,38,.58);transition:color .25s ease">' + (onSoft === "soft-sample" ? "Review data and security" : "View a sample assessment") + "</a>"
         : '<button type="button" data-navlink data-fs-chat style="font-family:inherit;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;cursor:pointer;background:none;border:0;padding:0;color:rgba(16,20,38,.58);transition:color .25s ease">See it answer</button>') +
-      '<a data-navcta href="' + (isSoft ? SOFT_CTA : "/fit") + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Complimentary review" : "Find my fit") + "</a>" +
+      '<a data-navcta href="' + (isSoft ? SOFT_CTA : "/fit") + '" style="background:#101426;color:#FFFFFF;padding:11px 16px;border-radius:5px;font-size:10.5px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;text-decoration:none;transition:background .25s ease">' + (isSoft ? "Free denial review" : "Find my fit") + "</a>" +
       "</div>";
     body.appendChild(barEl);
 
