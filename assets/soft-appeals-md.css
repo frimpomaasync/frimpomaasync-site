@@ -1,0 +1,399 @@
+/* ---------------------------------------------------------------------------
+   Soft Appeals · Maryland overview page  (/soft-appeals)
+   ---------------------------------------------------------------------------
+   Everything on that page that an existing component already covers uses the
+   existing component: .section, .wrap, .section-head, .eyebrow, .section-title,
+   .section-intro, .card-grid, .path-card, .pill, .m-stats, .srcs/.src,
+   .faq-list, .form-shell, .field, .form-status, .check-option, .small-note,
+   .button, .site-close.
+
+   Only the six things below had nothing suitable in journey.css or modules.css,
+   so they live here. Every class is prefixed sam- (Soft Appeals · Maryland) so
+   nothing in this file can reach any other page, per the class-prefix rule that
+   came out of the .who / .ico / .t collision on the booking pages.
+
+   Paint comes from the journey.css custom properties only. The one colour that
+   is not already a global token is the affirmative green used on the Carelon
+   block: that value is lifted straight from --sa-ok in soft-appeals.css, which
+   is scoped to .sa and therefore unreachable here. It is used exactly the way
+   that file uses it, as a rule and a tint behind a badge, never as a surface.
+   --------------------------------------------------------------------------- */
+
+:root {
+  --sam-ok: #1f7a4d;
+  --sam-ok-soft: rgba(31, 122, 77, 0.08);
+  --sam-ok-line: rgba(31, 122, 77, 0.24);
+  --sam-warn: #9f361c;
+  --sam-warn-soft: rgba(159, 54, 28, 0.07);
+  --sam-info: #2a5fa8;
+  --sam-info-soft: rgba(42, 95, 168, 0.07);
+}
+
+/* --- 1. The big figure inside a pricing cell ------------------------------- */
+/* .path-card carries the frame. This is only the number on top of it. */
+.sam-amt {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--copper);
+  font-family: var(--serif);
+  font-size: clamp(34px, 4.4vw, 46px);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  line-height: 0.95;
+}
+
+.sam-cite {
+  display: block;
+  margin-top: 14px;
+  color: var(--ink-faint);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  line-height: 1.6;
+}
+
+/* --- 2. The Carelon block -------------------------------------------------- */
+.sam-carelon {
+  margin-top: 8px;
+  padding: clamp(26px, 4vw, 44px);
+  border: 1px solid var(--sam-ok-line);
+  border-left: 4px solid var(--sam-ok);
+  border-radius: 18px;
+  background: var(--sam-ok-soft);
+}
+
+.sam-carelon .eyebrow {
+  color: var(--sam-ok);
+}
+
+.sam-carelon .eyebrow::before {
+  background: var(--sam-ok);
+}
+
+.sam-carelon h3 {
+  max-width: 22ch;
+  margin: 14px 0 0;
+  font-family: var(--serif);
+  font-size: clamp(28px, 3.6vw, 40px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.06;
+}
+
+.sam-carelon p {
+  max-width: 68ch;
+  margin: 18px 0 0;
+  color: var(--ink-soft);
+  font-size: 15.5px;
+  line-height: 1.68;
+}
+
+.sam-carelon p b,
+.sam-carelon p strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.sam-carelon .actions {
+  margin-top: 26px;
+}
+
+.sam-carelon .small-note {
+  margin-top: 18px;
+}
+
+/* --- 3. The process spine -------------------------------------------------- */
+/* Five steps threaded on one vertical rule. The rule is drawn on the list, not
+   on each item, so it cannot break between steps at any column width. */
+.sam-spine {
+  position: relative;
+  margin: 30px 0 0;
+  padding: 0 0 0 46px;
+  list-style: none;
+}
+
+.sam-spine::before {
+  position: absolute;
+  top: 10px;
+  bottom: 10px;
+  left: 15px;
+  width: 1px;
+  background: linear-gradient(180deg, var(--copper), rgba(194, 80, 28, 0.16));
+  content: "";
+}
+
+.sam-spine li {
+  position: relative;
+  padding: 0 0 26px;
+}
+
+.sam-spine li:last-child {
+  padding-bottom: 0;
+}
+
+.sam-spine li::before {
+  position: absolute;
+  top: 2px;
+  left: -39px;
+  display: grid;
+  width: 33px;
+  height: 33px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--paper);
+  color: var(--copper);
+  content: counter(list-item);
+  font-family: var(--mono);
+  font-size: 12px;
+  place-items: center;
+}
+
+.sam-spine h3 {
+  margin: 0 0 7px;
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.25;
+}
+
+.sam-spine p {
+  max-width: 62ch;
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 14.6px;
+  line-height: 1.62;
+}
+
+/* --- 4. The Maryland rules rows -------------------------------------------- */
+/* .src already gives the figure / description / citation row. All this adds is
+   the accent rule down the left edge, because these are five rules rather than
+   five sources. */
+.srcs.sam-rules .src {
+  border-left: 3px solid var(--copper);
+}
+
+/* A statute citation is case-sensitive: § 15-1005(e)(1) is not § 15-1005(E)(1).
+   .src .cite b uppercases, which is right for a publisher name and wrong here. */
+.srcs.sam-rules .src .cite b {
+  font-size: 10.5px;
+  letter-spacing: 0.4px;
+  text-transform: none;
+}
+
+.srcs.sam-rules .src .what b,
+.srcs.sam-rules .src .what strong {
+  display: block;
+  margin-bottom: 5px;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+/* --- 5. The honesty block -------------------------------------------------- */
+.sam-honesty {
+  max-width: 820px;
+  margin-inline: auto;
+  padding: clamp(28px, 5vw, 52px);
+  border: 1px dashed rgba(16, 20, 38, 0.28);
+  border-radius: 22px;
+  background: var(--paper-soft);
+}
+
+.sam-honesty .sam-quote {
+  max-width: 24ch;
+  margin: 12px 0 0;
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(30px, 4.4vw, 44px);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+}
+
+.sam-honesty p {
+  max-width: 66ch;
+  margin: 20px 0 0;
+  color: var(--ink-soft);
+  font-size: 15.5px;
+  line-height: 1.68;
+}
+
+.sam-honesty .actions {
+  margin-top: 28px;
+}
+
+/* --- 6. The conditional notices under the form ----------------------------- */
+.sam-notice {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ink-faint);
+  border-radius: 10px;
+  background: var(--paper-soft);
+  color: var(--ink-soft);
+  font-size: 13.6px;
+  line-height: 1.6;
+}
+
+.sam-notice b {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.sam-notice.is-warn {
+  border-left-color: var(--sam-warn);
+  background: var(--sam-warn-soft);
+}
+
+.sam-notice.is-info {
+  border-left-color: var(--sam-info);
+  background: var(--sam-info-soft);
+}
+
+.sam-notice[hidden] {
+  display: none;
+}
+
+/* --- The honeypot. Off-canvas rather than display:none, so a bot that filters
+       on display:none still fills it, and never reachable by keyboard. ------- */
+.sam-trap {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* --- The success panel that replaces the form in place --------------------- */
+.sam-success {
+  max-width: 820px;
+  margin-inline: auto;
+  padding: clamp(28px, 5vw, 54px);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--paper);
+}
+
+.sam-success h3 {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: clamp(30px, 4vw, 42px);
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.sam-success p {
+  max-width: 62ch;
+  margin: 18px 0 0;
+  color: var(--ink-soft);
+  font-size: 15.5px;
+  line-height: 1.66;
+}
+
+/* --- Phone ---------------------------------------------------------------- */
+@media (max-width: 620px) {
+  .sam-spine {
+    padding-left: 38px;
+  }
+
+  .sam-spine::before {
+    left: 13px;
+  }
+
+  .sam-spine li::before {
+    left: -33px;
+    width: 27px;
+    height: 27px;
+  }
+
+  .sam-carelon {
+    border-left-width: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sam-carelon,
+  .sam-honesty,
+  .sam-success {
+    transition: none;
+  }
+}
+
+/* --- Small corrections to existing components, scoped to this page --------- */
+
+/* .card-grid is a hard three columns, which leaves the scope section's two
+   cards with an empty third cell. */
+.card-grid.sam-two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 820px) {
+  .card-grid.sam-two {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* .path-card has no list style of its own: nothing on the site put a list in
+   one until the two scope cards. */
+.sam-list {
+  margin: 14px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sam-list li {
+  position: relative;
+  padding: 0 0 0 20px;
+  color: var(--ink-soft);
+  font-size: 14.4px;
+  line-height: 1.6;
+}
+
+.sam-list li + li {
+  margin-top: 9px;
+}
+
+.sam-list li::before {
+  position: absolute;
+  left: 0;
+  color: var(--copper);
+  content: "\2713";
+  font-size: 12px;
+}
+
+.path-card .sam-list.is-not li::before {
+  color: var(--ink-faint);
+  content: "\00B7";
+  font-size: 18px;
+  line-height: 1.1;
+}
+
+/* The required marker. abbr defaults to a dotted underline in most browsers. */
+.field abbr,
+label.field abbr {
+  border: 0;
+  color: var(--copper);
+  font-size: 12px;
+  text-decoration: none;
+}
+
+/* The two in-page anchors have to clear the fixed site bar, which is 76px. */
+#review,
+#pricing {
+  scroll-margin-top: calc(var(--nav-height) + 20px);
+}
+
+/* .field is a grid and stretches its rows, so a field carrying a hint sits its
+   control lower than the field beside it. Stack from the top instead, and the
+   controls in a row line up. */
+#sam-form .field {
+  align-content: start;
+}
+
+/* The submit row: button and the timing note on one baseline. */
+#sam-form .actions .small-note {
+  margin-top: 0;
+}
