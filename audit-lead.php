@@ -27,11 +27,27 @@ $audits = [
   'blueprint-workbook'   => 'The Blueprint workbook',
 ];
 
+// The subject line and the opening of the visitor's own copy. An assessment
+// hands back a reading, so "your result" is the honest word for it. The
+// Blueprint is a thing they built rather than a thing they answered, and
+// calling that a result would be somebody else's word for their own work.
+$subjects = [
+  'blueprint'          => 'Your blueprint, as it stands',
+  'blueprint-workbook' => 'Your blueprint, as it stands',
+];
+$openings = [
+  'blueprint' => "Here is your blueprint, the way you left it. None of it is new to\n"
+    . "you: it is here so you can keep it, forward it, or bring it to a\n"
+    . "conversation.",
+  'blueprint-workbook' => "Here is your blueprint, the way you left it. None of it is new to\n"
+    . "you: it is here so you can keep it, forward it, or bring it to a\n"
+    . "conversation.",
+];
+
 // The last paragraph of the visitor's own copy. The two assessments ask twelve
 // questions and hand back a reading, so theirs offers to apply it for real. The
-// Blueprint is a thing they built rather than a thing they answered, so it ends
-// on the one they are about to install instead. Falls back to the assessment
-// wording for anything not listed.
+// Blueprint ends on the one system they are about to install instead. Falls
+// back to the assessment wording for anything not listed.
 $closings = [
   'blueprint' => "The score moves when a system goes in, not when the audit is\n"
     . "retaken. Whatever sits at the top of Where to start is the one worth\n"
@@ -145,10 +161,11 @@ if ($cfg) {
   $first = preg_split('/\s+/', $name);
   $closing = $closings[$audit] ?? "If you would like this applied to your real business rather than to\n"
     . "twelve answers, reply to this email and say so.";
-  $visitorBody = "Hello " . $first[0] . ",\n\n"
-    . "Here is the result you asked for. It is the same page you saw on\n"
+  $opening = $openings[$audit] ?? "Here is the result you asked for. It is the same page you saw on\n"
     . "screen, so nothing here is new to you: it is here so you can keep it,\n"
-    . "forward it, or bring it to a conversation.\n\n"
+    . "forward it, or bring it to a conversation.";
+  $visitorBody = "Hello " . $first[0] . ",\n\n"
+    . $opening . "\n\n"
     . str_repeat('=', 66) . "\n\n"
     . $summary . "\n\n"
     . str_repeat('=', 66) . "\n\n"
@@ -157,7 +174,7 @@ if ($cfg) {
   $visitorSent = fs_smtp_send(
     $cfg,
     $email,
-    'Your result: ' . $audits[$audit],
+    $subjects[$audit] ?? ('Your result: ' . $audits[$audit]),
     $visitorBody,
     'nanafrimpgskc@gmail.com'
   );
