@@ -267,6 +267,8 @@
     "#bpl .bpl-status.is-done{color:#9fd8b6}" +
     "#bpl .bpl-status.is-warn{color:#f0a882}" +
     "#bpl .bpl-fine{font-size:12.5px;color:#8a8e9c;margin:16px 0 0;line-height:1.55}" +
+    "#bpl .bpl-back{color:#E5A886;text-decoration:underline}" +
+    "#bpl .bpl-back:hover{color:#fff}" +
     "#bpl .bpl-trap{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}" +
     "@media print{#bpl{display:none!important}}";
 
@@ -328,8 +330,18 @@
     form.appendChild(status);
     box.appendChild(form);
 
-    box.appendChild(el("p", { "class": "bpl-fine" },
-      "Sending it shares your blueprint with Nana Frimpongmaa, which is how she can answer you about it. Downloading keeps it entirely on your machine. Either way the blueprint stays here in this browser."));
+    var fine = el("p", { "class": "bpl-fine" });
+    fine.appendChild(document.createTextNode(
+      "Sending it shares your blueprint with Nana Frimpongmaa, which is how she can answer you about it. Downloading keeps it entirely on your machine. Either way the blueprint stays here in this browser. "));
+    /* The workbook and my-blueprint are both in the sitemap, so somebody can
+       land on either one cold with no way back into anything. This is that way
+       back, and on the command center itself it is simply where they are. */
+    if (auditId !== "blueprint") {
+      var back = el("a", { href: "/blueprint", "class": "bpl-back" }, "Open the command center");
+      fine.appendChild(back);
+      fine.appendChild(document.createTextNode(" to keep filling it in."));
+    }
+    box.appendChild(fine);
 
     dl.addEventListener("click", function () {
       var fresh = read();
@@ -435,7 +447,11 @@
      Wait for the unpacked document to appear, then append once. If the page
      never unpacks, nothing is added and nothing is broken. */
   function start() {
-    var auditId = location.pathname.indexOf("workbook") !== -1 ? "blueprint-workbook" : "blueprint";
+    /* Three pages, three ids, so a lead says which one it came from. */
+    var path = location.pathname;
+    var auditId = path.indexOf("my-blueprint") !== -1 ? "my-blueprint"
+      : path.indexOf("workbook") !== -1 ? "blueprint-workbook"
+      : "blueprint";
     var tries = 0;
     var timer = setInterval(function () {
       tries++;

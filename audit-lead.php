@@ -25,6 +25,7 @@ $audits = [
   'denial-health-score'  => 'The Denial Health Score',
   'blueprint'            => 'The Blueprint Command Center',
   'blueprint-workbook'   => 'The Blueprint workbook',
+  'my-blueprint'         => 'My Blueprint',
 ];
 
 // The subject line and the opening of the visitor's own copy. An assessment
@@ -34,12 +35,16 @@ $audits = [
 $subjects = [
   'blueprint'          => 'Your blueprint, as it stands',
   'blueprint-workbook' => 'Your blueprint, as it stands',
+  'my-blueprint'       => 'Your blueprint, as it stands',
 ];
 $openings = [
   'blueprint' => "Here is your blueprint, the way you left it. None of it is new to\n"
     . "you: it is here so you can keep it, forward it, or bring it to a\n"
     . "conversation.",
   'blueprint-workbook' => "Here is your blueprint, the way you left it. None of it is new to\n"
+    . "you: it is here so you can keep it, forward it, or bring it to a\n"
+    . "conversation.",
+  'my-blueprint' => "Here is your blueprint, the way you left it. None of it is new to\n"
     . "you: it is here so you can keep it, forward it, or bring it to a\n"
     . "conversation.",
 ];
@@ -57,6 +62,10 @@ $closings = [
   'blueprint-workbook' => "The workbook and the command center at\n"
     . "frimpomaasync.com/blueprint hold the same answers, so filling in either\n"
     . "one keeps this copy current.\n\n"
+    . "If you would rather have it built for you than build it, reply to this\n"
+    . "email and say which one.",
+  'my-blueprint' => "All three Blueprint pages read the same saved answers, so this copy\n"
+    . "stays current wherever you fill something in.\n\n"
     . "If you would rather have it built for you than build it, reply to this\n"
     . "email and say which one.",
 ];
