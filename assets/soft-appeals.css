@@ -1771,8 +1771,11 @@
   color: var(--sa-mute);
 }
 
-.sa-cover h1 {
+.sa-cover h1,
+.sa-sheet.sa-cover h2 {
   margin: clamp(30px, 6vw, 60px) 0 16px;
+  padding-bottom: 0;
+  border-bottom: 0;
   font-family: var(--serif);
   font-weight: 400;
   font-size: clamp(30px, 5.4vw, 52px);
