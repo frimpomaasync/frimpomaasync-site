@@ -23,6 +23,26 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') { http_response_code(405); ex
 $audits = [
   'siesie-systems-audit' => 'The Systems Audit',
   'denial-health-score'  => 'The Denial Health Score',
+  'blueprint'            => 'The Blueprint Command Center',
+  'blueprint-workbook'   => 'The Blueprint workbook',
+];
+
+// The last paragraph of the visitor's own copy. The two assessments ask twelve
+// questions and hand back a reading, so theirs offers to apply it for real. The
+// Blueprint is a thing they built rather than a thing they answered, so it ends
+// on the one they are about to install instead. Falls back to the assessment
+// wording for anything not listed.
+$closings = [
+  'blueprint' => "The score moves when a system goes in, not when the audit is\n"
+    . "retaken. Whatever sits at the top of Where to start is the one worth\n"
+    . "an hour this week.\n\n"
+    . "If you would rather have it built for you than build it, reply to this\n"
+    . "email and say which one.",
+  'blueprint-workbook' => "The workbook and the command center at\n"
+    . "frimpomaasync.com/blueprint hold the same answers, so filling in either\n"
+    . "one keeps this copy current.\n\n"
+    . "If you would rather have it built for you than build it, reply to this\n"
+    . "email and say which one.",
 ];
 
 // Every control character goes, carriage return and line feed included. The
@@ -123,6 +143,8 @@ if (!$ownerSent) { audit_formspree_fallback($audit, $audits, $name, $email, $bus
 $visitorSent = false;
 if ($cfg) {
   $first = preg_split('/\s+/', $name);
+  $closing = $closings[$audit] ?? "If you would like this applied to your real business rather than to\n"
+    . "twelve answers, reply to this email and say so.";
   $visitorBody = "Hello " . $first[0] . ",\n\n"
     . "Here is the result you asked for. It is the same page you saw on\n"
     . "screen, so nothing here is new to you: it is here so you can keep it,\n"
@@ -130,8 +152,7 @@ if ($cfg) {
     . str_repeat('=', 66) . "\n\n"
     . $summary . "\n\n"
     . str_repeat('=', 66) . "\n\n"
-    . "If you would like this applied to your real business rather than to\n"
-    . "twelve answers, reply to this email and say so.\n\n"
+    . $closing . "\n\n"
     . "Nana Frimpongmaa\nfrimpomaasync.com\n";
   $visitorSent = fs_smtp_send(
     $cfg,
