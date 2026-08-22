@@ -398,3 +398,38 @@ label.field abbr {
 #sam-form .actions .small-note {
   margin-top: 0;
 }
+
+/* The PHI guard message, shown only when a pattern is caught. Same markup and
+   the same rules as the guard on /soft-appeals-start, because a person who
+   meets it on one page should meet the same thing on the other. */
+#sam-form .guard {
+  display: none;
+  margin: 20px 0 0;
+  padding: 16px 18px;
+  border: 1px solid rgba(194, 80, 28, .34);
+  border-radius: 12px;
+  background: rgba(194, 80, 28, .05);
+  font-size: 14px;
+  line-height: 1.58;
+  color: #101426;
+}
+
+#sam-form .guard.on { display: block; }
+#sam-form .guard b { font-weight: 600; }
+
+#sam-form .guard label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 12px;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+#sam-form .guard input {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  margin-top: 2px;
+  accent-color: #C2501C;
+}

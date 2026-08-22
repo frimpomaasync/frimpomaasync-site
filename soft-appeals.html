@@ -321,7 +321,7 @@
 
         <div class="sam-formwrap">
 
-          <form class="form-shell" id="sam-form" name="soft-appeals-maryland" action="https://formspree.io/f/mnjkqydb" method="post">
+          <form class="form-shell" id="sam-form" name="soft-appeals-maryland" action="/sa-lead.php" method="post">
             <input type="hidden" name="_subject" value="Soft Appeals: free Maryland denial review request">
             <input type="hidden" name="source" value="soft-appeals-maryland">
 
@@ -344,7 +344,7 @@
               </label>
 
               <label class="field">Your role
-                <input type="text" name="role" placeholder="Owner, practice manager, billing lead…">
+                <input type="text" name="role" data-phi-check placeholder="Owner, practice manager, billing lead…">
               </label>
 
               <label class="field"><span>State where the practice operates <abbr title="required" aria-hidden="true">✱</abbr></span>
@@ -448,7 +448,7 @@
               <p class="sam-notice is-info" id="sam-note-solo" role="status" hidden><b>Worth saying up front:</b> a solo practice usually does not have enough denial volume to justify paying someone like me. I will still run the free review and tell you honestly what I find, including if the answer is that you do not need me.</p>
 
               <label class="field full">How do unresolved denials get handled today?
-                <textarea name="current_handling" placeholder="Who owns them, what usually happens, and where it tends to stall. Plain language is fine. There's no wrong answer here."></textarea>
+                <textarea name="current_handling" data-phi-check placeholder="Who owns them, what usually happens, and where it tends to stall. Plain language is fine. There's no wrong answer here."></textarea>
               </label>
 
               <div class="field full">
@@ -457,6 +457,8 @@
               </div>
 
             </div>
+
+            <div class="guard" data-phi-guard-msg aria-live="polite"></div>
 
             <div class="actions" style="margin-top:26px;align-items:center">
               <button class="button" type="submit">Send my free review request <span class="button-arrow" aria-hidden="true">&#8594;</span></button>
@@ -470,12 +472,13 @@
           <div class="sam-success" id="sam-success" role="status" aria-live="polite" tabindex="-1" hidden>
             <h3>Got it.</h3>
             <p>I'll come back to you within one business day with next steps and what I'd need to run the review. Nothing is submitted anywhere on your behalf until you authorize it in writing.</p>
+            <p>A copy of what you just sent is on its way to your inbox, so you have a record of it without waiting for me.</p>
             <p>In the meantime, the <a href="/soft-appeals-decoder">denial code decoder</a> is free and runs entirely in your browser.</p>
           </div>
 
         </div>
 
-        <noscript>This form posts directly if scripts are off. You will land on the form relay's own confirmation page instead of the one on this site.</noscript>
+        <noscript>This form posts directly if scripts are off. You will land on a confirmation page on this site, and your copy still reaches your inbox.</noscript>
       </div>
     </section>
 

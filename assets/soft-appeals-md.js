@@ -67,15 +67,75 @@
   });
   sync();
 
-  /* --- 2. Submission ------------------------------------------------------- */
+  /* --- 2. The PHI guard ---------------------------------------------------- */
+
+  /* Added 2026-08-22. The two forms on /soft-appeals-start and
+     /soft-appeals-contact have scanned their free-text fields since 08-17. This
+     one did not, and it sits on the page most people land on, which made it the
+     easiest place on the site to type something that should never leave a
+     practice. Same patterns, same message, same override. */
+
+  var guard = form.querySelector("[data-phi-guard-msg]");
+  var guarded = [].slice.call(form.querySelectorAll("[data-phi-check]"));
+
+  var PATTERNS = [
+    { re: /\b\d{3}-\d{2}-\d{4}\b/, what: "something shaped like a social security number" },
+    { re: /\b(0?[1-9]|1[0-2])[\/\-.](0?[1-9]|[12]\d|3[01])[\/\-.](19|20)?\d{2}\b/, what: "something shaped like a date of birth" },
+    { re: /\b(dob|d\.o\.b|date of birth|mrn|medical record|member id|subscriber id|patient)\b/i, what: "a word that usually travels with patient information" },
+    { re: /\b\d{7,}\b/, what: "a long identifier that could be a member or claim number" }
+  ];
+
+  function scan() {
+    var hits = [];
+    guarded.forEach(function (field) {
+      var v = field.value || "";
+      PATTERNS.forEach(function (p) {
+        if (p.re.test(v)) hits.push(p.what);
+      });
+    });
+    return hits.filter(function (h, i) { return hits.indexOf(h) === i; });
+  }
+
+  /* Returns true when the submission should stop. An override checkbox the
+     person has ticked means they have looked and they are sure. */
+  function blocked() {
+    if (!guard || !guarded.length) return false;
+    var override = guard.querySelector("input[type=checkbox]");
+    if (override && override.checked) return false;
+
+    var hits = scan();
+    if (!hits.length) return false;
+
+    guard.innerHTML =
+      "<b>Hold on, that looks like patient information.</b> This form found " +
+      hits.join(", ") +
+      ". Nothing has been sent. Please take it out and describe the situation at " +
+      "business level instead. Patient-level detail is requested later, through " +
+      "the secure intake process." +
+      "<label><input type=\"checkbox\"> I have checked this field, and it contains no patient information.</label>";
+    guard.classList.add("on");
+    guard.scrollIntoView({ block: "center" });
+    return true;
+  }
+
+  /* --- 3. Submission ------------------------------------------------------- */
 
   var status = form.querySelector("[data-form-status]");
   var button = form.querySelector("button[type='submit']");
   var trap = form.elements.company_website;
+  var sending = false;
+
+  /* Twenty seconds. A fetch that never settles used to leave this form sitting
+     on "Sending your request..." with the button dead, which reads as a broken
+     page and gets pressed again. Now it always ends: either the request lands,
+     or the person gets the fallback and the button back. */
+  var TIMEOUT_MS = 20000;
 
   form.addEventListener("submit", function (event) {
     event.preventDefault();
+    if (sending) return;
     if (!form.reportValidity()) return;
+    if (blocked()) return;
 
     /* A filled honeypot is a bot. Show the same answer a person gets, send
        nothing anywhere. */
@@ -84,8 +144,29 @@
       return;
     }
 
+    sending = true;
     button.disabled = true;
     status.textContent = "Sending your request...";
+
+    var settled = false;
+    var timer = window.setTimeout(function () {
+      if (!settled) fail();
+    }, TIMEOUT_MS);
+
+    function fail() {
+      settled = true;
+      window.clearTimeout(timer);
+      sending = false;
+      status.innerHTML =
+        'Your request did not send. Email <a href="mailto:' +
+        FALLBACK_EMAIL +
+        '">' +
+        FALLBACK_EMAIL +
+        '</a> or <a href="' +
+        BOOKING_URL +
+        '">book the 15-minute call</a>.';
+      button.disabled = false;
+    }
 
     fetch(form.action, {
       method: "POST",
@@ -93,19 +174,15 @@
       headers: { Accept: "application/json" }
     })
       .then(function (response) {
+        if (settled) return;
+        settled = true;
+        window.clearTimeout(timer);
         if (!response.ok) throw new Error("delivery failed");
         succeed();
       })
       .catch(function () {
-        status.innerHTML =
-          'Your request did not send. Email <a href="mailto:' +
-          FALLBACK_EMAIL +
-          '">' +
-          FALLBACK_EMAIL +
-          '</a> or <a href="' +
-          BOOKING_URL +
-          '">book the 15-minute call</a>.';
-        button.disabled = false;
+        if (settled && status.textContent.indexOf("did not send") !== -1) return;
+        fail();
       });
   });
 

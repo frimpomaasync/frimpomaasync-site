@@ -326,15 +326,24 @@ function bindQualificationForms() {
       button.disabled = true;
       status.textContent = "Sending your answers...";
 
+      /* Twenty seconds, then the fallback. A fetch that never settles used to
+         leave the form on "Sending your answers..." with the button dead, which
+         reads as a broken page and gets pressed again. */
+      const abort = new AbortController();
+      const timer = window.setTimeout(() => abort.abort(), 20000);
+
       try {
         const response = await fetch(form.action, {
           method: "POST",
           body: new FormData(form),
           headers: { Accept: "application/json" },
+          signal: abort.signal,
         });
+        window.clearTimeout(timer);
         if (!response.ok) throw new Error("delivery failed");
         window.location.href = form.dataset.success;
       } catch {
+        window.clearTimeout(timer);
         status.innerHTML =
           `Your answers did not send. Email <a href="mailto:${FALLBACK_EMAIL}">${FALLBACK_EMAIL}</a> ` +
           `or <a href="${BOOKING_URL}">book the 15-minute call</a>.`;
