@@ -183,6 +183,13 @@ def annotate(message: str) -> None:
     """
     if os.environ.get("GITHUB_ACTIONS") != "true":
         return
+    # A finding forwarded from the secret scan reads "secret: path:line: text",
+    # so the prefix has to come off or the annotation points at a file called
+    # "secret" and the line number lands in the message.
+    for prefix in ("secret: ", "secret_scan.py: "):
+        if message.startswith(prefix):
+            message = message[len(prefix):]
+            break
     path, _, rest = message.partition(":")
     line, _, text = rest.partition(":")
     flat = " ".join((text or rest or message).split())
