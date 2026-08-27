@@ -10,8 +10,9 @@ live server:
   1. PSR-4 correctness. The autoloader maps SoftAppeals\Foo\Bar to
      src/SoftAppeals/Foo/Bar.php. A namespace that disagrees with its path is a
      class that never loads, and the failure looks like an empty response.
-  2. No secret in the repository. The deploy uploads whatever is committed, so
-     a password in a tracked file is a published password.
+  2. No secret in the repository, by handing that job to secret_scan.py and
+     failing if it finds anything. The patterns live in exactly one file: two
+     copies is what made the build fail on its own definition of a secret.
   3. No stray output before <?php, and no closing ?> at the end of a class file.
      A byte before the opening tag breaks every header() call on the page.
   4. Balanced braces, parentheses and brackets outside strings and comments.
@@ -32,16 +33,6 @@ SRC = REPO / "src" / "SoftAppeals"
 
 # Directories that must never be served, each of which must carry Require all denied.
 PRIVATE_DIRS = ["src", "templates", "database", "storage-private", "cron", "tests", "docs", "vault", "fs-metrics"]
-
-# Files that legitimately contain the word "password" as an identifier.
-SECRET_PATTERNS = [
-    (re.compile(r"""SA_DB_PASSWORD\s*=>\s*['"][^'"]{3,}['"]"""), "a database password literal"),
-    (re.compile(r"""SA_SESSION_SECRET\s*=>\s*['"][^'"]{3,}['"]"""), "a session secret literal"),
-    (re.compile(r"""SA_TOKEN_SECRET\s*=>\s*['"][^'"]{3,}['"]"""), "a token secret literal"),
-    (re.compile(r"""SA_IP_HMAC_SECRET\s*=>\s*['"][^'"]{3,}['"]"""), "an IP HMAC secret literal"),
-    (re.compile(r"-----BEGIN [A-Z ]*PRIVATE KEY-----"), "a private key"),
-    (re.compile(r"""\bmysql:host=[^'";\s]+;.*['"][A-Za-z0-9!@#$%^&*]{8,}['"]"""), "a DSN with a password"),
-]
 
 failures: list[str] = []
 checked = 0
@@ -147,10 +138,6 @@ def check_php(path: pathlib.Path) -> None:
     if body.endswith("?>") and "/src/" in str(path):
         fail(path, "ends with ?>, which can emit a stray newline")
 
-    for pattern, label in SECRET_PATTERNS:
-        if pattern.search(text):
-            fail(path, f"looks like it contains {label}")
-
     stripped = strip_php_strings_and_comments(php_regions_only(text))
     for opener, closer, name in [("{", "}", "brace"), ("(", ")", "paren"), ("[", "]", "bracket")]:
         difference = stripped.count(opener) - stripped.count(closer)
@@ -196,8 +183,23 @@ def main() -> int:
         elif "Require all denied" not in htaccess.read_text(encoding="utf-8"):
             failures.append(f"{directory}/.htaccess: does not deny access")
 
+    # Secret scanning proper. Called rather than reimplemented, so the
+    # patterns exist in one file only. This also means a workflow that only
+    # runs the static check still gets the full gate.
+    sys.path.insert(0, str(pathlib.Path(__file__).parent))
+    import secret_scan
+
+    broken = secret_scan.self_test()
+    if broken:
+        for problem in broken:
+            failures.append(f"secret_scan.py: {problem}")
+    else:
+        for finding in secret_scan.scan():
+            failures.append(f"secret: {finding}")
+
     print(f"  {checked} PHP files checked")
     print(f"  {len(PRIVATE_DIRS)} private directories checked for a deny-all")
+    print("  secret scan: self-tested, then run over every tracked file")
     print("  " + "-" * 58)
 
     if failures:
@@ -208,7 +210,7 @@ def main() -> int:
         print()
         return 1
 
-    print("  Clean. Namespaces match paths, no secrets, every private folder denied.")
+    print("  Clean. Namespaces match paths, no secret anywhere, every private folder denied.")
     print()
     print("  This is NOT a PHP syntax check. There is no PHP on this machine.")
     print("  The first real syntax gate is the staging deploy.")

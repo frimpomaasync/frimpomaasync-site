@@ -178,7 +178,9 @@ def self_test() -> list[str]:
     must_catch = [
         ("config.php", "'SA_DB_PASSWORD' => 'Hq7dK2mPx9vLb4nR',"),
         ("config.php", "'SA_SESSION_SECRET' => 'r8Kd2mQx7pLv4nBw9tYz',"),
-        ("key.pem", "-" * 5 + "BEGIN RSA PRIVATE KEY" + "-" * 5),
+        # Assembled from pieces so this source line is not itself a key header.
+        # A scanner that trips other scanners is what broke the build once already.
+        ("key.pem", "-" * 5 + "BEGIN RSA " + "PRIVATE" + " KEY" + "-" * 5),
         ("db.php", "$dsn = 'mysql:host=localhost;password=Sk9dMx2pQr7v';"),
         ("mail.php", "'password' => 'Zx7Kd2mQp9vLb4nR',"),
         ("ci.yml", "token: ghp_" + "A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q7r8"),
