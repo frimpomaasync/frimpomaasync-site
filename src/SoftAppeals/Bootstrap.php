@@ -48,10 +48,11 @@ final class Bootstrap
     /** @var array<string,object> */
     private array $made = [];
 
-    private function __construct(Config $config)
+    private function __construct(Config $config, ErrorHandler $errors)
     {
         $this->config = $config;
-        $this->errors = new ErrorHandler($config);
+        $this->errors = $errors;
+        $errors->withConfig($config);
     }
 
     /**
@@ -65,17 +66,22 @@ final class Bootstrap
     {
         self::registerAutoloader();
 
-        $config = Config::load($configFile);
-        $app = new self($config);
-
-        if ($withErrorHandler) {
-            $app->errors->register();
-        }
-
         // Timestamps are stored in UTC regardless of what the host is set to.
         date_default_timezone_set('UTC');
 
-        return $app;
+        // The handler goes in BEFORE the configuration is read, because reading
+        // the configuration is the first thing that can fail. A config file with
+        // a stray character throws while loading, and with the handler installed
+        // afterwards that threw past every catch: empty 500, nothing in the body,
+        // nothing in any log. Measured on staging 2026-08-27.
+        $errors = new ErrorHandler();
+        if ($withErrorHandler) {
+            $errors->register();
+        }
+
+        $config = Config::load($configFile);
+
+        return new self($config, $errors);
     }
 
     /**

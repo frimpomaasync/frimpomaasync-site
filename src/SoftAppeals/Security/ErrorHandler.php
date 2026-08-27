@@ -19,15 +19,38 @@ use Throwable;
  */
 final class ErrorHandler
 {
-    private Config $config;
+    private ?Config $config;
     private string $logPath;
     private string $correlation;
 
-    public function __construct(Config $config)
+    /**
+     * $config is optional so this can be installed BEFORE configuration is
+     * loaded.
+     *
+     * That ordering is not a nicety. Configuration is the first thing that can
+     * fail: a config file with a stray character, or one that returns something
+     * other than an array, throws while loading. With the handler registered
+     * afterwards, that threw past every catch and the response was an empty 500
+     * with nothing in the body and nothing in any log. It happened on staging
+     * on 2026-08-27 and cost an hour of guessing.
+     *
+     * Installed first, the same failure renders a page with a class name and a
+     * correlation reference.
+     */
+    public function __construct(?Config $config = null, ?string $logPath = null)
+    {
+        $this->config = $config;
+        $this->logPath = $logPath
+            ?? $config?->privateStoragePath('audit-exports', 'errors.log')
+            ?? dirname(__DIR__, 3) . '/storage-private/soft-appeals/audit-exports/errors.log';
+        $this->correlation = strtoupper(bin2hex(random_bytes(4)));
+    }
+
+    /** Hand it the configuration once loading has succeeded. */
+    public function withConfig(Config $config): void
     {
         $this->config = $config;
         $this->logPath = $config->privateStoragePath('audit-exports', 'errors.log');
-        $this->correlation = strtoupper(bin2hex(random_bytes(4)));
     }
 
     public function correlationReference(): string
