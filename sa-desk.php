@@ -35,7 +35,11 @@ if (!$session->isAuthenticated() || $session->kind() !== 'admin') {
 if (!$app->config()->isConfigured()) {
     http_response_code(503);
     header('Retry-After: 600');
-    echo \SoftAppeals\Views\NotConfigured::render($app->config()->string('SA_APP_ENV'));
+    echo \SoftAppeals\Views\NotConfigured::render(
+        $app->config()->string('SA_APP_ENV'),
+        $app->config()->readiness(),
+        !$app->config()->isProduction()
+    );
     exit;
 }
 

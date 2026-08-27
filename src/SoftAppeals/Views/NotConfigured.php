@@ -20,11 +20,34 @@ namespace SoftAppeals\Views;
  */
 final class NotConfigured
 {
-    public static function render(string $environment = ''): string
-    {
+    /**
+     * @param array{path?:string,file?:bool,database?:bool,secrets?:bool} $readiness
+     */
+    public static function render(
+        string $environment = '',
+        array $readiness = [],
+        bool $showDetail = false
+    ): string {
         $env = $environment === ''
             ? ''
             : '<p class="env">' . htmlspecialchars($environment, ENT_QUOTES, 'UTF-8') . '</p>';
+
+        // The detail is for a non-production site only. On production the page
+        // stays a plain sentence: a public page does not teach the layout of a
+        // private directory.
+        $detail = '';
+        if ($showDetail && $readiness !== []) {
+            $mark = static fn (bool $ok): string => $ok
+                ? '<span class="yes">found</span>'
+                : '<span class="no">missing</span>';
+            $path = htmlspecialchars((string) ($readiness['path'] ?? ''), ENT_QUOTES, 'UTF-8');
+            $detail = '<div class="checks">'
+                . '<p><b>Config file</b> ' . $mark((bool) ($readiness['file'] ?? false)) . '</p>'
+                . '<p><b>Database setting</b> ' . $mark((bool) ($readiness['database'] ?? false)) . '</p>'
+                . '<p><b>Three secrets</b> ' . $mark((bool) ($readiness['secrets'] ?? false)) . '</p>'
+                . '<p class="path">Looking for this exact file:<br><code>' . $path . '</code></p>'
+                . '</div>';
+        }
 
         return <<<HTML
         <!doctype html>
@@ -50,6 +73,16 @@ final class NotConfigured
                font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.65rem;
                letter-spacing:.1em;text-transform:uppercase;color:#6E7280}
           a{color:#C2501C}
+          .checks{margin:1.25rem 0 0;padding:1rem 1.1rem;background:#F8F8F9;
+                  border-left:3px solid #C2501C;font-size:.9rem}
+          .checks p{margin:0 0 .4rem}
+          .checks p:last-child{margin-bottom:0}
+          .yes{color:#1F6B45;font-weight:600}
+          .no{color:#8A2B12;font-weight:600}
+          .path{margin-top:.9rem;padding-top:.7rem;border-top:1px solid #E1E2E6;
+                font-size:.8rem;color:#6E7280}
+          code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;
+               word-break:break-all;color:#101426}
         </style></head><body>
         <main class="card">
           <p class="eyebrow">Soft Appeals</p>
@@ -63,6 +96,7 @@ final class NotConfigured
             Nothing is broken and nothing is lost. This page becomes the sign-in
             form the moment that file exists.
           </p>
+          {$detail}
           {$env}
           <p style="margin-top:1.25rem"><a href="/soft-appeals">Back to Soft Appeals</a></p>
         </main></body></html>

@@ -84,10 +84,31 @@ final class Config
     /** @var array<string,mixed> */
     private array $values;
 
+    /** Whether the private config file was found on disk at boot. */
+    private bool $configFileFound;
+
+    /** The absolute path that was looked at. Shown on a non-production site. */
+    private string $configFilePath;
+
     /** @param array<string,mixed> $values */
-    private function __construct(array $values)
+    private function __construct(array $values, bool $configFileFound = false, string $configFilePath = '')
     {
         $this->values = $values;
+        $this->configFileFound = $configFileFound;
+        $this->configFilePath = $configFilePath;
+    }
+
+    /**
+     * Where the configuration was looked for.
+     *
+     * Returned only so a NON-PRODUCTION site can print it. A path that is right
+     * in the repository and wrong on the server is invisible from outside, and
+     * an afternoon was lost to exactly that: the file was saved, in a folder
+     * that looked correct, and the application was reading a different one.
+     */
+    public function configFilePath(): string
+    {
+        return $this->configFilePath;
     }
 
     /**
@@ -100,7 +121,8 @@ final class Config
         $configFile ??= $root . '/storage-private/soft-appeals/config/config.php';
 
         $fromFile = [];
-        if (is_file($configFile)) {
+        $found = is_file($configFile);
+        if ($found) {
             /** @psalm-suppress UnresolvableInclude */
             $loaded = require $configFile;
             if (!is_array($loaded)) {
@@ -127,7 +149,7 @@ final class Config
             $values['SA_PRIVATE_STORAGE_PATH'] = $root . '/storage-private/soft-appeals';
         }
 
-        return new self($values);
+        return new self($values, $found, $configFile);
     }
 
     /**
@@ -214,12 +236,41 @@ final class Config
      */
     public function isConfigured(): bool
     {
-        try {
-            $this->assertSecretsPresent();
-        } catch (RuntimeException) {
-            return false;
+        return $this->readiness()['ready'];
+    }
+
+    /**
+     * What is present and what is not, in a form safe to show on screen.
+     *
+     * No value and no path is ever included, only whether each thing arrived.
+     * That is enough to tell "the file is not there" apart from "the file is
+     * there and a field is blank", which are the two mistakes worth telling
+     * apart and which look identical from outside.
+     *
+     * @return array{path:string,ready:bool,file:bool,database:bool,secrets:bool,missing:list<string>}
+     */
+    public function readiness(): array
+    {
+        $missing = [];
+        foreach (self::REQUIRED_SECRETS as $key) {
+            $value = (string) ($this->values[$key] ?? '');
+            if ($value === '' || strlen($value) < self::MIN_SECRET_LENGTH) {
+                $missing[] = $key;
+            }
         }
-        return $this->hasDatabase();
+
+        $file = $this->configFileFound;
+        $database = $this->hasDatabase();
+        $secrets = $missing === [];
+
+        return [
+            'path'     => $this->configFilePath,
+            'ready'    => $file && $database && $secrets,
+            'file'     => $file,
+            'database' => $database,
+            'secrets'  => $secrets,
+            'missing'  => $missing,
+        ];
     }
 
     /** True when a database has actually been configured. */
