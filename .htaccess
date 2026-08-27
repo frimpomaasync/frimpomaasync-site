@@ -195,7 +195,7 @@ ErrorDocument 404 /404.html
   # The marketing pages keep SAMEORIGIN, because /synkasa-demo/ frames its own
   # pages and DENY would break it.
   # -------------------------------------------------------------------------
-  SetEnvIf Request_URI "^/(sa-desk|soft-appeals-(login|preferences|sign|room|confirmed))(\.php)?$" SA_APP=1
+  SetEnvIf Request_URI "^/(sa-desk|soft-appeals-(login|setup|preferences|sign|room|confirmed))(\.php)?$" SA_APP=1
 
   Header always set X-Frame-Options "SAMEORIGIN" env=!SA_APP
   Header always set Referrer-Policy "strict-origin-when-cross-origin" env=!SA_APP

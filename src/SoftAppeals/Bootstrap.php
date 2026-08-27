@@ -14,6 +14,8 @@ use SoftAppeals\Security\ErrorHandler;
 use SoftAppeals\Security\Hmac;
 use SoftAppeals\Security\RateLimiter;
 use SoftAppeals\Services\AuditService;
+use SoftAppeals\Services\SchemaService;
+use SoftAppeals\Services\SeedService;
 use SoftAppeals\Support\Clock;
 
 /**
@@ -163,6 +165,60 @@ final class Bootstrap
     {
         $this->requireSecrets();
         return $this->database();
+    }
+
+    public function schema(): SchemaService
+    {
+        return $this->make(SchemaService::class, fn (): SchemaService => new SchemaService(
+            $this->database(),
+            $this->clock(),
+            dirname(__DIR__, 2) . '/database/migrations',
+            $this->config->privateStoragePath('config', '.migrate.lock')
+        ));
+    }
+
+    public function seeds(): SeedService
+    {
+        return $this->make(SeedService::class, fn (): SeedService => new SeedService(
+            $this->database(),
+            $this->clock(),
+            $this->organizations(),
+            $this->users(),
+            $this->memberships()
+        ));
+    }
+
+    /**
+     * Make the database ready to serve, without a command line.
+     *
+     * There is no SSH on this account and no PHP on the machine this was
+     * written on, so `php database/migrate.php up` cannot be run by anyone.
+     * Every page that needs a table calls this instead.
+     *
+     * Off in production unless SA_AUTO_MIGRATE says otherwise: staging keeps
+     * itself current, the live database changes when she is watching.
+     *
+     * @return array{migrated:list<string>,seeded:int}
+     */
+    public function prepareDatabase(): array
+    {
+        $this->requireDatabase();
+
+        $migrated = [];
+        if ($this->config->autoMigrate()) {
+            $migrated = $this->schema()->migrate($this->audit());
+        } else {
+            // Even with auto-migration off, the ledger must exist so the Desk
+            // can say what is outstanding rather than crash on a missing table.
+            $this->schema()->ensureLedger();
+        }
+
+        $seeded = 0;
+        if ($this->config->autoSeed() && !$this->schema()->hasPending()) {
+            $seeded = $this->seeds()->seedIfEmpty($this->audit());
+        }
+
+        return ['migrated' => $migrated, 'seeded' => $seeded];
     }
 
     public function clock(): Clock

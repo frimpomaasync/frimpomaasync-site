@@ -34,6 +34,11 @@ if (!$session->isAuthenticated() || $session->kind() !== 'admin') {
 
 $app->requireSecrets();
 
+// Bring the schema up if it is behind. No SSH on this account means no command
+// line, so the application carries its own migrations. Off in production unless
+// SA_AUTO_MIGRATE says otherwise.
+$app->prepareDatabase();
+
 $user = $app->auth()->currentUser();
 if ($user === null) {
     // The account was deactivated while the session was alive. Read from the

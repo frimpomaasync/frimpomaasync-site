@@ -58,6 +58,16 @@ final class Config
 
         // Every capability past the foundation ships switched off. Phase 1
         // turns none of these on. Section 20 of the plan.
+        // Bring the schema up on boot. On staging that means she never runs a
+        // command line, which she does not have. In production it stays off:
+        // the live database changes when she is watching, not when a visitor
+        // happens to load a page.
+        'SA_AUTO_MIGRATE' => null,
+
+        // Create the fictional practices on a staging database that has none.
+        // Never in production, and never once real rows exist.
+        'SA_AUTO_SEED' => null,
+
         'SA_PORTAL_ENABLED'           => false,
         'SA_CLIENT_LOGIN_ENABLED'     => false,
         'SA_E_SIGN_ENABLED'           => false,
@@ -166,6 +176,32 @@ final class Config
     public function isStaging(): bool
     {
         return $this->string('SA_APP_ENV') === 'staging';
+    }
+
+    /**
+     * Whether the application may bring its own schema up.
+     *
+     * Unset means "anywhere but production", which is the behaviour that keeps
+     * staging current with no ceremony and leaves the live database alone. An
+     * explicit true or false in the config wins either way.
+     */
+    public function autoMigrate(): bool
+    {
+        $value = $this->values['SA_AUTO_MIGRATE'] ?? null;
+        if ($value === null || $value === '') {
+            return !$this->isProduction();
+        }
+        return self::toBool($value);
+    }
+
+    /** Same rule, for the fictional practices. */
+    public function autoSeed(): bool
+    {
+        $value = $this->values['SA_AUTO_SEED'] ?? null;
+        if ($value === null || $value === '') {
+            return !$this->isProduction() && $this->bool('SA_DEMO_MODE');
+        }
+        return self::toBool($value);
     }
 
     /** True when a database has actually been configured. */

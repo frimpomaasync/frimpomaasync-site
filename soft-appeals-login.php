@@ -30,6 +30,19 @@ if ($session->isAuthenticated() && $session->kind() === 'admin') {
     exit;
 }
 
+// Nobody can sign in until an account exists, so a first-time visitor is sent
+// to the setup page rather than left guessing at an empty database.
+try {
+    $app->requireSecrets();
+    $app->prepareDatabase();
+    if ($app->seeds()->needsOwner()) {
+        header('Location: /soft-appeals-setup.php', true, 303);
+        exit;
+    }
+} catch (\Throwable $e) {
+    $app->errors()->handle($e);
+}
+
 $csrf = $app->csrf();
 $error = null;
 $notice = $session->flash('login_notice');
