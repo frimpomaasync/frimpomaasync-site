@@ -131,13 +131,38 @@ final class Config
             $fromFile = $loaded;
         }
 
+        // Start from the defaults, then overlay everything the file supplied.
+        //
+        // This used to walk DEFAULTS and copy only the keys it found there,
+        // which quietly threw away every value that has no default. The three
+        // secrets have no default ON PURPOSE, so a missing one fails loudly
+        // instead of falling back to something predictable, and that is exactly
+        // the set the loop was dropping. The config file was read, the database
+        // setting arrived, and the secrets vanished between the file and the
+        // application. Measured on staging 2026-08-27.
+        //
+        // Keys are restricted to the SA_ prefix so a stray entry in the file
+        // cannot reach anything else.
         $values = self::DEFAULTS;
-        foreach (self::DEFAULTS as $key => $default) {
-            if (array_key_exists($key, $fromFile)) {
-                $values[$key] = $fromFile[$key];
+        foreach ($fromFile as $key => $value) {
+            if (is_string($key) && preg_match('/^SA_[A-Z0-9_]+$/', $key) === 1) {
+                $values[$key] = $value;
             }
+        }
+
+        // The environment wins over the file, which is how the cron jobs are
+        // configured. Every key that could exist is considered, not just the
+        // ones carrying a default.
+        $known = array_unique(array_merge(
+            array_keys(self::DEFAULTS),
+            self::SECRET_KEYS,
+            self::REQUIRED_SECRETS,
+            array_keys($values)
+        ));
+        foreach ($known as $key) {
             $env = getenv($key);
             if ($env !== false && $env !== '') {
+                $default = self::DEFAULTS[$key] ?? null;
                 $values[$key] = is_bool($default) ? self::toBool($env) : $env;
             }
         }
