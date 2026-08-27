@@ -50,21 +50,24 @@ jobs:
       - name: Static check
         run: python3 tests/SoftAppeals/static_check.py
 
-      # The one thing worth failing the build over even if the checks pass:
-      # a secret that reached a tracked file. The deploy publishes whatever is
-      # committed, so this is the last moment it can be caught.
+      # The last gate: a secret that reached a tracked file. The deploy
+      # publishes whatever is committed, so this is the final moment it can be
+      # caught.
+      #
+      # This used to be two `git grep` lines here. The second searched for the
+      # words that open a private key block and found them in static_check.py,
+      # where that phrase is written down as the thing to look for. The scanner
+      # matched the scanner's own definition of a secret and failed the build
+      # on 2026-08-27.
+      #
+      # It now lives in a script, which knows to skip the files whose job is to
+      # describe patterns, and which self-tests before it scans. Keeping the
+      # logic out of this file also means the next fix is an ordinary push:
+      # editing anything under .github/workflows/ needs a token with the
+      # workflow scope, and hers does not have one, so every change to this
+      # file costs a manual paste in the browser.
       - name: Refuse to deploy a committed secret
-        run: |
-          if git grep -nIE "SA_(DB_PASSWORD|SESSION_SECRET|TOKEN_SECRET|IP_HMAC_SECRET)['\"]?\s*=>\s*['\"][^'\"]{6,}" \
-               -- . ':!src/SoftAppeals/.env.example' ':!tests/'; then
-            echo "::error::A secret appears in a tracked file. Nothing was deployed."
-            exit 1
-          fi
-          if git grep -nI "BEGIN .*PRIVATE KEY" -- .; then
-            echo "::error::A private key appears in a tracked file. Nothing was deployed."
-            exit 1
-          fi
-          echo "No committed secrets found."
+        run: python3 tests/SoftAppeals/secret_scan.py
 
       # Same three-attempt shape as the live deploy. Hostinger's control socket
       # drops on bigger batches: across 57 runs of the live workflow, 49
