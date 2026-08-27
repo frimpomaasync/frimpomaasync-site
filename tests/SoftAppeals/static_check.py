@@ -17,6 +17,16 @@ live server:
      A byte before the opening tag breaks every header() call on the page.
   4. Balanced braces, parentheses and brackets outside strings and comments.
   5. Every private directory carries a deny-all .htaccess.
+  6. A real `php -l` syntax check, WHEN a PHP binary exists.
+
+On CI a PHP binary does exist, so the syntax check runs there and the deploy is
+blocked by it. On her Mac it does not, and the check reports itself as skipped
+rather than silently passing.
+
+That gap cost a broken deploy on 2026-08-27: a parse error shipped, every Soft
+Appeals page returned an empty 500, and nothing in this file had any way to see
+it. A parse error is a compile-time fatal, so the application's own error
+handler never runs and there is no message to read. Only a linter finds it.
 
 Usage:
     python3 tests/SoftAppeals/static_check.py
@@ -26,6 +36,8 @@ from __future__ import annotations
 
 import pathlib
 import re
+import shutil
+import subprocess
 import sys
 
 REPO = pathlib.Path(__file__).resolve().parents[2]
@@ -159,6 +171,39 @@ def check_php(path: pathlib.Path) -> None:
                 fail(path, f"class {class_match.group(1)} is in {path.name}, autoloader will not find it")
 
 
+def php_lint(paths: list[pathlib.Path]) -> str:
+    """
+    `php -l` on every file, when a PHP binary is available.
+
+    This is the only check here that can catch a parse error, and a parse error
+    is the one failure the application cannot report on itself: it is a
+    compile-time fatal, so the error handler never registers and the response is
+    an empty 500 with nothing in it to read.
+
+    On a machine with no PHP this returns a note saying so. It never pretends to
+    have passed.
+    """
+    binary = shutil.which("php")
+    if binary is None:
+        return "php -l: SKIPPED, no PHP on this machine (it runs on CI)"
+
+    bad = 0
+    for path in paths:
+        if not path.exists():
+            continue
+        result = subprocess.run(
+            [binary, "-l", str(path)],
+            capture_output=True,
+            text=True,
+        )
+        if result.returncode != 0:
+            bad += 1
+            message = (result.stdout + result.stderr).strip().splitlines()
+            detail = message[0] if message else "unknown parse error"
+            failures.append(f"{path.relative_to(REPO)}: {detail}")
+    return f"php -l: {len(paths)} files, {bad} with syntax errors"
+
+
 def main() -> int:
     print()
     print("  Soft Appeals static check")
@@ -197,9 +242,12 @@ def main() -> int:
         for finding in secret_scan.scan():
             failures.append(f"secret: {finding}")
 
+    lint_note = php_lint(php_files)
+
     print(f"  {checked} PHP files checked")
     print(f"  {len(PRIVATE_DIRS)} private directories checked for a deny-all")
     print("  secret scan: self-tested, then run over every tracked file")
+    print(f"  {lint_note}")
     print("  " + "-" * 58)
 
     if failures:
@@ -212,8 +260,9 @@ def main() -> int:
 
     print("  Clean. Namespaces match paths, no secret anywhere, every private folder denied.")
     print()
-    print("  This is NOT a PHP syntax check. There is no PHP on this machine.")
-    print("  The first real syntax gate is the staging deploy.")
+    if shutil.which("php") is None:
+        print("  No PHP on this machine, so `php -l` did not run here.")
+        print("  It runs on CI, and a parse error blocks the deploy there.")
     print()
     return 0
 
