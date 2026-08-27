@@ -30,6 +30,15 @@ if ($session->isAuthenticated() && $session->kind() === 'admin') {
     exit;
 }
 
+// A freshly deployed site has no configuration yet. Say so, rather than
+// answering with a 500 that reads as something broken.
+if (!$app->config()->isConfigured()) {
+    http_response_code(503);
+    header('Retry-After: 600');
+    echo \SoftAppeals\Views\NotConfigured::render($app->config()->string('SA_APP_ENV'));
+    exit;
+}
+
 // Nobody can sign in until an account exists, so a first-time visitor is sent
 // to the setup page rather than left guessing at an empty database.
 try {

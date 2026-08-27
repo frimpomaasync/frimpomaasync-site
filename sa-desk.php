@@ -32,6 +32,13 @@ if (!$session->isAuthenticated() || $session->kind() !== 'admin') {
     exit;
 }
 
+if (!$app->config()->isConfigured()) {
+    http_response_code(503);
+    header('Retry-After: 600');
+    echo \SoftAppeals\Views\NotConfigured::render($app->config()->string('SA_APP_ENV'));
+    exit;
+}
+
 $app->requireSecrets();
 
 // Bring the schema up if it is behind. No SSH on this account means no command

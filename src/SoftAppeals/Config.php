@@ -204,6 +204,24 @@ final class Config
         return self::toBool($value);
     }
 
+    /**
+     * True when the private config file is present and complete enough to serve.
+     *
+     * A freshly deployed site has no config: the file is written on the server
+     * and never committed. That is an ordinary state, not an error, and the
+     * pages say so plainly rather than answering with a 500 that looks like
+     * something broke.
+     */
+    public function isConfigured(): bool
+    {
+        try {
+            $this->assertSecretsPresent();
+        } catch (RuntimeException) {
+            return false;
+        }
+        return $this->hasDatabase();
+    }
+
     /** True when a database has actually been configured. */
     public function hasDatabase(): bool
     {
