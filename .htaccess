@@ -6,6 +6,20 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI} ^/os-fad13324c3/ [NC]
 RewriteRule ^ - [L]
 
+# Staging lives at public_html/staging, so frimpomaasync.com/staging reaches
+# the same folder as staging.frimpomaasync.com. Send the path form to the
+# subdomain, high up, before any generic rule or Apache's own directory-slash
+# redirect can claim the request.
+#
+# One address for staging means one set of cookies. A session started at
+# frimpomaasync.com/staging would otherwise be scoped to the production host,
+# and the session cookie is SameSite=Strict and host-bound.
+#
+# 302 rather than 301: staging is temporary infrastructure and must never be
+# cached into anyone's browser as permanent.
+RewriteCond %{HTTP_HOST} !^staging\. [NC]
+RewriteRule ^staging(/.*)?$ https://staging.frimpomaasync.com$1 [R=302,L]
+
 # Retired: Som used to ship as a zip. Anyone holding that link from an older
 # email lands on the app instead of a 404.
 RewriteRule ^Som\.zip$ /som-app/ [R=301,L,NC]
@@ -121,6 +135,31 @@ RewriteRule ^(.+)$ $1.php [L]
 <IfModule mod_mime.c>
   AddType video/webm .webm
   AddType image/webp .webp
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Staging, added 2026-08-27.
+#
+# Hostinger placed the staging subdomain INSIDE public_html, at public_html/
+# staging, so staging.frimpomaasync.com and frimpomaasync.com/staging are the
+# same folder. That folder receives its own deploy from the Soft Appeals branch
+# and holds invented practices.
+#
+# Two things follow from that, and both are handled here rather than in a
+# second file, because the deploy ships one .htaccess to both places:
+#
+#   1. Nothing on the staging host may ever be indexed. A test site carrying
+#      fictional practice names, on her real domain, in Google, would compete
+#      with the pages that pay for themselves.
+#   2. frimpomaasync.com/staging must not be a second front door to it. The
+#      subdomain is the only way in.
+#
+# Both rules are conditional on the host or the path, so neither does anything
+# at all on the live site.
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  SetEnvIfNoCase Host ^staging\. SA_STAGING=1
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet" env=SA_STAGING
 </IfModule>
 
 # Custom 404. Replaces the host's generic error page, keeps visitors on the site.
