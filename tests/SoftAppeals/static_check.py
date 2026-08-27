@@ -219,14 +219,43 @@ def main() -> int:
         if path.exists():
             check_php(path)
 
-    for directory in PRIVATE_DIRS:
-        htaccess = REPO / directory / ".htaccess"
-        if not (REPO / directory).is_dir():
+    tracked = set(
+        subprocess.run(
+            ["git", "ls-files"], cwd=REPO, capture_output=True, text=True, check=True
+        ).stdout.splitlines()
+    )
+
+    # Every private directory, and every subdirectory of storage-private, needs
+    # a deny-all that git actually tracks.
+    #
+    # Both halves of that sentence are load-bearing, and both were learned the
+    # hard way on 2026-08-27. The deploy excludes **/.git*, which matches
+    # .gitkeep, so five storage directories never reached the server at all. The
+    # .htaccess files that replaced them were then swallowed by an over-broad
+    # rule in .gitignore, so four of the five were about to go missing a second
+    # time in the very commit that fixed the first.
+    directories = list(PRIVATE_DIRS)
+    storage = REPO / "storage-private" / "soft-appeals"
+    if storage.is_dir():
+        directories += [
+            str(child.relative_to(REPO)) for child in sorted(storage.iterdir()) if child.is_dir()
+        ]
+
+    for directory in directories:
+        path = REPO / directory
+        if not path.is_dir():
             continue
+        htaccess = path / ".htaccess"
+        relative = f"{directory}/.htaccess"
         if not htaccess.exists():
             failures.append(f"{directory}/: no .htaccess, the deploy would publish it")
         elif "Require all denied" not in htaccess.read_text(encoding="utf-8"):
             failures.append(f"{directory}/.htaccess: does not deny access")
+        elif relative not in tracked:
+            failures.append(
+                f"{relative}: exists but git does not track it, so the deploy "
+                "will never create this directory on the server"
+            )
 
     # Secret scanning proper. Called rather than reimplemented, so the
     # patterns exist in one file only. This also means a workflow that only
@@ -245,7 +274,7 @@ def main() -> int:
     lint_note = php_lint(php_files)
 
     print(f"  {checked} PHP files checked")
-    print(f"  {len(PRIVATE_DIRS)} private directories checked for a deny-all")
+    print(f"  {len(directories)} private directories checked for a tracked deny-all")
     print("  secret scan: self-tested, then run over every tracked file")
     print(f"  {lint_note}")
     print("  " + "-" * 58)

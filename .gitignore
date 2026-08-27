@@ -25,7 +25,9 @@ storage-private/soft-appeals/agreements/*
 storage-private/soft-appeals/signatures/*
 storage-private/soft-appeals/audit-exports/*
 storage-private/soft-appeals/backups/*
-!storage-private/soft-appeals/*/.gitkeep
+# The deny-all in each subdirectory IS tracked: it is what makes the deploy
+# create the folder at all, and what locks it. Only the contents are ignored.
+!storage-private/soft-appeals/*/.htaccess
 
 # The local SQLite database used to prove the migrations run up and down before
 # staging exists. Never shipped, never the production store.
