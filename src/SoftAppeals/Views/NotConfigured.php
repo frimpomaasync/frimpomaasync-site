@@ -21,7 +21,7 @@ namespace SoftAppeals\Views;
 final class NotConfigured
 {
     /**
-     * @param array{path?:string,file?:bool,database?:bool,secrets?:bool} $readiness
+     * @param array{path?:string,file?:bool,database?:bool,secrets?:bool,connects?:bool,reason?:string} $readiness
      */
     public static function render(
         string $environment = '',
@@ -45,6 +45,15 @@ final class NotConfigured
                 . '<p><b>Config file</b> ' . $mark((bool) ($readiness['file'] ?? false)) . '</p>'
                 . '<p><b>Database setting</b> ' . $mark((bool) ($readiness['database'] ?? false)) . '</p>'
                 . '<p><b>Three secrets</b> ' . $mark((bool) ($readiness['secrets'] ?? false)) . '</p>'
+                . (isset($readiness['connects'])
+                    ? '<p><b>Database opens</b> ' . $mark((bool) $readiness['connects'])
+                        . (((bool) $readiness['connects']) === false && ($readiness['reason'] ?? '') !== ''
+                            ? '<br><span class="why">'
+                                . htmlspecialchars((string) $readiness['reason'], ENT_QUOTES, 'UTF-8')
+                                . '</span>'
+                            : '')
+                        . '</p>'
+                    : '')
                 . '<p class="path">Looking for this exact file:<br><code>' . $path . '</code></p>'
                 . '</div>';
         }
@@ -79,6 +88,7 @@ final class NotConfigured
           .checks p:last-child{margin-bottom:0}
           .yes{color:#1F6B45;font-weight:600}
           .no{color:#8A2B12;font-weight:600}
+          .why{color:#8A2B12;font-size:.85rem}
           .path{margin-top:.9rem;padding-top:.7rem;border-top:1px solid #E1E2E6;
                 font-size:.8rem;color:#6E7280}
           code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.78rem;

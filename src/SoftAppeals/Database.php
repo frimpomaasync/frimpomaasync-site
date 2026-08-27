@@ -85,6 +85,58 @@ final class Database
         return new self($pdo);
     }
 
+    /**
+     * Try to connect, and say plainly what went wrong if it did not.
+     *
+     * The phrases below name a category, never a value. "the username or the
+     * password was refused" is enough to act on and reveals neither, which is
+     * what makes it safe to put on a staging page.
+     *
+     * @return array{ok:bool,reason:string}
+     */
+    public static function probe(Config $config): array
+    {
+        if (!$config->hasDatabase()) {
+            return ['ok' => false, 'reason' => 'no database setting'];
+        }
+        try {
+            self::connect(
+                $config->string('SA_DB_DSN'),
+                $config->string('SA_DB_USER'),
+                $config->string('SA_DB_PASSWORD')
+            );
+            return ['ok' => true, 'reason' => ''];
+        } catch (\Throwable $e) {
+            return ['ok' => false, 'reason' => self::describe($e)];
+        }
+    }
+
+    /**
+     * A driver failure, translated into something a person can act on.
+     *
+     * The original message is never returned. A PDO exception can carry the
+     * host, the database name and sometimes the user, and none of those belongs
+     * on a page.
+     */
+    public static function describe(\Throwable $e): string
+    {
+        $previous = $e->getPrevious();
+        $raw = ($previous instanceof \Throwable ? $previous->getMessage() : $e->getMessage());
+
+        return match (true) {
+            str_contains($raw, '1045'), str_contains($raw, 'Access denied') =>
+                'the database refused the username or the password',
+            str_contains($raw, '1049'), str_contains($raw, 'Unknown database') =>
+                'that database name does not exist on this server',
+            str_contains($raw, '2002'), str_contains($raw, 'Connection refused') =>
+                'the database server could not be reached',
+            str_contains($raw, 'could not find driver') =>
+                'this PHP build has no driver for that database',
+            default =>
+                'the database could not be opened',
+        };
+    }
+
     public function pdo(): PDO
     {
         return $this->pdo;

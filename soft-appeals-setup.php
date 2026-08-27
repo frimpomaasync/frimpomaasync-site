@@ -46,6 +46,20 @@ try {
     exit('Not here.');
 }
 
+// A refused database is the difference between "wrong password" and "nothing
+// happened", and a 404 here says neither. Off production, name it.
+$probe = \SoftAppeals\Database::probe($app->config());
+if (!$probe['ok']) {
+    http_response_code(503);
+    header('Retry-After: 600');
+    echo \SoftAppeals\Views\NotConfigured::render(
+        $app->config()->string('SA_APP_ENV'),
+        $app->config()->readiness() + ['connects' => false, 'reason' => $probe['reason']],
+        !$app->config()->isProduction()
+    );
+    exit;
+}
+
 try {
     $app->prepareDatabase();
 } catch (\Throwable $e) {

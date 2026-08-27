@@ -43,6 +43,21 @@ if (!$app->config()->isConfigured()) {
     exit;
 }
 
+// Configured, but the database may still refuse. A wrong password and an
+// unopened file look identical from a 500, and the difference is the whole
+// answer, so it is named here rather than left to a correlation reference.
+$probe = \SoftAppeals\Database::probe($app->config());
+if (!$probe['ok']) {
+    http_response_code(503);
+    header('Retry-After: 600');
+    echo \SoftAppeals\Views\NotConfigured::render(
+        $app->config()->string('SA_APP_ENV'),
+        $app->config()->readiness() + ['connects' => false, 'reason' => $probe['reason']],
+        !$app->config()->isProduction()
+    );
+    exit;
+}
+
 // Nobody can sign in until an account exists, so a first-time visitor is sent
 // to the setup page rather than left guessing at an empty database.
 try {
