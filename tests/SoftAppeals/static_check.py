@@ -34,6 +34,7 @@ Usage:
 
 from __future__ import annotations
 
+import os
 import pathlib
 import re
 import shutil
@@ -171,6 +172,26 @@ def check_php(path: pathlib.Path) -> None:
                 fail(path, f"class {class_match.group(1)} is in {path.name}, autoloader will not find it")
 
 
+def annotate(message: str) -> None:
+    """
+    Emit a GitHub Actions annotation.
+
+    The workflow logs need admin rights on the repository to download, so a
+    failing check said only "Static check failed" and nothing about which file.
+    Annotations come back through the API without that, and show inline on the
+    diff for a person. One line, and it turns a guess into an answer.
+    """
+    if os.environ.get("GITHUB_ACTIONS") != "true":
+        return
+    path, _, rest = message.partition(":")
+    line, _, text = rest.partition(":")
+    flat = " ".join((text or rest or message).split())
+    if line.strip().isdigit():
+        print(f"::error file={path},line={line.strip()}::{flat}")
+    else:
+        print(f"::error file={path}::{flat}")
+
+
 def php_lint(paths: list[pathlib.Path]) -> str:
     """
     `php -l` on every file, when a PHP binary is available.
@@ -282,6 +303,7 @@ def main() -> int:
     if failures:
         for failure in failures:
             print(f"  FAIL   {failure}")
+            annotate(failure)
         print("  " + "-" * 58)
         print(f"  {len(failures)} problem(s).")
         print()

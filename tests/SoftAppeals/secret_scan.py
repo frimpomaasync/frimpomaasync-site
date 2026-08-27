@@ -34,6 +34,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import os
 import pathlib
 import re
 import subprocess
@@ -238,6 +239,13 @@ def main() -> int:
     if findings:
         for finding in findings:
             print(f"  FAIL   {finding}")
+            if os.environ.get("GITHUB_ACTIONS") == "true":
+                path, _, rest = finding.partition(":")
+                line, _, text = rest.partition(":")
+                if line.strip().isdigit():
+                    print(f"::error file={path},line={line.strip()}::{text.strip()}")
+                else:
+                    print(f"::error file={path}::{rest.strip()}")
         print("  " + "-" * 58)
         print(f"  {len(findings)} possible secret(s). Nothing should be deployed.")
         print()
