@@ -94,6 +94,29 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.+)$ $1.html [L]
 
+# /page -> serve page.php  (internal, invisible)  ADDED 2026-08-27
+#
+# Every Soft Appeals URL on this site is extensionless, and the Desk, the
+# preferences page, the signing screen and the Recovery Room are PHP. Without
+# this a practice would be emailed a link to sign an agreement that ends .php.
+#
+# It sits AFTER the .html rule on purpose, so an existing page always wins and
+# no URL that works today can move. It fires only when the .php file exists.
+#
+# There is deliberately NO counterpart redirect from /page.php to /page. The
+# .html rule above has one; the .php equivalent must never be added, because
+# sa-lead.php and audit-lead.php are POST endpoints and a 301 on a POST is
+# downgraded to a GET by every browser, which would silently break both live
+# forms.
+#
+# One known behaviour change, harmless: /stats used to 404 and now resolves to
+# stats.php, which returns its own 404 because no key is present. Same status,
+# same outcome.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L]
+
 # The hero loop ships as WebM as well as MP4; make sure the host labels it.
 <IfModule mod_mime.c>
   AddType video/webm .webm
@@ -112,6 +135,13 @@ ErrorDocument 404 /404.html
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Added 2026-08-27, Phase 0 finding R-04. Every PHP response was announcing
+  # its exact patch level in x-powered-by. The Soft Appeals pages also call
+  # header_remove() themselves, because a header PHP sets is not always
+  # removable at the web server layer on a shared host.
+  Header always unset X-Powered-By
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
 </IfModule>
 
 # Cache policy, added 2026-07-30. The site sent no Cache-Control at all, so

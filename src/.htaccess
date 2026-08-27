@@ -1,0 +1,7 @@
+# Nothing in this folder is served to a browser. It is application code, data,
+# or test material, and it reaches the server only because the FTPS deploy
+# uploads the whole repository into public_html.
+#
+# Proven: /vault/ and /fs-metrics/ carry this same line and return 403 live for
+# both the directory index and for a file inside it.
+Require all denied

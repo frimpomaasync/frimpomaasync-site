@@ -12,3 +12,22 @@ tests/size_audit_*.json
 # local width-check and probe pages, and a stray `git add -A` swept one into a
 # commit on 2026-08-07. The deploy publishes whatever is in the repo.
 _*.html
+
+# Soft Appeals Recovery Command Center, added 2026-08-27.
+#
+# The runtime config carries the database password, the session secret, the
+# token secret, and the IP HMAC secret. It is written on the server and it never
+# enters this repository. The deploy uploads whatever is in the repo, so a
+# secret committed here would be published, and the deploy only deletes files it
+# previously uploaded, so a server-written config survives every release.
+storage-private/soft-appeals/config/config.php
+storage-private/soft-appeals/agreements/*
+storage-private/soft-appeals/signatures/*
+storage-private/soft-appeals/audit-exports/*
+storage-private/soft-appeals/backups/*
+!storage-private/soft-appeals/*/.gitkeep
+
+# The local SQLite database used to prove the migrations run up and down before
+# staging exists. Never shipped, never the production store.
+database/*.sqlite
+database/*.sqlite-journal
