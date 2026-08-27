@@ -1,0 +1,157 @@
+name: Deploy staging.frimpomaasync.com
+
+# The Soft Appeals test site.
+#
+# WHY THIS IS A SEPARATE FILE, and why deploy.yml is untouched:
+# a mistake in a staging workflow must never be able to take the live site
+# down. Nothing here edits, imports from, or shares state with deploy.yml.
+#
+# WHERE IT GOES:
+# Hostinger placed the staging subdomain inside public_html, at
+# public_html/staging, so staging.frimpomaasync.com and
+# frimpomaasync.com/staging are the same folder. Verified live on 2026-08-27:
+# both returned 200 with a byte-identical body.
+#
+# That has one convenient consequence. The existing FTP account is rooted at
+# public_html and can already reach public_html/staging, so this workflow needs
+# no second account and no new secrets. It reuses FTP_SERVER, FTP_USERNAME and
+# FTP_PASSWORD, and differs from the live deploy only in server-dir.
+#
+# WHAT IT WILL NOT DO:
+# it never runs on main. The trigger is the Soft Appeals branches only, so a
+# merge to main deploys production through deploy.yml and nothing else.
+
+on:
+  push:
+    branches:
+      - 'soft-appeals/**'
+  workflow_dispatch:
+
+concurrency:
+  # A second push while one upload is in flight would have two FTP sessions
+  # writing the same directory and racing over the sync-state file.
+  group: deploy-staging
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v5
+
+      # A last gate before anything leaves the runner. Both checks run on
+      # Python, which is why they can run here and on her Mac alike, and why
+      # Phase 1 was not shipped unverified despite there being no PHP anywhere
+      # she can reach.
+      - name: Schema check
+        run: python3 tests/SoftAppeals/schema_check.py
+
+      - name: Static check
+        run: python3 tests/SoftAppeals/static_check.py
+
+      # The one thing worth failing the build over even if the checks pass:
+      # a secret that reached a tracked file. The deploy publishes whatever is
+      # committed, so this is the last moment it can be caught.
+      - name: Refuse to deploy a committed secret
+        run: |
+          if git grep -nIE "SA_(DB_PASSWORD|SESSION_SECRET|TOKEN_SECRET|IP_HMAC_SECRET)['\"]?\s*=>\s*['\"][^'\"]{6,}" \
+               -- . ':!src/SoftAppeals/.env.example' ':!tests/'; then
+            echo "::error::A secret appears in a tracked file. Nothing was deployed."
+            exit 1
+          fi
+          if git grep -nI "BEGIN .*PRIVATE KEY" -- .; then
+            echo "::error::A private key appears in a tracked file. Nothing was deployed."
+            exit 1
+          fi
+          echo "No committed secrets found."
+
+      # Same three-attempt shape as the live deploy. Hostinger's control socket
+      # drops on bigger batches: across 57 runs of the live workflow, 49
+      # succeeded first time and every one of the 8 failures succeeded on a
+      # re-run with no code change. Retry rather than re-trigger by hand.
+      - name: Upload via FTPS
+        id: ftp1
+        continue-on-error: true
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          # The one line that separates this from production.
+          server-dir: ./staging/
+          timeout: 180000
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/*.bak
+            **/videos/**
+
+      - name: Wait, then retry (attempt 2)
+        if: steps.ftp1.outcome == 'failure'
+        run: sleep 45
+
+      - name: Upload via FTPS, attempt 2
+        id: ftp2
+        continue-on-error: true
+        if: steps.ftp1.outcome == 'failure'
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          server-dir: ./staging/
+          timeout: 180000
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/*.bak
+            **/videos/**
+
+      - name: Wait, then retry (attempt 3)
+        if: steps.ftp1.outcome == 'failure' && steps.ftp2.outcome == 'failure'
+        run: sleep 120
+
+      - name: Upload via FTPS, attempt 3
+        id: ftp3
+        if: steps.ftp1.outcome == 'failure' && steps.ftp2.outcome == 'failure'
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          server-dir: ./staging/
+          timeout: 180000
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            **/*.bak
+            **/videos/**
+
+      # The first two attempts swallow their own failure, so the job would
+      # otherwise report success when nothing uploaded.
+      - name: Report
+        if: always()
+        run: |
+          if [ "${{ steps.ftp1.outcome }}" = "success" ]; then
+            echo "Staging deployed on the first attempt."
+          elif [ "${{ steps.ftp2.outcome }}" = "success" ]; then
+            echo "::warning::Hostinger FTP failed once, second attempt deployed staging."
+          elif [ "${{ steps.ftp3.outcome }}" = "success" ]; then
+            echo "::warning::Hostinger FTP failed twice, third attempt deployed staging."
+          else
+            echo "::error::All three FTP attempts failed. This is not the usual blip."
+            exit 1
+          fi
+          echo ""
+          echo "  https://staging.frimpomaasync.com/soft-appeals-login.php"
+          echo ""
+          echo "  The Desk will not open until the private config file exists at"
+          echo "  staging/storage-private/soft-appeals/config/config.php on the"
+          echo "  server, and the migrations have been run."
