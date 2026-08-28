@@ -31,7 +31,11 @@ declare(strict_types=1);
  * held access at the practice when closeout began, and the decision taken on
  * each: removed or retained. Closing refuses while any of them is undecided.
  *
- * Three MariaDB rules paid for on staging in 0007 and kept here:
+ * Four MariaDB rules, three paid for on staging in 0007 and the fourth paid
+ * for by this migration on its first staging deploy (errno 121, "Duplicate key
+ * on write or update", on CREATE TABLE sa_invoices): a foreign-key name is
+ * unique across the whole DATABASE, not the table, and `sa_invitations` in
+ * 0002 already owns the `sa_inv_` prefix. Invoice constraints are `sa_invc_`.
  *   1. No CHECK may reference a column a foreign key can SET NULL. So the
  *      user columns (verified_by, confirmed_by, decided_by, closed_by) carry
  *      no foreign key, exactly like recorded_by in 0007, and the pointer
@@ -81,21 +85,21 @@ return [
                 updated_at            DATETIME     NOT NULL,
                 row_version           INTEGER      NOT NULL,
                 PRIMARY KEY (id),
-                CONSTRAINT sa_inv_ref_unique UNIQUE (public_ref),
-                CONSTRAINT sa_inv_eng_fk FOREIGN KEY (engagement_id)
+                CONSTRAINT sa_invc_ref_unique UNIQUE (public_ref),
+                CONSTRAINT sa_invc_eng_fk FOREIGN KEY (engagement_id)
                     REFERENCES sa_engagements (id) ON DELETE CASCADE,
-                CONSTRAINT sa_inv_org_fk FOREIGN KEY (organization_id)
+                CONSTRAINT sa_invc_org_fk FOREIGN KEY (organization_id)
                     REFERENCES sa_organizations (id) ON DELETE CASCADE,
-                CONSTRAINT sa_inv_status_check CHECK (status IN (
+                CONSTRAINT sa_invc_status_check CHECK (status IN (
                     \'draft\', \'issued\', \'paid\', \'void\'
                 )),
-                CONSTRAINT sa_inv_fee_check CHECK (fee_cents >= 0),
-                CONSTRAINT sa_inv_credit_check CHECK (credit_cents >= 0),
-                CONSTRAINT sa_inv_total_check CHECK (total_cents = fee_cents - credit_cents),
+                CONSTRAINT sa_invc_fee_check CHECK (fee_cents >= 0),
+                CONSTRAINT sa_invc_credit_check CHECK (credit_cents >= 0),
+                CONSTRAINT sa_invc_total_check CHECK (total_cents = fee_cents - credit_cents),
 
                 -- An issued invoice says when. A paid one was issued first.
                 -- A void one says when it was voided.
-                CONSTRAINT sa_inv_status_pairs CHECK (
+                CONSTRAINT sa_invc_status_pairs CHECK (
                     (status <> \'issued\' OR issued_at IS NOT NULL)
                     AND (status <> \'paid\' OR (paid_at IS NOT NULL AND issued_at IS NOT NULL))
                     AND (status <> \'void\' OR voided_at IS NOT NULL)
@@ -104,8 +108,8 @@ return [
             )' . $suffix
         );
 
-        $db->run('CREATE INDEX sa_inv_engagement_idx ON sa_invoices (engagement_id, status)');
-        $db->run('CREATE INDEX sa_inv_status_idx ON sa_invoices (status, issued_at)');
+        $db->run('CREATE INDEX sa_invc_engagement_idx ON sa_invoices (engagement_id, status)');
+        $db->run('CREATE INDEX sa_invc_status_idx ON sa_invoices (status, issued_at)');
 
         // ------------------------------------------------------------------
         // Recoveries. Append-only. Section 19, every rule of it.
