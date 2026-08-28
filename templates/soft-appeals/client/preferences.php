@@ -182,8 +182,12 @@ $number = 0;
   <ol style="margin:0;padding-left:18px;line-height:1.7;font-size:14px">
     <li>You confirm these preferences. Nothing is charged and nothing is signed yet.</li>
     <li>
+      <?php /* ?? is the wrong operator here. The key always exists, it is just
+               empty until they name somebody, so the fallback never fired and
+               the line read "come to to read and sign". Seen on screen. */ ?>
+      <?php $signerName = trim((string) ($people['signer']['name'] ?? '')); ?>
       The Business Associate Agreement and the review authorization come to
-      <?= $e($people['signer']['name'] ?? 'the person you named') ?> to read and sign.
+      <?= $e($signerName === '' ? 'whoever you name above' : $signerName) ?> to read and sign.
     </li>
     <li>The secure route opens. Only then does anything at patient level move.</li>
     <li>

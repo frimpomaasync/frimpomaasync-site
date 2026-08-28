@@ -284,7 +284,9 @@ $render(
         'organization' => $organization,
         'expiresNote'  => $expiresNote,
     ],
-    'Confirm your onboarding preferences &middot; Soft Appeals',
+    // The character, not the entity. The shell escapes the title, so an
+    // entity here printed as "&middot;" in the browser tab. Seen on screen.
+    'Confirm your onboarding preferences · Soft Appeals',
     'Onboarding',
     $organization,
     $problem
