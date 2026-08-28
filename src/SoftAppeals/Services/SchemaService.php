@@ -73,9 +73,12 @@ final class SchemaService
      * Returns the names actually applied. An empty array means either there was
      * nothing to do, or another request held the lock and is doing it.
      *
+     * $allowRecovery clears the tables left behind by a migration that failed
+     * halfway. Never pass true on production.
+     *
      * @return list<string>
      */
-    public function migrate(?AuditService $audit = null): array
+    public function migrate(?AuditService $audit = null, bool $allowRecovery = false): array
     {
         $pending = $this->pending();
         if ($pending === []) {
@@ -95,6 +98,31 @@ final class SchemaService
             // being granted, the other request may have finished the lot.
             foreach ($this->pending() as $migration) {
                 $batch = (int) ($this->db->value('SELECT MAX(batch) FROM sa_migrations') ?? 0) + 1;
+
+                // MySQL commits DDL as it goes, so a migration that fails
+                // halfway leaves tables behind and no ledger row. Retrying then
+                // dies on "table already exists" and stays stuck forever, which
+                // is not a state anyone can get out of without a SQL console,
+                // and there is no SQL console on this account.
+                //
+                // Off production, clear first. This is only ever reached for a
+                // migration the ledger says was never applied, so it can only
+                // remove tables from an attempt that did not finish. Production
+                // is left alone deliberately: there, a half-applied migration is
+                // a decision to make, not a mess to sweep.
+                if ($allowRecovery) {
+                    try {
+                        // The down step is DROP TABLE IF EXISTS throughout, so
+                        // on a database where this migration never ran it is a
+                        // no-op, and on one where it half ran it is the cleanup.
+                        // Either way it is safe to call before the up.
+                        ($migration['down'])($this->db);
+                    } catch (Throwable) {
+                        // Best effort. If the down cannot clear it, the up below
+                        // fails with its own message, which is the more useful
+                        // of the two.
+                    }
+                }
 
                 $this->db->transaction(function () use ($migration, $batch): void {
                     ($migration['up'])($this->db);

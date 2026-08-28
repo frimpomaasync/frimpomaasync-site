@@ -212,7 +212,9 @@ final class Bootstrap
 
         $migrated = [];
         if ($this->config->autoMigrate()) {
-            $migrated = $this->schema()->migrate($this->audit());
+            // Recovery from a half-applied migration is offered off production
+            // only. See SchemaService::migrate.
+            $migrated = $this->schema()->migrate($this->audit(), !$this->config->isProduction());
         } else {
             // Even with auto-migration off, the ledger must exist so the Desk
             // can say what is outstanding rather than crash on a missing table.

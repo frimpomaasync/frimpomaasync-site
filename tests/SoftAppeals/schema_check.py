@@ -182,17 +182,40 @@ def run_cycle(migration_path: pathlib.Path, db_path: pathlib.Path) -> dict:
         " VALUES ('u1', 'a@example.org', 1, '2026-01-01 00:00:00')"
     )
     connection.execute(
-        "INSERT INTO sa_memberships (user_id, organization_id, role, created_at)"
-        " VALUES ('u1', NULL, 'owner_admin', '2026-01-01 00:00:00')"
+        "INSERT INTO sa_memberships"
+        " (user_id, organization_id, organization_scope, role, created_at)"
+        " VALUES ('u1', NULL, 'GLOBAL', 'owner_admin', '2026-01-01 00:00:00')"
     )
     try:
         connection.execute(
-            "INSERT INTO sa_memberships (user_id, organization_id, role, created_at)"
-            " VALUES ('u1', NULL, 'owner_admin', '2026-01-01 00:00:00')"
+            "INSERT INTO sa_memberships"
+            " (user_id, organization_id, organization_scope, role, created_at)"
+            " VALUES ('u1', NULL, 'GLOBAL', 'owner_admin', '2026-01-01 00:00:00')"
         )
         raise Failure("a duplicate global staff membership was accepted")
     except sqlite3.IntegrityError:
         pass  # correct
+
+    # The sentinel must not block a legitimate second row: the same user in the
+    # same role at two different organizations is normal.
+    connection.execute(
+        "INSERT INTO sa_organizations"
+        " (id, public_ref, legal_name, status, created_at, updated_at)"
+        " VALUES ('o1', 'SA-ORG-AAAAAA', 'One', 'prospect',"
+        " '2026-01-01 00:00:00', '2026-01-01 00:00:00')"
+    )
+    connection.execute(
+        "INSERT INTO sa_organizations"
+        " (id, public_ref, legal_name, status, created_at, updated_at)"
+        " VALUES ('o2', 'SA-ORG-BBBBBB', 'Two', 'prospect',"
+        " '2026-01-01 00:00:00', '2026-01-01 00:00:00')"
+    )
+    for org in ("o1", "o2"):
+        connection.execute(
+            "INSERT INTO sa_memberships"
+            " (user_id, organization_id, organization_scope, role, created_at)"
+            f" VALUES ('u1', '{org}', '{org}', 'viewer', '2026-01-01 00:00:00')"
+        )
     connection.rollback()
 
     for table in down_tables:

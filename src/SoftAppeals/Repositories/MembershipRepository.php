@@ -14,6 +14,10 @@ use SoftAppeals\Domain\Role;
  */
 final class MembershipRepository extends Repository
 {
+    /** Stands in for "no organization" so the unique index can be NOT NULL. */
+    public const GLOBAL_SCOPE = 'GLOBAL';
+
+
     protected function table(): string
     {
         return 'sa_memberships';
@@ -75,10 +79,15 @@ final class MembershipRepository extends Repository
             return;
         }
         $this->db->insert('sa_memberships', [
-            'user_id'         => $userId,
-            'organization_id' => $organizationId,
-            'role'            => $role,
-            'created_at'      => $this->clock->nowUtc(),
+            'user_id'            => $userId,
+            'organization_id'    => $organizationId,
+            // The uniqueness key. NULL never equals NULL, so a nullable column
+            // cannot carry a unique constraint that means anything; this one is
+            // NOT NULL and holds the sentinel for a staff row. A UUIDv4 always
+            // carries hyphens in fixed positions, so GLOBAL can never collide.
+            'organization_scope' => $organizationId ?? self::GLOBAL_SCOPE,
+            'role'               => $role,
+            'created_at'         => $this->clock->nowUtc(),
         ]);
     }
 

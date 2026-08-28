@@ -107,17 +107,17 @@ return [
         // everywhere; a client row names one organization and applies only
         // there.
         //
-        // The uniqueness constraint is on the triple, but NULL never equals
-        // NULL in SQL, so a UNIQUE index alone would happily accept the same
-        // staff role twice. The partial unique index below closes that, and
-        // MembershipRepository::grant checks first as well.
+        // organization_scope is the uniqueness key. It holds the same value as
+        // organization_id, or the literal GLOBAL for a staff row, so one plain
+        // unique index covers both cases on both engines. See the index below.
         // ------------------------------------------------------------------
         $db->run(
             'CREATE TABLE sa_memberships (
-                user_id         CHAR(36)    NOT NULL,
-                organization_id CHAR(36)        NULL,
-                role            VARCHAR(40) NOT NULL,
-                created_at      DATETIME    NOT NULL,
+                user_id            CHAR(36)    NOT NULL,
+                organization_id    CHAR(36)        NULL,
+                organization_scope CHAR(36)    NOT NULL,
+                role               VARCHAR(40) NOT NULL,
+                created_at         DATETIME    NOT NULL,
                 CONSTRAINT sa_membership_user_fk FOREIGN KEY (user_id)
                     REFERENCES sa_users (id) ON DELETE CASCADE,
                 CONSTRAINT sa_membership_org_fk FOREIGN KEY (organization_id)
@@ -127,33 +127,28 @@ return [
         $db->run('CREATE INDEX sa_membership_user_idx ON sa_memberships (user_id)');
         $db->run('CREATE INDEX sa_membership_org_idx ON sa_memberships (organization_id)');
 
-        if ($sqlite) {
-            // SQLite has partial indexes, so both halves can be expressed.
-            $db->run(
-                'CREATE UNIQUE INDEX sa_membership_scoped_unique
-                 ON sa_memberships (user_id, organization_id, role)
-                 WHERE organization_id IS NOT NULL'
-            );
-            $db->run(
-                'CREATE UNIQUE INDEX sa_membership_global_unique
-                 ON sa_memberships (user_id, role)
-                 WHERE organization_id IS NULL'
-            );
-        } else {
-            // MySQL has no partial index. A generated column standing in for
-            // "no organization" gives the same guarantee: the sentinel is a
-            // fixed string that can never collide with a UUIDv4, because a
-            // UUIDv4 always carries hyphens in fixed positions.
-            $db->run(
-                "ALTER TABLE sa_memberships
-                 ADD COLUMN organization_scope CHAR(36)
-                 AS (COALESCE(organization_id, 'GLOBAL')) STORED"
-            );
-            $db->run(
-                'CREATE UNIQUE INDEX sa_membership_unique
-                 ON sa_memberships (user_id, organization_scope, role)'
-            );
-        }
+        // One unique index, on both engines, with no generated column and no
+        // partial index.
+        //
+        // The problem: a staff membership has organization_id NULL and must be
+        // unique per (user, role), while a client membership names an
+        // organization and must be unique per (user, organization, role). NULL
+        // never equals NULL in SQL, so a plain unique index on the triple would
+        // happily accept the same staff role twice.
+        //
+        // SQLite solves that with a partial index and MySQL with a generated
+        // column, and the first version of this migration used one of each.
+        // That is two schemas wearing one name, and only one of them was ever
+        // executed before it reached a server.
+        //
+        // Instead the application writes an explicit sentinel. organization_id
+        // stays nullable and keeps the foreign key; organization_scope is NOT
+        // NULL and carries either the same id or the literal GLOBAL. A UUIDv4
+        // always carries hyphens in fixed positions, so the sentinel can never
+        // collide with one.
+        $db->run(
+            'CREATE UNIQUE INDEX sa_membership_unique ON sa_memberships (user_id, organization_scope, role)'
+        );
 
         // ------------------------------------------------------------------
         // The audit trail. Append only. No update path and no delete path
