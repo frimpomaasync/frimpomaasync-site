@@ -214,6 +214,32 @@ final class ErrorHandler
             ? ''
             : '<p class="ref">Reference: <code>' . $reference . '</code></p>';
 
+        // Off production, the page names what actually broke.
+        //
+        // The log line has always held this, and the log lives in a folder the
+        // web server denies, on a host with no shell. So on staging the only
+        // way to read it was to guess, and a page that hands back a reference
+        // nobody can look up is a page that says nothing. Views\Desk already
+        // works this way for a template that fails, for the same reason.
+        //
+        // Production shows the reference alone. A stack detail there tells a
+        // stranger the shape of the application.
+        $detailBlock = '';
+        if ($this->config !== null && !$this->config->isProduction() && $status !== 404) {
+            $detailBlock = '<p class="ref"><code>'
+                . htmlspecialchars($e::class, ENT_QUOTES, 'UTF-8') . '</code></p>'
+                . '<p class="ref"><code>'
+                . htmlspecialchars(
+                    preg_replace('/[\x00-\x1F\x7F]/', ' ', $e->getMessage()) ?? '',
+                    ENT_QUOTES,
+                    'UTF-8'
+                )
+                . '</code></p>'
+                . '<p class="ref"><code>'
+                . htmlspecialchars(basename($e->getFile()), ENT_QUOTES, 'UTF-8')
+                . ':' . (int) $e->getLine() . '</code></p>';
+        }
+
         return <<<HTML
         <!doctype html>
         <html lang="en"><head><meta charset="utf-8">
@@ -235,6 +261,7 @@ final class ErrorHandler
         <h1>{$heading}<span>.</span></h1>
         <p>{$message}</p>
         {$referenceBlock}
+        {$detailBlock}
         <p><a href="/soft-appeals">Back to Soft Appeals</a></p>
         </div></body></html>
         HTML;
