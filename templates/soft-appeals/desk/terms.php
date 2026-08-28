@@ -17,6 +17,7 @@
  * @var array<string,mixed>|null $preview
  * @var list<array<string,mixed>> $communications
  * @var list<array<string,mixed>> $awaitingTerms
+ * @var ?string $stagingLink  the just-minted one-time link, off production only
  * @var list<array{label:string,value:string}> $preferencesSummary
  * @var array<string,mixed>|null $preferencesRow
  * @var bool $canSendTerms
@@ -181,6 +182,39 @@ $e = static fn (?string $value): string => Desk::e($value);
           <p class="sa-desk-note">
             The people named here already hold their roles. The signer can be sent
             the Business Associate Agreement the moment document generation exists.
+          </p>
+        </div>
+      </div>
+    </section>
+  <?php endif; ?>
+
+  <?php /* Staging only, and only on the one request that minted it.
+           TermsService returns null for this on production, so there is no
+           setting anybody can switch that would print a live token on the live
+           site. It is here because staging refuses to email a real practice,
+           which leaves the link inside a message the mail layer declined to
+           send, and without it the client side cannot be walked at all. */ ?>
+  <?php if ($stagingLink !== null): ?>
+    <section aria-labelledby="desk-terms-testlink">
+      <p class="sa-label" id="desk-terms-testlink">The link that just went out</p>
+      <div class="sa-panel" style="border-color:var(--sa-action)">
+        <div class="sa-panel-h">
+          <span>Shown once, because this environment does not email real practices</span>
+          <span class="sa-pill is-action"><?= $e($config->string('SA_APP_ENV')) ?></span>
+        </div>
+        <div style="padding:14px 18px">
+          <p class="sa-desk-email" style="margin:0 0 12px"><?= $e($stagingLink) ?></p>
+          <a class="sa-btn is-action" href="<?= $e($stagingLink) ?>">Open it as the practice</a>
+          <p class="sa-desk-note" style="margin-top:12px">
+            This is the real one-time link, not a copy of it. Opening it uses it
+            up, exactly as it would for them, and there is no second chance:
+            send again to mint a fresh one.
+            <br><br>
+            It also signs you out of the Desk and into that practice's side,
+            because that is what the link does. Sign back in with your password
+            when you have seen enough.
+            <br><br>
+            Reload this page and the link is gone from it. It was never stored.
           </p>
         </div>
       </div>

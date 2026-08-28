@@ -34,8 +34,10 @@ $e = static fn (?string $value): string => Client::e($value);
     <a class="sa-btn" href="/soft-appeals-contact">Ask for a new link</a>
   </div>
 
+  <?php /* The no-PHI line is deliberately not repeated here. The shell prints
+           it in the footer of every client page, and the same sentence twice,
+           three lines apart, reads as a stutter. Seen on screen 2026-08-28. */ ?>
   <p class="sa-note">
     Write to hello@frimpomaasync.com and a new link goes out the same day.
-    Do not send patient, member, claim or clinical information by email.
   </p>
 </div>

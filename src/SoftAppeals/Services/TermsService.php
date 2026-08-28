@@ -161,8 +161,16 @@ final class TermsService
      * the same preview send once, and a deliberate resend from a freshly loaded
      * page sends again.
      *
+     * `link` is the one-time link that was just minted, and it is null on
+     * production, always, with no setting that changes that. Off production it
+     * is returned so the Desk can show it once, because staging refuses to
+     * email a real practice and the link would otherwise exist only inside a
+     * message the mail layer declined to send, which makes the client side
+     * impossible to walk. The token is still never stored and never logged: it
+     * is handed back on this one request and then it is gone.
+     *
      * @param array<string,mixed> $engagement a row joined with its organization
-     * @return array{state:string,sent:bool,reason:string,expires_at:?string,resent:bool}
+     * @return array{state:string,sent:bool,reason:string,expires_at:?string,resent:bool,link:?string}
      */
     public function send(array $engagement, int $sendSequence, ?string $userId = null): array
     {
@@ -194,6 +202,8 @@ final class TermsService
                 'reason'     => 'this preview had already been sent',
                 'expires_at' => null,
                 'resent'     => false,
+                // Nothing was minted on this path, so there is nothing to show.
+                'link'       => null,
             ];
         }
 
@@ -261,6 +271,11 @@ final class TermsService
             'reason'     => $result['reason'],
             'expires_at' => $invitation['expires_at'],
             'resent'     => $sendSequence > 0,
+
+            // Production never sees this. The check is against the environment
+            // itself rather than a feature flag, so there is no setting anybody
+            // can switch that would start handing live tokens back to a page.
+            'link'       => $this->config->isProduction() ? null : $link,
         ];
     }
 

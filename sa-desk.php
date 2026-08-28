@@ -194,6 +194,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             }
             $result = $app->termsService()->send($joined, max(0, $sequence), $userId);
 
+            // Staging refuses to email a real practice, so the one-time link
+            // exists only inside a message the mail layer declined to send.
+            // Without this there is no way to walk the client side at all.
+            // TermsService returns null here on production, whatever this page
+            // does with it.
+            if ($result['link'] !== null) {
+                $session->flash('desk_link', (string) $result['link']);
+            }
+
             $session->flash(
                 $result['sent'] ? 'desk_ok' : 'desk_problem',
                 $result['sent']
@@ -318,6 +327,7 @@ $data = [
     'termsReady'     => $termsReady,
     'ok'             => $session->flash('desk_ok'),
     'problem'        => $session->flash('desk_problem'),
+    'stagingLink'    => $session->flash('desk_link'),
 
     // Off production, a view that fails names the exception. On production it
     // names the section and nothing else. Either way the page is readable

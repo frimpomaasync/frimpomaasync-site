@@ -313,6 +313,55 @@ return [
             );
         },
 
+    'the one-time link comes back off production, and never on it' =>
+        static function (Bootstrap $app, Database $db) use ($answers, $readyEngagement): void {
+            // Off production. The Desk shows the link because staging refuses
+            // to email a real practice, and without it the client side cannot
+            // be walked at all.
+            $engagement = $readyEngagement($app, $answers);
+            $app->mail(static fn (): bool => true);
+
+            $result = $app->termsService()->send($engagement, 0, null);
+
+            Expect::notNull($result['link'], 'staging should hand the link back');
+            Expect::true(
+                str_contains((string) $result['link'], 'soft-appeals-preferences.php?t='),
+                'and it should be the real preferences link'
+            );
+
+            // On production the same call returns null, and the check is
+            // against the environment itself rather than a feature flag, so
+            // there is no setting anybody can switch that would start printing
+            // live tokens on the live site.
+            $path = sys_get_temp_dir() . '/sa-prod-config-' . bin2hex(random_bytes(4)) . '.php';
+            file_put_contents($path, '<?php return ' . var_export([
+                'SA_APP_ENV'           => 'production',
+                'SA_APP_URL'           => 'https://frimpomaasync.com',
+                'SA_BUSINESS_TIMEZONE' => 'America/New_York',
+                'SA_SESSION_SECRET'    => str_repeat('test-session-secret-', 3),
+                'SA_TOKEN_SECRET'      => str_repeat('test-token-secret-', 3),
+                'SA_IP_HMAC_SECRET'    => str_repeat('test-ip-hmac-secret-', 3),
+                'SA_DEMO_MODE'         => false,
+                'SA_MAIL_ALLOWLIST'    => '',
+            ], true) . ";\n");
+            register_shutdown_function(static function () use ($path): void {
+                @unlink($path);
+            });
+
+            $live = Bootstrap::boot($path, false);
+            $live->useDatabase($db);
+            $live->mail(static fn (): bool => true);
+
+            $reloaded = $live->engagements()->findWithOrganization((string) $engagement['id']);
+
+            // Sequence 1, because sequence 0 already went above and the
+            // idempotency guard would return the earlier row instead of minting.
+            $onLive = $live->termsService()->send($reloaded, 1, null);
+
+            Expect::true($onLive['sent'], 'the send itself still works on production');
+            Expect::null($onLive['link'], 'but production never hands a live token back to a page');
+        },
+
     'this environment cannot email a practice that is not on its allowlist' =>
         static function (Bootstrap $app, Database $db) use ($answers, $readyEngagement): void {
             $engagement = $readyEngagement($app, $answers);
