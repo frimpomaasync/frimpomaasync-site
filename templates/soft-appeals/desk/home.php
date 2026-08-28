@@ -371,7 +371,7 @@ $hidden = count($cards) - count($shown);
     verified reimbursement and the fee calculated from it. None of those numbers
     exists until recoveries are recorded, and a row of zeros where money belongs
     reads like a result rather than an unbuilt feature. It arrives with the
-    money phase. Work-batch deadlines, approvals and documents arrive with the
-    Recovery Room.
+    money phase. Approvals and payer submissions arrive with the recovery
+    phase.
   </p>
 </section>

@@ -39,6 +39,10 @@ $e = static fn (?string $value): string => Client::e($value);
       It works once and it stops working ten minutes after it was sent.
     </p>
 
+    <?php if ($notice !== null): ?>
+      <p class="sa-note"><?= $e($notice) ?></p>
+    <?php endif; ?>
+
     <form method="post" action="/soft-appeals-room.php">
       <?= $csrf->field('client.code.verify') ?>
       <input type="hidden" name="action" value="client.code.verify">
