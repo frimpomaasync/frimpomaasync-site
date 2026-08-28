@@ -257,7 +257,19 @@ final class Database
         $this->pdo->beginTransaction();
         try {
             $result = $work();
-            $this->pdo->commit();
+            // MySQL commits implicitly on any DDL statement, so a migration
+            // that ran CREATE TABLE inside this closure has already ended the
+            // transaction by the time it returns, and PDO knows it: on PHP 8
+            // inTransaction() reads the server's own flag. Calling commit()
+            // then throws "There is no active transaction", which is what
+            // turned the first request after every schema deploy into a 500
+            // (the ledger row had been written in autocommit mode, so the
+            // second request found nothing pending and was clean). Measured
+            // on staging 2026-08-28 on migration 0006. Commit only if there is
+            // still something to commit.
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->commit();
+            }
             return $result;
         } catch (\Throwable $e) {
             if ($this->pdo->inTransaction()) {
