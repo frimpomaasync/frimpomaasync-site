@@ -22,7 +22,9 @@ use SoftAppeals\Repositories\ContactRepository;
 use SoftAppeals\Repositories\DocumentRepository;
 use SoftAppeals\Repositories\EngagementRepository;
 use SoftAppeals\Repositories\MembershipRepository;
+use SoftAppeals\Repositories\InvoiceRepository;
 use SoftAppeals\Repositories\PreferenceRepository;
+use SoftAppeals\Repositories\RecoveryRepository;
 use SoftAppeals\Repositories\RecoveryScopeRepository;
 use SoftAppeals\Repositories\StatusEventRepository;
 use SoftAppeals\Repositories\SubmissionEventRepository;
@@ -89,6 +91,8 @@ final class RecoveryService
     private AuthorizationService $authorization;
     private MailService $mail;
     private AuditService $audit;
+    private RecoveryRepository $recoveries;
+    private InvoiceRepository $invoices;
 
     public function __construct(
         Config $config,
@@ -111,8 +115,12 @@ final class RecoveryService
         ActionRequestService $requests,
         AuthorizationService $authorization,
         MailService $mail,
-        AuditService $audit
+        AuditService $audit,
+        RecoveryRepository $recoveries,
+        InvoiceRepository $invoices
     ) {
+        $this->recoveries = $recoveries;
+        $this->invoices = $invoices;
         $this->config = $config;
         $this->db = $db;
         $this->clock = $clock;
@@ -261,9 +269,13 @@ final class RecoveryService
 
     /**
      * Section 15.9, the recovery and fee block. Shown once recovery work
-     * begins. The verified figure is one this phase never writes, and the
-     * fee is calculated from it and from nothing else, so both read $0.00
-     * until the money phase records a verified reimbursement.
+     * begins.
+     *
+     * The verified figure is the sum of the verified rows Phase 7 writes,
+     * less what was taken back, and the fee is the sum of the fees on those
+     * rows, each calculated in whole cents at the rate snapshotted on it.
+     * Nothing here reads a submission or a payer decision as money. Until a
+     * reimbursement is verified both read $0.00, and the block says why.
      *
      * @param array<string,mixed> $engagement
      * @return array<string,mixed>
@@ -273,13 +285,19 @@ final class RecoveryService
         $engagementId = (string) $engagement['id'];
         $scope = $this->scopes->forEngagement($engagementId);
         $totals = $this->events->totals($engagementId);
+        $money = $this->recoveries->totals($engagementId);
+        $invoiced = $this->invoices->totals($engagementId);
         $rateBps = $scope === null || $scope['fee_rate_bps'] === null ? null : (int) $scope['fee_rate_bps'];
+        $agreement = $this->documents->current($engagementId, DocumentKind::RECOVERY_AGREEMENT);
 
-        // Verified reimbursement is recorded by the money phase. Until it
-        // exists it is zero, and a fee on zero is zero, by the same integer
-        // arithmetic the money phase will use.
-        $verifiedCents = 0;
-        $feeCents = $rateBps === null ? 0 : Money::feeCents($verifiedCents, $rateBps);
+        $invoiceLine = 'Not created';
+        if ($invoiced['draft_count'] > 0) {
+            $invoiceLine = 'Being prepared';
+        } elseif ($invoiced['issued_count'] > 0) {
+            $invoiceLine = 'Issued';
+        } elseif ($invoiced['paid_cents'] > 0 || $invoiced['invoiced_cents'] > 0) {
+            $invoiceLine = 'Paid';
+        }
 
         return [
             'shown'             => Stage::phiGatePassed((string) $engagement['stage'])
@@ -287,14 +305,20 @@ final class RecoveryService
                     Stage::RECOVERY_ACTIVE, Stage::RECONCILIATION, Stage::FINAL_REPORT,
                     Stage::ACCESS_REVIEW, Stage::DATA_DISPOSITION, Stage::CLOSED,
                 ], true),
-            'verified'          => Money::format($verifiedCents),
-            'verified_cents'    => $verifiedCents,
+            'verified'          => Money::format($money['net_cents']),
+            'verified_cents'    => $money['net_cents'],
+            'verified_gross'    => Money::format($money['verified_cents']),
+            'taken_back'        => Money::format($money['taken_back_cents']),
+            'taken_back_cents'  => $money['taken_back_cents'],
             'rate'              => $scope === null
                 ? 'Not set'
                 : self::feeRateLabel((string) $scope['fee_basis'], $rateBps),
-            'fee'               => Money::format($feeCents),
-            'fee_cents'         => $feeCents,
-            'invoice'           => 'Not created',
+            'fee'               => Money::format($money['fee_net_cents']),
+            'fee_cents'         => $money['fee_net_cents'],
+            'invoice'           => $invoiceLine,
+            'invoiced'          => Money::format($invoiced['invoiced_cents']),
+            'paid'              => Money::format($invoiced['paid_cents']),
+            'agreement_ref'     => $agreement === null ? null : (string) $agreement['public_ref'],
             'submitted'         => Money::format($totals['submitted_cents']),
             'submitted_count'   => $totals['submitted_count'],
             'overturned'        => Money::format($totals['overturned_cents']),

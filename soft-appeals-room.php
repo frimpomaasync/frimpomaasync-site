@@ -453,8 +453,44 @@ $signable = $config->eSignEnabled()
 // Phase 5. Which section of the room, section 15.3. Anything unknown is the
 // overview, never a 404: a practice following an old link lands somewhere.
 $section = (string) ($_GET['section'] ?? 'overview');
-if (!in_array($section, ['overview', 'assessment', 'batches', 'requests', 'approvals', 'recovery'], true)) {
+if (!in_array($section, ['overview', 'assessment', 'batches', 'requests', 'approvals', 'recovery', 'closeout'], true)) {
     $section = 'overview';
+}
+
+// Phase 7. Their own issued invoice, out of the vault. Section 8.2: billing
+// or finance, and the organization admin, see invoices; nobody else does.
+// Found THROUGH this session's engagement, and only once issued.
+$wantedInvoice = (string) ($_GET['invoice'] ?? '');
+if ($wantedInvoice !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
+    $allowed = $app->authorization()->can(Permission::FINANCE_VIEW, $organizationId);
+    $invoice = $allowed
+        ? $app->invoices()->findForEngagement($wantedInvoice, (string) $engagement['id'])
+        : null;
+    $text = $invoice === null || (string) $invoice['status'] === \SoftAppeals\Domain\InvoiceStatus::DRAFT
+        ? null
+        : $app->reconciliationService()->invoiceText($invoice);
+    if ($text === null) {
+        $app->audit()->record('invoice.open', 'denied', 'invoice', null, [
+            'reason' => $allowed ? 'no issued invoice with that reference on this engagement' : 'no finance role',
+        ], $organizationId);
+        $session->flash('client_problem', $allowed
+            ? 'That invoice is not ready to read yet.'
+            : 'Your sign-in cannot read invoices. The organization admin or the billing contact can.');
+        header('Location: /soft-appeals-room.php?section=recovery', true, 303);
+        exit;
+    }
+    $app->audit()->record('invoice.open', 'success', 'invoice', (string) $invoice['id'], [
+        'source' => 'client',
+    ], $organizationId);
+    header('Content-Type: text/plain; charset=utf-8');
+    header("Content-Security-Policy: default-src 'none'; base-uri 'none'; form-action 'none'");
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: no-referrer');
+    header('Cache-Control: no-store, private');
+    header('X-Robots-Tag: noindex, nofollow');
+    header('Content-Disposition: inline; filename="' . $wantedInvoice . '.txt"');
+    echo $text;
+    exit;
 }
 
 $assessmentService = $app->assessmentService();
@@ -554,4 +590,16 @@ Client::render('room-shell', [
     'feeBlock'          => $recovery->feeBlock($engagement),
     'agreementStatus'   => $recovery->agreementStatus($engagement),
     'scope'             => $recovery->scope($engagement),
+
+    // Phase 7. Invoices for the people section 8.2 lets read them, the
+    // closeout as section 15.10 shows it, and whether the rail lists it.
+    'canViewFinance'    => $app->authorization()->can(Permission::FINANCE_VIEW, $organizationId),
+    'canViewCompliance' => $app->authorization()->can(Permission::COMPLIANCE_VIEW, $organizationId),
+    'invoices'          => $app->invoices()->forClient($engagementId),
+    'ledger'            => $app->recoveries()->forEngagement($engagementId),
+    'closeoutSummary'   => $app->closeoutService()->summary($engagement),
+    'inCloseout'        => in_array($stage, [
+        Stage::RECONCILIATION, Stage::FINAL_REPORT, Stage::ACCESS_REVIEW,
+        Stage::DATA_DISPOSITION, Stage::CLOSED, Stage::CLOSED_NO_RECOVERY,
+    ], true),
 ], $showDetail);

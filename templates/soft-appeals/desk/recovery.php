@@ -263,11 +263,22 @@ $e = static fn (?string $value): string => Desk::e($value);
         <?php endif; ?>
 
       <?php elseif ($active): ?>
-        <p style="margin:0">
+        <p style="margin:0 0 12px">
           Recovery is active. Work the board below: ask for approval on a batch in
           scope, record the submission once approved, then record what the payer
-          did. Nothing here creates a fee.
+          did. Nothing here creates a fee; verifying what actually arrived is on
+          the <a href="/sa-desk.php?view=money&amp;e=<?= $e(urlencode($engagementRef)) ?>">Money</a> screen.
         </p>
+        <?php if (($beginCheck['ok'] ?? false) && ($canClose ?? false)): ?>
+          <p style="margin:0 0 10px">Every batch in scope is resolved. Closeout can begin.</p>
+          <a class="sa-btn is-primary" href="/sa-desk.php?view=closeout&amp;e=<?= $e(urlencode($engagementRef)) ?>">Open closeout</a>
+        <?php elseif (isset($beginCheck)): ?>
+          <p class="sa-desk-note" style="margin:0">Closeout: <?= $e((string) ($beginCheck['reason'] ?? '')) ?></p>
+        <?php endif; ?>
+
+      <?php elseif (in_array($stage, [Stage::RECONCILIATION, Stage::FINAL_REPORT, Stage::ACCESS_REVIEW, Stage::DATA_DISPOSITION, Stage::CLOSED], true)): ?>
+        <p style="margin:0 0 10px">This engagement is in closeout, or closed. The board below is history.</p>
+        <a class="sa-btn is-sm" href="/sa-desk.php?view=closeout&amp;e=<?= $e(urlencode($engagementRef)) ?>">Open closeout</a>
 
       <?php else: ?>
         <p style="margin:0">Nothing to do on recovery at "<?= $e(Stage::staffLabel($stage)) ?>".</p>
@@ -632,15 +643,16 @@ $e = static fn (?string $value): string => Desk::e($value);
           <dt>Submitted to payers</dt><dd><?= $e((string) $feeBlock['submitted']) ?> &middot; <?= (int) $feeBlock['submitted_count'] ?> claims</dd>
           <dt>Overturned, per the payer</dt><dd><?= $e((string) $feeBlock['overturned']) ?> &middot; <?= (int) $feeBlock['overturned_count'] ?> claims</dd>
           <dt>Upheld</dt><dd><?= $e((string) $feeBlock['upheld']) ?> &middot; <?= (int) $feeBlock['upheld_count'] ?> claims</dd>
-          <dt>Verified recovered reimbursement</dt><dd><?= $e((string) $feeBlock['verified']) ?></dd>
+          <dt>Verified recovered reimbursement</dt><dd><?= $e((string) $feeBlock['verified']) ?><?= (int) ($feeBlock['taken_back_cents'] ?? 0) > 0 ? ' <span class="sa-desk-quiet">after ' . $e((string) $feeBlock['taken_back']) . ' taken back</span>' : '' ?></dd>
           <dt>Applicable fee rate</dt><dd><?= $e((string) $feeBlock['rate']) ?></dd>
-          <dt>Calculated Soft Appeals fee</dt><dd><?= $e((string) $feeBlock['fee']) ?></dd>
+          <dt>Calculated Soft Appeals fee</dt><dd><?= $e((string) $feeBlock['fee']) ?><?= empty($feeBlock['agreement_ref']) ? '' : ' <span class="sa-desk-quiet">under <span class="sa-desk-mono">' . $e((string) $feeBlock['agreement_ref']) . '</span></span>' ?></dd>
           <dt>Invoice status</dt><dd><?= $e((string) $feeBlock['invoice']) ?></dd>
         </dl>
         <p class="sa-desk-note" style="margin-top:12px">
-          A payer decision is not a reimbursement. The verified figure is written by
-          the money phase, when the money has actually arrived at the practice and
-          been checked, and the fee is calculated from that figure alone.
+          A payer decision is not a reimbursement. The verified figure is written on
+          the <a href="/sa-desk.php?view=money&amp;e=<?= $e(urlencode($engagementRef)) ?>">Money</a> screen,
+          when the money has actually arrived at the practice and been checked, and
+          the fee is calculated from that figure alone.
         </p>
       </div></div>
     </section>

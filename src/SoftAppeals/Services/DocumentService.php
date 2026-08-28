@@ -240,12 +240,38 @@ final class DocumentService
     }
 
     /**
+     * Generate a record kind and execute it in the same transaction. Phase 7.
+     *
+     * A record is Soft Appeals' own statement, not an agreement: nobody
+     * signs it, so there is no sent, no client-signed and no countersigned.
+     * It goes from draft to executed in one move, is rendered into the vault
+     * with its hash on the row like every agreement, and reopens and
+     * re-hashes on every read the same way. Refused for any kind a practice
+     * signs, so this can never be a way past a signature.
+     *
+     * @param array<string,mixed> $engagement joined with its organization
+     * @param array<string,string> $context the figures the record prints
+     * @return array<string,mixed> the executed document row
+     */
+    public function seal(array $engagement, string $kind, array $context, ?string $userId = null): array
+    {
+        if (!DocumentKind::isRecord($kind)) {
+            throw new \RuntimeException(DocumentKind::label($kind) . ' is signed, not sealed.');
+        }
+        return $this->db->transaction(function () use ($engagement, $kind, $context, $userId): array {
+            $document = $this->generate($engagement, $kind, $userId, $context);
+            return $this->execute((string) $document['id'], $engagement, $userId);
+        });
+    }
+
+    /**
      * Generate one version of one document.
      *
      * @param array<string,mixed> $engagement joined with its organization
+     * @param array<string,string> $extraContext record figures, see seal()
      * @return array<string,mixed> the document row as inserted
      */
-    public function generate(array $engagement, string $kind, ?string $userId = null): array
+    public function generate(array $engagement, string $kind, ?string $userId = null, array $extraContext = []): array
     {
         $engagementId = (string) $engagement['id'];
         $organizationId = (string) $engagement['organization_id'];
@@ -267,7 +293,10 @@ final class DocumentService
         $reserved = $this->documents->reserve($engagementId, $kind);
         $effectiveDate = $this->clock->displayDate($this->clock->nowUtc());
 
-        $body = DocumentTemplates::body($kind, $this->templateContext(
+        // The caller's keys sit on the left so a record kind can hand in the
+        // figures it prints. No agreement kind passes any, and the identity
+        // keys are set here, so nothing a caller passes can rename a party.
+        $body = DocumentTemplates::body($kind, $extraContext + $this->templateContext(
             $engagement,
             $signer,
             $reserved['public_ref'],
@@ -608,6 +637,17 @@ final class DocumentService
             );
         }
 
+        // The draft-to-executed edge exists for record kinds and for nothing
+        // else. An agreement the practice has not signed does not execute,
+        // whatever the status table allows, and this is the line that says so.
+        if (DocumentKind::requiresSignature($kind)
+            && !in_array($status, [DocumentStatus::CLIENT_SIGNED, DocumentStatus::COUNTERSIGNED], true)
+        ) {
+            throw new \RuntimeException(
+                DocumentKind::label($kind) . ' needs the practice\'s signature before it is executed.'
+            );
+        }
+
         $organizationId = (string) $engagement['organization_id'];
         $now = $this->clock->nowUtc();
 
@@ -643,7 +683,11 @@ final class DocumentService
             );
         }
 
-        $this->notifyExecuted($document, $engagement);
+        // A record's own service tells the practice what the record is; the
+        // "signed by both of us" notice would be untrue for it.
+        if (DocumentKind::requiresSignature($kind)) {
+            $this->notifyExecuted($document, $engagement);
+        }
 
         $this->audit->record('document.execute', 'success', 'document', $documentId, [
             'document_kind'    => $kind,
@@ -1013,12 +1057,29 @@ final class DocumentService
             . $escape($this->settings->legalEntity($this->config)) . ', operating as '
             . $escape($this->settings->tradeName($this->config)) . '.</p>';
 
-        $out[] = '<h2>The document as signed</h2>';
+        $isRecord = DocumentKind::isRecord((string) $document['kind']);
+
+        $out[] = '<h2>' . ($isRecord ? 'The record as sealed' : 'The document as signed') . '</h2>';
         $out[] = '<pre>' . $escape($body) . '</pre>';
+
+        if ($isRecord) {
+            $out[] = '<h2>Sealed by</h2>';
+            $out[] = '<p>' . $escape($this->settings->tradeName($this->config))
+                . ', on ' . $escape($this->clock->displaySigningStamp($executedAt))
+                . '. This is a record of how the engagement ended, prepared by Soft Appeals. '
+                . 'It carries no signature because there is nothing in it for the Practice to '
+                . 'agree to; the agreements it refers to are each sealed under their own '
+                . 'signatures.</p>';
+        }
 
         $out[] = '<h2>Signatures</h2>';
         $out[] = '<table><tr><th>Party</th><th>Signed by</th><th>When</th>'
             . '<th>Document hash signed</th></tr>';
+        if ($signatures === []) {
+            $out[] = '<tr><td colspan="4">None. ' . ($isRecord
+                ? 'A sealed record is not signed.'
+                : 'No signature is recorded on this version.') . '</td></tr>';
+        }
         foreach ($signatures as $signature) {
             $out[] = '<tr><td>' . $escape(SignatureRepository::partyLabel((string) $signature['party']))
                 . '</td><td>' . $escape((string) $signature['typed_name'])
@@ -1064,6 +1125,9 @@ final class DocumentService
         $out[] = '<h2>Signature evidence</h2>';
         $out[] = '<table><tr><th>Party</th><th>Consent</th><th>Accepted</th>'
             . '<th>Network and device digests</th></tr>';
+        if ($signatures === []) {
+            $out[] = '<tr><td colspan="4">None.</td></tr>';
+        }
         foreach ($signatures as $signature) {
             $out[] = '<tr><td>' . $escape(SignatureRepository::partyLabel((string) $signature['party']))
                 . '</td><td>version ' . $escape((string) $signature['consent_version'])
@@ -1075,8 +1139,10 @@ final class DocumentService
         }
         $out[] = '</table>';
 
-        $out[] = '<h2>The consent that was accepted</h2>';
-        $out[] = '<p>' . $escape(DocumentTemplates::consentText()) . '</p>';
+        if (!$isRecord) {
+            $out[] = '<h2>The consent that was accepted</h2>';
+            $out[] = '<p>' . $escape(DocumentTemplates::consentText()) . '</p>';
+        }
 
         $out[] = '<p>This record was produced by the Soft Appeals command centre at the '
             . 'moment of execution. Its own hash is stored on the document row, so any '

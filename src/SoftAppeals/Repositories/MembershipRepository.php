@@ -109,6 +109,49 @@ final class MembershipRepository extends Repository
         return $this->db->run('DELETE FROM sa_memberships WHERE user_id = :u', ['u' => $userId])->rowCount();
     }
 
+    /**
+     * Every role a user holds anywhere, staff or client. Empty means the
+     * sign-in reaches nothing and can be deactivated.
+     *
+     * @return list<string>
+     */
+    public function rolesAnywhere(string $userId): array
+    {
+        $out = [];
+        foreach ($this->db->all('SELECT role FROM sa_memberships WHERE user_id = :u', ['u' => $userId]) as $row) {
+            if (Role::isValid((string) $row['role'])) {
+                $out[] = (string) $row['role'];
+            }
+        }
+        return $out;
+    }
+
+    /**
+     * Everybody holding a client role at one practice, with the roles each
+     * holds. The closeout access review reads this on every visit.
+     *
+     * @return list<array{user_id:string,roles:list<string>}>
+     */
+    public function usersForOrganization(string $organizationId): array
+    {
+        $byUser = [];
+        foreach ($this->db->all(
+            'SELECT user_id, role FROM sa_memberships WHERE organization_id = :o ORDER BY created_at ASC',
+            ['o' => $organizationId]
+        ) as $row) {
+            $role = (string) $row['role'];
+            if (!Role::isValid($role) || Role::isStaff($role)) {
+                continue;
+            }
+            $byUser[(string) $row['user_id']][] = $role;
+        }
+        $out = [];
+        foreach ($byUser as $userId => $roles) {
+            $out[] = ['user_id' => (string) $userId, 'roles' => $roles];
+        }
+        return $out;
+    }
+
     public function has(string $userId, string $role, ?string $organizationId = null): bool
     {
         return in_array($role, $this->rolesFor($userId, $organizationId), true);

@@ -2,12 +2,14 @@
 /**
  * Desk home. Section 12.4, in the order the plan puts it.
  *
- * Needs you, pipeline, deadlines, recent inquiries, active organizations.
- * The recovery summary is deliberately absent: it counts verified reimbursement
- * and calculated fees, none of which exists until Phase 6, and a row of
- * confident zeros where money should be reads as a result rather than as a
- * feature that has not been built. The note at the bottom says so outright.
+ * Needs you, pipeline, deadlines, recent inquiries, active organizations,
+ * and, since Phase 7, the recovery summary: verified reimbursement and the
+ * fees calculated from it, which exist now.
  *
+ * @var array<string,mixed> $recoverySummary
+ * @var list<array<string,mixed>> $awaitingVerification
+ * @var list<array<string,mixed>> $invoiceReady
+ * @var list<array<string,mixed>> $closeoutOpen
  * @var \SoftAppeals\Support\Clock $clock
  * @var array<string,int> $pipeline
  * @var array<string,int> $intakeCounts
@@ -142,6 +144,41 @@ foreach ($followUps ?? [] as $row) {
             . ' · ' . Desk::deadlineWords($days, true),
         'action' => ['Open', '/sa-desk.php?view=recovery&e=' . urlencode((string) $row['engagement_ref']) . '#desk-rc-events'],
         'view'   => ['View', '/sa-desk.php?view=recovery&e=' . urlencode((string) $row['engagement_ref'])],
+        'allowed' => true,
+    ];
+}
+
+// Phase 7. Money waiting on her, and closeouts in progress.
+foreach ($awaitingVerification ?? [] as $row) {
+    $cards[] = [
+        'urgent' => false,
+        'title'  => 'Overturned, waiting on payment verification',
+        'line'   => (string) ($row['display_name'] ?? $row['legal_name']) . ' · batch ' . (string) $row['label']
+            . ' · no fee until the money is verified',
+        'action' => ['Verify what arrived', '/sa-desk.php?view=money&e=' . urlencode((string) $row['engagement_ref']) . '#desk-mo-verify'],
+        'view'   => ['View', '/sa-desk.php?view=money&e=' . urlencode((string) $row['engagement_ref'])],
+        'allowed' => true,
+    ];
+}
+foreach ($invoiceReady ?? [] as $row) {
+    $cards[] = [
+        'urgent' => false,
+        'title'  => 'Invoice-ready',
+        'line'   => (string) ($row['display_name'] ?? $row['legal_name']) . ' · '
+            . \SoftAppeals\Support\Money::format((int) $row['fee_net_cents']) . ' in fees not on an invoice',
+        'action' => ['Create the invoice', '/sa-desk.php?view=money&e=' . urlencode((string) $row['engagement_ref']) . '#desk-mo-invoices'],
+        'view'   => ['View', '/sa-desk.php?view=money&e=' . urlencode((string) $row['engagement_ref'])],
+        'allowed' => true,
+    ];
+}
+foreach ($closeoutOpen ?? [] as $row) {
+    $stage = (string) $row['stage'];
+    $cards[] = [
+        'urgent' => false,
+        'title'  => 'Closeout in progress',
+        'line'   => (string) ($row['display_name'] ?? $row['legal_name']) . ' · ' . Stage::staffLabel($stage) . ' · ' . Stage::nextAction($stage),
+        'action' => ['Open', '/sa-desk.php?view=closeout&e=' . urlencode((string) $row['public_ref'])],
+        'view'   => ['View', '/sa-desk.php?view=closeout&e=' . urlencode((string) $row['public_ref'])],
         'allowed' => true,
     ];
 }
@@ -439,13 +476,23 @@ $hidden = count($cards) - count($shown);
 </section>
 <?php endif; ?>
 
-<section>
-  <p class="sa-label">Not on this screen yet, and why</p>
-  <p class="sa-desk-note">
-    The recovery summary counts verified reimbursement and the fee calculated
-    from it. Neither number exists until a reimbursement is verified, and a
-    row of zeros where money belongs reads like a result rather than an unbuilt
-    feature. It arrives with the money phase. Submitted and overturned figures,
-    per practice, are on the Recovery screen.
+<?php if (isset($recoverySummary)): ?>
+<section aria-labelledby="desk-home-money">
+  <p class="sa-label" id="desk-home-money">Recovery summary</p>
+  <div class="sa-metrics">
+    <div class="sa-metric"><p class="sa-metric-k">Denied dollars accepted</p><p class="sa-metric-v"><?= $e((string) $recoverySummary['denied_accepted']) ?></p></div>
+    <div class="sa-metric"><p class="sa-metric-k">Submitted to payers</p><p class="sa-metric-v"><?= $e((string) $recoverySummary['submitted']) ?></p></div>
+    <div class="sa-metric"><p class="sa-metric-k">Favorable, awaiting payment</p><p class="sa-metric-v"><?= $e((string) $recoverySummary['awaiting']) ?></p><p class="sa-metric-c">no fee yet</p></div>
+    <div class="sa-metric"><p class="sa-metric-k">Verified reimbursement</p><p class="sa-metric-v"><?= $e((string) $recoverySummary['verified']) ?></p></div>
+    <div class="sa-metric"><p class="sa-metric-k">Calculated fees</p><p class="sa-metric-v"><?= $e((string) $recoverySummary['fee']) ?></p></div>
+    <div class="sa-metric"><p class="sa-metric-k">Invoiced</p><p class="sa-metric-v"><?= $e((string) $recoverySummary['invoiced']) ?></p></div>
+    <div class="sa-metric"><p class="sa-metric-k">Paid</p><p class="sa-metric-v"><?= $e((string) $recoverySummary['paid']) ?></p></div>
+    <div class="sa-metric"><p class="sa-metric-k">Adjusted or reversed</p><p class="sa-metric-v"><?= $e((string) $recoverySummary['taken_back']) ?></p></div>
+  </div>
+  <p class="sa-desk-note" style="margin-top:10px">
+    The fee card is calculated only from verified qualifying reimbursement
+    recorded under the agreement. A favorable decision alone never creates a
+    fee. Per practice: <a href="/sa-desk.php?view=money">Money</a>.
   </p>
 </section>
+<?php endif; ?>

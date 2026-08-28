@@ -10,16 +10,19 @@ use SoftAppeals\Repositories\ActionRequestRepository;
 use SoftAppeals\Repositories\ApprovalRequestRepository;
 use SoftAppeals\Repositories\AssessmentRepository;
 use SoftAppeals\Repositories\ChecklistRepository;
+use SoftAppeals\Repositories\CloseoutRepository;
 use SoftAppeals\Repositories\CommunicationRepository;
 use SoftAppeals\Repositories\ContactRepository;
 use SoftAppeals\Repositories\DocumentRepository;
 use SoftAppeals\Repositories\EngagementRepository;
 use SoftAppeals\Repositories\IntakeRepository;
 use SoftAppeals\Repositories\InvitationRepository;
+use SoftAppeals\Repositories\InvoiceRepository;
 use SoftAppeals\Repositories\LoginCodeRepository;
 use SoftAppeals\Repositories\MembershipRepository;
 use SoftAppeals\Repositories\OrganizationRepository;
 use SoftAppeals\Repositories\PreferenceRepository;
+use SoftAppeals\Repositories\RecoveryRepository;
 use SoftAppeals\Repositories\RecoveryScopeRepository;
 use SoftAppeals\Repositories\SettingsRepository;
 use SoftAppeals\Repositories\SignatureRepository;
@@ -36,6 +39,7 @@ use SoftAppeals\Services\AssessmentService;
 use SoftAppeals\Services\AuditService;
 use SoftAppeals\Services\ChecklistService;
 use SoftAppeals\Services\ClientAccessService;
+use SoftAppeals\Services\CloseoutService;
 use SoftAppeals\Services\DocumentService;
 use SoftAppeals\Services\DocumentVault;
 use SoftAppeals\Services\EngagementService;
@@ -43,6 +47,7 @@ use SoftAppeals\Services\IntakeService;
 use SoftAppeals\Services\LegacyLeadImporter;
 use SoftAppeals\Services\MailService;
 use SoftAppeals\Services\PreferencesService;
+use SoftAppeals\Services\ReconciliationService;
 use SoftAppeals\Services\RecoveryService;
 use SoftAppeals\Services\SchemaService;
 use SoftAppeals\Services\SeedService;
@@ -626,6 +631,88 @@ final class Bootstrap
             $this->checklistService(),
             $this->actionRequestService(),
             $this->authorization(),
+            $this->mail(),
+            $this->audit(),
+            $this->recoveries(),
+            $this->invoices()
+        ));
+    }
+
+    // ------------------------------------------------------------------
+    // Phase 7. Reconciliation and closeout. The money.
+    // ------------------------------------------------------------------
+
+    public function recoveries(): RecoveryRepository
+    {
+        return $this->make(RecoveryRepository::class, fn (): RecoveryRepository => new RecoveryRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function invoices(): InvoiceRepository
+    {
+        return $this->make(InvoiceRepository::class, fn (): InvoiceRepository => new InvoiceRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function closeouts(): CloseoutRepository
+    {
+        return $this->make(CloseoutRepository::class, fn (): CloseoutRepository => new CloseoutRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function reconciliationService(): ReconciliationService
+    {
+        return $this->make(ReconciliationService::class, fn (): ReconciliationService => new ReconciliationService(
+            $this->config,
+            $this->database(),
+            $this->clock(),
+            $this->recoveries(),
+            $this->invoices(),
+            $this->recoveryScopes(),
+            $this->submissionEvents(),
+            $this->workBatches(),
+            $this->engagements(),
+            $this->documents(),
+            $this->contacts(),
+            $this->preferences(),
+            $this->timeline(),
+            $this->settings(),
+            $this->vault(),
+            $this->actionRequestService(),
+            $this->mail(),
+            $this->audit()
+        ));
+    }
+
+    public function closeoutService(): CloseoutService
+    {
+        return $this->make(CloseoutService::class, fn (): CloseoutService => new CloseoutService(
+            $this->config,
+            $this->database(),
+            $this->clock(),
+            $this->closeouts(),
+            $this->invoices(),
+            $this->recoveryScopes(),
+            $this->approvalRequests(),
+            $this->submissionEvents(),
+            $this->workBatches(),
+            $this->engagements(),
+            $this->documents(),
+            $this->contacts(),
+            $this->users(),
+            $this->memberships(),
+            $this->invitations(),
+            $this->timeline(),
+            $this->engagementService(),
+            $this->reconciliationService(),
+            $this->documentService(),
+            $this->actionRequestService(),
             $this->mail(),
             $this->audit()
         ));

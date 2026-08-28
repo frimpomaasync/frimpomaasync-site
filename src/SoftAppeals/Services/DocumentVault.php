@@ -133,6 +133,12 @@ final class DocumentVault
         return 'signatures/' . self::segment($documentRef) . '-' . self::segment($party) . '.json';
     }
 
+    /** Where one issued invoice lives. Phase 7. Written once, at issue. */
+    public static function invoicePath(string $engagementRef, string $invoiceRef): string
+    {
+        return 'invoices/' . self::segment($engagementRef) . '/' . self::segment($invoiceRef) . '.txt';
+    }
+
     /** One path segment, reduced to characters that cannot mean anything else. */
     private static function segment(string $raw): string
     {

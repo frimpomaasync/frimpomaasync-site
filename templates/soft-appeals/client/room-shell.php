@@ -59,6 +59,10 @@ $navNow = [
     ['approvals',  'Approvals',       '/soft-appeals-room.php?section=approvals',  ($pendingApprovalCount ?? 0) ?: null],
     ['recovery',   'Recovery',        '/soft-appeals-room.php?section=recovery',   null],
 ];
+// Phase 7. Closeout appears in the rail once it has begun, section 15.10.
+if ($inCloseout ?? false) {
+    $navNow[] = ['closeout', 'Closeout', '/soft-appeals-room.php?section=closeout', null];
+}
 ?><!doctype html>
 <html lang="en">
 <head>

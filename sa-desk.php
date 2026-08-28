@@ -810,9 +810,246 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         exit;
     }
 
+    // -----------------------------------------------------------------
+    // Phase 7. The money, and the closeout.
+    //
+    // The same rule a third time: the engagement by public reference, and
+    // the batch, the recovery row, the invoice or the access row found
+    // THROUGH it. Money is the owner's alone (Permission::RECOVERY_VERIFY),
+    // and so is closing (Permission::CLOSEOUT_MANAGE), section 8.1.
+    // -----------------------------------------------------------------
+    $moneyActions = [
+        'recovery.verify',
+        'recovery.adjust',
+        'invoice.create',
+        'invoice.issue',
+        'invoice.paid',
+        'invoice.void',
+    ];
+    $closeoutActions = [
+        'closeout.begin',
+        'closeout.without_recovery',
+        'closeout.reconciliation',
+        'closeout.final_report',
+        'closeout.access_decide',
+        'closeout.access_confirm',
+        'closeout.disposition',
+    ];
+
+    if (in_array($action, $moneyActions, true) || in_array($action, $closeoutActions, true)) {
+        $csrf->require($action);
+
+        $isMoney = in_array($action, $moneyActions, true);
+        $ref = (string) ($_POST['engagement'] ?? '');
+        $engagement = $engagements->findByPublicRef($ref);
+        $joined = $engagement === null
+            ? null
+            : $engagements->findWithOrganization((string) $engagement['id']);
+
+        if ($joined === null) {
+            $session->flash('desk_problem', 'That engagement reference is not one of hers.');
+            header('Location: /sa-desk.php?view=' . ($isMoney ? 'money' : 'closeout'), true, 303);
+            exit;
+        }
+
+        $money = $app->reconciliationService();
+        $closeout = $app->closeoutService();
+        $back = '/sa-desk.php?view=' . ($isMoney ? 'money' : 'closeout') . '&e=' . urlencode($ref);
+
+        try {
+            if ($action === 'recovery.verify') {
+                $authorization->require(Permission::RECOVERY_VERIFY);
+                $batch = $app->workBatches()->findForEngagement((string) ($_POST['batch'] ?? ''), (string) $joined['id']);
+                if ($batch === null) {
+                    throw new \RuntimeException('That batch is not on this engagement.');
+                }
+                $row = $money->verify($joined, $batch, [
+                    'amount'      => (string) ($_POST['amount'] ?? ''),
+                    'source'      => (string) ($_POST['source'] ?? ''),
+                    'verified_on' => (string) ($_POST['verified_on'] ?? ''),
+                    'qualifies'   => (string) ($_POST['qualifies'] ?? 'yes'),
+                    'note'        => (string) ($_POST['note'] ?? ''),
+                ], $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Verified: ' . \SoftAppeals\Support\Money::format((int) $row['amount_cents']) . ' on '
+                    . (string) $row['public_ref'] . '. The fee on it is '
+                    . \SoftAppeals\Support\Money::format((int) $row['fee_cents'])
+                    . ', calculated in whole cents at the rate on the agreement, and it is invoice-ready.'
+                );
+            }
+
+            if ($action === 'recovery.adjust') {
+                $authorization->require(Permission::RECOVERY_VERIFY);
+                $original = $app->recoveries()->findForEngagement((string) ($_POST['recovery'] ?? ''), (string) $joined['id']);
+                if ($original === null) {
+                    throw new \RuntimeException('That recovery record is not on this engagement.');
+                }
+                $row = $money->adjust($joined, $original, [
+                    'kind'        => (string) ($_POST['kind'] ?? ''),
+                    'amount'      => (string) ($_POST['amount'] ?? ''),
+                    'occurred_on' => (string) ($_POST['occurred_on'] ?? ''),
+                    'note'        => (string) ($_POST['note'] ?? ''),
+                ], $userId);
+                $session->flash(
+                    'desk_ok',
+                    \SoftAppeals\Domain\RecoveryRecord::kindLabel((string) $row['kind']) . ' recorded as '
+                    . (string) $row['public_ref'] . ', ' . \SoftAppeals\Support\Money::format((int) $row['amount_cents'])
+                    . ' taken back. ' . (string) $original['public_ref'] . ' is untouched; the fee credit of '
+                    . \SoftAppeals\Support\Money::format((int) $row['fee_cents']) . ' comes off the next invoice.'
+                );
+            }
+
+            if ($action === 'invoice.create') {
+                $authorization->require(Permission::RECOVERY_VERIFY);
+                $invoice = $money->createInvoice($joined, $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Draft invoice ' . (string) $invoice['public_ref'] . ' created for '
+                    . \SoftAppeals\Support\Money::format((int) $invoice['total_cents'])
+                    . '. Nothing has gone to the practice. Read it, then issue it.'
+                );
+            }
+
+            if ($action === 'invoice.issue' || $action === 'invoice.paid' || $action === 'invoice.void') {
+                $authorization->require(Permission::RECOVERY_VERIFY);
+                $invoice = $app->invoices()->findForEngagement((string) ($_POST['invoice'] ?? ''), (string) $joined['id']);
+                if ($invoice === null) {
+                    throw new \RuntimeException('That invoice is not on this engagement.');
+                }
+                if ($action === 'invoice.issue') {
+                    $issued = $money->issueInvoice($joined, $invoice, ['due_on' => (string) ($_POST['due_on'] ?? '')], $userId);
+                    $session->flash(
+                        'desk_ok',
+                        'Issued: ' . (string) $issued['public_ref'] . ', due '
+                        . $clock->displayDate((string) $issued['due_at'])
+                        . '. The practice has been told there is an invoice to read in the room. The figure stays in the room.'
+                    );
+                }
+                if ($action === 'invoice.paid') {
+                    $money->markPaid($joined, $invoice, [
+                        'paid_on' => (string) ($_POST['paid_on'] ?? ''),
+                        'note'    => (string) ($_POST['note'] ?? ''),
+                    ], $userId);
+                    $session->flash('desk_ok', (string) $invoice['public_ref'] . ' is marked paid.');
+                }
+                if ($action === 'invoice.void') {
+                    $money->voidInvoice($joined, $invoice, (string) ($_POST['reason'] ?? ''), $userId);
+                    $session->flash('desk_ok', (string) $invoice['public_ref'] . ' is void. Its rows are invoice-ready again; the number is not reused.');
+                }
+            }
+
+            if ($action === 'closeout.begin') {
+                $authorization->require(Permission::CLOSEOUT_MANAGE);
+                $closeout->begin($joined, $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Closeout has begun. First step: financial reconciliation. Verify every '
+                    . 'overturned batch, invoice every fee, then confirm the money is final.'
+                );
+            }
+
+            if ($action === 'closeout.without_recovery') {
+                $authorization->require(Permission::CLOSEOUT_MANAGE);
+                $closeout->closeWithoutRecovery($joined, (string) ($_POST['reason'] ?? ''), $userId);
+                $session->flash('desk_ok', 'Closed with no recovery. That is terminal; the record stays.');
+                $back = '/sa-desk.php?view=recovery&e=' . urlencode($ref);
+            }
+
+            if ($action === 'closeout.reconciliation') {
+                $authorization->require(Permission::CLOSEOUT_MANAGE);
+                $closeout->confirmReconciliation($joined, (string) ($_POST['note'] ?? ''), $userId);
+                $session->flash('desk_ok', 'The money is reconciled and final. Next: the final report.');
+            }
+
+            if ($action === 'closeout.final_report') {
+                $authorization->require(Permission::CLOSEOUT_MANAGE);
+                $closeout->confirmFinalReport($joined, (string) ($_POST['summary'] ?? ''), $userId);
+                $session->flash('desk_ok', 'Final report recorded. Next: decide every person\'s access.');
+            }
+
+            if ($action === 'closeout.access_decide') {
+                $authorization->require(Permission::CLOSEOUT_MANAGE);
+                $decision = (string) ($_POST['decision'] ?? '');
+                $closeout->decideAccess($joined, (string) ($_POST['row'] ?? ''), $decision, $userId);
+                $session->flash(
+                    'desk_ok',
+                    $decision === \SoftAppeals\Domain\CloseoutStep::ACCESS_REMOVED
+                        ? 'Access removed. Their roles at this practice are revoked, any open link is cancelled, and their next request signs them out.'
+                        : 'Access retained, on the record.'
+                );
+            }
+
+            if ($action === 'closeout.access_confirm') {
+                $authorization->require(Permission::CLOSEOUT_MANAGE);
+                $closeout->confirmAccessReview($joined, (string) ($_POST['note'] ?? ''), $userId);
+                $session->flash('desk_ok', 'Access review confirmed. Last step: the data disposition, which closes the engagement.');
+            }
+
+            if ($action === 'closeout.disposition') {
+                $authorization->require(Permission::CLOSEOUT_MANAGE);
+                $record = $closeout->confirmDataDisposition($joined, [
+                    'disposition' => (string) ($_POST['disposition'] ?? ''),
+                    'note'        => (string) ($_POST['note'] ?? ''),
+                ], $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Closed. The closeout record is sealed as ' . (string) $record['public_ref']
+                    . ' and the practice has been told it is in the room.'
+                );
+            }
+        } catch (\RuntimeException $e) {
+            $session->flash('desk_problem', $e->getMessage());
+        }
+
+        header('Location: ' . $back, true, 303);
+        exit;
+    }
+
     // An action nobody offers. Recorded, then treated as a visit.
     $app->audit()->record('desk.unknown_action', 'denied', 'page', null, ['reason' => 'unknown action']);
     header('Location: /sa-desk.php', true, 303);
+    exit;
+}
+
+// ---------------------------------------------------------------------------
+// Opening one issued invoice, out of the vault. Phase 7.
+//
+// Found THROUGH the engagement, like a document. Only an issued invoice has
+// a file; a draft is figures on a row and nothing else.
+// ---------------------------------------------------------------------------
+$openInvoice = (string) ($_GET['invoice'] ?? '');
+if ($openInvoice !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
+    $ref = (string) ($_GET['e'] ?? '');
+    $engagement = $ref === '' ? null : $engagements->findByPublicRef($ref);
+    $invoice = $engagement === null
+        ? null
+        : $app->invoices()->findForEngagement($openInvoice, (string) $engagement['id']);
+    $text = $invoice === null ? null : $app->reconciliationService()->invoiceText($invoice);
+
+    if ($invoice === null || $text === null) {
+        $app->audit()->record('invoice.open', 'denied', 'invoice', null, [
+            'reason' => $invoice === null ? 'not an invoice on that engagement' : 'not issued yet',
+        ]);
+        $session->flash('desk_problem', $invoice === null
+            ? 'That invoice is not on that engagement.'
+            : 'That invoice is a draft. It is rendered when it is issued.');
+        header('Location: /sa-desk.php?view=money&e=' . urlencode($ref), true, 303);
+        exit;
+    }
+
+    $app->audit()->record('invoice.open', 'success', 'invoice', (string) $invoice['id'], [
+        'source' => 'desk',
+    ], (string) $invoice['organization_id']);
+
+    header('Content-Type: text/plain; charset=utf-8');
+    header("Content-Security-Policy: default-src 'none'; base-uri 'none'; form-action 'none'");
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: no-referrer');
+    header('Cache-Control: no-store, private');
+    header('X-Robots-Tag: noindex, nofollow');
+    header('Content-Disposition: inline; filename="' . $openInvoice . '.txt"');
+    echo $text;
     exit;
 }
 
@@ -896,7 +1133,7 @@ if ($open !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
 $app->audit()->record('desk.view', 'success', 'page', null);
 
 $view = (string) ($_GET['view'] ?? 'home');
-$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'assessments', 'recovery', 'import', 'audit', 'settings'];
+$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'assessments', 'recovery', 'money', 'closeout', 'import', 'audit', 'settings'];
 if (!in_array($view, $allowedViews, true)) {
     $view = 'home';
 }
@@ -994,6 +1231,25 @@ $data['recoveryNeedingHer'] = count($data['awaitingSubmission']) + count($data['
         $data['followUps'],
         static fn (array $row): bool => ($clock->daysUntil((string) $row['follow_up_due_at']) ?? 1) <= 0
     ));
+
+// Phase 7. Money waiting on her: overturned batches with nothing verified,
+// fees not yet on an invoice, invoices issued and unpaid. And every
+// engagement inside closeout. Read on every view for the two rail counts.
+$reconciliation = $app->reconciliationService();
+$data['awaitingVerification'] = $reconciliation->awaitingVerification();
+$data['invoiceReady'] = $reconciliation->invoiceReady();
+$data['outstandingInvoices'] = $reconciliation->outstandingInvoices();
+$data['moneyNeedingHer'] = count($data['awaitingVerification']) + count($data['invoiceReady']);
+$data['closeoutRows'] = $app->closeoutService()->inCloseout();
+$data['closeoutOpen'] = array_values(array_filter(
+    $data['closeoutRows'],
+    static fn (array $row): bool => $row['closeout_closed_at'] === null
+));
+$data['closeoutNeedingHer'] = count($data['closeoutOpen']);
+$data['financeEnabled'] = $config->recoveryFinanceEnabled();
+if ($view === 'home') {
+    $data['recoverySummary'] = $reconciliation->summaryEverywhere();
+}
 
 if ($view === 'inquiries') {
     $data['inquiries'] = $intakes->recent(50);
@@ -1141,6 +1397,10 @@ if ($view === 'recovery') {
                 Stage::RECOVERY_AGREEMENT_EXECUTED,
                 Stage::RECOVERY_ACTIVE,
                 Stage::RECONCILIATION,
+                Stage::FINAL_REPORT,
+                Stage::ACCESS_REVIEW,
+                Stage::DATA_DISPOSITION,
+                Stage::CLOSED,
             ], true)) {
                 $rows[] = $row;
             }
@@ -1161,6 +1421,70 @@ if ($view === 'recovery') {
         $data['generateCheck'] = $app->documentService()->canGenerate($joined, DocumentKind::RECOVERY_AGREEMENT);
         $data['eSignEnabled'] = $config->eSignEnabled();
         $data['canGenerate'] = $authorization->can(Permission::DOCUMENT_GENERATE);
+        // Phase 7. Whether closeout can begin from here, and who may.
+        $data['canClose'] = $authorization->can(Permission::CLOSEOUT_MANAGE);
+        $data['beginCheck'] = $app->closeoutService()->canBegin($joined);
+        $data['moneySummary'] = $reconciliation->summary($joined);
+    }
+}
+
+// Phase 7. The money: one engagement's ledger, its invoices, and the
+// verify, adjust and invoice forms. Or, with no engagement, every practice
+// with money waiting.
+if ($view === 'money') {
+    $ref = (string) ($_GET['e'] ?? '');
+    $engagement = $ref === '' ? null : $engagements->findByPublicRef($ref);
+    $joined = $engagement === null
+        ? null
+        : $engagements->findWithOrganization((string) $engagement['id']);
+
+    $data['engagement'] = $joined;
+    $data['canMoney'] = $authorization->can(Permission::RECOVERY_VERIFY);
+    $data['recoverySummary'] = $reconciliation->summaryEverywhere();
+
+    if ($joined === null) {
+        $rows = [];
+        foreach ($engagements->withOrganizations(false) as $row) {
+            if (Stage::phiGatePassed((string) $row['stage'])) {
+                $row['money'] = $reconciliation->summary($row);
+                $rows[] = $row;
+            }
+        }
+        $data['moneyRows'] = $rows;
+    } else {
+        $data['moneySummary'] = $reconciliation->summary($joined);
+        $data['verifiable'] = $reconciliation->verifiable($joined);
+        $data['ledger'] = $reconciliation->ledger($joined);
+        $data['invoiceRows'] = $reconciliation->invoices((string) $joined['id']);
+        $data['invoiceVerifications'] = [];
+        foreach ($data['invoiceRows'] as $invoice) {
+            $data['invoiceVerifications'][(string) $invoice['id']] = $reconciliation->verifyInvoice($invoice);
+        }
+        $data['moneyStageOpen'] = in_array((string) $joined['stage'], [Stage::RECOVERY_ACTIVE, Stage::RECONCILIATION], true);
+    }
+}
+
+// Phase 7. Closeout: the four steps, the access review, the sealed record.
+if ($view === 'closeout') {
+    $ref = (string) ($_GET['e'] ?? '');
+    $engagement = $ref === '' ? null : $engagements->findByPublicRef($ref);
+    $joined = $engagement === null
+        ? null
+        : $engagements->findWithOrganization((string) $engagement['id']);
+
+    $data['engagement'] = $joined;
+    $data['canClose'] = $authorization->can(Permission::CLOSEOUT_MANAGE);
+
+    if ($joined === null) {
+        // Every engagement at recovery active is a candidate; every one in a
+        // closeout stage is in progress or done.
+        $data['closeoutCandidates'] = $engagements->atStage(Stage::RECOVERY_ACTIVE);
+    } else {
+        $closeoutService = $app->closeoutService();
+        $data['closeoutSummary'] = $closeoutService->summary($joined);
+        $data['beginCheck'] = $closeoutService->canBegin($joined);
+        $data['stepCheck'] = $closeoutService->stepCheck($joined);
+        $data['timeline'] = $app->timeline()->forEngagement((string) $joined['id']);
     }
 }
 

@@ -38,7 +38,7 @@ final class DocumentTemplates
      * number so that a document found in three years says when its wording was
      * written without anybody having to look up a changelog.
      */
-    public const TEMPLATE_VERSION = '2026-08-29';
+    public const TEMPLATE_VERSION = '2026-08-30';
 
     /** The electronic-record consent, versioned separately from the documents. */
     public const CONSENT_VERSION = '2026-08-28';
@@ -110,11 +110,17 @@ final class DocumentTemplates
         $lines[] = strtoupper(DocumentKind::label($kind));
         $lines[] = '';
 
+        $isRecord = DocumentKind::isRecord($kind);
+
         if (!self::isApproved($kind)) {
-            $lines[] = 'DRAFT FOR REVIEW. This wording has not been approved yet, so '
-                . 'this document is not an offer and is not binding on either party. '
-                . 'It is here so the process can be walked end to end before any real '
-                . 'agreement is issued.';
+            $lines[] = $isRecord
+                ? 'DRAFT WORDING. The wording of this record has not been approved yet. '
+                    . 'The figures and dates in it are the figures and dates on the record '
+                    . 'the moment it was sealed.'
+                : 'DRAFT FOR REVIEW. This wording has not been approved yet, so '
+                    . 'this document is not an offer and is not binding on either party. '
+                    . 'It is here so the process can be walked end to end before any real '
+                    . 'agreement is issued.';
             $lines[] = '';
         }
 
@@ -128,14 +134,15 @@ final class DocumentTemplates
         $lines[] = 'Template version: ' . self::TEMPLATE_VERSION;
         $lines[] = 'Effective date: ' . self::value($context, 'effective_date');
         $lines[] = '';
-        $lines[] = 'Between';
+        $lines[] = $isRecord ? 'Prepared by' : 'Between';
         $lines[] = '  ' . self::value($context, 'provider_legal_name')
             . ', operating as ' . self::value($context, 'provider_trade_name')
             . ' ("Soft Appeals")';
-        $lines[] = 'and';
+        $lines[] = $isRecord ? 'for' : 'and';
         $lines[] = '  ' . self::value($context, 'client_legal_name') . ' ("the Practice")';
         $lines[] = '';
-        $lines[] = 'Signing for the Practice: ' . self::value($context, 'signer_name')
+        $lines[] = ($isRecord ? 'Delivered to: ' : 'Signing for the Practice: ')
+            . self::value($context, 'signer_name')
             . ', ' . self::value($context, 'signer_title')
             . ', ' . self::value($context, 'signer_email');
         $lines[] = '';
@@ -149,7 +156,9 @@ final class DocumentTemplates
             $lines[] = '';
         }
 
-        $lines[] = 'Signatures follow on the record page.';
+        $lines[] = $isRecord
+            ? 'This record is sealed by Soft Appeals and carries no signature.'
+            : 'Signatures follow on the record page.';
 
         return implode("\n", $lines) . "\n";
     }
@@ -167,6 +176,7 @@ final class DocumentTemplates
             DocumentKind::REVIEW_AUTHORIZATION => self::reviewAuthorizationClauses($context),
             DocumentKind::RECOVERY_AGREEMENT   => self::recoveryAgreementClauses($context),
             DocumentKind::APPROVED_SCOPE       => self::approvedScopeClauses($context),
+            DocumentKind::CLOSEOUT             => self::closeoutClauses($context),
             default => [[
                 'heading'    => 'Not yet written',
                 'paragraphs' => [
@@ -589,6 +599,95 @@ final class DocumentTemplates
                     'A batch can be added to or removed from this scope only by a '
                     . 'new version of this document, signed the same way. The version '
                     . 'in force is the latest executed one.',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * The Closeout and Data-Disposition Record. Section 15.10, as a document.
+     *
+     * Every figure in it arrives in the context from CloseoutService, already
+     * formatted, already in whole cents. Nothing here calculates anything,
+     * for the same reason nothing here reads the clock: the record has to
+     * hash the same way twice.
+     *
+     * @param array<string,string> $context
+     * @return list<array{heading:string,paragraphs:list<string>}>
+     */
+    private static function closeoutClauses(array $context): array
+    {
+        return [
+            [
+                'heading'    => 'What this record is',
+                'paragraphs' => [
+                    'This is Soft Appeals\' record of how the engagement with the Practice '
+                    . 'ended. It states what was worked, what was verified as recovered, what '
+                    . 'was invoiced, who kept access and who did not, and what happened to the '
+                    . 'Practice\'s material. It is sealed by Soft Appeals and delivered to the '
+                    . 'Practice; it is not an agreement and nobody signs it.',
+
+                    'Closeout began on ' . self::value($context, 'closeout_started')
+                    . ' and the engagement closed on ' . self::value($context, 'closeout_closed') . '.',
+                ],
+            ],
+            [
+                'heading'    => 'Final aggregate disposition',
+                'paragraphs' => [
+                    self::value($context, 'closeout_batches') . '.',
+
+                    'Nothing at patient, member or claim level appears in this record, and '
+                    . 'nothing at that level was ever held by the Soft Appeals command centre.',
+                ],
+            ],
+            [
+                'heading'    => 'Final verified recovery and fee',
+                'paragraphs' => [
+                    'Verified reimbursement: ' . self::value($context, 'closeout_verified') . '.',
+
+                    'Fee: ' . self::value($context, 'closeout_fee') . '. Calculated in whole cents, '
+                    . 'only on reimbursement verified as received by the Practice. A submission, '
+                    . 'a favorable decision or an expected reimbursement created no fee.',
+                ],
+            ],
+            [
+                'heading'    => 'Invoices and adjustments',
+                'paragraphs' => [
+                    self::value($context, 'closeout_invoices'),
+                ],
+            ],
+            [
+                'heading'    => 'Final report',
+                'paragraphs' => [
+                    self::value($context, 'closeout_summary'),
+                ],
+            ],
+            [
+                'heading'    => 'Access removed or retained',
+                'paragraphs' => [
+                    self::value($context, 'closeout_access'),
+                ],
+            ],
+            [
+                'heading'    => 'Data return or destruction',
+                'paragraphs' => [
+                    self::value($context, 'closeout_disposition'),
+
+                    'The Business Associate Agreement between the parties governs what '
+                    . 'happens to protected health information at the end of the '
+                    . 'engagement, and this record states what was done under it.',
+                ],
+            ],
+            [
+                'heading'    => 'Final documents',
+                'paragraphs' => [
+                    self::value($context, 'closeout_documents'),
+                ],
+            ],
+            [
+                'heading'    => 'Who confirmed each step',
+                'paragraphs' => [
+                    self::value($context, 'closeout_steps'),
                 ],
             ],
         ];

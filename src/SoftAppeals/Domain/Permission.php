@@ -42,6 +42,10 @@ final class Permission
     public const RECEIPT_CONFIRM        = 'receipt.confirm';
     public const DECISION_RECORD        = 'decision.record';
 
+    // Phase 7. Closing an engagement revokes people's access and seals a
+    // record; section 8.1 puts user revocation with the owner alone.
+    public const CLOSEOUT_MANAGE        = 'closeout.manage';
+
     /**
      * permission => roles that hold it.
      *
@@ -66,6 +70,7 @@ final class Permission
             // cannot execute an agreement or decide what a recovery was worth.
             self::DOCUMENT_COUNTERSIGN => [Role::OWNER_ADMIN],
             self::RECOVERY_VERIFY      => [Role::OWNER_ADMIN],
+            self::CLOSEOUT_MANAGE      => [Role::OWNER_ADMIN],
             self::CONFIG_MANAGE        => [Role::OWNER_ADMIN],
             self::USER_MANAGE          => [Role::OWNER_ADMIN],
 

@@ -143,16 +143,36 @@ final class SubmissionEventRepository extends Repository
      */
     public function totals(string $engagementId): array
     {
+        return $this->sumTotals($engagementId);
+    }
+
+    /**
+     * The same figures across every practice. The Desk home summary,
+     * section 12.4: "aggregate dollars submitted".
+     *
+     * @return array{submitted_count:int,submitted_cents:int,overturned_count:int,overturned_cents:int,upheld_count:int,upheld_cents:int}
+     */
+    public function totalsEverywhere(): array
+    {
+        return $this->sumTotals(null);
+    }
+
+    /**
+     * @return array{submitted_count:int,submitted_cents:int,overturned_count:int,overturned_cents:int,upheld_count:int,upheld_cents:int}
+     */
+    private function sumTotals(?string $engagementId): array
+    {
         $sum = function (array $types) use ($engagementId): array {
             $marks = [];
-            $params = ['e' => $engagementId];
+            $params = $engagementId === null ? [] : ['e' => $engagementId];
             foreach (array_values($types) as $i => $type) {
                 $marks[] = ':t' . $i;
                 $params['t' . $i] = $type;
             }
             $row = $this->db->one(
                 'SELECT COALESCE(SUM(claim_count), 0) AS n, COALESCE(SUM(amount_cents), 0) AS c'
-                . ' FROM sa_submission_events WHERE engagement_id = :e'
+                . ' FROM sa_submission_events WHERE '
+                . ($engagementId === null ? '1 = 1' : 'engagement_id = :e')
                 . ' AND event_type IN (' . implode(', ', $marks) . ')',
                 $params
             ) ?? [];

@@ -54,7 +54,39 @@ final class DocumentKind
      */
     public static function live(): array
     {
-        return [self::BAA, self::REVIEW_AUTHORIZATION, self::RECOVERY_AGREEMENT, self::APPROVED_SCOPE];
+        return [
+            self::BAA,
+            self::REVIEW_AUTHORIZATION,
+            self::RECOVERY_AGREEMENT,
+            self::APPROVED_SCOPE,
+            self::CLOSEOUT,
+        ];
+    }
+
+    /**
+     * The kinds nobody signs. Phase 7 drives the first: the Closeout and
+     * Data-Disposition Record is Soft Appeals' own statement of how the
+     * engagement ended, sealed into the vault by DocumentService::seal() and
+     * hashed like an agreement, and it carries no signature because there
+     * is nothing in it for a practice to agree to. It is a record, and the
+     * room says so.
+     *
+     * @return list<string>
+     */
+    public static function records(): array
+    {
+        return [self::CLOSEOUT];
+    }
+
+    public static function isRecord(string $kind): bool
+    {
+        return in_array($kind, self::records(), true);
+    }
+
+    /** True for every kind a practice signs. */
+    public static function requiresSignature(string $kind): bool
+    {
+        return !self::isRecord($kind);
     }
 
     /**
@@ -126,6 +158,7 @@ final class DocumentKind
             self::REVIEW_AUTHORIZATION => Stage::BAA_EXECUTED,
             self::RECOVERY_AGREEMENT,
             self::APPROVED_SCOPE       => Stage::RECOVERY_SCOPE_SELECTED,
+            self::CLOSEOUT             => Stage::DATA_DISPOSITION,
             default                    => null,
         };
     }

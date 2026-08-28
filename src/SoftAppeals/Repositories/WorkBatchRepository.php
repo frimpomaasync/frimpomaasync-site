@@ -159,6 +159,19 @@ final class WorkBatchRepository extends Repository
     }
 
     /**
+     * Every denied dollar on every batch on every engagement past the PHI
+     * gate. Section 12.4: "aggregate denied dollars accepted". In cents.
+     */
+    public function deniedAcceptedEverywhere(): int
+    {
+        return (int) ($this->db->value(
+            'SELECT COALESCE(SUM(b.denied_amount_cents), 0) FROM sa_work_batches b'
+            . ' JOIN sa_engagements e ON e.id = b.engagement_id'
+            . ' WHERE e.stage NOT IN (\'declined\')'
+        ) ?? 0);
+    }
+
+    /**
      * Aggregates across an engagement, for the overview cards.
      *
      * @return array{batches:int,claims:int,received:int,denied_cents:int,recommended:int}

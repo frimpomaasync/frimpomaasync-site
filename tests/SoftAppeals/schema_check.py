@@ -94,6 +94,13 @@ EXPECTED_TABLES = {
         "sa_approval_requests",
         "sa_submission_events",
     ],
+    "0008_reconciliation_and_closeout.php": [
+        "sa_invoices",
+        "sa_recoveries",
+        "sa_closeouts",
+        "sa_closeout_steps",
+        "sa_access_reviews",
+    ],
 }
 
 
@@ -1052,6 +1059,149 @@ def assert_recovery_agreement_and_approvals(connection: sqlite3.Connection) -> N
             raise Failure(f"deleting an engagement left {table} rows behind")
 
 
+def assert_reconciliation_and_closeout(connection: sqlite3.Connection) -> None:
+    """
+    The constraints 0008 exists to enforce. Section 19 as CHECKs.
+
+    A verified row names no parent and an adjustment always does. Money that
+    does not qualify carries a fee of zero. An invoice's total is its fee less
+    its credit, and its status pairs with its stamps. One closeout per
+    engagement, closed only with a disposition. An access decision carries its
+    stamp. And no column in any of the five tables names a patient.
+    """
+    connection.execute(
+        "INSERT INTO sa_organizations (id, public_ref, legal_name, status, created_at, updated_at)"
+        f" VALUES ('orgM', 'SA-ORG-MMMMMM', 'Fictional Money Practice', 'active', {STAMP}, {STAMP})"
+    )
+    connection.execute(
+        "INSERT INTO sa_engagements (id, organization_id, public_ref, stage, fee_basis,"
+        " opened_at, row_version)"
+        f" VALUES ('eM', 'orgM', 'SA-ENG-MMMMMM', 'recovery_active', 'contingency_25', {STAMP}, 1)"
+    )
+    connection.execute(
+        "INSERT INTO sa_work_batches (id, public_ref, engagement_id, organization_id, label,"
+        " payer_label_approved, claim_count, denied_amount_cents, received_count, in_review_count,"
+        " submitted_count, overturned_count, upheld_count, closed_count, stage,"
+        " earliest_deadline_at, deadline_confirmed, next_owner, created_at, updated_at, row_version)"
+        f" VALUES ('bM', 'SA-BAT-MMMMMM', 'eM', 'orgM', 'Initial set', 0, 20, 1840000, 20, 0,"
+        f" 12, 8, 4, 0, 'overturned', NULL, 0, 'soft_appeals', {STAMP}, {STAMP}, 1)"
+    )
+
+    for table in ("sa_invoices", "sa_recoveries", "sa_closeouts", "sa_closeout_steps", "sa_access_reviews"):
+        columns = [row[1] for row in connection.execute(f"PRAGMA table_info({table})").fetchall()]
+        for column in columns:
+            for word in ("patient", "member", "claim_number", "claim_id", "mrn", "dob", "date_of_service"):
+                if word in column:
+                    raise Failure(f"{table}.{column}: a patient-level column, section 5")
+    for column in [row[1] for row in connection.execute("PRAGMA table_info(sa_recoveries)").fetchall()]:
+        if column.endswith("_float") or column.endswith("_decimal"):
+            raise Failure(f"sa_recoveries.{column}: money that is not integer cents, section 19")
+
+    def invoice(ident: str, ref: str, status: str = "draft", fee: int = 175000, credit: int = 0, total: int = 175000,
+                issued: str = "NULL", paid: str = "NULL", voided: str = "NULL") -> str:
+        return (
+            "INSERT INTO sa_invoices (id, public_ref, engagement_id, organization_id, status, fee_cents,"
+            " credit_cents, total_cents, issued_at, paid_at, voided_at, created_at, updated_at, row_version)"
+            f" VALUES ('{ident}', '{ref}', 'eM', 'orgM', '{status}', {fee}, {credit}, {total}, {issued}, {paid},"
+            f" {voided}, {STAMP}, {STAMP}, 1)"
+        )
+
+    accepts(connection, invoice("i1", "SA-INV-AAAAAA"), "a plain draft invoice was refused")
+    refuses(connection, invoice("i2", "SA-INV-AAAAAA"), "two invoices with one number were accepted")
+    refuses(connection, invoice("i3", "SA-INV-BBBBBB", total=175001), "a total that is not fee less credit was accepted")
+    accepts(connection, invoice("i4", "SA-INV-CCCCCC", fee=0, credit=25000, total=-25000), "a credit note was refused")
+    refuses(connection, invoice("i5", "SA-INV-DDDDDD", status="issued"), "an issued invoice with no issue stamp was accepted")
+    refuses(connection, invoice("i6", "SA-INV-EEEEEE", status="paid", paid=STAMP), "a paid invoice never issued was accepted")
+    accepts(connection, invoice("i7", "SA-INV-FFFFFF", status="paid", issued=STAMP, paid=STAMP), "a paid, issued invoice was refused")
+    refuses(connection, invoice("i8", "SA-INV-GGGGGG", status="void"), "a void invoice with no void stamp was accepted")
+    refuses(connection, invoice("i9", "SA-INV-HHHHHH", status="draft", issued=STAMP), "a draft carrying an issue stamp was accepted")
+    refuses(connection, invoice("i10", "SA-INV-IIIIII", status="sent", issued=STAMP), "a status nobody named was accepted")
+    refuses(connection, invoice("i11", "SA-INV-JJJJJJ", fee=-1, total=-1), "a negative fee was accepted")
+
+    def recovery(ident: str, ref: str, kind: str = "verified", parent: str = "NULL", amount: int = 700000,
+                 qualifies: int = 1, rate: str = "2500", fee: int = 175000, source: str = "remittance",
+                 invoice_id: str = "NULL") -> str:
+        return (
+            "INSERT INTO sa_recoveries (id, public_ref, engagement_id, organization_id, work_batch_id, kind,"
+            " adjusts_recovery_id, original_denied_cents, amount_cents, qualifies, fee_basis, fee_rate_bps,"
+            " fee_cents, verification_source, verified_at, invoice_id, created_at)"
+            f" VALUES ('{ident}', '{ref}', 'eM', 'orgM', 'bM', '{kind}', {parent}, 1840000, {amount}, {qualifies},"
+            f" 'contingency_25', {rate}, {fee}, '{source}', {STAMP}, {invoice_id}, {STAMP})"
+        )
+
+    accepts(connection, recovery("r1", "SA-REC-AAAAAA"), "a plain verified row was refused")
+    refuses(connection, recovery("r2", "SA-REC-AAAAAA"), "two rows with one reference were accepted")
+    refuses(connection, recovery("r3", "SA-REC-BBBBBB", kind="verified", parent="'r1'"), "rule 8: a verified row naming a parent was accepted")
+    refuses(connection, recovery("r4", "SA-REC-CCCCCC", kind="adjustment"), "rule 8: an adjustment with no parent was accepted")
+    accepts(connection, recovery("r5", "SA-REC-DDDDDD", kind="adjustment", parent="'r1'", amount=100000, fee=25000), "an adjustment naming its parent was refused")
+    accepts(connection, recovery("r6", "SA-REC-EEEEEE", kind="reversal", parent="'r1'", amount=600000, fee=150000), "a reversal naming its parent was refused")
+    refuses(connection, recovery("r7", "SA-REC-FFFFFF", kind="refund", parent="'r1'"), "a kind nobody named was accepted")
+    refuses(connection, recovery("r8", "SA-REC-GGGGGG", qualifies=0), "rule 6: money that does not qualify carrying a fee was accepted")
+    accepts(connection, recovery("r9", "SA-REC-HHHHHH", qualifies=0, fee=0), "money that does not qualify with no fee was refused")
+    refuses(connection, recovery("r10", "SA-REC-IIIIII", amount=-1), "a negative amount was accepted")
+    refuses(connection, recovery("r11", "SA-REC-JJJJJJ", fee=-1), "a negative fee was accepted")
+    refuses(connection, recovery("r12", "SA-REC-KKKKKK", rate="12000"), "a rate above ten thousand basis points was accepted")
+    refuses(connection, recovery("r13", "SA-REC-LLLLLL", source="screenshot"), "a source nobody named was accepted")
+    accepts(connection, recovery("r14", "SA-REC-MMMMMM", rate="NULL", fee=0), "a fixed basis with no rate was refused")
+    accepts(connection, recovery("r15", "SA-REC-NNNNNN", invoice_id="'i1'"), "a row on an invoice was refused")
+    refuses(connection, recovery("r16", "SA-REC-OOOOOO", invoice_id="'no-invoice'"), "a row pointing at an unknown invoice was accepted")
+
+    # Voiding is done in code, but deleting an invoice must never delete money.
+    connection.execute("DELETE FROM sa_invoices WHERE id = 'i1'")
+    left = connection.execute("SELECT invoice_id FROM sa_recoveries WHERE id = 'r15'").fetchone()[0]
+    if left is not None:
+        raise Failure("deleting an invoice did not hand its rows back")
+    if connection.execute("SELECT COUNT(*) FROM sa_recoveries WHERE id = 'r15'").fetchone()[0] != 1:
+        raise Failure("deleting an invoice deleted a recovery row")
+
+    def closeout(ident: str, engagement: str = "'eM'", disposition: str = "NULL", closed: str = "NULL",
+                 access: str = "NULL") -> str:
+        return (
+            "INSERT INTO sa_closeouts (id, engagement_id, organization_id, started_at, data_disposition,"
+            " access_outcome, closed_at, created_at, updated_at, row_version)"
+            f" VALUES ('{ident}', {engagement}, 'orgM', {STAMP}, {disposition}, {access}, {closed}, {STAMP}, {STAMP}, 1)"
+        )
+
+    accepts(connection, closeout("c1"), "a plain closeout was refused")
+    refuses(connection, closeout("c2"), "two closeouts for one engagement were accepted")
+    connection.execute("DELETE FROM sa_closeouts WHERE id = 'c1'")
+    refuses(connection, closeout("c3", closed=STAMP), "a closeout closed with no disposition was accepted")
+    refuses(connection, closeout("c4", disposition="'shredded'"), "a disposition nobody named was accepted")
+    refuses(connection, closeout("c5", access="'some'"), "an access outcome nobody named was accepted")
+    accepts(connection, closeout("c6", disposition="'returned'", closed=STAMP, access="'mixed'"), "a closed closeout with a disposition was refused")
+
+    def step(key: str, order: int = 1, confirmed: str = "NULL") -> str:
+        return (
+            "INSERT INTO sa_closeout_steps (closeout_id, step_key, display_order, confirmed_at, created_at)"
+            f" VALUES ('c6', '{key}', {order}, {confirmed}, {STAMP})"
+        )
+
+    accepts(connection, step("reconciliation"), "a step was refused")
+    refuses(connection, step("reconciliation"), "the same step twice was accepted")
+    refuses(connection, step("celebration", 5), "a step nobody named was accepted")
+    refuses(connection, step("final_report", 0), "a display order of zero was accepted")
+
+    def access(ident: str, user: str, decision: str = "NULL", decided: str = "NULL") -> str:
+        return (
+            "INSERT INTO sa_access_reviews (id, closeout_id, user_id, email, roles, decision, decided_at, created_at)"
+            f" VALUES ('{ident}', 'c6', '{user}', '{user}@example.org', 'viewer', {decision}, {decided}, {STAMP})"
+        )
+
+    accepts(connection, access("x1", "u1"), "an undecided access row was refused")
+    refuses(connection, access("x2", "u1"), "the same person twice on one review was accepted")
+    refuses(connection, access("x3", "u2", decision="'removed'"), "a decision with no stamp was accepted")
+    refuses(connection, access("x4", "u3", decided=STAMP), "a stamp with no decision was accepted")
+    refuses(connection, access("x5", "u4", decision="'maybe'", decided=STAMP), "a decision nobody named was accepted")
+    accepts(connection, access("x6", "u5", decision="'retained'", decided=STAMP), "a stamped decision was refused")
+
+    # Closing the engagement takes every Phase 7 row with it.
+    connection.execute("DELETE FROM sa_engagements WHERE id = 'eM'")
+    for table in ("sa_invoices", "sa_recoveries", "sa_closeouts", "sa_closeout_steps", "sa_access_reviews"):
+        left = connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        if left != 0:
+            raise Failure(f"deleting an engagement left {table} rows behind")
+
+
 ASSERTIONS = {
     "0001_foundation.php": assert_foundation,
     "0002_intake_and_engagement.php": assert_intake_and_engagement,
@@ -1060,6 +1210,7 @@ ASSERTIONS = {
     "0005_documents_and_signatures.php": assert_documents_and_signatures,
     "0006_assessment_and_recovery_room.php": assert_assessment_and_recovery_room,
     "0007_recovery_agreement_and_approvals.php": assert_recovery_agreement_and_approvals,
+    "0008_reconciliation_and_closeout.php": assert_reconciliation_and_closeout,
 }
 
 

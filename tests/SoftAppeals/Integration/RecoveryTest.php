@@ -724,10 +724,11 @@ return [
             Expect::same($before + 1, count($sent), 'the practice was told');
             Expect::false(str_contains($sent[count($sent) - 1]['body'], 'Eight of twelve'), 'without the detail');
 
-            // Section 19. Nothing here is a fee.
-            Expect::false($db->tableExists('sa_recoveries'), 'no recovery table exists in this phase');
-            Expect::false($db->tableExists('sa_invoices'), 'no invoice table exists in this phase');
+            // Section 19. Nothing here is a fee. The recovery table exists
+            // since Phase 7 and nothing in this phase writes to it.
             Expect::false($db->columnExists('sa_submission_events', 'fee_cents'), 'no fee column on an event');
+            Expect::false($db->columnExists('sa_approval_requests', 'fee_cents'), 'no fee column on an approval');
+            Expect::same(0, count($app->recoveries()->forEngagement((string) $engagement['id'])), 'a payer decision wrote no recovery row');
             $block = $recovery->feeBlock($engagement);
             Expect::true($block['shown'], 'the fee block is shown once recovery is active');
             Expect::same('$0.00', (string) $block['verified'], 'nothing is verified');

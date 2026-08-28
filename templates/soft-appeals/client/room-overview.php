@@ -216,7 +216,7 @@ $e = static fn (?string $value): string => Client::e($value);
               <?php endif; ?>
             </div>
             <div>
-              <span class="sa-pill"><?= $e(DocumentStatus::clientLabel((string) $document['status'])) ?></span>
+              <span class="sa-pill"><?= $e(DocumentStatus::clientLabelFor((string) $document['kind'], (string) $document['status'])) ?></span>
               <?php if ($isSignable): ?>
                 <a class="sa-btn is-primary" href="/soft-appeals-sign.php" style="margin-left:8px">Sign</a>
               <?php endif; ?>

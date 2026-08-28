@@ -52,12 +52,18 @@ final class DocumentStatus
      * countersigned, because a one-party document has nobody to countersign it
      * and waiting for a signature that is never coming would leave it stuck.
      *
+     * draft reaches executed directly for exactly one reason: a record kind
+     * (DocumentKind::records()) is sealed by Soft Appeals with no signature
+     * on it. DocumentService::execute() refuses that edge for every kind that
+     * a practice signs, so an unsigned agreement cannot take it whatever the
+     * table says. The edge is here; the guard is there.
+     *
      * @return array<string,list<string>>
      */
     public static function transitions(): array
     {
         return [
-            self::DRAFT         => [self::SENT, self::VOID],
+            self::DRAFT         => [self::SENT, self::EXECUTED, self::VOID],
             self::SENT          => [self::CLIENT_SIGNED, self::VOID],
             self::CLIENT_SIGNED => [self::COUNTERSIGNED, self::EXECUTED, self::VOID],
             self::COUNTERSIGNED => [self::EXECUTED, self::VOID],
@@ -116,5 +122,22 @@ final class DocumentStatus
             self::VOID          => 'Replaced',
             default             => 'In progress',
         };
+    }
+
+    /**
+     * The same, for a document nobody signs. A sealed record is not "signed
+     * by both of us", and telling a practice it was would be a small lie on
+     * the one screen that must never carry one.
+     */
+    public static function clientLabelFor(string $kind, string $status): string
+    {
+        if (!DocumentKind::requiresSignature($kind)) {
+            return match ($status) {
+                self::EXECUTED => 'Sealed record',
+                self::VOID     => 'Replaced',
+                default        => 'Being prepared',
+            };
+        }
+        return self::clientLabel($status);
     }
 }

@@ -16,10 +16,15 @@
  * @var list<array<string,mixed>> $board
  * @var list<array<string,mixed>> $submissions
  * @var array<string,mixed> $feeBlock
+ * @var bool $canViewFinance
+ * @var list<array<string,mixed>> $ledger
+ * @var list<array<string,mixed>> $invoices
  */
 
 use SoftAppeals\Domain\DocumentKind;
 use SoftAppeals\Domain\DocumentStatus;
+use SoftAppeals\Domain\InvoiceStatus;
+use SoftAppeals\Domain\RecoveryRecord;
 use SoftAppeals\Domain\Stage;
 use SoftAppeals\Domain\SubmissionEventType;
 use SoftAppeals\Support\Money;
@@ -158,11 +163,46 @@ $documentLine = static function (?array $document) use ($e): string {
       A payer decision is not a reimbursement. Overturned so far, per the payer:
       <?= $e((string) $feeBlock['overturned']) ?>. The verified figure is recorded
       when the money has actually reached you and been checked, and the fee is
-      calculated from that figure alone. Every calculated fee shows the agreement
-      and the recovery record that produced it.
+      calculated from that figure alone<?= empty($feeBlock['agreement_ref']) ? '' : ', under agreement ' . $e((string) $feeBlock['agreement_ref']) ?>.
     </p>
   </div></div>
 </section>
+
+<?php if ($canViewFinance ?? false): ?>
+<section aria-labelledby="room-rc-money">
+  <p class="sa-label" id="room-rc-money">Verified reimbursement and invoices</p>
+  <div class="sa-panel"><div class="sa-panel-b" style="padding:6px 18px 10px">
+    <?php if (($ledger ?? []) === [] && ($invoices ?? []) === []): ?>
+      <p class="sa-room-quiet" style="margin:8px 0">Nothing verified yet, so no invoice exists.</p>
+    <?php else: ?>
+      <?php foreach ($ledger ?? [] as $row): ?>
+        <div class="sa-client-docrow">
+          <div>
+            <?= $e(RecoveryRecord::kindClientLabel((string) $row['kind'])) ?>
+            <span class="sa-room-quiet">batch <?= $e((string) $row['batch_label']) ?> &middot; <?= RecoveryRecord::takesBack((string) $row['kind']) ? '-' : '' ?><?= $e(Money::format((int) $row['amount_cents'])) ?></span>
+          </div>
+          <span class="sa-room-quiet"><?= $e($clock->displayDate((string) $row['verified_at'])) ?></span>
+        </div>
+      <?php endforeach; ?>
+      <?php foreach ($invoices ?? [] as $invoice): ?>
+        <div class="sa-client-docrow">
+          <div>
+            <b>Invoice <?= $e((string) $invoice['public_ref']) ?></b>
+            <span class="sa-room-quiet"><?= $e(Money::format((int) $invoice['total_cents'])) ?><?= $invoice['due_at'] === null ? '' : ' &middot; due ' . $e($clock->displayDate((string) $invoice['due_at'])) ?></span>
+          </div>
+          <div>
+            <span class="sa-pill"><?= $e(InvoiceStatus::clientLabel((string) $invoice['status'])) ?></span>
+            <?php if ($invoice['private_path'] !== null): ?>
+              <a class="sa-btn is-sm" style="margin-left:8px" target="_blank" rel="noopener" href="/soft-appeals-room.php?invoice=<?= $e(urlencode((string) $invoice['public_ref'])) ?>">Read it</a>
+            <?php endif; ?>
+          </div>
+        </div>
+      <?php endforeach; ?>
+    <?php endif; ?>
+    <p class="sa-room-note" style="margin-top:12px">Payer reimbursement goes directly to you. Soft Appeals never receives or holds payer funds; an invoice is paid by you, by whatever means you pay anything.</p>
+  </div></div>
+</section>
+<?php endif; ?>
 <?php endif; ?>
 
 <?php endif; ?>

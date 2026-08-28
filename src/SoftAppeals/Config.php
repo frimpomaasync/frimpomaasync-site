@@ -115,7 +115,12 @@ final class Config
         // shut on top of it whatever the file says. See eSignEnabled().
         'SA_E_SIGN_ENABLED'           => null,
 
-        'SA_RECOVERY_FINANCE_ENABLED' => false,
+        // Recovery finance follows the same unset rule as the portal flags:
+        // on anywhere but production, so Phase 7 can be walked and tested on
+        // staging, and shut on production until section 25 step 10 is done
+        // ("enable recovery finance after reconciliation tests") and she sets
+        // it to true by hand. See recoveryFinanceEnabled().
+        'SA_RECOVERY_FINANCE_ENABLED' => null,
         'SA_DEADLINE_CRON_ENABLED'    => false,
         'SA_DEMO_MODE'                => true,
 
@@ -311,6 +316,17 @@ final class Config
     public function clientLoginEnabled(): bool
     {
         return $this->flagOrNotProduction('SA_CLIENT_LOGIN_ENABLED');
+    }
+
+    /**
+     * Whether a reimbursement can be verified, a fee calculated and an
+     * invoice issued. Section 20 lists the flag and section 25 says when it
+     * goes on: after the reconciliation tests. Unset is on off production and
+     * off on production, like the portal flags.
+     */
+    public function recoveryFinanceEnabled(): bool
+    {
+        return $this->flagOrNotProduction('SA_RECOVERY_FINANCE_ENABLED');
     }
 
     /**

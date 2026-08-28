@@ -31,7 +31,7 @@ $greeting = (int) $clock->now()->setTimezone(new DateTimeZone($config->string('S
 $greetingWord = $greeting < 12 ? 'Good morning' : ($greeting < 18 ? 'Good afternoon' : 'Good evening');
 
 $needsYou = count($awaitingReview) + count($termsReady) + ($documentsNeedingHer ?? 0) + count($requestsForHer ?? [])
-    + ($recoveryNeedingHer ?? 0);
+    + ($recoveryNeedingHer ?? 0) + ($moneyNeedingHer ?? 0) + ($closeoutNeedingHer ?? 0);
 
 /** The rail. Built here, in the plan's own order, so the map is visible even
  *  where the page behind it is not written yet. Section 12.3. */
@@ -42,6 +42,8 @@ $navBuilt = [
     ['documents',   'Agreements',  ($documentsNeedingHer ?? 0) ?: null],
     ['assessments', 'Assessments', ($assessmentsNeedingHer ?? 0) ?: null],
     ['recovery',    'Recovery',    ($recoveryNeedingHer ?? 0) ?: null],
+    ['money',       'Money',       ($moneyNeedingHer ?? 0) ?: null],
+    ['closeout',    'Closeout',    ($closeoutNeedingHer ?? 0) ?: null],
 ];
 $navLater = [
     'Organizations', 'Engagements',
