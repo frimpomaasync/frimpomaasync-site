@@ -37,6 +37,13 @@ final class StatusEventRepository extends Repository
         'source',
         'count',
         'reason',
+
+        // Phase 4. A client reading their own timeline should see which
+        // agreement moved and which version of it, because "an agreement was
+        // executed" on an engagement that has been through a correction is a
+        // line that answers nothing.
+        'document_kind',
+        'document_version',
     ];
 
     protected function table(): string

@@ -8,6 +8,7 @@ use SoftAppeals\Auth\AuthService;
 use SoftAppeals\Auth\SessionManager;
 use SoftAppeals\Repositories\CommunicationRepository;
 use SoftAppeals\Repositories\ContactRepository;
+use SoftAppeals\Repositories\DocumentRepository;
 use SoftAppeals\Repositories\EngagementRepository;
 use SoftAppeals\Repositories\IntakeRepository;
 use SoftAppeals\Repositories\InvitationRepository;
@@ -15,6 +16,7 @@ use SoftAppeals\Repositories\LoginCodeRepository;
 use SoftAppeals\Repositories\MembershipRepository;
 use SoftAppeals\Repositories\OrganizationRepository;
 use SoftAppeals\Repositories\PreferenceRepository;
+use SoftAppeals\Repositories\SignatureRepository;
 use SoftAppeals\Repositories\StatusEventRepository;
 use SoftAppeals\Repositories\UserRepository;
 use SoftAppeals\Security\Csrf;
@@ -23,6 +25,8 @@ use SoftAppeals\Security\Hmac;
 use SoftAppeals\Security\RateLimiter;
 use SoftAppeals\Services\AuditService;
 use SoftAppeals\Services\ClientAccessService;
+use SoftAppeals\Services\DocumentService;
+use SoftAppeals\Services\DocumentVault;
 use SoftAppeals\Services\EngagementService;
 use SoftAppeals\Services\IntakeService;
 use SoftAppeals\Services\LegacyLeadImporter;
@@ -30,6 +34,7 @@ use SoftAppeals\Services\MailService;
 use SoftAppeals\Services\PreferencesService;
 use SoftAppeals\Services\SchemaService;
 use SoftAppeals\Services\SeedService;
+use SoftAppeals\Services\SigningService;
 use SoftAppeals\Services\TermsService;
 use SoftAppeals\Support\Clock;
 
@@ -352,6 +357,22 @@ final class Bootstrap
         ));
     }
 
+    public function documents(): DocumentRepository
+    {
+        return $this->make(DocumentRepository::class, fn (): DocumentRepository => new DocumentRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function signatures(): SignatureRepository
+    {
+        return $this->make(SignatureRepository::class, fn (): SignatureRepository => new SignatureRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
     public function loginCodes(): LoginCodeRepository
     {
         return $this->make(LoginCodeRepository::class, fn (): LoginCodeRepository => new LoginCodeRepository(
@@ -483,6 +504,57 @@ final class Bootstrap
             $this->timeline(),
             $this->mail(),
             $this->audit()
+        ));
+    }
+
+    /**
+     * The three Phase 4 pieces: the vault, her side of signing, and theirs.
+     *
+     * The vault takes only the config, because the one thing it must not do is
+     * reach for anything that could tell it where to write other than the
+     * configured private path.
+     */
+    public function vault(): DocumentVault
+    {
+        return $this->make(DocumentVault::class, fn (): DocumentVault => new DocumentVault(
+            $this->config
+        ));
+    }
+
+    public function documentService(): DocumentService
+    {
+        return $this->make(DocumentService::class, fn (): DocumentService => new DocumentService(
+            $this->config,
+            $this->database(),
+            $this->clock(),
+            $this->documents(),
+            $this->signatures(),
+            $this->preferences(),
+            $this->contacts(),
+            $this->invitations(),
+            $this->timeline(),
+            $this->engagementService(),
+            $this->vault(),
+            $this->mail(),
+            $this->audit(),
+            $this->hmac()
+        ));
+    }
+
+    public function signingService(): SigningService
+    {
+        return $this->make(SigningService::class, fn (): SigningService => new SigningService(
+            $this->config,
+            $this->database(),
+            $this->clock(),
+            $this->documents(),
+            $this->signatures(),
+            $this->contacts(),
+            $this->timeline(),
+            $this->vault(),
+            $this->authorization(),
+            $this->audit(),
+            $this->hmac()
         ));
     }
 

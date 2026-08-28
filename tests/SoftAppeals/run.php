@@ -254,20 +254,53 @@ function testConfigFile(): string
         return $path;
     }
     $path = sys_get_temp_dir() . '/sa-test-config-' . bin2hex(random_bytes(4)) . '.php';
+
+    // Phase 4 writes documents, executed records and signature payloads to the
+    // private vault. It has to be a throwaway directory: pointed at the real
+    // one, a test run would leave fictional agreements inside the folder that
+    // holds the real ones, which is the one place in this application where a
+    // stray file is genuinely dangerous.
+    $vault = sys_get_temp_dir() . '/sa-test-vault-' . bin2hex(random_bytes(4));
+
     file_put_contents($path, "<?php return " . var_export([
-        'SA_APP_ENV'           => 'testing',
-        'SA_APP_URL'           => 'https://staging.frimpomaasync.com',
-        'SA_BUSINESS_TIMEZONE' => 'America/New_York',
-        'SA_SESSION_SECRET'    => str_repeat('test-session-secret-', 3),
-        'SA_TOKEN_SECRET'      => str_repeat('test-token-secret-', 3),
-        'SA_IP_HMAC_SECRET'    => str_repeat('test-ip-hmac-secret-', 3),
-        'SA_DEMO_MODE'         => true,
-        'SA_MAIL_ALLOWLIST'    => 'nanafrimpgskc@gmail.com',
+        'SA_APP_ENV'              => 'testing',
+        'SA_APP_URL'              => 'https://staging.frimpomaasync.com',
+        'SA_BUSINESS_TIMEZONE'    => 'America/New_York',
+        'SA_SESSION_SECRET'       => str_repeat('test-session-secret-', 3),
+        'SA_TOKEN_SECRET'         => str_repeat('test-token-secret-', 3),
+        'SA_IP_HMAC_SECRET'       => str_repeat('test-ip-hmac-secret-', 3),
+        'SA_DEMO_MODE'            => true,
+        'SA_MAIL_ALLOWLIST'       => 'nanafrimpgskc@gmail.com',
+        'SA_PRIVATE_STORAGE_PATH' => $vault,
+        'SA_LEGAL_ENTITY'         => 'A Fictional Legal Entity LLC',
     ], true) . ";\n");
-    register_shutdown_function(static function () use ($path): void {
+
+    register_shutdown_function(static function () use ($path, $vault): void {
         @unlink($path);
+        removeTree($vault);
     });
     return $path;
+}
+
+/** Delete a throwaway directory and everything under it. Tests only. */
+function removeTree(string $path): void
+{
+    if (!is_dir($path)) {
+        return;
+    }
+    $entries = scandir($path);
+    foreach ($entries === false ? [] : $entries as $entry) {
+        if ($entry === '.' || $entry === '..') {
+            continue;
+        }
+        $full = $path . '/' . $entry;
+        if (is_dir($full)) {
+            removeTree($full);
+            continue;
+        }
+        @unlink($full);
+    }
+    @rmdir($path);
 }
 
 function migrationDefinitions(): array

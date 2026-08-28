@@ -44,6 +44,23 @@ final class Config
 
     private const MIN_SECRET_LENGTH = 32;
 
+    /**
+     * The six things section 14.5 says have to be true before production
+     * signing may be switched on. While this list has anything in it,
+     * eSignEnabled() answers false on production whatever the config file says.
+     *
+     * Written out rather than kept as a boolean, so the screen that says
+     * signing is off can also say what is standing in the way.
+     */
+    private const PRODUCTION_SIGNING_BLOCKERS = [
+        'the BAA text has not been approved',
+        'the review-authorization text has not been approved',
+        'the recovery-agreement text has not been written or approved',
+        'the legal entity and trade-name language are not confirmed',
+        'the signature consent and evidence requirements have not been reviewed',
+        'the retention requirements have not been confirmed',
+    ];
+
     private const DEFAULTS = [
         'SA_APP_ENV'              => 'production',
         'SA_APP_URL'              => 'https://frimpomaasync.com',
@@ -60,6 +77,18 @@ final class Config
         'SA_MAIL_REPLY_TO'        => 'softappeals@frimpomaasync.com',
         'SA_OWNER_EMAIL'          => 'nanafrimpgskc@gmail.com',
         'SA_PRIVATE_STORAGE_PATH' => '',
+
+        // The two parties named on the face of every generated agreement.
+        //
+        // The legal entity is deliberately blank. Section 14.5 lists "legal
+        // entity and trade-name language are confirmed" as one of the six
+        // blockers on production signing, and a default here would be an
+        // invented company name sitting inside a document somebody could sign.
+        // Blank means the generator refuses on production and names the field.
+        // Off production it falls back to a placeholder that says out loud what
+        // it is, so the workflow can be walked without inventing anything.
+        'SA_LEGAL_ENTITY' => '',
+        'SA_TRADE_NAME'   => 'Soft Appeals',
 
         // Every capability past the foundation ships switched off. Phase 1
         // turns none of these on. Section 20 of the plan.
@@ -82,7 +111,10 @@ final class Config
         'SA_PORTAL_ENABLED'           => null,
         'SA_CLIENT_LOGIN_ENABLED'     => null,
 
-        'SA_E_SIGN_ENABLED'           => false,
+        // Signing follows the same unset rule, and then production is clamped
+        // shut on top of it whatever the file says. See eSignEnabled().
+        'SA_E_SIGN_ENABLED'           => null,
+
         'SA_RECOVERY_FINANCE_ENABLED' => false,
         'SA_DEADLINE_CRON_ENABLED'    => false,
         'SA_DEMO_MODE'                => true,
@@ -279,6 +311,67 @@ final class Config
     public function clientLoginEnabled(): bool
     {
         return $this->flagOrNotProduction('SA_CLIENT_LOGIN_ENABLED');
+    }
+
+    /**
+     * Whether the signing screen will actually apply a signature.
+     *
+     * Two gates, and the second one is not overridable from the config file.
+     *
+     * Off production, this behaves like the portal flags: unset means on, and
+     * an explicit value in the config file wins. That is what lets the whole
+     * agreement workflow be built, walked and tested against fictional
+     * practices, which section 14.5 expressly allows.
+     *
+     * On production it is false, full stop, whatever the file says. Section
+     * 14.5 lists six blockers and not one of them has been cleared: no
+     * agreement text is approved, the legal entity and trade-name language are
+     * not confirmed, and the consent and retention requirements have not been
+     * reviewed. A config value is a thing that can be flipped by accident at
+     * two in the morning; the clamp is a thing that has to be edited, reviewed
+     * and deployed, which is the right weight for turning on real signatures.
+     *
+     * Clearing the blockers means editing PRODUCTION_SIGNING_BLOCKERS below
+     * down to nothing, and approving the templates in Domain\DocumentTemplates.
+     */
+    public function eSignEnabled(): bool
+    {
+        if ($this->isProduction() && self::PRODUCTION_SIGNING_BLOCKERS !== []) {
+            return false;
+        }
+        return $this->flagOrNotProduction('SA_E_SIGN_ENABLED');
+    }
+
+    /**
+     * The section 14.5 blockers, still standing.
+     *
+     * @return list<string>
+     */
+    public static function productionSigningBlockers(): array
+    {
+        return self::PRODUCTION_SIGNING_BLOCKERS;
+    }
+
+    /**
+     * The legal party name that appears on every generated agreement.
+     *
+     * Empty on production is a refusal, not a fallback. See the DEFAULTS entry.
+     */
+    public function legalEntity(): string
+    {
+        $value = trim($this->string('SA_LEGAL_ENTITY'));
+        if ($value !== '') {
+            return $value;
+        }
+        return $this->isProduction()
+            ? ''
+            : 'Legal entity name not confirmed yet';
+    }
+
+    public function tradeName(): string
+    {
+        $value = trim($this->string('SA_TRADE_NAME'));
+        return $value === '' ? 'Soft Appeals' : $value;
     }
 
     /**

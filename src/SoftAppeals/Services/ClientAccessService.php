@@ -150,23 +150,52 @@ final class ClientAccessService
 
             $organizationId = (string) $invitation['organization_id'];
             $email = strtolower(trim((string) $invitation['contact_email']));
+            $purpose = (string) $invitation['purpose'];
 
-            $contact = $this->contacts->upsert(
-                $organizationId,
-                $this->nameFromEngagement($invitation),
-                $email
-            );
+            // The contact the invitation was minted for, where it named one.
+            //
+            // A signing invitation names a person the practice chose, and that
+            // person already has a row with their own name and job title on it.
+            // Upserting by name here would rewrite that row with whoever
+            // happened to fill in the intake form, which is how a signer ends up
+            // called somebody else on their own agreement.
+            $namedContactId = $invitation['contact_id'] === null
+                ? null
+                : (string) $invitation['contact_id'];
+            $named = $namedContactId === null ? null : $this->contacts->find($namedContactId);
+
+            $contact = $named !== null
+                ? ['id' => (string) $named['id']]
+                : $this->contacts->upsert(
+                    $organizationId,
+                    $this->nameFromEngagement($invitation),
+                    $email
+                );
 
             $user = $this->users->findByEmail($email);
             $userId = $user === null
                 ? $this->users->create($email, null, $contact['id'])
                 : (string) $user['id'];
 
-            // The person who opens the terms link speaks for the practice on
-            // this page: they choose the cadence, they name the signer. That is
+            // What the link grants depends on what the link is for.
+            //
+            // The person who opens the TERMS link speaks for the practice on
+            // that page: they choose the cadence, they name the signer. That is
             // the organization admin role and nothing wider. Signing, approving
             // and seeing money are separate roles, granted to whoever they name.
-            $this->memberships->grant($userId, Role::ORG_ADMIN, $organizationId);
+            //
+            // Every other link grants nothing. A signing link is sent to
+            // somebody the practice already named, who already holds the role
+            // that lets them sign, and a link that handed out an admin role on
+            // the way in would quietly promote every signer a practice ever
+            // chooses. So a link for somebody who holds no role here any more
+            // is spent and refused, which is the same answer as an expired one
+            // and lands on the same plain page.
+            if ($purpose === InvitationRepository::PURPOSE_PREFERENCES) {
+                $this->memberships->grant($userId, Role::ORG_ADMIN, $organizationId);
+            } elseif ($this->memberships->rolesFor($userId, $organizationId) === []) {
+                return null;
+            }
 
             return [
                 'organization_id' => $organizationId,

@@ -232,6 +232,25 @@ $roleLabels = array_map(
 $preferencesOpen = !$app->preferences()->isConfirmed($engagementId)
     && $app->authorization()->can(Permission::PREFERENCES_CONFIRM, $organizationId);
 
+// Phase 4. The document portal, section 15.3.
+//
+// Drafts are left out: a draft is a document she is still preparing, and a
+// practice watching one appear and change would be watching the drafting rather
+// than reading an agreement.
+//
+// The one that is signable is derived from the session's own contact, so a
+// second person at the same practice sees the agreement listed and is not
+// offered the button. Holding the role is not the same as being the person this
+// document names.
+$documents = $app->documents()->forClient($engagementId);
+$signable = $config->eSignEnabled()
+    ? $app->signingService()->pending([
+        'organization_id' => $organizationId,
+        'engagement'      => $engagement,
+        'contact_id'      => $context['contact_id'],
+    ])
+    : null;
+
 Client::render('room-shell', [
     'config'       => $config,
     'clock'        => $clock,
@@ -255,4 +274,7 @@ Client::render('room-shell', [
     'nextOwner'       => Stage::clientNextOwner($stage),
     'nextAction'      => Stage::clientNextAction($stage),
     'preferencesOpen' => $preferencesOpen,
+    'documents'       => $documents,
+    'signable'        => $signable,
+    'documentCount'   => count($documents),
 ], $showDetail);

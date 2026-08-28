@@ -77,6 +77,10 @@ EXPECTED_TABLES = {
     # migration nobody checked, an empty one is a migration that was checked
     # and creates nothing.
     "0004_status_event_sequence.php": [],
+    "0005_documents_and_signatures.php": [
+        "sa_documents",
+        "sa_signatures",
+    ],
 }
 
 
@@ -592,11 +596,199 @@ def assert_status_event_sequence(connection: sqlite3.Connection) -> None:
     )
 
 
+def assert_documents_and_signatures(connection: sqlite3.Connection) -> None:
+    """
+    The constraints 0005 exists to enforce.
+
+    Three of section 14's acceptance lines are database rules rather than code
+    rules, and this is where that is proved:
+
+      a corrected document creates a new version   the unique constraint on
+                                                   (engagement_id, kind, version)
+      a signed document cannot be edited           there is no second version 1
+                                                   to write the correction into
+      only one signature per party per document    the unique constraint on
+                                                   (document_id, party)
+
+    The hash-length checks are here for a duller reason. A truncated SHA-256
+    still looks like a hash, and a column that accepted one would let a
+    half-written value sit in the record for years looking correct.
+    """
+    connection.execute(
+        "INSERT INTO sa_organizations (id, public_ref, legal_name, status, created_at, updated_at)"
+        f" VALUES ('orgD', 'SA-ORG-FFFFFF', 'Fictional Behavioral Health', 'active', {STAMP}, {STAMP})"
+    )
+    connection.execute(
+        "INSERT INTO sa_engagements (id, organization_id, public_ref, stage, fee_basis,"
+        " opened_at, row_version)"
+        f" VALUES ('eD', 'orgD', 'SA-ENG-CCCCCC', 'baa_pending', 'contingency_25', {STAMP}, 1)"
+    )
+    connection.execute(
+        "INSERT INTO sa_contacts (id, organization_id, name, work_email, active, created_at)"
+        f" VALUES ('cD', 'orgD', 'A Signer', 'signer@example.org', 1, {STAMP})"
+    )
+
+    hash64 = "a" * 64
+
+    def document(
+        ident: str,
+        ref: str,
+        version: int = 1,
+        kind: str = "baa",
+        status: str = "draft",
+        content: str = hash64,
+        executed_hash: str = "NULL",
+        executed_at: str = "NULL",
+        void_reason: str = "NULL",
+        engagement: str = "'eD'",
+    ) -> str:
+        return (
+            "INSERT INTO sa_documents (id, public_ref, engagement_id, organization_id, kind,"
+            " version, status, title, template_version, consent_version, content_sha256,"
+            " executed_sha256, executed_at, void_reason, private_path, created_at, updated_at)"
+            f" VALUES ('{ident}', '{ref}', {engagement}, 'orgD', '{kind}', {version},"
+            f" '{status}', 'Business Associate Agreement', '2026-08-28', '2026-08-28',"
+            f" '{content}', {executed_hash}, {executed_at}, {void_reason},"
+            f" 'agreements/SA-ENG-CCCCCC/{ref}-v{version}.txt', {STAMP}, {STAMP})"
+        )
+
+    accepts(connection, document("d1", "SA-DOC-AAAAAA"), "a plain draft document was refused")
+
+    refuses(
+        connection,
+        document("d2", "SA-DOC-BBBBBB", version=1),
+        "two version 1 documents of the same kind on one engagement were accepted,"
+        " so a correction could overwrite the original",
+    )
+
+    accepts(
+        connection,
+        document("d3", "SA-DOC-CCCCCC", version=2),
+        "a second VERSION of the same document was refused, so a correction has"
+        " nowhere to go",
+    )
+
+    accepts(
+        connection,
+        document("d4", "SA-DOC-DDDDDD", kind="review_authorization"),
+        "version 1 of a DIFFERENT kind on the same engagement was refused",
+    )
+
+    refuses(
+        connection,
+        document("d5", "SA-DOC-EEEEEE", kind="a_kind_nobody_named"),
+        "a document of an invented kind was accepted",
+    )
+    refuses(
+        connection,
+        document("d6", "SA-DOC-FFFFFF", version=3, status="nearly_signed"),
+        "a document with an invented status was accepted",
+    )
+    refuses(
+        connection,
+        document("d7", "SA-DOC-GGGGGG", version=4, content="a" * 63),
+        "a document with a 63-character content hash was accepted",
+    )
+    refuses(
+        connection,
+        document("d8", "SA-DOC-HHHHHH", version=5, status="executed"),
+        "a document marked executed with no executed hash and no stamp was accepted",
+    )
+    refuses(
+        connection,
+        document("d9", "SA-DOC-JJJJJJ", version=6, status="void"),
+        "a voided document with no reason was accepted",
+    )
+    refuses(
+        connection,
+        document("d10", "SA-DOC-AAAAAA", version=7),
+        "two documents with the same public reference were accepted",
+    )
+    refuses(
+        connection,
+        document("d11", "SA-DOC-KKKKKK", version=0),
+        "a document at version 0 was accepted",
+    )
+    refuses(
+        connection,
+        document("d12", "SA-DOC-LLLLLL", engagement="'no-such-engagement'"),
+        "a document pointing at an unknown engagement was accepted",
+    )
+
+    def signature(
+        ident: str,
+        party: str = "client",
+        document_id: str = "'d1'",
+        doc_hash: str = hash64,
+        key: str = "NULL",
+    ) -> str:
+        return (
+            "INSERT INTO sa_signatures (id, document_id, organization_id, party, signer_contact_id,"
+            " signer_role, typed_name, consent_version, consent_text_sha256, consent_accepted_at,"
+            " document_sha256, payload_path, payload_sha256, idempotency_key, signed_at, created_at)"
+            f" VALUES ('{ident}', {document_id}, 'orgD', '{party}', 'cD', 'authorized_signer',"
+            f" 'A Signer', '2026-08-28', '{'b' * 64}', {STAMP}, '{doc_hash}',"
+            f" 'signatures/SA-DOC-AAAAAA-{party}.json', '{'c' * 64}', {key}, {STAMP}, {STAMP})"
+        )
+
+    accepts(connection, signature("s1"), "a plain client signature was refused")
+
+    refuses(
+        connection,
+        signature("s2"),
+        "a second client signature on the same document was accepted, so a replayed"
+        " form could sign twice",
+    )
+
+    accepts(
+        connection,
+        signature("s3", party="soft_appeals"),
+        "a countersignature on a document the client had signed was refused",
+    )
+
+    refuses(
+        connection,
+        signature("s4", party="a_third_party"),
+        "a signature from a party nobody defined was accepted",
+    )
+    refuses(
+        connection,
+        signature("s5", document_id="'d3'", doc_hash="a" * 63),
+        "a signature carrying a 63-character document hash was accepted",
+    )
+    refuses(
+        connection,
+        signature("s6", document_id="'no-such-document'"),
+        "a signature pointing at an unknown document was accepted",
+    )
+
+    # The idempotency index has to refuse a repeat and still allow many NULLs,
+    # because a signature written by hand carries no key.
+    accepts(
+        connection,
+        signature("s7", document_id="'d3'", key=f"'{'d' * 64}'"),
+        "a signature carrying an idempotency key was refused",
+    )
+    refuses(
+        connection,
+        signature("s8", document_id="'d4'", key=f"'{'d' * 64}'"),
+        "two signatures with the same idempotency key were accepted, so a replayed"
+        " request could sign twice",
+    )
+    accepts(
+        connection,
+        signature("s9", document_id="'d4'"),
+        "a second signature with no idempotency key was refused, but NULL is not a"
+        " duplicate of NULL",
+    )
+
+
 ASSERTIONS = {
     "0001_foundation.php": assert_foundation,
     "0002_intake_and_engagement.php": assert_intake_and_engagement,
     "0003_preferences_and_client_access.php": assert_preferences_and_client_access,
     "0004_status_event_sequence.php": assert_status_event_sequence,
+    "0005_documents_and_signatures.php": assert_documents_and_signatures,
 }
 
 

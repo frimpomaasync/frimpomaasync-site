@@ -19,13 +19,30 @@
  * @var string $nextOwner
  * @var string $nextAction
  * @var bool $preferencesOpen
+ * @var list<array<string,mixed>> $documents
+ * @var array<string,mixed>|null $signable
  */
 
+use SoftAppeals\Domain\DocumentKind;
+use SoftAppeals\Domain\DocumentStatus;
 use SoftAppeals\Domain\Stage;
 use SoftAppeals\Views\Client;
 
 $e = static fn (?string $value): string => Client::e($value);
 ?>
+
+<?php if ($signable !== null): ?>
+<section aria-labelledby="room-sign">
+  <p class="sa-label" id="room-sign">Needs you</p>
+  <div class="sa-panel"><div class="sa-panel-b" style="padding:16px 18px">
+    <p style="margin:0 0 12px">
+      <b><?= $e(DocumentKind::label((string) $signable['kind'])) ?></b> is waiting for
+      your signature. You can read all of it before you sign anything.
+    </p>
+    <a class="sa-btn is-primary" href="/soft-appeals-sign.php">Read it and sign</a>
+  </div></div>
+</section>
+<?php endif; ?>
 
 <?php if ($preferencesOpen): ?>
 <section aria-labelledby="room-needs">
@@ -114,6 +131,62 @@ $e = static fn (?string $value): string => Client::e($value);
   </section>
 
 </div>
+
+<section aria-labelledby="room-agreements-h" id="room-agreements">
+  <p class="sa-label" id="room-agreements-h">Your agreements</p>
+  <div class="sa-panel">
+    <?php if ($documents === []): ?>
+      <div class="sa-empty">
+        Nothing to sign yet. Your agreements appear here as they are issued, and
+        they stay here afterwards.
+      </div>
+    <?php else: ?>
+      <div class="sa-panel-b" style="padding:6px 18px 14px">
+        <?php foreach ($documents as $document): ?>
+          <?php
+          // Worked out here rather than inside the markup, because the static
+          // check counts `if ...:` a line at a time and a condition wrapped
+          // over three lines reads to it as an endif with no if.
+          $isSignable = (string) $document['status'] === DocumentStatus::SENT
+              && $signable !== null
+              && (string) $signable['id'] === (string) $document['id'];
+          ?>
+          <div class="sa-client-docrow">
+            <div>
+              <b><?= $e(DocumentKind::label((string) $document['kind'])) ?></b>
+              <?php if ((int) $document['version'] > 1): ?>
+                <span class="sa-room-quiet">version <?= (int) $document['version'] ?></span>
+              <?php endif; ?>
+              <br>
+              <span class="sa-room-quiet">
+                <?= $e((string) $document['public_ref']) ?>
+                <?php if ($document['executed_at'] !== null): ?>
+                  &middot; signed <?= $e($clock->displayDate((string) $document['executed_at'])) ?>
+                <?php elseif ($document['sent_at'] !== null): ?>
+                  &middot; sent <?= $e($clock->displayDate((string) $document['sent_at'])) ?>
+                <?php endif; ?>
+              </span>
+              <?php if ((string) $document['status'] === DocumentStatus::VOID): ?>
+                <br><span class="sa-room-quiet">Replaced by a later version.</span>
+              <?php endif; ?>
+            </div>
+            <div>
+              <span class="sa-pill"><?= $e(DocumentStatus::clientLabel((string) $document['status'])) ?></span>
+              <?php if ($isSignable): ?>
+                <a class="sa-btn is-primary" href="/soft-appeals-sign.php" style="margin-left:8px">Sign</a>
+              <?php endif; ?>
+            </div>
+          </div>
+        <?php endforeach; ?>
+        <p class="sa-note" style="margin-top:12px">
+          Signed copies stay in this room rather than being emailed to you, so
+          your agreements are never sitting in an inbox. Ask for a paper copy at
+          any time by writing to softappeals@frimpomaasync.com.
+        </p>
+      </div>
+    <?php endif; ?>
+  </div>
+</section>
 
 <section aria-labelledby="room-later">
   <p class="sa-label" id="room-later">Not here yet</p>

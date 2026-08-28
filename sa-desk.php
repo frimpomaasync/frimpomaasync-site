@@ -12,14 +12,16 @@ declare(strict_types=1);
  *
  * Phase 2 lights up the home dashboard with the real pipeline, the inquiry
  * queue, the review drawer, the terms preview, and the importer that brings her
- * existing leads in off the server. Everything past that is still ahead:
- * documents, work batches, recoveries, the Recovery Room.
+ * existing leads in off the server. Phase 4 adds the Agreements view: generate,
+ * send, countersign, correct. Work batches and recoveries are still ahead.
  *
  * ADR-004: session, not a key in the URL.
  * Section 10.1: an unauthorized caller is answered with a 404, not a 403, so
  * the page cannot be discovered by watching status codes.
  */
 
+use SoftAppeals\Domain\DocumentKind;
+use SoftAppeals\Domain\DocumentStatus;
 use SoftAppeals\Domain\EngagementTerms;
 use SoftAppeals\Domain\FitDecision;
 use SoftAppeals\Domain\IntakeStatus;
@@ -268,6 +270,168 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         exit;
     }
 
+    // -----------------------------------------------------------------
+    // Phase 4. Documents and signing.
+    //
+    // Every one of these looks the engagement up by its public reference and
+    // then finds the document THROUGH that engagement. A document id straight
+    // off a POST would be a way to act on somebody else's agreement by guessing
+    // a value, and there is no code path here that accepts one.
+    // -----------------------------------------------------------------
+    $documentActions = [
+        'document.generate',
+        'document.send',
+        'document.countersign',
+        'document.correct',
+        'document.void',
+        'engagement.open_secure_route',
+    ];
+
+    if (in_array($action, $documentActions, true)) {
+        $csrf->require($action);
+
+        $ref = (string) ($_POST['engagement'] ?? '');
+        $engagement = $engagements->findByPublicRef($ref);
+        $joined = $engagement === null
+            ? null
+            : $engagements->findWithOrganization((string) $engagement['id']);
+
+        if ($joined === null) {
+            $session->flash('desk_problem', 'That engagement reference is not one of hers.');
+            header('Location: /sa-desk.php?view=documents', true, 303);
+            exit;
+        }
+
+        $documents = $app->documentService();
+        $back = '/sa-desk.php?view=documents&e=' . urlencode($ref);
+
+        /** One version of this engagement's documents, found by reference. */
+        $findDocument = static function (string $documentRef) use ($app, $joined): ?array {
+            if ($documentRef === '') {
+                return null;
+            }
+            foreach ($app->documents()->forEngagement((string) $joined['id']) as $row) {
+                if ((string) $row['public_ref'] === $documentRef) {
+                    return $row;
+                }
+            }
+            return null;
+        };
+
+        try {
+            if ($action === 'document.generate') {
+                $authorization->require(Permission::DOCUMENT_GENERATE);
+                $kind = (string) ($_POST['kind'] ?? '');
+                $document = $documents->generate($joined, $kind, $userId);
+                $session->flash(
+                    'desk_ok',
+                    DocumentKind::label($kind) . ' generated as version '
+                    . (int) $document['version'] . '. Read it before it goes anywhere.'
+                );
+            }
+
+            if ($action === 'document.send') {
+                $authorization->require(Permission::DOCUMENT_GENERATE);
+                $document = $findDocument((string) ($_POST['document'] ?? ''));
+                if ($document === null) {
+                    throw new \RuntimeException('That document is not on this engagement.');
+                }
+                $result = $documents->send($document, $joined, $userId);
+
+                // Staging refuses to email a real practice, so the signing link
+                // exists only inside a message the mail layer declined to send.
+                // Null on production, gated on the environment, exactly as the
+                // terms link is.
+                if ($result['link'] !== null) {
+                    $session->flash('desk_link', (string) $result['link']);
+                }
+
+                $session->flash(
+                    $result['sent'] ? 'desk_ok' : 'desk_problem',
+                    $result['sent']
+                        ? 'Sent for signature. The link stops working '
+                            . $clock->displayDateTime((string) $result['expires_at']) . '.'
+                        : 'Not emailed: ' . $result['reason'] . '. The document is still marked '
+                            . 'as issued and the attempt is on the record.'
+                );
+            }
+
+            if ($action === 'document.countersign') {
+                $authorization->require(Permission::DOCUMENT_COUNTERSIGN);
+                $document = $findDocument((string) ($_POST['document'] ?? ''));
+                if ($document === null) {
+                    throw new \RuntimeException('That document is not on this engagement.');
+                }
+                $documents->countersign($document, $joined, [
+                    'typed_name'  => (string) ($_POST['typed_name'] ?? ''),
+                    'typed_title' => trim((string) ($_POST['typed_title'] ?? '')) === ''
+                        ? null
+                        : mb_substr(trim((string) $_POST['typed_title']), 0, 120),
+                    'consent'     => (string) ($_POST['consent'] ?? '') === 'yes',
+                ], $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Countersigned and executed. The practice has been told, and its copy is '
+                    . 'in the Recovery Room.'
+                );
+            }
+
+            if ($action === 'document.correct') {
+                $authorization->require(Permission::DOCUMENT_GENERATE);
+                $document = $findDocument((string) ($_POST['document'] ?? ''));
+                if ($document === null) {
+                    throw new \RuntimeException('That document is not on this engagement.');
+                }
+                $replacement = $documents->correct(
+                    $document,
+                    $joined,
+                    (string) ($_POST['reason'] ?? ''),
+                    $userId
+                );
+                $session->flash(
+                    'desk_ok',
+                    'Version ' . (int) $document['version'] . ' is void and version '
+                    . (int) $replacement['version'] . ' has taken its place. The old one is '
+                    . 'still on the record, exactly as it was.'
+                );
+            }
+
+            if ($action === 'document.void') {
+                $authorization->require(Permission::DOCUMENT_GENERATE);
+                $document = $findDocument((string) ($_POST['document'] ?? ''));
+                if ($document === null) {
+                    throw new \RuntimeException('That document is not on this engagement.');
+                }
+                $documents->void($document, $joined, (string) ($_POST['reason'] ?? ''), $userId);
+                $session->flash('desk_ok', 'Voided. Nothing was deleted.');
+            }
+
+            if ($action === 'engagement.open_secure_route') {
+                // The PHI gate, section 6 Gate A. This is the one move that
+                // both agreements exist to unlock, so it lives with them: an
+                // executed review authorization that opened nothing would be a
+                // signature with no effect.
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $app->engagementService()->move(
+                    (string) $joined['id'],
+                    Stage::SECURE_INTAKE_READY,
+                    'The secure route is open',
+                    'engagement.secure_route_open',
+                    $userId
+                );
+                $session->flash(
+                    'desk_ok',
+                    'The secure route is open. This practice may now send denials.'
+                );
+            }
+        } catch (\RuntimeException $e) {
+            $session->flash('desk_problem', $e->getMessage());
+        }
+
+        header('Location: ' . $back, true, 303);
+        exit;
+    }
+
     // An action nobody offers. Recorded, then treated as a visit.
     $app->audit()->record('desk.unknown_action', 'denied', 'page', null, ['reason' => 'unknown action']);
     header('Location: /sa-desk.php', true, 303);
@@ -280,7 +444,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 $app->audit()->record('desk.view', 'success', 'page', null);
 
 $view = (string) ($_GET['view'] ?? 'home');
-$allowedViews = ['home', 'inquiries', 'terms', 'import', 'audit'];
+$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'import', 'audit'];
 if (!in_array($view, $allowedViews, true)) {
     $view = 'home';
 }
@@ -378,6 +542,63 @@ if ($view === 'terms') {
     $data['preferencesRow'] = $joined === null
         ? null
         : $app->preferences()->forEngagement((string) $joined['id']);
+}
+
+// Phase 4. What is standing still and waiting on her, across every practice.
+$awaitingCountersignature = $app->documents()->awaitingCountersignature();
+$outForSignature = $app->documents()->outForSignature();
+$data['documentsNeedingHer'] = count($awaitingCountersignature);
+$data['awaitingCountersignature'] = $awaitingCountersignature;
+$data['outForSignature'] = $outForSignature;
+
+if ($view === 'documents') {
+    $ref = (string) ($_GET['e'] ?? '');
+    $engagement = $ref === '' ? null : $engagements->findByPublicRef($ref);
+    $joined = $engagement === null
+        ? null
+        : $engagements->findWithOrganization((string) $engagement['id']);
+
+    $service = $app->documentService();
+
+    $data['engagement'] = $joined;
+    $data['documents'] = $joined === null
+        ? []
+        : $app->documents()->forEngagement((string) $joined['id']);
+    $data['signatures'] = [];
+    $data['verifications'] = [];
+
+    if ($joined !== null) {
+        foreach ($data['documents'] as $row) {
+            $data['signatures'][(string) $row['id']] = $app->signatures()
+                ->forDocument((string) $row['id']);
+
+            // Reopened and checked against the hashes on the row, on every
+            // read. Section 14.4 asks that the executed record can be proved
+            // later; a page that showed it without checking would be showing a
+            // claim rather than a fact.
+            $data['verifications'][(string) $row['id']] = $service->verify($row);
+        }
+    }
+
+    // What she can generate next, and why not when she cannot.
+    $data['nextKind'] = $joined === null
+        ? null
+        : DocumentKind::nextForStage((string) $joined['stage']);
+    $data['generateChecks'] = [];
+    if ($joined !== null) {
+        foreach (DocumentKind::live() as $kind) {
+            $data['generateChecks'][$kind] = $service->canGenerate($joined, $kind);
+        }
+    }
+
+    $data['signer'] = $joined === null ? null : $service->signerContact($joined);
+    $data['blockers'] = \SoftAppeals\Config::productionSigningBlockers();
+    $data['eSignEnabled'] = $config->eSignEnabled();
+    $data['canCountersign'] = $authorization->can(Permission::DOCUMENT_COUNTERSIGN);
+    $data['canGenerate'] = $authorization->can(Permission::DOCUMENT_GENERATE);
+
+    // Every engagement far enough along to have agreements, for the picker.
+    $data['engagementsWithDocuments'] = $engagements->withOrganizations(true);
 }
 
 if ($view === 'import') {

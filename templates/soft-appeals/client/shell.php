@@ -111,6 +111,36 @@ $e = static fn (?string $value): string => Client::e($value);
     letter-spacing: .35em;
     text-align: center;
   }
+
+  /* The document on the signing screen. Its own scroll rather than the page's,
+     so the fields underneath it stay reachable on a phone without scrolling
+     past nine pages of agreement to get to them. */
+  .sa-client-doc {
+    max-height: min(52vh, 460px);
+    overflow: auto;
+    padding: 16px 18px;
+    border: 1px solid var(--sa-line-strong);
+    border-radius: var(--sa-r);
+    background: #fff;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    -webkit-overflow-scrolling: touch;
+  }
+  .sa-client-doc:focus-visible { outline: 2px solid var(--sa-action); outline-offset: 2px; }
+
+  .sa-client-docrow {
+    display: flex;
+    gap: 10px 16px;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--sa-line);
+  }
+  .sa-client-docrow:last-child { border-bottom: 0; }
 </style>
 </head>
 <body>

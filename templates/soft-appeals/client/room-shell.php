@@ -39,10 +39,16 @@ use SoftAppeals\Views\Client;
 
 $e = static fn (?string $value): string => Client::e($value);
 
-/** Section 15.3, in the plan's own order. Overview is the one that is built. */
+/**
+ * Section 15.3, in the plan's own order.
+ *
+ * Overview was built in Phase 3 and Agreements in Phase 4, so Agreements has
+ * come out of this list and into the one above it. The rest stay listed and
+ * marked: a practice that can see the whole map knows what is coming.
+ */
 $navLater = [
     'Assessment', 'Work batches', 'Action requests', 'Approvals',
-    'Agreements', 'Recovery', 'Messages', 'Access',
+    'Recovery', 'Messages', 'Access',
 ];
 ?><!doctype html>
 <html lang="en">
@@ -108,6 +114,13 @@ $navLater = [
   <ul class="sa-rail-nav">
     <li>
       <a href="/soft-appeals-room.php" aria-current="page"><span>Overview</span></a>
+    </li>
+    <li>
+      <a href="/soft-appeals-room.php#room-agreements"><span>Agreements</span>
+        <?php if (($documentCount ?? 0) > 0): ?>
+          <span class="sa-count"><?= (int) $documentCount ?></span>
+        <?php endif; ?>
+      </a>
     </li>
   </ul>
 
