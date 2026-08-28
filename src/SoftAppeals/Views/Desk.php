@@ -35,9 +35,21 @@ final class Desk
      * template cannot reach a variable the controller happened to leave lying
      * around. Anything a view needs, it is handed.
      *
+     * The output is buffered, and a failure inside a view is caught rather than
+     * left to become an empty response. Since PHP 7 a syntax error in a file
+     * brought in by require throws ParseError instead of fataling, so this
+     * catches the one failure the application otherwise cannot report on
+     * itself. That matters more here than usual: there is no PHP on the machine
+     * these views are written on, so the first time one of them is parsed is on
+     * a server, and a blank page with nothing in it is the worst possible way
+     * to find that out.
+     *
+     * $showDetail is false in production. There, the block names the view and
+     * nothing else; the correlation reference in the error log carries the rest.
+     *
      * @param array<string,mixed> $data
      */
-    public static function render(string $view, array $data = []): void
+    public static function render(string $view, array $data = [], bool $showDetail = false): void
     {
         if (preg_match('/^[a-z0-9_]+$/', $view) !== 1) {
             throw new \RuntimeException('Refusing to render "' . $view . '" as a view.');
@@ -46,10 +58,38 @@ final class Desk
         if (!is_file($path)) {
             throw new \RuntimeException('No such Desk view: ' . $view);
         }
-        (static function (string $__path, array $data): void {
-            extract($data, EXTR_SKIP);
-            require $__path;
-        })($path, $data);
+
+        ob_start();
+        try {
+            (static function (string $__path, array $data): void {
+                extract($data, EXTR_SKIP);
+                require $__path;
+            })($path, $data);
+            echo ob_get_clean();
+        } catch (\Throwable $e) {
+            // Throw away whatever the view managed to print before it broke.
+            // Half a table followed by an error block is harder to read than
+            // the error block alone.
+            ob_end_clean();
+            echo self::failureBlock($view, $e, $showDetail);
+        }
+    }
+
+    /** A readable block, in place of a screen that would otherwise be blank. */
+    private static function failureBlock(string $view, \Throwable $e, bool $showDetail): string
+    {
+        $out = '<div class="sa-panel" style="border-color:#e4222c">'
+            . '<div style="padding:16px 18px">'
+            . '<p class="sa-label" style="color:#b4141c">This section did not render</p>'
+            . '<p>The rest of the Desk is fine. The <strong>' . self::e($view)
+            . '</strong> section is the part that broke.</p>';
+
+        if ($showDetail) {
+            $out .= '<p class="sa-desk-mono">' . self::e($e::class) . ': ' . self::e($e->getMessage()) . '</p>'
+                . '<p class="sa-desk-mono">' . self::e(basename($e->getFile())) . ':' . (int) $e->getLine() . '</p>';
+        }
+
+        return $out . '</div></div>';
     }
 
     /**

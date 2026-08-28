@@ -285,6 +285,11 @@ $data = [
     'termsReady'     => $termsReady,
     'ok'             => $session->flash('desk_ok'),
     'problem'        => $session->flash('desk_problem'),
+
+    // Off production, a view that fails names the exception. On production it
+    // names the section and nothing else. Either way the page is readable
+    // rather than blank, which is the whole point.
+    'showDetail'     => !$config->isProduction(),
 ];
 
 if ($view === 'home') {
@@ -329,4 +334,4 @@ if ($view === 'audit') {
     $data['communicationRows'] = $communications->recent(20);
 }
 
-Desk::render('shell', $data);
+Desk::render('shell', $data, $data['showDetail']);

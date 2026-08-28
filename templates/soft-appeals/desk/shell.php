@@ -17,6 +17,7 @@
  * @var string $view
  * @var array<string,int> $pipeline
  * @var array<string,mixed> $data
+ * @var bool $showDetail
  */
 
 use SoftAppeals\Views\Desk;
@@ -223,7 +224,7 @@ $navLater = [
       <p class="sa-desk-flash is-problem" role="alert"><?= $e($problem) ?></p>
     <?php endif; ?>
 
-    <?php Desk::render($view, $data); ?>
+    <?php Desk::render($view, $data, $showDetail); ?>
   </div>
 </div>
 
