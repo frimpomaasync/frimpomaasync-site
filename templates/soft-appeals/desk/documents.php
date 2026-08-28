@@ -205,7 +205,9 @@ $e = static fn (?string $value): string => Desk::e($value);
     <p class="sa-label" id="desk-doc-make">Generate</p>
     <div class="sa-desk-cards">
       <?php foreach (DocumentKind::live() as $kind): ?>
-        <?php if ($kind === DocumentKind::APPROVED_SCOPE): ?>
+        <?php if ($kind === DocumentKind::APPROVED_SCOPE || DocumentKind::isRecord($kind)): ?>
+          <?php /* The scope is generated with the agreement, and a record is
+                   sealed by the closeout. Neither has a button here. */ ?>
           <?php continue; ?>
         <?php endif; ?>
         <?php

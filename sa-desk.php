@@ -327,6 +327,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             if ($action === 'document.generate') {
                 $authorization->require(Permission::DOCUMENT_GENERATE);
                 $kind = (string) ($_POST['kind'] ?? '');
+                if (DocumentKind::isRecord($kind)) {
+                    // A record is sealed by the step that produces it, with the
+                    // figures of that moment. Generated bare it would be a
+                    // draft with nothing in it and no way to execute it.
+                    throw new \RuntimeException(
+                        DocumentKind::label($kind) . ' is sealed by the closeout, not generated here.'
+                    );
+                }
                 $document = $documents->generate($joined, $kind, $userId);
                 $session->flash(
                     'desk_ok',

@@ -343,7 +343,7 @@ return [
         },
 
     'the room reads the closeout: the practice sees steps and documents, money and access by role' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $atAccessReview): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $atAccessReview, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $engagement = $atAccessReview($app, $sent);
             $closeout = $app->closeoutService();
@@ -358,6 +358,6 @@ return [
             Expect::same(1, count($summary['invoices']), 'and the invoice');
             Expect::same(InvoiceStatus::ISSUED, (string) $summary['invoices'][0]['status'], 'issued');
             Expect::same(2, count($summary['access']), 'and the access rows for the compliance role');
-            Expect::same(BatchStage::OVERTURNED, (string) $app->workBatches()->forEngagement((string) $engagement['id'])[0]['stage'], 'the batch reads overturned, as history');
+            Expect::same(BatchStage::OVERTURNED, (string) $batchNamed($app, (string) $engagement['id'], 'Commercial set')['stage'], 'the batch reads overturned, as history');
         },
 ];
