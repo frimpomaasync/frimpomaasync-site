@@ -105,7 +105,15 @@ return [
             Expect::false($preview['is_resend'], 'nothing has gone yet');
 
             $body = (string) $preview['body'];
-            Expect::true(str_contains($body, 'Hello A Person,'), 'it greets them by their first name');
+            // "A Person" is the fixture's whole name, so the first name is "A".
+            // The test used to expect the whole name while calling it the first
+            // name, and the code was right: section 13.1 says "Hello [First
+            // name],". Nothing had ever run this file, so nobody found out.
+            Expect::true(str_contains($body, 'Hello A,'), 'it greets them by their first name');
+            Expect::false(
+                str_contains($body, 'Hello A Person,'),
+                'and by the first name only, not the whole name'
+            );
             Expect::true(
                 str_contains($body, "Fictional Behavioral Health LLC's denial situation"),
                 'and names their practice'
