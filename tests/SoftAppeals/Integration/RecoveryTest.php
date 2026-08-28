@@ -299,7 +299,7 @@ $labelsOf = static function (Bootstrap $app, string $engagementId): array {
 return [
 
     'recovery cannot activate before the agreement is executed, and not before the scope is signed either' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $owner, $scopeSelected, $recordScope, $signAsPractice): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $owner, $scopeSelected, $recordScope, $signAsPractice, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $ownerId = $owner($app);
             $engagement = $scopeSelected($app, $sent, $atSecureRoute($app, $sent), $ownerId);
@@ -329,7 +329,7 @@ return [
         },
 
     'the scope is recorded from recommended batches only, names the approver, and completes the checklist item' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $owner, $scopeSelected, $recordScope): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $owner, $scopeSelected, $recordScope, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $ownerId = $owner($app);
             $engagement = $scopeSelected($app, $sent, $atSecureRoute($app, $sent), $ownerId);
@@ -388,7 +388,7 @@ return [
         },
 
     'the recovery pair is refused without a scope, and generated from it with the scope on its face' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $owner, $scopeSelected, $recordScope): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $owner, $scopeSelected, $recordScope, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $ownerId = $owner($app);
             $engagement = $scopeSelected($app, $sent, $atSecureRoute($app, $sent), $ownerId);
@@ -424,7 +424,7 @@ return [
         },
 
     'sending the agreement sends the scope alongside it, in one email that carries no scope detail' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $owner, $scopeSelected, $recordScope): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $owner, $scopeSelected, $recordScope, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $ownerId = $owner($app);
             $engagement = $scopeSelected($app, $sent, $atSecureRoute($app, $sent), $ownerId);
@@ -447,7 +447,7 @@ return [
         },
 
     'the practice signs the agreement first, then the scope, which executes on their signature alone' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $owner, $scopeSelected, $recordScope, $signAsPractice): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $owner, $scopeSelected, $recordScope, $signAsPractice, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $ownerId = $owner($app);
             $engagement = $scopeSelected($app, $sent, $atSecureRoute($app, $sent), $ownerId);
@@ -490,7 +490,7 @@ return [
         },
 
     'an approval request needs an active recovery, a batch in scope and an approver, and emails only a notice' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $active): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $active, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
@@ -537,7 +537,7 @@ return [
         },
 
     'double submission does not create duplicate approval events' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $active, $asClient, $labelsOf): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $active, $asClient, $labelsOf, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
@@ -582,7 +582,7 @@ return [
         },
 
     'a returned approval hands the batch back with the note, and a fresh request can follow' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $active, $asClient): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $active, $asClient, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
@@ -621,7 +621,7 @@ return [
         },
 
     'a submission cannot be recorded without an approval, uses the approval once, and is the first submission on the checklist' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $active, $asClient, $labelsOf): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $active, $asClient, $labelsOf, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
@@ -686,7 +686,7 @@ return [
         },
 
     'payer responses move the batch and never create a fee' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $active, $asClient): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $active, $asClient, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
@@ -749,7 +749,7 @@ return [
         },
 
     'the room reads the board, the approvals and the recovery block from the same source as the Desk' =>
-        static function (Bootstrap $app, Database $db) use ($boot, $active): void {
+        static function (Bootstrap $app, Database $db) use ($boot, $active, $batchNamed): void {
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
