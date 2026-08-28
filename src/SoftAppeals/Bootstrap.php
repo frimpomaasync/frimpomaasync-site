@@ -6,6 +6,9 @@ namespace SoftAppeals;
 use SoftAppeals\Auth\AuthorizationService;
 use SoftAppeals\Auth\AuthService;
 use SoftAppeals\Auth\SessionManager;
+use SoftAppeals\Repositories\ActionRequestRepository;
+use SoftAppeals\Repositories\AssessmentRepository;
+use SoftAppeals\Repositories\ChecklistRepository;
 use SoftAppeals\Repositories\CommunicationRepository;
 use SoftAppeals\Repositories\ContactRepository;
 use SoftAppeals\Repositories\DocumentRepository;
@@ -16,14 +19,19 @@ use SoftAppeals\Repositories\LoginCodeRepository;
 use SoftAppeals\Repositories\MembershipRepository;
 use SoftAppeals\Repositories\OrganizationRepository;
 use SoftAppeals\Repositories\PreferenceRepository;
+use SoftAppeals\Repositories\SettingsRepository;
 use SoftAppeals\Repositories\SignatureRepository;
 use SoftAppeals\Repositories\StatusEventRepository;
 use SoftAppeals\Repositories\UserRepository;
+use SoftAppeals\Repositories\WorkBatchRepository;
 use SoftAppeals\Security\Csrf;
 use SoftAppeals\Security\ErrorHandler;
 use SoftAppeals\Security\Hmac;
 use SoftAppeals\Security\RateLimiter;
+use SoftAppeals\Services\ActionRequestService;
+use SoftAppeals\Services\AssessmentService;
 use SoftAppeals\Services\AuditService;
+use SoftAppeals\Services\ChecklistService;
 use SoftAppeals\Services\ClientAccessService;
 use SoftAppeals\Services\DocumentService;
 use SoftAppeals\Services\DocumentVault;
@@ -36,6 +44,7 @@ use SoftAppeals\Services\SchemaService;
 use SoftAppeals\Services\SeedService;
 use SoftAppeals\Services\SigningService;
 use SoftAppeals\Services\TermsService;
+use SoftAppeals\Services\WorkBatchService;
 use SoftAppeals\Support\Clock;
 
 /**
@@ -538,7 +547,8 @@ final class Bootstrap
             $this->vault(),
             $this->mail(),
             $this->audit(),
-            $this->hmac()
+            $this->hmac(),
+            $this->settings()
         ));
     }
 
@@ -556,6 +566,103 @@ final class Bootstrap
             $this->authorization(),
             $this->audit(),
             $this->hmac()
+        ));
+    }
+
+    // ------------------------------------------------------------------
+    // Phase 5. The assessment and the Recovery Room proper.
+    // ------------------------------------------------------------------
+
+    public function settings(): SettingsRepository
+    {
+        return $this->make(SettingsRepository::class, fn (): SettingsRepository => new SettingsRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function assessments(): AssessmentRepository
+    {
+        return $this->make(AssessmentRepository::class, fn (): AssessmentRepository => new AssessmentRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function workBatches(): WorkBatchRepository
+    {
+        return $this->make(WorkBatchRepository::class, fn (): WorkBatchRepository => new WorkBatchRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function checklistItems(): ChecklistRepository
+    {
+        return $this->make(ChecklistRepository::class, fn (): ChecklistRepository => new ChecklistRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function actionRequests(): ActionRequestRepository
+    {
+        return $this->make(ActionRequestRepository::class, fn (): ActionRequestRepository => new ActionRequestRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function checklistService(): ChecklistService
+    {
+        return $this->make(ChecklistService::class, fn (): ChecklistService => new ChecklistService(
+            $this->checklistItems(),
+            $this->timeline()
+        ));
+    }
+
+    public function actionRequestService(): ActionRequestService
+    {
+        return $this->make(ActionRequestService::class, fn (): ActionRequestService => new ActionRequestService(
+            $this->config,
+            $this->clock(),
+            $this->actionRequests(),
+            $this->contacts(),
+            $this->preferences(),
+            $this->mail(),
+            $this->audit()
+        ));
+    }
+
+    public function workBatchService(): WorkBatchService
+    {
+        return $this->make(WorkBatchService::class, fn (): WorkBatchService => new WorkBatchService(
+            $this->clock(),
+            $this->workBatches(),
+            $this->engagements(),
+            $this->audit()
+        ));
+    }
+
+    public function assessmentService(): AssessmentService
+    {
+        return $this->make(AssessmentService::class, fn (): AssessmentService => new AssessmentService(
+            $this->config,
+            $this->database(),
+            $this->clock(),
+            $this->assessments(),
+            $this->actionRequests(),
+            $this->engagements(),
+            $this->workBatches(),
+            $this->contacts(),
+            $this->preferences(),
+            $this->timeline(),
+            $this->engagementService(),
+            $this->workBatchService(),
+            $this->checklistService(),
+            $this->actionRequestService(),
+            $this->mail(),
+            $this->audit()
         ));
     }
 

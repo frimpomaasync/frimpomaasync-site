@@ -53,7 +53,7 @@ final class MailService
         $this->config = $config;
         $this->communications = $communications;
         $this->audit = $audit;
-        $this->transport = $transport ?? self::smtpTransport();
+        $this->transport = $transport ?? self::smtpTransport($config);
     }
 
     /**
@@ -133,6 +133,21 @@ final class MailService
         $accepted = false;
         try {
             $accepted = ($this->transport)($to, $subject, $body, $replyTo);
+        } catch (NoMailCredentials) {
+            // Not a refusal by the mail server: this installation has no
+            // credentials to offer it. Recorded as its own category so the
+            // Desk can say "no credentials here" rather than "refused".
+            return $this->finish(
+                CommunicationRepository::FAILED,
+                'no_mail_credentials',
+                $to,
+                $subject,
+                $templateKey,
+                $engagementId,
+                $organizationId,
+                $idempotencyKey,
+                'this environment has no mail credentials'
+            );
         } catch (\Throwable) {
             $accepted = false;
         }
@@ -199,25 +214,64 @@ final class MailService
     }
 
     /**
+     * Where the SMTP credentials live, or null when this installation has
+     * none it may use.
+     *
+     * The live site keeps them at fs-metrics/smtp.json beside fs-mail.php,
+     * written on the server and never committed. Staging is a folder INSIDE
+     * public_html with its own fs-metrics, which the deploy creates empty, so
+     * the same relative path finds nothing there. That is the whole reason
+     * every staging send came back "the mail server would not take it" from
+     * 2026-08-27: there was no server, because there were no credentials to
+     * open a socket with.
+     *
+     * The rule is the one LegacyLeadImporter already uses for the leads: look
+     * in this installation's own folder first, and off production look one
+     * level up, which on staging is the live site. On production the parent
+     * of the document root is the account home and holds no fs-metrics, and
+     * the fallback is not offered there anyway.
+     *
+     * $appRoot is the folder holding fs-mail.php; the tests pass a fixture.
+     */
+    public static function smtpConfigPath(bool $isProduction, ?string $appRoot = null): ?string
+    {
+        $appRoot = rtrim($appRoot ?? dirname(__DIR__, 3), '/');
+        $own = $appRoot . '/fs-metrics/smtp.json';
+        if (is_file($own)) {
+            return $own;
+        }
+        if ($isProduction) {
+            return null;
+        }
+        $up = dirname($appRoot) . '/fs-metrics/smtp.json';
+        return is_file($up) ? $up : null;
+    }
+
+    /**
      * The site's own sender. Loaded lazily so nothing outside a real send ever
      * pulls the SMTP code in, and so a test that never sends never touches it.
      *
      * @return callable(string,string,string,string):bool
      */
-    private static function smtpTransport(): callable
+    private static function smtpTransport(Config $config): callable
     {
-        return static function (string $to, string $subject, string $body, string $replyTo): bool {
+        return static function (string $to, string $subject, string $body, string $replyTo) use ($config): bool {
             $mailer = dirname(__DIR__, 3) . '/fs-mail.php';
             if (!is_file($mailer)) {
-                return false;
+                throw new NoMailCredentials('fs-mail.php is not here');
             }
             require_once $mailer;
-            if (!function_exists('fs_mail_config') || !function_exists('fs_smtp_send')) {
-                return false;
+            if (!function_exists('fs_smtp_send')) {
+                throw new NoMailCredentials('fs-mail.php does not define fs_smtp_send');
             }
-            $cfg = fs_mail_config();
-            if (!$cfg) {
-                return false;
+
+            $path = self::smtpConfigPath($config->isProduction());
+            if ($path === null) {
+                throw new NoMailCredentials('no smtp.json in reach');
+            }
+            $cfg = json_decode((string) file_get_contents($path), true);
+            if (!is_array($cfg) || empty($cfg['user']) || empty($cfg['pass'])) {
+                throw new NoMailCredentials('smtp.json is incomplete');
             }
             return (bool) fs_smtp_send($cfg, $to, $subject, $body, $replyTo);
         };

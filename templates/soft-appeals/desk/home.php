@@ -16,6 +16,10 @@
  * @var list<array<string,mixed>> $activeEngagements
  * @var list<array<string,mixed>> $recentIntakes
  * @var list<array<string,mixed>> $deadlines
+ * @var list<array<string,mixed>> $batchDeadlines
+ * @var list<array<string,mixed>> $requestsForHer
+ * @var list<array<string,mixed>> $assessmentsWaiting
+ * @var list<array<string,mixed>> $awaitingCountersignature
  * @var list<array<string,mixed>> $recentTimeline
  * @var bool $canReview
  * @var bool $canSendTerms
@@ -50,6 +54,49 @@ foreach ($termsReady as $engagement) {
         'action' => ['Read the terms', '/sa-desk.php?view=terms&e=' . urlencode((string) $engagement['public_ref'])],
         'view'   => ['View', '/sa-desk.php?view=terms&e=' . urlencode((string) $engagement['public_ref'])],
         'allowed' => $canSendTerms,
+    ];
+}
+
+// Phase 4. Agreements signed by the practice and waiting on her.
+foreach ($awaitingCountersignature ?? [] as $row) {
+    $cards[] = [
+        'urgent' => true,
+        'title'  => \SoftAppeals\Domain\DocumentKind::label((string) $row['kind']) . ' waiting for your countersignature',
+        'line'   => (string) ($row['display_name'] ?? $row['legal_name'])
+            . ' · signed ' . Desk::ago($clock, (string) $row['client_signed_at']),
+        'action' => ['Countersign', '/sa-desk.php?view=documents&e=' . urlencode((string) $row['engagement_ref'])],
+        'view'   => ['View', '/sa-desk.php?view=documents&e=' . urlencode((string) $row['engagement_ref'])],
+        'allowed' => true,
+    ];
+}
+
+// Phase 5. The assessment milestones that are hers, and a practice's question.
+foreach ($assessmentsWaiting ?? [] as $row) {
+    $stage = (string) $row['stage'];
+    $title = match ($stage) {
+        Stage::SECURE_INTAKE_READY    => 'Aggregate intake receipt not confirmed',
+        Stage::RECEIPT_CONFIRMED      => 'Assessment ready to start',
+        Stage::ASSESSMENT_IN_PROGRESS => 'Assessment in progress',
+        Stage::ASSESSMENT_QA          => 'Assessment in quality review',
+        default                       => 'Assessment',
+    };
+    $cards[] = [
+        'urgent' => $stage === Stage::ASSESSMENT_QA,
+        'title'  => $title,
+        'line'   => (string) ($row['display_name'] ?? $row['legal_name']) . ' · ' . Stage::nextAction($stage),
+        'action' => ['Open', '/sa-desk.php?view=assessments&e=' . urlencode((string) $row['public_ref'])],
+        'view'   => ['View', '/sa-desk.php?view=assessments&e=' . urlencode((string) $row['public_ref'])],
+        'allowed' => true,
+    ];
+}
+foreach ($requestsForHer ?? [] as $row) {
+    $cards[] = [
+        'urgent' => true,
+        'title'  => \SoftAppeals\Domain\ActionRequestKind::title((string) $row['kind']),
+        'line'   => (string) ($row['display_name'] ?? $row['legal_name']) . ' · ' . Desk::ago($clock, (string) $row['created_at']),
+        'action' => ['Answer', '/sa-desk.php?view=assessments&e=' . urlencode((string) $row['engagement_ref']) . '#desk-as-requests'],
+        'view'   => ['View', '/sa-desk.php?view=assessments&e=' . urlencode((string) $row['engagement_ref'])],
+        'allowed' => true,
     ];
 }
 
@@ -106,16 +153,16 @@ $hidden = count($cards) - count($shown);
 
 <section aria-labelledby="desk-deadlines">
   <p class="sa-label" id="desk-deadlines">Deadlines</p>
-  <?php if ($deadlines === []): ?>
+  <?php $batchDeadlines = $batchDeadlines ?? []; ?>
+  <?php if ($deadlines === [] && $batchDeadlines === []): ?>
     <div class="sa-panel"><div class="sa-empty">
       No dated commitment on any engagement yet.
     </div></div>
     <p class="sa-desk-note">
-      Payer and appeal deadlines are counted per work batch, and work batches
-      arrive with the Recovery Room. Nothing here is calculated from an
-      assumption: a date is either entered and confirmed, or it is shown as
-      unconfirmed, and until a real one is entered this board stays empty rather
-      than guessing at one.
+      Payer and appeal deadlines are counted per work batch. Nothing here is
+      calculated from an assumption: a date is either entered and confirmed, or
+      it is shown as unconfirmed, and until a real one is entered this board
+      stays empty rather than guessing at one.
     </p>
   <?php else: ?>
     <div class="sa-panel"><div class="sa-tablewrap">
@@ -124,6 +171,30 @@ $hidden = count($cards) - count($shown);
           <th>Organization</th><th>What is due</th><th>When</th><th>Stage</th>
         </tr></thead>
         <tbody>
+        <?php foreach ($batchDeadlines as $row): ?>
+          <?php
+            $due = (string) $row['earliest_deadline_at'];
+            $days = $clock->daysUntil($due);
+            $confirmed = (int) $row['deadline_confirmed'] === 1;
+          ?>
+          <tr>
+            <td class="sa-strong"><?= $e((string) ($row['display_name'] ?? $row['legal_name'])) ?></td>
+            <td>
+              Batch <?= $e((string) $row['label']) ?>
+              <div class="sa-desk-mono"><?= $e((string) $row['public_ref']) ?></div>
+            </td>
+            <td>
+              <span class="<?= $e(Desk::deadlinePill($days, $confirmed)) ?>">
+                <?= $e(Desk::deadlineWords($days, $confirmed)) ?>
+              </span>
+              <div class="sa-desk-mono"><?= $e($clock->displayDate($due)) ?></div>
+            </td>
+            <td>
+              <?= $e(\SoftAppeals\Domain\BatchStage::staffLabel((string) $row['stage'])) ?>
+              <div><a class="sa-btn is-quiet is-sm" href="/sa-desk.php?view=assessments&amp;e=<?= $e(urlencode((string) $row['engagement_ref'])) ?>">Open</a></div>
+            </td>
+          </tr>
+        <?php endforeach; ?>
         <?php foreach ($deadlines as $row): ?>
           <?php
             $due = (string) $row['client_decision_due_at'];
@@ -261,9 +332,11 @@ $hidden = count($cards) - count($shown);
                 <?php endif; ?>
               </td>
               <td>
-                <?php /* Client access is Phase 3. Saying "closed" would be a
-                         claim about a door that does not exist yet. */ ?>
-                <span class="sa-pill">Not open yet</span>
+                <?php if (Stage::phiGatePassed($stage)): ?>
+                  <a class="sa-btn is-quiet is-sm" href="/sa-desk.php?view=assessments&amp;e=<?= $e(urlencode((string) $row['public_ref'])) ?>">Assessment</a>
+                <?php else: ?>
+                  <span class="sa-pill">Onboarding</span>
+                <?php endif; ?>
               </td>
             </tr>
           <?php endforeach; ?>

@@ -20,6 +20,7 @@ declare(strict_types=1);
  * the page cannot be discovered by watching status codes.
  */
 
+use SoftAppeals\Domain\ActionRequestKind;
 use SoftAppeals\Domain\DocumentKind;
 use SoftAppeals\Domain\DocumentStatus;
 use SoftAppeals\Domain\EngagementTerms;
@@ -27,7 +28,9 @@ use SoftAppeals\Domain\FitDecision;
 use SoftAppeals\Domain\IntakeStatus;
 use SoftAppeals\Domain\Permission;
 use SoftAppeals\Domain\Stage;
+use SoftAppeals\Repositories\SettingsRepository;
 use SoftAppeals\Security\Headers;
+use SoftAppeals\Support\Money;
 use SoftAppeals\Services\LegacyLeadImporter;
 use SoftAppeals\Views\Desk;
 
@@ -432,6 +435,210 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         exit;
     }
 
+    // -----------------------------------------------------------------
+    // Phase 5. The assessment, work batches, action requests, settings.
+    //
+    // The same rule as the document actions: the engagement is looked up by
+    // its public reference, and a batch or a request is found THROUGH it.
+    // -----------------------------------------------------------------
+    if ($action === 'settings.save') {
+        $csrf->require('settings.save');
+        $authorization->require(Permission::CONFIG_MANAGE);
+
+        $saved = [];
+        foreach (SettingsRepository::keys() as $key) {
+            if (!array_key_exists($key, $_POST)) {
+                continue;
+            }
+            $value = trim((string) $_POST[$key]);
+            $app->settings()->set($key, $value, $userId);
+            $app->audit()->record('settings.update', 'success', 'setting', $key, [
+                'setting' => $key,
+                'reason'  => $value === '' ? 'cleared' : 'set',
+            ]);
+            $saved[] = $key;
+        }
+        $session->flash(
+            'desk_ok',
+            $saved === []
+                ? 'Nothing changed.'
+                : 'Saved. Every agreement generated from now on carries these names. Documents already generated are untouched.'
+        );
+        header('Location: /sa-desk.php?view=settings', true, 303);
+        exit;
+    }
+
+    $assessmentActions = [
+        'assessment.confirm_receipt',
+        'assessment.start',
+        'assessment.quality_review',
+        'assessment.return',
+        'assessment.deliver',
+        'assessment.answer',
+        'batch.open',
+        'batch.update',
+        'request.open',
+        'request.complete',
+        'request.cancel',
+    ];
+
+    if (in_array($action, $assessmentActions, true)) {
+        $csrf->require($action);
+
+        $ref = (string) ($_POST['engagement'] ?? '');
+        $engagement = $engagements->findByPublicRef($ref);
+        $joined = $engagement === null
+            ? null
+            : $engagements->findWithOrganization((string) $engagement['id']);
+
+        if ($joined === null) {
+            $session->flash('desk_problem', 'That engagement reference is not one of hers.');
+            header('Location: /sa-desk.php?view=assessments', true, 303);
+            exit;
+        }
+
+        $assessments = $app->assessmentService();
+        $batchService = $app->workBatchService();
+        $requestService = $app->actionRequestService();
+        $back = '/sa-desk.php?view=assessments&e=' . urlencode($ref);
+
+        try {
+            if ($action === 'assessment.confirm_receipt') {
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $received = trim((string) ($_POST['received_count'] ?? ''));
+                if (preg_match('/^\d{1,6}$/', $received) !== 1) {
+                    throw new \RuntimeException('The received count has to be a whole number.');
+                }
+                $expected = trim((string) ($_POST['expected_count'] ?? ''));
+                $expectedInt = $expected === '' ? null : (preg_match('/^\d{1,6}$/', $expected) === 1 ? (int) $expected : null);
+                if ($expected !== '' && $expectedInt === null) {
+                    throw new \RuntimeException('The expected count has to be a whole number.');
+                }
+                $fields = $batchService->fieldsFromInput($_POST);
+                $assessments->confirmReceipt($joined, (int) $received, $expectedInt, $fields, $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Receipt confirmed: ' . (int) $received . ' denials. The first batch is open and the '
+                    . 'practice has been asked to confirm the count.'
+                );
+            }
+
+            if ($action === 'assessment.start') {
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $assessments->start($joined, $userId);
+                $session->flash('desk_ok', 'Assessment started. Every received batch is now in review.');
+            }
+
+            if ($action === 'assessment.quality_review') {
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $assessments->sendToQualityReview($joined, $userId);
+                $session->flash('desk_ok', 'In quality review. Deliver it from here, or send it back.');
+            }
+
+            if ($action === 'assessment.return') {
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $assessments->returnToWork($joined, $userId);
+                $session->flash('desk_ok', 'Back in progress.');
+            }
+
+            if ($action === 'assessment.deliver') {
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $count = trim((string) ($_POST['recommended_count'] ?? ''));
+                if ($count !== '' && preg_match('/^\d{1,6}$/', $count) !== 1) {
+                    throw new \RuntimeException('The recommended count has to be a whole number.');
+                }
+                $amount = trim((string) ($_POST['recommended_amount'] ?? ''));
+                $cents = null;
+                if ($amount !== '') {
+                    $cents = Money::parseCents($amount);
+                    if ($cents === null) {
+                        throw new \RuntimeException('The recommended amount has to be a plain dollar figure, like 12,345.67.');
+                    }
+                }
+                $assessments->deliver($joined, [
+                    'summary'                  => (string) ($_POST['summary'] ?? ''),
+                    'recommended_count'        => $count === '' ? null : (int) $count,
+                    'recommended_amount_cents' => $cents,
+                    'decision_due'             => (string) ($_POST['decision_due'] ?? ''),
+                ], $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Delivered. The practice has been told it is in their Recovery Room, and the '
+                    . 'decision is theirs now.'
+                );
+            }
+
+            if ($action === 'assessment.answer') {
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $request = $app->actionRequests()->findForEngagement((string) ($_POST['request'] ?? ''), (string) $joined['id']);
+                if ($request === null) {
+                    throw new \RuntimeException('That request is not on this engagement.');
+                }
+                $assessments->answer($joined, $request, (string) ($_POST['response'] ?? ''), $userId);
+                $session->flash('desk_ok', 'Answered. The practice can read it in the room and decide.');
+            }
+
+            if ($action === 'batch.open') {
+                $authorization->require(Permission::WORK_BATCH_MANAGE);
+                $fields = $batchService->fieldsFromInput($_POST);
+                $batch = $batchService->open($joined, $fields, $userId);
+                $session->flash('desk_ok', 'Batch ' . (string) $batch['public_ref'] . ' is open.');
+            }
+
+            if ($action === 'batch.update') {
+                $authorization->require(Permission::WORK_BATCH_MANAGE);
+                $batch = $app->workBatches()->findForEngagement((string) ($_POST['batch'] ?? ''), (string) $joined['id']);
+                if ($batch === null) {
+                    throw new \RuntimeException('That batch is not on this engagement.');
+                }
+                $fields = $batchService->fieldsFromInput($_POST);
+                $batchService->update($joined, $batch, $fields, $userId);
+                $session->flash('desk_ok', 'Batch ' . (string) $batch['public_ref'] . ' updated.');
+            }
+
+            if ($action === 'request.open') {
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $kind = (string) ($_POST['kind'] ?? '');
+                if (!ActionRequestKind::isValid($kind) || ActionRequestKind::owner($kind) !== ActionRequestKind::OWNER_CLIENT) {
+                    throw new \RuntimeException('That is not a request the practice can be asked for.');
+                }
+                $due = trim((string) ($_POST['due'] ?? ''));
+                $dueUtc = null;
+                if ($due !== '') {
+                    if (preg_match('/^(\d{4})-(\d{2})-(\d{2})$/', $due, $m) !== 1
+                        || !checkdate((int) $m[2], (int) $m[3], (int) $m[1])
+                    ) {
+                        throw new \RuntimeException('The due date has to be a date, like 2026-09-30.');
+                    }
+                    $dueUtc = $due . ' 12:00:00';
+                }
+                $note = trim((string) ($_POST['note'] ?? ''));
+                $requestService->open($joined, $kind, $note === '' ? null : $note, $dueUtc, $userId);
+                $session->flash('desk_ok', 'Asked. It is on their board and they have been emailed that something is waiting.');
+            }
+
+            if ($action === 'request.complete' || $action === 'request.cancel') {
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $request = $app->actionRequests()->findForEngagement((string) ($_POST['request'] ?? ''), (string) $joined['id']);
+                if ($request === null) {
+                    throw new \RuntimeException('That request is not on this engagement.');
+                }
+                if ($action === 'request.complete') {
+                    $requestService->complete($joined, $request, $userId, null);
+                    $session->flash('desk_ok', 'Marked done.');
+                } else {
+                    $requestService->cancel($joined, $request, $userId);
+                    $session->flash('desk_ok', 'Withdrawn. It stays on the record as withdrawn.');
+                }
+            }
+        } catch (\RuntimeException $e) {
+            $session->flash('desk_problem', $e->getMessage());
+        }
+
+        header('Location: ' . $back, true, 303);
+        exit;
+    }
+
     // An action nobody offers. Recorded, then treated as a visit.
     $app->audit()->record('desk.unknown_action', 'denied', 'page', null, ['reason' => 'unknown action']);
     header('Location: /sa-desk.php', true, 303);
@@ -518,7 +725,7 @@ if ($open !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
 $app->audit()->record('desk.view', 'success', 'page', null);
 
 $view = (string) ($_GET['view'] ?? 'home');
-$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'import', 'audit'];
+$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'assessments', 'import', 'audit', 'settings'];
 if (!in_array($view, $allowedViews, true)) {
     $view = 'home';
 }
@@ -531,6 +738,9 @@ if ($view === 'audit' && !$canAudit) {
     $view = 'home';
 }
 if (($view === 'import') && !$canReview) {
+    $view = 'home';
+}
+if ($view === 'settings' && !$authorization->can(Permission::CONFIG_MANAGE)) {
     $view = 'home';
 }
 
@@ -582,8 +792,21 @@ if ($view === 'home') {
     $data['activeEngagements'] = $rows;
     $data['recentIntakes'] = $intakes->recent(10);
     $data['deadlines'] = $engagements->withDecisionDates();
+    $data['batchDeadlines'] = $app->workBatches()->withDeadlines();
     $data['recentTimeline'] = $app->timeline()->recent(8);
 }
+
+// Phase 5. What is waiting on her across every assessment, for the cards and
+// the rail count. Read on every view so the count is never stale.
+$requestsForHer = $app->actionRequests()->openForSoftAppeals();
+$data['requestsForHer'] = $requestsForHer;
+$data['assessmentsWaiting'] = array_merge(
+    $engagements->atStage(Stage::SECURE_INTAKE_READY),
+    $engagements->atStage(Stage::RECEIPT_CONFIRMED),
+    $engagements->atStage(Stage::ASSESSMENT_IN_PROGRESS),
+    $engagements->atStage(Stage::ASSESSMENT_QA)
+);
+$data['assessmentsNeedingHer'] = count($requestsForHer) + count($data['assessmentsWaiting']);
 
 if ($view === 'inquiries') {
     $data['inquiries'] = $intakes->recent(50);
@@ -673,6 +896,49 @@ if ($view === 'documents') {
 
     // Every engagement far enough along to have agreements, for the picker.
     $data['engagementsWithDocuments'] = $engagements->withOrganizations(true);
+}
+
+if ($view === 'assessments') {
+    $ref = (string) ($_GET['e'] ?? '');
+    $engagement = $ref === '' ? null : $engagements->findByPublicRef($ref);
+    $joined = $engagement === null
+        ? null
+        : $engagements->findWithOrganization((string) $engagement['id']);
+
+    $data['engagement'] = $joined;
+    $data['canManage'] = $authorization->can(Permission::ENGAGEMENT_MANAGE);
+    $data['canBatches'] = $authorization->can(Permission::WORK_BATCH_MANAGE);
+
+    if ($joined === null) {
+        // Every engagement past the gate, and the ones one step short of it.
+        $rows = [];
+        foreach ($engagements->withOrganizations(false) as $row) {
+            $stage = (string) $row['stage'];
+            if (Stage::phiGatePassed($stage) || $stage === Stage::REVIEW_AUTH_EXECUTED) {
+                $rows[] = $row;
+            }
+        }
+        $data['assessmentRows'] = $rows;
+    } else {
+        $service = $app->assessmentService();
+        $data['overview'] = $service->overview($joined);
+        $data['batches'] = $app->workBatches()->forEngagement((string) $joined['id']);
+        $data['batchCards'] = array_map(
+            static fn (array $b): array => $app->workBatchService()->card($b),
+            $data['batches']
+        );
+        $data['requests'] = $service->requestsFor((string) $joined['id']);
+        $data['timeline'] = $app->timeline()->forEngagement((string) $joined['id']);
+        $data['signer'] = $app->actionRequestService()->signerContact((string) $joined['id']);
+    }
+}
+
+if ($view === 'settings') {
+    $data['settingsRepository'] = $app->settings();
+    $data['legalEntitySource'] = $app->settings()->legalEntitySource($config);
+    $data['effectiveLegalEntity'] = $app->settings()->legalEntity($config);
+    $data['effectiveTradeName'] = $app->settings()->tradeName($config);
+    $data['configLegalEntity'] = trim($config->string('SA_LEGAL_ENTITY'));
 }
 
 if ($view === 'import') {

@@ -16,6 +16,7 @@ use SoftAppeals\Repositories\DocumentRepository;
 use SoftAppeals\Repositories\EngagementRepository;
 use SoftAppeals\Repositories\InvitationRepository;
 use SoftAppeals\Repositories\PreferenceRepository;
+use SoftAppeals\Repositories\SettingsRepository;
 use SoftAppeals\Repositories\SignatureRepository;
 use SoftAppeals\Repositories\StatusEventRepository;
 use SoftAppeals\Security\Hmac;
@@ -60,6 +61,7 @@ final class DocumentService
     private MailService $mail;
     private AuditService $audit;
     private Hmac $hmac;
+    private SettingsRepository $settings;
 
     public function __construct(
         Config $config,
@@ -76,9 +78,11 @@ final class DocumentService
         DocumentVault $vault,
         MailService $mail,
         AuditService $audit,
-        Hmac $hmac
+        Hmac $hmac,
+        SettingsRepository $settings
     ) {
         $this->config = $config;
+        $this->settings = $settings;
         $this->db = $db;
         $this->clock = $clock;
         $this->documents = $documents;
@@ -169,12 +173,12 @@ final class DocumentService
             ];
         }
 
-        if ($this->config->legalEntity() === '') {
+        if ($this->settings->legalEntity($this->config) === '') {
             return [
                 'ok'     => false,
-                'reason' => 'SA_LEGAL_ENTITY is not set, so there is no legal party name to '
-                    . 'put on the document. Section 14.5 keeps this blank until the entity '
-                    . 'and trade-name language are confirmed.',
+                'reason' => 'No legal entity name is set, so there is no legal party name to '
+                    . 'put on the document. Set it under Settings on the Desk, or as '
+                    . 'SA_LEGAL_ENTITY in the server config.',
             ];
         }
 
@@ -445,7 +449,7 @@ final class DocumentService
                 'signer_role'         => Role::OWNER_ADMIN,
                 'typed_name'          => $typedName,
                 'typed_title'         => $input['typed_title'] ?? null,
-                'typed_organization'  => $this->config->legalEntity(),
+                'typed_organization'  => $this->settings->legalEntity($this->config),
                 'consent_version'     => DocumentTemplates::CONSENT_VERSION,
                 'consent_text_sha256' => DocumentTemplates::consentSha256(),
                 'consent_accepted_at' => $now,
@@ -755,8 +759,8 @@ final class DocumentService
             'document_ref'        => $documentRef,
             'version'             => (string) $version,
             'effective_date'      => $effectiveDate,
-            'provider_legal_name' => $this->config->legalEntity(),
-            'provider_trade_name' => $this->config->tradeName(),
+            'provider_legal_name' => $this->settings->legalEntity($this->config),
+            'provider_trade_name' => $this->settings->tradeName($this->config),
             'client_legal_name'   => (string) $engagement['legal_name'],
             'signer_name'         => (string) $signer['name'],
             'signer_title'        => trim((string) ($signer['role_title'] ?? '')) === ''
@@ -842,8 +846,8 @@ final class DocumentService
 
         $out[] = '<h1>' . $escape((string) $document['title']) . '</h1>';
         $out[] = '<p>' . $escape((string) $engagement['legal_name']) . ' and '
-            . $escape($this->config->legalEntity()) . ', operating as '
-            . $escape($this->config->tradeName()) . '.</p>';
+            . $escape($this->settings->legalEntity($this->config)) . ', operating as '
+            . $escape($this->settings->tradeName($this->config)) . '.</p>';
 
         $out[] = '<h2>The document as signed</h2>';
         $out[] = '<pre>' . $escape($body) . '</pre>';

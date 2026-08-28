@@ -81,6 +81,13 @@ EXPECTED_TABLES = {
         "sa_documents",
         "sa_signatures",
     ],
+    "0006_assessment_and_recovery_room.php": [
+        "sa_settings",
+        "sa_assessments",
+        "sa_work_batches",
+        "sa_checklist_items",
+        "sa_action_requests",
+    ],
 }
 
 
@@ -783,12 +790,146 @@ def assert_documents_and_signatures(connection: sqlite3.Connection) -> None:
     )
 
 
+def assert_assessment_and_recovery_room(connection: sqlite3.Connection) -> None:
+    """
+    The constraints 0006 exists to enforce.
+
+    Phase 5's acceptance line "every aggregate deadline is marked confirmed
+    or unconfirmed" is a CHECK here: a batch cannot claim a confirmed deadline
+    without a date. One assessment per engagement, one checklist item per
+    key, and a decision that always carries its stamp are the other three.
+    """
+    connection.execute(
+        "INSERT INTO sa_organizations (id, public_ref, legal_name, status, created_at, updated_at)"
+        f" VALUES ('orgP', 'SA-ORG-GGGGGG', 'Fictional Family Practice', 'active', {STAMP}, {STAMP})"
+    )
+    connection.execute(
+        "INSERT INTO sa_engagements (id, organization_id, public_ref, stage, fee_basis,"
+        " opened_at, row_version)"
+        f" VALUES ('eP', 'orgP', 'SA-ENG-DDDDDD', 'secure_intake_ready', 'contingency_25', {STAMP}, 1)"
+    )
+
+    accepts(
+        connection,
+        "INSERT INTO sa_settings (setting_key, setting_value, updated_at)"
+        f" VALUES ('legal_entity', 'A Fictional Legal Entity LLC', {STAMP})",
+        "a plain setting was refused",
+    )
+    refuses(
+        connection,
+        "INSERT INTO sa_settings (setting_key, setting_value, updated_at)"
+        f" VALUES ('legal_entity', 'Twice', {STAMP})",
+        "the same setting key was accepted twice",
+    )
+
+    def assessment(ident: str, engagement: str = "'eP'", decision: str = "NULL", decision_at: str = "NULL",
+                   received: str = "NULL") -> str:
+        return (
+            "INSERT INTO sa_assessments (id, engagement_id, organization_id, expected_count,"
+            " received_count, decision, decision_at, created_at, updated_at)"
+            f" VALUES ('{ident}', {engagement}, 'orgP', 20, {received}, {decision}, {decision_at}, {STAMP}, {STAMP})"
+        )
+
+    accepts(connection, assessment("a1"), "a plain assessment was refused")
+    refuses(connection, assessment("a2"), "two assessments for one engagement were accepted")
+    refuses(
+        connection,
+        assessment("a3", engagement="'no-such-engagement'"),
+        "an assessment pointing at an unknown engagement was accepted",
+    )
+    connection.execute("DELETE FROM sa_assessments WHERE id = 'a1'")
+    refuses(
+        connection,
+        assessment("a4", decision="'recovery_scope'"),
+        "a decision with no stamp was accepted",
+    )
+    refuses(
+        connection,
+        assessment("a5", decision="'maybe_later'", decision_at=STAMP),
+        "a decision nobody offers was accepted",
+    )
+    refuses(connection, assessment("a6", received="-1"), "a negative received count was accepted")
+    accepts(
+        connection,
+        assessment("a7", decision="'no_further_action'", decision_at=STAMP, received="20"),
+        "a stamped decision was refused",
+    )
+
+    def batch(ident: str, ref: str, stage: str = "received", owner: str = "soft_appeals",
+              deadline: str = "NULL", confirmed: int = 0, count: int = 20, cents: int = 0) -> str:
+        return (
+            "INSERT INTO sa_work_batches (id, public_ref, engagement_id, organization_id, label,"
+            " payer_label_approved, claim_count, denied_amount_cents, received_count, in_review_count,"
+            " submitted_count, overturned_count, upheld_count, closed_count, stage,"
+            " earliest_deadline_at, deadline_confirmed, next_owner, created_at, updated_at, row_version)"
+            f" VALUES ('{ident}', '{ref}', 'eP', 'orgP', 'Initial set', 0, {count}, {cents}, {count}, 0,"
+            f" 0, 0, 0, 0, '{stage}', {deadline}, {confirmed}, '{owner}', {STAMP}, {STAMP}, 1)"
+        )
+
+    accepts(connection, batch("b1", "SA-BAT-AAAAAA"), "a plain batch was refused")
+    refuses(connection, batch("b2", "SA-BAT-AAAAAA"), "two batches with one reference were accepted")
+    refuses(
+        connection,
+        batch("b3", "SA-BAT-BBBBBB", confirmed=1),
+        "a batch claiming a confirmed deadline with no date was accepted",
+    )
+    accepts(
+        connection,
+        batch("b4", "SA-BAT-CCCCCC", deadline="'2026-09-30 12:00:00'", confirmed=1),
+        "a batch with a dated, confirmed deadline was refused",
+    )
+    accepts(
+        connection,
+        batch("b5", "SA-BAT-DDDDDD", deadline="'2026-09-30 12:00:00'", confirmed=0),
+        "a batch with a dated, unconfirmed deadline was refused",
+    )
+    refuses(connection, batch("b6", "SA-BAT-EEEEEE", stage="lost"), "a batch stage nobody named was accepted")
+    refuses(connection, batch("b7", "SA-BAT-FFFFFF", owner="lawyer"), "a next owner nobody named was accepted")
+    refuses(connection, batch("b8", "SA-BAT-GGGGGG", count=-1), "a negative claim count was accepted")
+    refuses(connection, batch("b9", "SA-BAT-HHHHHH", cents=-100), "a negative denied amount was accepted")
+
+    def item(ident: str, key: str = "baa_executed", category: str = "DOCUMENT") -> str:
+        return (
+            "INSERT INTO sa_checklist_items (id, engagement_id, item_key, label, category,"
+            " display_order, created_at)"
+            f" VALUES ('{ident}', 'eP', '{key}', 'Label', '{category}', 1, {STAMP})"
+        )
+
+    accepts(connection, item("c1"), "a plain checklist item was refused")
+    refuses(connection, item("c2"), "the same checklist key was accepted twice on one engagement")
+    refuses(connection, item("c3", key="other", category="WHIMSY"), "a checklist category nobody named was accepted")
+
+    def request(ident: str, ref: str, kind: str = "confirm_receipt_count", status: str = "open",
+                completed: str = "NULL", owner: str = "client") -> str:
+        return (
+            "INSERT INTO sa_action_requests (id, public_ref, engagement_id, organization_id, kind,"
+            " owner, status, completed_at, created_at, updated_at)"
+            f" VALUES ('{ident}', '{ref}', 'eP', 'orgP', '{kind}', '{owner}', '{status}', {completed},"
+            f" {STAMP}, {STAMP})"
+        )
+
+    accepts(connection, request("r1", "SA-REQ-AAAAAA"), "a plain open request was refused")
+    refuses(connection, request("r2", "SA-REQ-BBBBBB", kind="please_upload"), "a request kind nobody designed was accepted")
+    refuses(connection, request("r3", "SA-REQ-CCCCCC", status="done"), "a done request with no completion stamp was accepted")
+    refuses(connection, request("r4", "SA-REQ-DDDDDD", completed=STAMP), "an open request carrying a completion stamp was accepted")
+    accepts(connection, request("r5", "SA-REQ-EEEEEE", status="done", completed=STAMP), "a stamped done request was refused")
+    refuses(connection, request("r6", "SA-REQ-FFFFFF", owner="payer"), "a request owner nobody named was accepted")
+
+    # Closing the engagement takes every Phase 5 row with it.
+    connection.execute("DELETE FROM sa_engagements WHERE id = 'eP'")
+    for table in ("sa_assessments", "sa_work_batches", "sa_checklist_items", "sa_action_requests"):
+        left = connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        if left != 0:
+            raise Failure(f"deleting an engagement left {table} rows behind")
+
+
 ASSERTIONS = {
     "0001_foundation.php": assert_foundation,
     "0002_intake_and_engagement.php": assert_intake_and_engagement,
     "0003_preferences_and_client_access.php": assert_preferences_and_client_access,
     "0004_status_event_sequence.php": assert_status_event_sequence,
     "0005_documents_and_signatures.php": assert_documents_and_signatures,
+    "0006_assessment_and_recovery_room.php": assert_assessment_and_recovery_room,
 }
 
 

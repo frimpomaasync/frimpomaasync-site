@@ -49,6 +49,10 @@ final class AuditService
         'idempotency_key',
         'migration',
         'environment',
+
+        // Phase 5.
+        'decision',
+        'setting',
     ];
 
     /** Outcomes. Anything else is refused. */

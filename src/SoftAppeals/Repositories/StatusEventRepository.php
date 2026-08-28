@@ -44,6 +44,9 @@ final class StatusEventRepository extends Repository
         // line that answers nothing.
         'document_kind',
         'document_version',
+
+        // Phase 5. Which of the four answers the practice gave.
+        'decision',
     ];
 
     protected function table(): string

@@ -394,6 +394,7 @@ def main() -> int:
             REPO / "soft-appeals-preferences.php",
             REPO / "soft-appeals-confirmed.php",
             REPO / "soft-appeals-room.php",
+            REPO / "soft-appeals-sign.php",
         ]
     )
     for path in php_files:

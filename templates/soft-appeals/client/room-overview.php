@@ -21,6 +21,7 @@
  * @var bool $preferencesOpen
  * @var list<array<string,mixed>> $documents
  * @var array<string,mixed>|null $signable
+ * @var array<string,mixed> $overview
  */
 
 use SoftAppeals\Domain\DocumentKind;
@@ -72,13 +73,36 @@ $e = static fn (?string $value): string => Client::e($value);
     </div>
     <div class="sa-metric">
       <p class="sa-metric-k">Denials received</p>
-      <p class="sa-metric-v">None yet</p>
-      <p class="sa-metric-c">Nothing at patient level moves until both agreements are signed.</p>
+      <p class="sa-metric-v"><?= $overview['received'] === null ? 'None yet' : (int) $overview['received'] ?></p>
+      <p class="sa-metric-c">
+        <?php if ($overview['received'] === null): ?>
+          Nothing at patient level moves until both agreements are signed and the route is open.
+        <?php elseif ($overview['client_confirmed']): ?>
+          Count confirmed by you.
+        <?php else: ?>
+          Please confirm the count under Action requests.
+        <?php endif; ?>
+      </p>
     </div>
     <div class="sa-metric">
       <p class="sa-metric-k">Assessment</p>
-      <p class="sa-metric-v">Not started</p>
-      <p class="sa-metric-c">It begins once the denials arrive.</p>
+      <p class="sa-metric-v"><?= $e((string) $overview['progress']) ?></p>
+      <p class="sa-metric-c">
+        <?= $overview['recommended'] === null
+          ? 'It begins once the denials arrive.'
+          : (int) $overview['recommended'] . ' recommended for action' ?>
+      </p>
+    </div>
+    <div class="sa-metric<?= (int) $overview['client_requests_open'] > 0 ? ' is-lead' : '' ?>">
+      <p class="sa-metric-k">Waiting on you</p>
+      <p class="sa-metric-v"><?= (int) $overview['client_requests_open'] === 0 ? 'Nothing' : (int) $overview['client_requests_open'] ?></p>
+      <p class="sa-metric-c">
+        <?php if ((int) $overview['client_requests_open'] > 0): ?>
+          <a href="/soft-appeals-room.php?section=requests">See what is asked</a>
+        <?php else: ?>
+          Anything we need from you appears under Action requests.
+        <?php endif; ?>
+      </p>
     </div>
   </div>
   <p class="sa-room-note" style="margin-top:14px">
@@ -108,6 +132,25 @@ $e = static fn (?string $value): string => Client::e($value);
         </div>
       <?php endif; ?>
     </div>
+  </section>
+
+  <section aria-labelledby="room-checklist">
+    <p class="sa-label" id="room-checklist">
+      Checklist &middot; <?= (int) $overview['checklist_progress']['done'] ?> of <?= (int) $overview['checklist_progress']['total'] ?>
+    </p>
+    <div class="sa-panel"><div class="sa-panel-b" style="padding:14px 18px">
+      <ul class="sa-room-list" style="list-style:none;padding-left:0">
+        <?php foreach ($overview['checklist'] as $item): ?>
+          <li>
+            <?= $item['completed_at'] !== null ? '&#10003;' : '&middot;' ?>
+            <?= $e((string) $item['label']) ?>
+            <?php if ($item['completed_at'] !== null): ?>
+              <span class="sa-room-quiet"><?= $e($clock->displayDate((string) $item['completed_at'])) ?></span>
+            <?php endif; ?>
+          </li>
+        <?php endforeach; ?>
+      </ul>
+    </div></div>
   </section>
 
   <section aria-labelledby="room-history">
@@ -198,9 +241,9 @@ $e = static fn (?string $value): string => Client::e($value);
   <p class="sa-label" id="room-later">Not here yet</p>
   <div class="sa-panel"><div class="sa-panel-b" style="padding:14px 18px">
     <p style="margin:0 0 10px">
-      Your agreements, the work batches, anything waiting on your approval, and
-      what has actually been recovered each appear in this room as they start.
-      Nothing is kept from you: a section that is not listed has not begun.
+      Approvals, what has actually been recovered, messages and access each
+      appear in this room as they start. Nothing is kept from you: a section
+      that is marked "later" has not begun.
     </p>
     <p class="sa-room-note">
       Nothing in this room ever holds patient, member or claim-level information.

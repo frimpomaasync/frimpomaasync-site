@@ -17,6 +17,8 @@
  * @var string $view
  * @var array<string,int> $pipeline
  * @var int $documentsNeedingHer
+ * @var int $assessmentsNeedingHer
+ * @var list<array<string,mixed>> $requestsForHer
  * @var array<string,mixed> $data
  * @var bool $showDetail
  */
@@ -28,19 +30,20 @@ $demo = $config->bool('SA_DEMO_MODE');
 $greeting = (int) $clock->now()->setTimezone(new DateTimeZone($config->string('SA_BUSINESS_TIMEZONE')))->format('G');
 $greetingWord = $greeting < 12 ? 'Good morning' : ($greeting < 18 ? 'Good afternoon' : 'Good evening');
 
-$needsYou = count($awaitingReview) + count($termsReady) + ($documentsNeedingHer ?? 0);
+$needsYou = count($awaitingReview) + count($termsReady) + ($documentsNeedingHer ?? 0) + count($requestsForHer ?? []);
 
 /** The rail. Built here, in the plan's own order, so the map is visible even
  *  where the page behind it is not written yet. Section 12.3. */
 $navBuilt = [
-    ['home',      'Home',      null],
-    ['inquiries', 'Inquiries', count($openIntakes) ?: null],
-    ['terms',     'Terms',     count($termsReady) ?: null],
-    ['documents', 'Agreements', ($documentsNeedingHer ?? 0) ?: null],
+    ['home',        'Home',        null],
+    ['inquiries',   'Inquiries',   count($openIntakes) ?: null],
+    ['terms',       'Terms',       count($termsReady) ?: null],
+    ['documents',   'Agreements',  ($documentsNeedingHer ?? 0) ?: null],
+    ['assessments', 'Assessments', ($assessmentsNeedingHer ?? 0) ?: null],
 ];
 $navLater = [
-    'Organizations', 'Assessments', 'Engagements', 'Approvals',
-    'Communications', 'Recoveries', 'Deadlines', 'Settings',
+    'Organizations', 'Engagements', 'Approvals',
+    'Communications', 'Recoveries', 'Deadlines',
 ];
 ?><!doctype html>
 <html lang="en">
@@ -172,6 +175,13 @@ $navLater = [
       <li>
         <a href="/sa-desk.php?view=audit" <?= $view === 'audit' ? 'aria-current="page"' : '' ?>>
           <span>Audit trail</span>
+        </a>
+      </li>
+    <?php endif; ?>
+    <?php if (in_array(\SoftAppeals\Domain\Role::OWNER_ADMIN, $roles, true)): ?>
+      <li>
+        <a href="/sa-desk.php?view=settings" <?= $view === 'settings' ? 'aria-current="page"' : '' ?>>
+          <span>Settings</span>
         </a>
       </li>
     <?php endif; ?>

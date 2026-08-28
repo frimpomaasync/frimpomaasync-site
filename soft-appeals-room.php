@@ -18,6 +18,8 @@ declare(strict_types=1);
  * organization id read from a request would be the whole leak.
  */
 
+use SoftAppeals\Domain\ActionRequestKind;
+use SoftAppeals\Domain\ClientDecision;
 use SoftAppeals\Domain\DocumentStatus;
 use SoftAppeals\Domain\Permission;
 use SoftAppeals\Domain\Role;
@@ -173,6 +175,70 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         exit;
     }
 
+    // -----------------------------------------------------------------
+    // Phase 5. The two things a practice does in the room: confirm the
+    // aggregate count, and give the one decision. Both need a session, both
+    // are permission-checked against the organization on that session, and
+    // neither takes anything at patient level.
+    // -----------------------------------------------------------------
+    if ($action === 'client.confirm_receipt' || $action === 'client.decide') {
+        $context = $access->context();
+        if ($context === null || $context['engagement'] === null) {
+            header('Location: /soft-appeals-room.php', true, 303);
+            exit;
+        }
+        $engagement = $context['engagement'];
+        $organizationId = (string) $context['organization_id'];
+        $userId = (string) $context['user']['id'];
+
+        try {
+            $csrf->require($action);
+
+            if ($action === 'client.confirm_receipt') {
+                $app->authorization()->require(Permission::RECEIPT_CONFIRM, $organizationId);
+                $app->assessmentService()->clientConfirmsReceipt($engagement, $context['contact_id'], $userId);
+                $session->flash('client_ok', 'Thank you. The count is confirmed on both sides.');
+                header('Location: /soft-appeals-room.php?section=requests', true, 303);
+                exit;
+            }
+
+            $app->authorization()->require(Permission::DECISION_RECORD, $organizationId);
+            $decision = (string) ($_POST['decision'] ?? '');
+            if (!ClientDecision::isValid($decision)) {
+                throw new \RuntimeException('Choose one of the four.');
+            }
+            if (ClientDecision::closes($decision) && (string) ($_POST['confirm_close'] ?? '') !== 'yes') {
+                throw new \RuntimeException(
+                    'That choice closes this engagement. Tick the box to say you mean it.'
+                );
+            }
+            $app->assessmentService()->decide(
+                $engagement,
+                $decision,
+                (string) ($_POST['note'] ?? ''),
+                $context['contact_id'],
+                $userId
+            );
+            $session->flash('client_ok', match ($decision) {
+                ClientDecision::RECOVERY_SCOPE    => 'Recorded. We are preparing the recovery agreement, and nothing is submitted anywhere until you have signed it.',
+                ClientDecision::MORE_INFORMATION  => 'Sent. We answer here in the room, and the decision comes back to you after that.',
+                ClientDecision::INTERNAL_USE      => 'Recorded. The assessment is yours to use, and this engagement is closed with nothing owed.',
+                default                           => 'Recorded. This engagement is closed with nothing owed.',
+            });
+        } catch (CsrfException) {
+            $session->flash('client_problem', 'That form had expired. Try again.');
+        } catch (AuthorizationException) {
+            $session->flash('client_problem', 'Your sign-in cannot do that. The organization admin or the authorized signer can.');
+        } catch (RateLimitException) {
+            $session->flash('client_problem', 'Too many attempts. Try again in a minute.');
+        } catch (\RuntimeException $e) {
+            $session->flash('client_problem', $e->getMessage());
+        }
+
+        header('Location: /soft-appeals-room.php?section=assessment', true, 303);
+        exit;
+    }
+
     // An action nobody offers. Recorded, then treated as a visit.
     $app->audit()->record('client.unknown_action', 'denied', 'page', null, ['reason' => 'unknown action']);
     header('Location: /soft-appeals-room.php', true, 303);
@@ -315,11 +381,46 @@ $signable = $config->eSignEnabled()
     ])
     : null;
 
+// Phase 5. Which section of the room, section 15.3. Anything unknown is the
+// overview, never a 404: a practice following an old link lands somewhere.
+$section = (string) ($_GET['section'] ?? 'overview');
+if (!in_array($section, ['overview', 'assessment', 'batches', 'requests'], true)) {
+    $section = 'overview';
+}
+
+$assessmentService = $app->assessmentService();
+
+// Opening the assessment is the read that moves "delivered" to "decision
+// pending". Any member of the practice opening it counts: the room is theirs.
+if ($section === 'assessment' && $stage === Stage::ASSESSMENT_DELIVERED) {
+    $assessmentService->markRead($engagement, (string) $context['user']['id']);
+    $engagement = $app->engagements()->findWithOrganization($engagementId) ?? $engagement;
+    $stage = (string) $engagement['stage'];
+}
+
+$overview = $assessmentService->overview($engagement);
+$batchCards = array_map(
+    static fn (array $b): array => $app->workBatchService()->card($b),
+    $app->workBatches()->forEngagement($engagementId)
+);
+$clientRequests = $assessmentService->requestsFor($engagementId, ActionRequestKind::OWNER_CLIENT);
+$answered = array_values(array_filter(
+    $assessmentService->requestsFor($engagementId, ActionRequestKind::OWNER_SOFT_APPEALS),
+    static fn (array $r): bool => $r['response'] !== null
+));
+$canDecide = $app->authorization()->can(Permission::DECISION_RECORD, $organizationId);
+$canConfirmReceipt = $app->authorization()->can(Permission::RECEIPT_CONFIRM, $organizationId);
+$openClientRequests = count(array_filter(
+    $clientRequests,
+    static fn (array $r): bool => (string) $r['status'] === ActionRequestKind::STATUS_OPEN
+));
+
 Client::render('room-shell', [
     'config'       => $config,
     'clock'        => $clock,
     'csrf'         => $csrf,
-    'view'         => 'room-overview',
+    'view'         => 'room-' . $section,
+    'section'      => $section,
     'showDetail'   => $showDetail,
     'organization' => $organization,
     'engagement'   => $engagement,
@@ -351,4 +452,14 @@ Client::render('room-shell', [
     'documents'       => $documents,
     'signable'        => $signable,
     'documentCount'   => count($documents),
+
+    // Phase 5.
+    'overview'          => $overview,
+    'batchCards'        => $batchCards,
+    'clientRequests'    => $clientRequests,
+    'answered'          => $answered,
+    'openRequestCount'  => $openClientRequests,
+    'canDecide'         => $canDecide,
+    'canConfirmReceipt' => $canConfirmReceipt,
+    'stage'             => $stage,
 ], $showDetail);

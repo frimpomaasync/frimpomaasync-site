@@ -33,6 +33,9 @@
  * @var list<string> $roleLabels
  * @var ?string $problem
  * @var ?string $ok
+ * @var string $section
+ * @var list<array<string,mixed>> $batchCards
+ * @var int $openRequestCount
  */
 
 use SoftAppeals\Views\Client;
@@ -46,9 +49,13 @@ $e = static fn (?string $value): string => Client::e($value);
  * come out of this list and into the one above it. The rest stay listed and
  * marked: a practice that can see the whole map knows what is coming.
  */
-$navLater = [
-    'Assessment', 'Work batches', 'Action requests', 'Approvals',
-    'Recovery', 'Messages', 'Access',
+$navLater = ['Approvals', 'Recovery', 'Messages', 'Access'];
+$section = $section ?? 'overview';
+$navNow = [
+    ['overview',   'Overview',        '/soft-appeals-room.php',                    null],
+    ['assessment', 'Assessment',      '/soft-appeals-room.php?section=assessment', null],
+    ['batches',    'Work batches',    '/soft-appeals-room.php?section=batches',    count($batchCards ?? []) ?: null],
+    ['requests',   'Action requests', '/soft-appeals-room.php?section=requests',   ($openRequestCount ?? 0) ?: null],
 ];
 ?><!doctype html>
 <html lang="en">
@@ -112,9 +119,14 @@ $navLater = [
 
   <p class="sa-rail-group">Now</p>
   <ul class="sa-rail-nav">
-    <li>
-      <a href="/soft-appeals-room.php" aria-current="page"><span>Overview</span></a>
-    </li>
+    <?php foreach ($navNow as [$key, $label, $href, $count]): ?>
+      <li>
+        <a href="<?= $e($href) ?>" <?= $section === $key ? 'aria-current="page"' : '' ?>>
+          <span><?= $e($label) ?></span>
+          <?php if ($count !== null): ?><span class="sa-count"><?= (int) $count ?></span><?php endif; ?>
+        </a>
+      </li>
+    <?php endforeach; ?>
     <li>
       <a href="/soft-appeals-room.php#room-agreements"><span>Agreements</span>
         <?php if (($documentCount ?? 0) > 0): ?>

@@ -36,6 +36,12 @@ final class Permission
     public const COMPLIANCE_VIEW        = 'compliance.view';
     public const CLIENT_USER_MANAGE     = 'client_user.manage';
 
+    // Phase 5. The practice confirms an aggregate count and gives one
+    // decision on the assessment. Both belong to the people who speak for the
+    // organization, never to a viewer.
+    public const RECEIPT_CONFIRM        = 'receipt.confirm';
+    public const DECISION_RECORD        = 'decision.record';
+
     /**
      * permission => roles that hold it.
      *
@@ -72,6 +78,8 @@ final class Permission
             self::FINANCE_VIEW         => [Role::ORG_ADMIN, Role::BILLING],
             self::COMPLIANCE_VIEW      => [Role::ORG_ADMIN, Role::COMPLIANCE],
             self::CLIENT_USER_MANAGE   => [Role::ORG_ADMIN],
+            self::RECEIPT_CONFIRM      => [Role::ORG_ADMIN, Role::AUTHORIZED_SIGNER, Role::SUBMISSION_APPROVER],
+            self::DECISION_RECORD      => [Role::ORG_ADMIN, Role::AUTHORIZED_SIGNER],
         ];
     }
 
