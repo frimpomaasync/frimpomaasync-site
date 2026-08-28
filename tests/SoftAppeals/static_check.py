@@ -327,16 +327,47 @@ def php_suite() -> str:
             break
 
     if result.returncode != 0:
-        # Carry the whole run into the failure list. A test that broke is worth
-        # every line it printed, and this is the only place anybody sees it.
-        failures.append("tests/SoftAppeals/run.php:\n" + indent_block(output))
+        for one in failed_cases(output):
+            failures.append("tests/SoftAppeals/run.php:0: " + one)
         return f"php test suite: FAILED ({summary or 'see below'})"
 
     return f"php test suite: {summary or 'passed'}"
 
 
-def indent_block(text: str) -> str:
-    return "\n".join("           " + line for line in text.splitlines())
+def failed_cases(output: str) -> list[str]:
+    """
+    One flat line per failing test, out of the runner's own summary.
+
+    Shaped for annotate(), which partitions the message on colons to find a path
+    and a line number. A multi-line blob handed to it loses everything before
+    the second colon, which is how the first real failure came back through the
+    API as the four words after a colon in a stack trace. One line each, no
+    newlines, and the whole reason survives the trip.
+
+    The runner prints each failure as three lines: the label, the message, then
+    the file and line. The inline "FAIL <name>" it prints while running carries
+    no detail, so only the summary block is read.
+    """
+    lines = output.splitlines()
+    out: list[str] = []
+    i = 0
+    while i < len(lines):
+        if lines[i].startswith("  FAIL   "):
+            block = [lines[i][len("  FAIL   "):].strip()]
+            j = i + 1
+            while j < len(lines) and lines[j].startswith("           "):
+                block.append(lines[j].strip())
+                j += 1
+            out.append(" · ".join(part for part in block if part)[:900])
+            i = j
+            continue
+        i += 1
+
+    if not out:
+        # A fatal kills the run before the summary is ever printed, so there is
+        # no block to parse and the tail is the only thing worth carrying.
+        out.append(" ".join(output.split())[-900:] or "the suite failed and printed nothing")
+    return out
 
 
 def main() -> int:
