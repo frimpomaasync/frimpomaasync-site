@@ -569,7 +569,15 @@ return [
             );
             Expect::same(ApprovalState::APPROVED, (string) $app->approvalRequests()->find((string) $request['id'])['state'], 'still approved');
 
-            $card = $recovery->board($engagement)[0]['card'];
+            // By label, not by index: two batches opened in the same second
+            // sort by reference, and the board order followed the dice.
+            $card = null;
+            foreach ($recovery->board($engagement) as $row) {
+                if ((string) $row['batch']['label'] === 'Commercial set') {
+                    $card = $row['card'];
+                }
+            }
+            Expect::notNull($card, 'the commercial set is on the board');
             Expect::same('Approved by you, submission next', (string) $card['stage'], 'the card says approved rather than asking again');
             Expect::null($app->actionRequests()->openOfKind((string) $engagement['id'], ActionRequestKind::APPROVE_SUBMISSION), 'the room card closed');
 
