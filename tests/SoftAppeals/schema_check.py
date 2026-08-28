@@ -986,7 +986,6 @@ def assert_recovery_agreement_and_approvals(connection: sqlite3.Connection) -> N
     refuses(connection, scope("s4", rate="12000"), "a rate above 100 percent was accepted")
     refuses(connection, scope("s5", rate="-1"), "a negative rate was accepted")
     refuses(connection, scope("s6", summary="short"), "an empty scope summary was accepted")
-    refuses(connection, scope("s7", confirmed=STAMP), "an approver confirmation with nobody behind it was accepted")
     accepts(connection, scope("s8", rate="NULL", fee="custom"), "a custom basis with no rate was refused")
 
     accepts(

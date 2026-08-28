@@ -76,13 +76,12 @@ return [
                 CONSTRAINT sa_scope_rate_check CHECK (
                     fee_rate_bps IS NULL OR (fee_rate_bps >= 0 AND fee_rate_bps <= 10000)
                 ),
-                CONSTRAINT sa_scope_summary_check CHECK (length(summary) >= 10),
+                CONSTRAINT sa_scope_summary_check CHECK (length(summary) >= 10)
 
-                -- An approver is confirmed by naming one. A confirmation stamp
-                -- with nobody behind it is a tick with no person.
-                CONSTRAINT sa_scope_approver_pair CHECK (
-                    approver_confirmed_at IS NULL OR approver_contact_id IS NOT NULL
-                )
+                -- No CHECK ties approver_confirmed_at to approver_contact_id.
+                -- MariaDB refuses a CHECK on a column a foreign key can SET
+                -- NULL (error 1901), and it did, on the first staging deploy.
+                -- RecoveryScopeRepository::save() writes the two together.
             )' . $suffix
         );
 
