@@ -122,8 +122,13 @@ return [
                 str_contains($body, 'It does not produce 20 finished appeals.'),
                 'it says outright that this is an assessment and not the appeals themselves'
             );
+            // The body wraps at 72 characters, which is right for a plain-text
+            // email, so the fee sentence spans a line break and str_contains on
+            // the raw body cannot see it. A reader sees the sentence whatever
+            // the wrapping does, so the whitespace is flattened first.
+            $flat = preg_replace('/\s+/', ' ', $body) ?? '';
             Expect::true(
-                str_contains($body, '25 percent of reimbursement that is actually recovered'),
+                str_contains($flat, '25 percent of reimbursement that is actually recovered'),
                 'the fee sentence matches the fee basis she chose'
             );
             Expect::true(
