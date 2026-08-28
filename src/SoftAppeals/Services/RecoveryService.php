@@ -228,6 +228,11 @@ final class RecoveryService
             $out[] = [
                 'batch'      => $batch,
                 'card'       => $this->batchService->card($batch, $approval),
+                'staff_stage' => (string) $batch['stage'] === BatchStage::APPROVAL_PENDING
+                    && $approval !== null
+                    && (string) $approval['state'] === ApprovalState::APPROVED
+                    ? 'Approved, submission next'
+                    : BatchStage::staffLabel((string) $batch['stage']),
                 'in_scope'   => in_array($batchId, $inScope, true),
                 'approval'   => $approval,
                 'event'      => $event,

@@ -420,7 +420,7 @@ $e = static fn (?string $value): string => Desk::e($value);
                 <span class="sa-desk-quiet">outside the scope</span>
               <?php endif; ?>
             </div>
-            <span class="sa-pill<?= BatchStage::isInRecovery($batchStage) ? ' is-action' : '' ?>"><?= $e((string) $card['staff_stage']) ?></span>
+            <span class="sa-pill<?= BatchStage::isInRecovery($batchStage) ? ' is-action' : '' ?>"><?= $e((string) $row['staff_stage']) ?></span>
           </div>
           <div class="sa-panel-b" style="padding:14px 18px">
             <dl class="sa-dl">

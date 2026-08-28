@@ -208,8 +208,18 @@ $asClient = static function (Bootstrap $app, array $engagement, string $email = 
     ];
 };
 
+/** One batch on the engagement, by its label. Two batches opened in the same second sort by reference, not by age. */
+$batchNamed = static function (Bootstrap $app, string $engagementId, string $label): array {
+    foreach ($app->workBatches()->forEngagement($engagementId) as $batch) {
+        if ((string) $batch['label'] === $label) {
+            return $batch;
+        }
+    }
+    throw new RuntimeException('No batch named ' . $label);
+};
+
 /** Through the assessment to "recovery scope selected", with one batch recommended and one not. */
-$scopeSelected = static function (Bootstrap $app, ArrayObject $sent, array $engagement, string $ownerId) use ($asClient): array {
+$scopeSelected = static function (Bootstrap $app, ArrayObject $sent, array $engagement, string $ownerId) use ($asClient, $batchNamed): array {
     $service = $app->assessmentService();
     $service->confirmReceipt($engagement, 20, 20, $app->workBatchService()->fieldsFromInput([
         'label' => 'Commercial set', 'payer_label' => 'Commercial', 'payer_label_approved' => 'yes',
@@ -221,7 +231,7 @@ $scopeSelected = static function (Bootstrap $app, ArrayObject $sent, array $enga
     $service->start($engagement, $ownerId);
     $service->sendToQualityReview($engagement, $ownerId);
 
-    $first = $app->workBatches()->forEngagement((string) $engagement['id'])[0];
+    $first = $batchNamed($app, (string) $engagement['id'], 'Commercial set');
     $app->workBatchService()->update($engagement, $first, ['stage' => BatchStage::RECOMMENDED], $ownerId);
 
     $service->deliver($engagement, [
@@ -240,8 +250,8 @@ $scopeSelected = static function (Bootstrap $app, ArrayObject $sent, array $enga
 };
 
 /** Record a scope naming a new approver and covering the recommended batch. */
-$recordScope = static function (Bootstrap $app, array $engagement, string $ownerId, array $overrides = []): array {
-    $first = $app->workBatches()->forEngagement((string) $engagement['id'])[0];
+$recordScope = static function (Bootstrap $app, array $engagement, string $ownerId, array $overrides = []) use ($batchNamed): array {
+    $first = $batchNamed($app, (string) $engagement['id'], 'Commercial set');
     return $app->recoveryService()->recordScope($engagement, array_merge([
         'fee_basis'      => EngagementTerms::FEE_CONTINGENCY_25,
         'fee_rate'       => '',
@@ -323,8 +333,7 @@ return [
             [$app, $sent] = $boot($db);
             $ownerId = $owner($app);
             $engagement = $scopeSelected($app, $sent, $atSecureRoute($app, $sent), $ownerId);
-            $batches = $app->workBatches()->forEngagement((string) $engagement['id']);
-            $notRecommended = $batches[1];
+            $notRecommended = $batchNamed($app, (string) $engagement['id'], 'Second set');
 
             Expect::throws(
                 RuntimeException::class,
@@ -400,7 +409,7 @@ return [
             Expect::same(DocumentStatus::DRAFT, (string) $pair['scope']['status'], 'the scope is a draft');
             Expect::same(EngagementTerms::FEE_CONTINGENCY_25, (string) $pair['agreement']['fee_basis'], 'the fee basis is stamped on the row');
 
-            $first = $app->workBatches()->forEngagement((string) $engagement['id'])[0];
+            $first = $batchNamed($app, (string) $engagement['id'], 'Commercial set');
             $agreementBody = (string) $documents->body($pair['agreement']);
             $scopeBody = (string) $documents->body($pair['scope']);
             Expect::true(str_contains($agreementBody, 'DRAFT FOR REVIEW'), 'the agreement says it is a draft');
@@ -485,9 +494,8 @@ return [
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
-            $batches = $app->workBatches()->forEngagement((string) $engagement['id']);
-            $inScope = $batches[0];
-            $outside = $batches[1];
+            $inScope = $batchNamed($app, (string) $engagement['id'], 'Commercial set');
+            $outside = $batchNamed($app, (string) $engagement['id'], 'Second set');
             $ownerId = (string) $app->users()->findByEmail('owner@example.org')['id'];
 
             Expect::throws(
@@ -533,7 +541,7 @@ return [
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
-            $batch = $app->workBatches()->forEngagement((string) $engagement['id'])[0];
+            $batch = $batchNamed($app, (string) $engagement['id'], 'Commercial set');
             $ownerId = (string) $app->users()->findByEmail('owner@example.org')['id'];
             $request = $recovery->requestApproval($engagement, $batch, ['safe_summary' => 'First-level appeals to the commercial payer.'], $ownerId);
 
@@ -578,7 +586,7 @@ return [
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
-            $batch = $app->workBatches()->forEngagement((string) $engagement['id'])[0];
+            $batch = $batchNamed($app, (string) $engagement['id'], 'Commercial set');
             $ownerId = (string) $app->users()->findByEmail('owner@example.org')['id'];
             $request = $recovery->requestApproval($engagement, $batch, ['safe_summary' => 'First-level appeals to the commercial payer.'], $ownerId);
 
@@ -617,7 +625,7 @@ return [
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
-            $batch = $app->workBatches()->forEngagement((string) $engagement['id'])[0];
+            $batch = $batchNamed($app, (string) $engagement['id'], 'Commercial set');
             $ownerId = (string) $app->users()->findByEmail('owner@example.org')['id'];
 
             Expect::throws(
@@ -682,7 +690,7 @@ return [
             [$app, $sent] = $boot($db);
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
-            $batch = $app->workBatches()->forEngagement((string) $engagement['id'])[0];
+            $batch = $batchNamed($app, (string) $engagement['id'], 'Commercial set');
             $ownerId = (string) $app->users()->findByEmail('owner@example.org')['id'];
 
             Expect::throws(
@@ -746,19 +754,26 @@ return [
             $engagement = $active($app, $sent);
             $recovery = $app->recoveryService();
             $ownerId = (string) $app->users()->findByEmail('owner@example.org')['id'];
-            $batch = $app->workBatches()->forEngagement((string) $engagement['id'])[0];
+            $batch = $batchNamed($app, (string) $engagement['id'], 'Commercial set');
             $recovery->requestApproval($engagement, $batch, ['safe_summary' => 'First-level appeals to the commercial payer.'], $ownerId);
 
             $board = $recovery->board($engagement);
             Expect::same(2, count($board), 'two batches on the board');
-            Expect::true($board[0]['in_scope'], 'the first is in scope');
-            Expect::false($board[1]['in_scope'], 'the second is not');
-            Expect::same('Waiting for your approval', (string) $board[0]['card']['stage'], 'the card reads as the practice reads it');
-            Expect::same('You', (string) $board[0]['card']['owner'], 'and waits on them');
-            foreach (['payer', 'count', 'denied', 'stage', 'owner', 'action', 'deadline', 'confirmed'] as $key) {
-                Expect::true(array_key_exists($key, $board[0]['card']), 'the card has ' . $key);
+            $rows = [];
+            foreach ($board as $row) {
+                $rows[(string) $row['batch']['label']] = $row;
             }
-            Expect::false(array_key_exists('claims', $board[0]['card']), 'and nothing that lists a claim');
+            Expect::true($rows['Commercial set']['in_scope'], 'the commercial set is in scope');
+            Expect::false($rows['Second set']['in_scope'], 'the second set is not');
+            $card = $rows['Commercial set']['card'];
+            Expect::same('Waiting for your approval', (string) $card['stage'], 'the card reads as the practice reads it');
+            Expect::same('Awaiting client approval', (string) $rows['Commercial set']['staff_stage'], 'and the Desk reads it its own way');
+            Expect::same('You', (string) $card['owner'], 'and waits on them');
+            foreach (['payer', 'count', 'denied', 'stage', 'owner', 'action', 'deadline', 'confirmed'] as $key) {
+                Expect::true(array_key_exists($key, $card), 'the card has ' . $key);
+            }
+            Expect::false(array_key_exists('claims', $card), 'and nothing that lists a claim');
+            Expect::false(array_key_exists('staff_stage', $card), 'and nothing written for the Desk');
 
             $pending = $app->approvalRequests()->pendingForEngagement((string) $engagement['id']);
             Expect::same(1, count($pending), 'one approval pending for the room');

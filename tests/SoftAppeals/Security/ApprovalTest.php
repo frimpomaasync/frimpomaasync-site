@@ -107,9 +107,12 @@ $pendingApproval = static function (Bootstrap $app, ArrayObject $sent) use ($sig
             $token = $m[1];
         }
     }
-    $app->clientAccess()->redeemInvitation($token, InvitationRepository::PURPOSE_PREFERENCES);
+    Expect::notNull($app->clientAccess()->redeemInvitation($token, InvitationRepository::PURPOSE_PREFERENCES), 'the preferences link should redeem');
     $context = $app->clientAccess()->context();
-    $app->preferencesService()->confirm($engagement, [
+    // The row as it is NOW, after the terms went out. The one read before the
+    // send is a stage behind, and confirm() reads the stage off what it is given.
+    $engagement = $app->engagements()->findWithOrganization($engagementId);
+    $saved = $app->preferencesService()->confirm($engagement, [
         'communication_cadence' => EngagementTerms::CADENCE_BIWEEKLY,
         'secure_channel'        => EngagementTerms::CHANNEL_CLIENT_SYSTEM,
         'billing_partner'       => PreferenceForm::PARTNER_YES,
@@ -118,6 +121,7 @@ $pendingApproval = static function (Bootstrap $app, ArrayObject $sent) use ($sig
         'billing_name' => 'Bea Ledger', 'billing_role' => 'Finance', 'billing_email' => 'bea@example.org',
         'initial_payer_group' => 'Commercial', 'procurement_notes' => '',
     ], (string) $context['user']['id'], $context['contact_id']);
+    Expect::true($saved['saved'], 'the preferences should save: ' . implode('; ', $saved['errors']));
     $app->clientAccess()->signOut();
 
     foreach ([DocumentKind::BAA, DocumentKind::REVIEW_AUTHORIZATION] as $kind) {

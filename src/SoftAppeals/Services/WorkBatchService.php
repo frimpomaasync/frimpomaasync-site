@@ -249,7 +249,6 @@ final class WorkBatchService
             'count'          => (int) $batch['claim_count'],
             'denied'         => Money::format((int) $batch['denied_amount_cents']),
             'stage'          => $approved ? 'Approved by you, submission next' : BatchStage::clientLabel($stage),
-            'staff_stage'    => $approved ? 'Approved, submission next' : BatchStage::staffLabel($stage),
             'owner'          => BatchStage::ownerLabel((string) $batch['next_owner'], true),
             'action'         => $batch['next_action'] === null
                 ? BatchStage::defaultNextAction($stage)
