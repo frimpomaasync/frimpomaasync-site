@@ -79,8 +79,10 @@ $e = static fn (?string $value): string => Client::e($value);
           Nothing at patient level moves until both agreements are signed and the route is open.
         <?php elseif ($overview['client_confirmed']): ?>
           Count confirmed by you.
-        <?php else: ?>
+        <?php elseif ($overview['receipt_request_open']): ?>
           Please confirm the count under Action requests.
+        <?php else: ?>
+          Recorded when the set arrived.
         <?php endif; ?>
       </p>
     </div>

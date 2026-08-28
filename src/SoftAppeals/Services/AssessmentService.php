@@ -147,6 +147,7 @@ final class AssessmentService
                 ? AssessmentRepository::DEFAULT_EXPECTED
                 : (int) $assessment['expected_count'],
             'client_confirmed' => $assessment !== null && $assessment['client_confirmed_at'] !== null,
+            'receipt_request_open' => $this->requestsRepository()->openOfKind($engagementId, ActionRequestKind::CONFIRM_RECEIPT_COUNT) !== null,
             'progress'         => $progress,
             'delivered'        => $assessment !== null && $assessment['delivered_at'] !== null,
             'recommended'      => $assessment === null || $assessment['recommended_count'] === null
