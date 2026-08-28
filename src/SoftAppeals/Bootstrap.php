@@ -496,7 +496,8 @@ final class Bootstrap
             $this->rateLimiter(),
             $this->mail(),
             $this->audit(),
-            $this->hmac()
+            $this->hmac(),
+            $this->config
         ));
     }
 

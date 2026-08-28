@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SoftAppeals\Services;
 
+use SoftAppeals\Config;
 use SoftAppeals\Auth\SessionManager;
 use SoftAppeals\Database;
 use SoftAppeals\Domain\Role;
@@ -63,6 +64,7 @@ final class ClientAccessService
     private MailService $mail;
     private AuditService $audit;
     private Hmac $hmac;
+    private Config $config;
 
     public function __construct(
         Database $db,
@@ -78,7 +80,8 @@ final class ClientAccessService
         RateLimiter $limiter,
         MailService $mail,
         AuditService $audit,
-        Hmac $hmac
+        Hmac $hmac,
+        ?Config $config = null
     ) {
         $this->db = $db;
         $this->clock = $clock;
@@ -94,6 +97,9 @@ final class ClientAccessService
         $this->mail = $mail;
         $this->audit = $audit;
         $this->hmac = $hmac;
+        // Optional only so a caller that predates Phase 5 still constructs;
+        // without it the code is treated as production, which is the safe side.
+        $this->config = $config ?? Config::load();
     }
 
     // -----------------------------------------------------------------------
@@ -243,7 +249,14 @@ final class ClientAccessService
      * Throws RateLimitException when this caller or this address has asked too
      * often, which the page turns into a wait rather than a refusal.
      *
-     * @return array{sent:bool,expires_at:?string}
+     * The code itself comes back on the request that minted it, OFF PRODUCTION
+     * ONLY, for the same reason TermsService::send() returns the link: staging
+     * refuses to email a real practice, so the code exists only inside a
+     * message the mail layer declined to send and the room could never be
+     * entered a second time. Null on production, gated on the environment
+     * itself. Never stored beyond its digest, never logged.
+     *
+     * @return array{sent:bool,expires_at:?string,code:?string}
      */
     public function requestLoginCode(string $email): array
     {
@@ -256,7 +269,7 @@ final class ClientAccessService
             $this->audit->record('client.code_request', 'failure', 'user', null, [
                 'reason' => 'not an address',
             ]);
-            return ['sent' => false, 'expires_at' => null];
+            return ['sent' => false, 'expires_at' => null, 'code' => null];
         }
 
         $user = $this->users->findByEmail($email);
@@ -264,7 +277,7 @@ final class ClientAccessService
             $this->audit->record('client.code_request', 'failure', 'user', null, [
                 'reason' => 'no such client',
             ]);
-            return ['sent' => false, 'expires_at' => null];
+            return ['sent' => false, 'expires_at' => null, 'code' => null];
         }
 
         $userId = (string) $user['id'];
@@ -275,7 +288,7 @@ final class ClientAccessService
             $this->audit->record('client.code_request', 'failure', 'user', $userId, [
                 'reason' => 'no client membership',
             ]);
-            return ['sent' => false, 'expires_at' => null];
+            return ['sent' => false, 'expires_at' => null, 'code' => null];
         }
 
         $minted = $this->codes->mint($organizationId, $userId, $email);
@@ -294,7 +307,11 @@ final class ClientAccessService
             'count' => $minted['revoked'],
         ], $organizationId);
 
-        return ['sent' => true, 'expires_at' => $minted['expires_at']];
+        return [
+            'sent'       => true,
+            'expires_at' => $minted['expires_at'],
+            'code'       => $this->config->isProduction() ? null : (string) $minted['code'],
+        ];
     }
 
     /**

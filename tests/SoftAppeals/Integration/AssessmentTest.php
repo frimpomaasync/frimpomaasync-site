@@ -656,4 +656,43 @@ return [
             Expect::true(ActionRequestKind::directsToSecureChannel(ActionRequestKind::OPEN_SECURE_CHANNEL), 'the secure kinds say so');
             Expect::null(ActionRequestKind::portalAction(ActionRequestKind::OPEN_SECURE_CHANNEL), 'and offer no portal button');
         },
+
+    'the sign-in code is handed back off production and withheld on production' =>
+        static function (Bootstrap $app, Database $db) use ($boot, $atSecureRoute, $answers, $preferences): void {
+            [$app, $sent] = $boot($db);
+            $atSecureRoute($app, $sent);
+            $issued = $app->clientAccess()->requestLoginCode('dana@example.org');
+            Expect::true($issued['sent'], 'the code should be issued');
+            Expect::notNull($issued['code'], 'off production the code comes back to the page');
+            Expect::same(6, strlen((string) $issued['code']), 'six digits');
+            Expect::notNull(
+                $app->clientAccess()->verifyLoginCode('dana@example.org', (string) $issued['code']),
+                'and it is the real code'
+            );
+            $app->clientAccess()->signOut();
+
+            migrateDown($db);
+            migrateUp($db);
+            Bootstrap::resetInstance();
+            // Production clamps signing shut, so the walk stops at preferences:
+            // that is enough to have a client user to ask for a code.
+            [$app, $sent] = $boot($db, ['SA_APP_ENV' => 'production']);
+            $intake = $app->intakeService()->record('soft-appeals-start', $answers, 'raw-' . bin2hex(random_bytes(4)));
+            $review = $app->intakeService()->review($intake['id'], FitDecision::ACCEPT, null, null, EngagementTerms::FEE_CONTINGENCY_25, EngagementTerms::CHANNEL_CLIENT_SYSTEM, null);
+            $engagement = $app->engagements()->findWithOrganization((string) $review['engagement_id']);
+            $app->termsService()->send($engagement, 0, null);
+            $token = '';
+            foreach ($sent as $message) {
+                if (preg_match('~soft-appeals-preferences\.php\?t=([0-9a-f]+)~', $message['body'], $m) === 1) {
+                    $token = $m[1];
+                }
+            }
+            $app->clientAccess()->redeemInvitation($token, InvitationRepository::PURPOSE_PREFERENCES);
+            $context = $app->clientAccess()->context();
+            $app->preferencesService()->confirm($engagement, $preferences, (string) $context['user']['id'], $context['contact_id']);
+            $app->clientAccess()->signOut();
+            $issued = $app->clientAccess()->requestLoginCode('dana@example.org');
+            Expect::true($issued['sent'], 'production still issues it');
+            Expect::null($issued['code'], 'and never hands it back');
+        },
 ];

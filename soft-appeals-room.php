@@ -137,9 +137,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     }
 
     if ($action === 'client.code.request') {
+        $issued = null;
         try {
             $csrf->require('client.code.request');
-            $access->requestLoginCode($email);
+            $issued = $access->requestLoginCode($email);
         } catch (CsrfException) {
             $signIn('email', $email, null, 'That form had expired. Try again.');
         } catch (RateLimitException $e) {
@@ -151,7 +152,16 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         // The same screen whatever happened, including for an address nobody
         // has ever invited. A form that says "no such account" is a way to find
         // out which practices she works with.
-        $signIn('code', $email, null, null);
+        //
+        // Off production the code is printed here, once, because staging will
+        // not email a real practice and the room could otherwise never be
+        // entered a second time. ClientAccessService returns null for it on
+        // production whatever this page does with it.
+        $shown = $issued !== null && $issued['code'] !== null
+            ? 'This environment will not email a real practice, so the code is shown here '
+                . 'instead and is not shown again: ' . $issued['code']
+            : null;
+        $signIn('code', $email, $shown, null);
     }
 
     if ($action === 'client.code.verify') {
