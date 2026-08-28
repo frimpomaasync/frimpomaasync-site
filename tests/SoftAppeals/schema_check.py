@@ -42,16 +42,33 @@ import tempfile
 REPO = pathlib.Path(__file__).resolve().parents[2]
 MIGRATIONS = REPO / "database" / "migrations"
 
-# Tables the foundation migration must create, in creation order.
-EXPECTED_TABLES = [
-    "sa_organizations",
-    "sa_contacts",
-    "sa_users",
-    "sa_memberships",
-    "sa_audit_events",
-    "sa_rate_limits",
-    "sa_idempotency_keys",
-]
+# What each migration must create, keyed by file name.
+#
+# The migrations are applied CUMULATIVELY into one database, in file order,
+# which is how they run on a real server. Running each one alone in a fresh
+# database was fine while there was one of them; the moment 0002 arrived with
+# foreign keys pointing at 0001's tables, a per-file database was proving the
+# wrong thing. SQLite will happily create a table whose foreign key names a
+# table that does not exist, and only complains at insert time, so a per-file
+# run would have passed while the real ordering was never checked at all.
+EXPECTED_TABLES = {
+    "0001_foundation.php": [
+        "sa_organizations",
+        "sa_contacts",
+        "sa_users",
+        "sa_memberships",
+        "sa_audit_events",
+        "sa_rate_limits",
+        "sa_idempotency_keys",
+    ],
+    "0002_intake_and_engagement.php": [
+        "sa_intakes",
+        "sa_engagements",
+        "sa_invitations",
+        "sa_communications",
+        "sa_status_events",
+    ],
+}
 
 
 class Failure(Exception):
@@ -106,138 +123,358 @@ def strip_suffix_concat(sql: str) -> str:
     return re.sub(r"\)\s*'\s*\.\s*\$suffix\s*$", ")", sql).strip().rstrip("'")
 
 
-def run_cycle(migration_path: pathlib.Path, db_path: pathlib.Path) -> dict:
-    source = migration_path.read_text(encoding="utf-8")
+def split_halves(migration_path: pathlib.Path) -> tuple[list[str], list[str]]:
+    """
+    One migration, read into its up statements and its down table list.
 
-    # Read the two halves separately. The down half builds its SQL by
-    # concatenating a table name, so its $db->run() call carries no complete
-    # statement and must never be swept into the up list.
+    The down half builds its SQL by concatenating a table name, so its
+    $db->run() call carries no complete statement and must never be swept into
+    the up list. The table names are read from the list the migration itself
+    loops over, which keeps this honest: a table added to `up` and forgotten in
+    `down` is caught by the leftover assertion at the end of the cycle.
+    """
+    source = migration_path.read_text(encoding="utf-8")
     split_at = source.index("'down' =>")
     up_source = source[:split_at]
     down_block = source[split_at:]
 
-    up_sql = [strip_suffix_concat(s) for s in extract_statements(up_source, sqlite_branch=True)]
+    up_sql = [strip_suffix_concat(one) for one in extract_statements(up_source, sqlite_branch=True)]
     if not up_sql:
         raise Failure(f"No SQL found in {migration_path.name}")
 
-    # The down half is a loop over table names, not literal SQL, so it is read
-    # from the list the migration itself uses. That keeps this check honest: if
-    # a table is added to `up` and forgotten in `down`, the leftover-table
-    # assertion below is what catches it.
     down_tables = re.findall(r"'(sa_[a-z_]+)'", down_block)
     if not down_tables:
-        raise Failure("No tables listed in the down migration")
+        raise Failure(f"No tables listed in the down half of {migration_path.name}")
 
-    connection = sqlite3.connect(db_path)
-    connection.execute("PRAGMA foreign_keys = ON")
+    return up_sql, down_tables
 
-    applied = 0
-    for sql in up_sql:
-        try:
-            connection.execute(sql)
-        except sqlite3.Error as error:
-            head = " ".join(sql.split())[:110]
-            raise Failure(f"up failed on statement {applied + 1}: {error}\n         {head}")
-        applied += 1
-    connection.commit()
 
-    tables_after_up = sorted(
+def tables_now(connection: sqlite3.Connection) -> list[str]:
+    return sorted(
         row[0]
         for row in connection.execute(
             "SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE 'sa_%'"
         )
     )
 
-    missing = [t for t in EXPECTED_TABLES if t not in tables_after_up]
-    if missing:
-        raise Failure("up did not create: " + ", ".join(missing))
 
-    # Foreign keys must actually be enforced, or the constraints are decorative.
+_probe = 0
+
+
+def refuses(connection: sqlite3.Connection, sql: str, what: str) -> None:
+    """
+    The database must reject this statement. If it takes it, that is a bug.
+
+    The attempt runs inside its own savepoint, so a refusal undoes the one bad
+    statement and leaves every fixture row placed before it alone. A plain
+    rollback here would take the whole setup with it, and the next assertion
+    would then fail on a foreign key for a row that had quietly vanished.
+    """
+    global _probe
+    _probe += 1
+    name = f"probe{_probe}"
+    connection.execute(f"SAVEPOINT {name}")
+    accepted = False
     try:
-        connection.execute(
-            "INSERT INTO sa_contacts (id, organization_id, name, work_email, active, created_at)"
-            " VALUES ('x', 'does-not-exist', 'n', 'e@example.org', 1, '2026-01-01 00:00:00')"
-        )
-        connection.rollback()
-        raise Failure("a contact with an unknown organization was accepted")
+        connection.execute(sql)
+        accepted = True
     except sqlite3.IntegrityError:
-        pass  # correct
+        pass
+    finally:
+        connection.execute(f"ROLLBACK TO {name}")
+        connection.execute(f"RELEASE {name}")
+    if accepted:
+        raise Failure(what)
 
-    # CHECK constraints must bite too.
+
+def accepts(connection: sqlite3.Connection, sql: str, what: str) -> None:
+    """The database must take this statement. A refusal means a rule is too tight."""
     try:
-        connection.execute(
-            "INSERT INTO sa_organizations"
-            " (id, public_ref, legal_name, status, created_at, updated_at)"
-            " VALUES ('y', 'SA-ORG-TEST01', 'Test', 'not_a_status',"
-            " '2026-01-01 00:00:00', '2026-01-01 00:00:00')"
-        )
-        connection.rollback()
-        raise Failure("an organization with an invalid status was accepted")
-    except sqlite3.IntegrityError:
-        pass  # correct
+        connection.execute(sql)
+    except sqlite3.Error as error:
+        raise Failure(f"{what}: {error}")
 
-    # The partial unique index on staff memberships must stop a duplicate.
-    connection.execute(
-        "INSERT INTO sa_users (id, email, active, created_at)"
-        " VALUES ('u1', 'a@example.org', 1, '2026-01-01 00:00:00')"
+
+def in_savepoint(connection: sqlite3.Connection, work) -> None:
+    """
+    Run one assertion block and leave the database exactly as it was found.
+
+    The fixtures each block plants (a practice, an intake, an engagement) exist
+    only for that block. Committing them would leave the next migration's
+    assertions running against somebody else's leftovers, which is the same
+    mistake the PHP test runner avoids by rebuilding the schema per test.
+    """
+    connection.execute("SAVEPOINT block")
+    try:
+        work(connection)
+    finally:
+        connection.execute("ROLLBACK TO block")
+        connection.execute("RELEASE block")
+
+
+STAMP = "'2026-01-01 00:00:00'"
+
+
+def assert_foundation(connection: sqlite3.Connection) -> None:
+    """The constraints 0001 exists to enforce."""
+    refuses(
+        connection,
+        "INSERT INTO sa_contacts (id, organization_id, name, work_email, active, created_at)"
+        f" VALUES ('x', 'does-not-exist', 'n', 'e@example.org', 1, {STAMP})",
+        "a contact with an unknown organization was accepted",
     )
-    connection.execute(
-        "INSERT INTO sa_memberships"
-        " (user_id, organization_id, organization_scope, role, created_at)"
-        " VALUES ('u1', NULL, 'GLOBAL', 'owner_admin', '2026-01-01 00:00:00')"
+    refuses(
+        connection,
+        "INSERT INTO sa_organizations (id, public_ref, legal_name, status, created_at, updated_at)"
+        f" VALUES ('y', 'SA-ORG-TEST01', 'Test', 'not_a_status', {STAMP}, {STAMP})",
+        "an organization with an invalid status was accepted",
     )
-    try:
-        connection.execute(
-            "INSERT INTO sa_memberships"
-            " (user_id, organization_id, organization_scope, role, created_at)"
-            " VALUES ('u1', NULL, 'GLOBAL', 'owner_admin', '2026-01-01 00:00:00')"
-        )
-        raise Failure("a duplicate global staff membership was accepted")
-    except sqlite3.IntegrityError:
-        pass  # correct
+
+    accepts(
+        connection,
+        f"INSERT INTO sa_users (id, email, active, created_at) VALUES ('u1', 'a@example.org', 1, {STAMP})",
+        "a plain user row was refused",
+    )
+    accepts(
+        connection,
+        "INSERT INTO sa_memberships (user_id, organization_id, organization_scope, role, created_at)"
+        f" VALUES ('u1', NULL, 'GLOBAL', 'owner_admin', {STAMP})",
+        "a global staff membership was refused",
+    )
+    refuses(
+        connection,
+        "INSERT INTO sa_memberships (user_id, organization_id, organization_scope, role, created_at)"
+        f" VALUES ('u1', NULL, 'GLOBAL', 'owner_admin', {STAMP})",
+        "a duplicate global staff membership was accepted",
+    )
 
     # The sentinel must not block a legitimate second row: the same user in the
     # same role at two different organizations is normal.
-    connection.execute(
-        "INSERT INTO sa_organizations"
-        " (id, public_ref, legal_name, status, created_at, updated_at)"
-        " VALUES ('o1', 'SA-ORG-AAAAAA', 'One', 'prospect',"
-        " '2026-01-01 00:00:00', '2026-01-01 00:00:00')"
-    )
-    connection.execute(
-        "INSERT INTO sa_organizations"
-        " (id, public_ref, legal_name, status, created_at, updated_at)"
-        " VALUES ('o2', 'SA-ORG-BBBBBB', 'Two', 'prospect',"
-        " '2026-01-01 00:00:00', '2026-01-01 00:00:00')"
-    )
+    for ident, ref, name in (("o1", "SA-ORG-AAAAAA", "One"), ("o2", "SA-ORG-BBBBBB", "Two")):
+        connection.execute(
+            "INSERT INTO sa_organizations (id, public_ref, legal_name, status, created_at, updated_at)"
+            f" VALUES ('{ident}', '{ref}', '{name}', 'prospect', {STAMP}, {STAMP})"
+        )
     for org in ("o1", "o2"):
         connection.execute(
-            "INSERT INTO sa_memberships"
-            " (user_id, organization_id, organization_scope, role, created_at)"
-            f" VALUES ('u1', '{org}', '{org}', 'viewer', '2026-01-01 00:00:00')"
+            "INSERT INTO sa_memberships (user_id, organization_id, organization_scope, role, created_at)"
+            f" VALUES ('u1', '{org}', '{org}', 'viewer', {STAMP})"
         )
-    connection.rollback()
 
-    for table in down_tables:
-        connection.execute(f'DROP TABLE IF EXISTS "{table}"')
-    connection.commit()
 
-    leftovers = sorted(
-        row[0]
-        for row in connection.execute(
-            "SELECT name FROM sqlite_master WHERE type = 'table' AND name LIKE 'sa_%'"
-        )
+def assert_intake_and_engagement(connection: sqlite3.Connection) -> None:
+    """
+    The constraints 0002 exists to enforce.
+
+    Every one of these is a rule the application also states in PHP. The point
+    of asserting them here is that the database is the layer that cannot be
+    bypassed: a second code path, a future page, or a hand-written statement all
+    still meet these.
+    """
+    # A practice to hang the rest on.
+    connection.execute(
+        "INSERT INTO sa_organizations (id, public_ref, legal_name, status, created_at, updated_at)"
+        f" VALUES ('org1', 'SA-ORG-CCCCCC', 'Fictional Behavioral Health', 'prospect', {STAMP}, {STAMP})"
     )
+
+    def intake(ident: str, ref: str, digest: str, status: str = "received", org: str = "'org1'") -> str:
+        return (
+            "INSERT INTO sa_intakes (id, public_ref, organization_id, source, organization_name,"
+            " contact_name, contact_email, time_sensitive, payload_sha256, status, submitted_at, created_at)"
+            f" VALUES ('{ident}', '{ref}', {org}, 'soft-appeals-start', 'Fictional Behavioral Health',"
+            f" 'A Person', 'person@example.org', 0, '{digest}', '{status}', {STAMP}, {STAMP})"
+        )
+
+    accepts(connection, intake("i1", "SA-INQ-AAAAAA", "a" * 64), "a plain intake was refused")
+
+    refuses(
+        connection,
+        intake("i2", "SA-INQ-BBBBBB", "a" * 64),
+        "two intakes with the same payload hash were accepted, so the import is not idempotent",
+    )
+    refuses(
+        connection,
+        intake("i3", "SA-INQ-CCCCCC", "c" * 64, status="nonsense"),
+        "an intake with an invented status was accepted",
+    )
+    refuses(
+        connection,
+        intake("i4", "SA-INQ-DDDDDD", "d" * 64, org="'no-such-org'"),
+        "an intake pointing at an unknown organization was accepted",
+    )
+    refuses(
+        connection,
+        "INSERT INTO sa_intakes (id, public_ref, organization_id, source, organization_name,"
+        " contact_name, contact_email, time_sensitive, payload_sha256, status, submitted_at, created_at)"
+        f" VALUES ('i5', 'SA-INQ-EEEEEE', 'org1', 'soft-appeals-start', 'X', 'A', 'a@example.org',"
+        f" 7, '{'e' * 64}', 'received', {STAMP}, {STAMP})",
+        "an intake with a time-sensitive flag that is neither 0 nor 1 was accepted",
+    )
+
+    def engagement(ident: str, ref: str, fee: str = "not_set") -> str:
+        return (
+            "INSERT INTO sa_engagements (id, organization_id, intake_id, public_ref, stage,"
+            " fee_basis, opened_at, row_version)"
+            f" VALUES ('{ident}', 'org1', 'i1', '{ref}', 'terms_ready', '{fee}', {STAMP}, 1)"
+        )
+
+    accepts(connection, engagement("e1", "SA-ENG-AAAAAA"), "a plain engagement was refused")
+    refuses(
+        connection,
+        engagement("e2", "SA-ENG-BBBBBB", fee="whatever_she_likes"),
+        "an engagement with an invented fee basis was accepted",
+    )
+
+    # Invitations: the digest is unique, so one token cannot be minted twice.
+    accepts(
+        connection,
+        "INSERT INTO sa_invitations (id, organization_id, engagement_id, contact_email, purpose,"
+        " token_digest, expires_at, created_at)"
+        f" VALUES ('v1', 'org1', 'e1', 'person@example.org', 'preferences', '{'f' * 64}',"
+        f" '2027-01-01 00:00:00', {STAMP})",
+        "a plain invitation was refused",
+    )
+    refuses(
+        connection,
+        "INSERT INTO sa_invitations (id, organization_id, engagement_id, contact_email, purpose,"
+        " token_digest, expires_at, created_at)"
+        f" VALUES ('v2', 'org1', 'e1', 'person@example.org', 'preferences', '{'f' * 64}',"
+        f" '2027-01-01 00:00:00', {STAMP})",
+        "the same invitation digest was accepted twice",
+    )
+    refuses(
+        connection,
+        "INSERT INTO sa_invitations (id, organization_id, engagement_id, contact_email, purpose,"
+        " token_digest, expires_at, created_at)"
+        f" VALUES ('v3', 'org1', 'e1', 'person@example.org', 'whatever', '{'0' * 64}',"
+        f" '2027-01-01 00:00:00', {STAMP})",
+        "an invitation with an invented purpose was accepted",
+    )
+
+    def comm(ident: str, state: str, key: str) -> str:
+        return (
+            "INSERT INTO sa_communications (id, engagement_id, organization_id, recipient_email,"
+            " template_key, template_version, subject, channel, state, idempotency_key, created_at)"
+            f" VALUES ('{ident}', 'e1', 'org1', 'person@example.org', 'assessment_terms', '1',"
+            f" 'Subject', 'email', '{state}', {key}, {STAMP})"
+        )
+
+    accepts(connection, comm("c1", "accepted", f"'{'1' * 64}'"), "a plain communication was refused")
+    refuses(
+        connection,
+        comm("c2", "accepted", f"'{'1' * 64}'"),
+        "the same idempotency key was accepted twice, so a double click can send twice",
+    )
+    refuses(
+        connection,
+        comm("c3", "delivered", f"'{'2' * 64}'"),
+        "a communication was allowed to claim it was delivered",
+    )
+    # Two rows with no key at all are fine: NULL never equals NULL, and a
+    # manually recorded message legitimately has no key.
+    accepts(connection, comm("c4", "manually_confirmed", "NULL"), "a keyless communication was refused")
+    accepts(connection, comm("c5", "manually_confirmed", "NULL"), "a second keyless communication was refused")
+
+    def event(ident: str, actor: str) -> str:
+        return (
+            "INSERT INTO sa_status_events (id, engagement_id, event_type, public_label, actor_type, created_at)"
+            f" VALUES ('{ident}', 'e1', 'terms.sent', 'Your terms were sent.', '{actor}', {STAMP})"
+        )
+
+    accepts(connection, event("s1", "staff"), "a plain status event was refused")
+    refuses(connection, event("s2", "robot"), "a status event with an invented actor type was accepted")
+
+    # Deleting an engagement must take its timeline with it. A status event
+    # pointing at an engagement that is gone is a row nothing can ever render.
+    connection.execute("DELETE FROM sa_engagements WHERE id = 'e1'")
+    left = connection.execute(
+        "SELECT COUNT(*) FROM sa_status_events WHERE engagement_id = 'e1'"
+    ).fetchone()[0]
+    if left != 0:
+        raise Failure("deleting an engagement left its status events behind")
+
+
+ASSERTIONS = {
+    "0001_foundation.php": assert_foundation,
+    "0002_intake_and_engagement.php": assert_intake_and_engagement,
+}
+
+
+def run_cycle(migration_paths: list[pathlib.Path], db_path: pathlib.Path) -> dict:
+    """
+    Every migration, up in order and down in reverse, against one database.
+
+    That is how they run on a server, and it is the only arrangement that
+    proves the ordering: a foreign key in 0002 pointing at a table 0001 creates
+    is only meaningful if 0001 actually ran first.
+    """
+    # Autocommit, so the savepoints below are the only transaction control.
+    # Python's sqlite3 otherwise opens an implicit transaction before the first
+    # write and a rollback anywhere would take the whole cycle with it.
+    connection = sqlite3.connect(db_path, isolation_level=None)
+    connection.execute("PRAGMA foreign_keys = ON")
+
+    per_file: list[dict] = []
+    all_down_tables: list[list[str]] = []
+
+    for migration_path in migration_paths:
+        up_sql, down_tables = split_halves(migration_path)
+        all_down_tables.append(down_tables)
+
+        before = set(tables_now(connection))
+        applied = 0
+        for sql in up_sql:
+            try:
+                connection.execute(sql)
+            except sqlite3.Error as error:
+                head = " ".join(sql.split())[:110]
+                raise Failure(
+                    f"{migration_path.name}: up failed on statement {applied + 1}: {error}"
+                    f"\n         {head}"
+                )
+            applied += 1
+
+        after = tables_now(connection)
+        created = sorted(set(after) - before)
+
+        expected = EXPECTED_TABLES.get(migration_path.name)
+        if expected is None:
+            raise Failure(
+                f"{migration_path.name} has no entry in EXPECTED_TABLES. Add one, "
+                "or this file's tables are never checked."
+            )
+        missing = [table for table in expected if table not in after]
+        if missing:
+            raise Failure(f"{migration_path.name}: up did not create " + ", ".join(missing))
+
+        assertion = ASSERTIONS.get(migration_path.name)
+        if assertion is None:
+            raise Failure(
+                f"{migration_path.name} has no constraint assertions. Its CHECK and "
+                "foreign key clauses would be decorative and nothing would notice."
+            )
+        in_savepoint(connection, assertion)
+
+        per_file.append(
+            {
+                "name": migration_path.name,
+                "statements": applied,
+                "created": created,
+                "dropped": down_tables,
+            }
+        )
+
+    # Down, in reverse file order, which is the order a rollback runs in.
+    for down_tables in reversed(all_down_tables):
+        for table in down_tables:
+            connection.execute(f'DROP TABLE IF EXISTS "{table}"')
+
+    leftovers = tables_now(connection)
     if leftovers:
         raise Failure("down left tables behind: " + ", ".join(leftovers))
 
     connection.close()
-
-    return {
-        "statements": applied,
-        "tables": tables_after_up,
-        "dropped": down_tables,
-    }
+    return {"files": per_file}
 
 
 def structural_mysql_check(migration_path: pathlib.Path) -> list[str]:
@@ -286,52 +523,55 @@ def main() -> int:
     print("  " + "-" * 58)
 
     failures = 0
-    for migration in files:
-        directory = pathlib.Path(tempfile.mkdtemp(prefix="sa-schema-"))
-        db_path = directory / "check.sqlite"
-        try:
-            result = run_cycle(migration, db_path)
-        except Failure as error:
-            print(f"  FAIL   {migration.name}")
-            print(f"         {error}")
-            failures += 1
-            continue
-        finally:
-            if not args.keep and db_path.exists():
+    directory = pathlib.Path(tempfile.mkdtemp(prefix="sa-schema-"))
+    db_path = directory / "check.sqlite"
+
+    try:
+        result = run_cycle(files, db_path)
+    except Failure as error:
+        print("  FAIL   migrations")
+        print(f"         {error}")
+        result = None
+        failures += 1
+    finally:
+        if args.keep:
+            print(f"         kept {db_path}")
+        else:
+            if db_path.exists():
                 db_path.unlink()
-                directory.rmdir()
-            elif args.keep:
-                print(f"         kept {db_path}")
+            for leftover in (db_path.with_name("check.sqlite-wal"), db_path.with_name("check.sqlite-shm")):
+                if leftover.exists():
+                    leftover.unlink()
+            directory.rmdir()
 
-        print(f"  ok     {migration.name}")
-        print(f"         {result['statements']} statements up, "
-              f"{len(result['tables'])} tables, "
-              f"{len(result['dropped'])} dropped, empty after down")
-        for table in result["tables"]:
-            print(f"           {table}")
+    if result is not None:
+        total = sum(one["statements"] for one in result["files"])
+        print(f"  ok     {len(files)} migrations, {total} statements up, empty after down")
+        for one in result["files"]:
+            print(f"         {one['name']}  {one['statements']} statements")
+            for table in one["created"]:
+                print(f"           {table}")
 
+    for migration in files:
         notes = structural_mysql_check(migration)
         if notes:
-            print("  WARN   MySQL branch:")
+            print(f"  WARN   {migration.name}, MySQL branch:")
             for note in notes:
                 print(f"           {note}")
             failures += 1
         else:
-            print("         MySQL branch: engine, charset and portability checks pass")
+            print(f"         {migration.name}: MySQL engine, charset and portability checks pass")
 
     print("  " + "-" * 58)
     if failures:
         print(f"  {failures} problem(s).")
     else:
-        print("  Up and down both clean on SQLite.")
+        print("  Up and down both clean on SQLite, in file order.")
     print()
     print("  NOT PROVED HERE, and it cannot be on this machine:")
     print("    the PHP itself never executes, because there is no PHP runtime")
     print("    the MySQL branch is checked by reading, never by running")
-    print("  Both close on staging, which is the first environment that has")
-    print("  PHP 8.3 and MySQL together. Phase 0, blocker B-03.")
     print()
-
     return 1 if failures else 0
 
 

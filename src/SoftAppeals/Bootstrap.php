@@ -6,16 +6,26 @@ namespace SoftAppeals;
 use SoftAppeals\Auth\AuthorizationService;
 use SoftAppeals\Auth\AuthService;
 use SoftAppeals\Auth\SessionManager;
+use SoftAppeals\Repositories\CommunicationRepository;
+use SoftAppeals\Repositories\EngagementRepository;
+use SoftAppeals\Repositories\IntakeRepository;
+use SoftAppeals\Repositories\InvitationRepository;
 use SoftAppeals\Repositories\MembershipRepository;
 use SoftAppeals\Repositories\OrganizationRepository;
+use SoftAppeals\Repositories\StatusEventRepository;
 use SoftAppeals\Repositories\UserRepository;
 use SoftAppeals\Security\Csrf;
 use SoftAppeals\Security\ErrorHandler;
 use SoftAppeals\Security\Hmac;
 use SoftAppeals\Security\RateLimiter;
 use SoftAppeals\Services\AuditService;
+use SoftAppeals\Services\EngagementService;
+use SoftAppeals\Services\IntakeService;
+use SoftAppeals\Services\LegacyLeadImporter;
+use SoftAppeals\Services\MailService;
 use SoftAppeals\Services\SchemaService;
 use SoftAppeals\Services\SeedService;
+use SoftAppeals\Services\TermsService;
 use SoftAppeals\Support\Clock;
 
 /**
@@ -294,6 +304,133 @@ final class Bootstrap
         return $this->make(OrganizationRepository::class, fn (): OrganizationRepository => new OrganizationRepository(
             $this->database(),
             $this->clock()
+        ));
+    }
+
+    public function intakes(): IntakeRepository
+    {
+        return $this->make(IntakeRepository::class, fn (): IntakeRepository => new IntakeRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function engagements(): EngagementRepository
+    {
+        return $this->make(EngagementRepository::class, fn (): EngagementRepository => new EngagementRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function invitations(): InvitationRepository
+    {
+        return $this->make(InvitationRepository::class, fn (): InvitationRepository => new InvitationRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function communications(): CommunicationRepository
+    {
+        return $this->make(CommunicationRepository::class, fn (): CommunicationRepository => new CommunicationRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function timeline(): StatusEventRepository
+    {
+        return $this->make(StatusEventRepository::class, fn (): StatusEventRepository => new StatusEventRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    /**
+     * The mailer.
+     *
+     * $transport exists for the tests, which must never open a socket. Passing
+     * one rebuilds the service, so a test that swaps the transport is not
+     * handed a cached one that would still send for real.
+     *
+     * @param (callable(string,string,string,string):bool)|null $transport
+     */
+    public function mail(?callable $transport = null): MailService
+    {
+        if ($transport !== null) {
+            return $this->made[MailService::class] = new MailService(
+                $this->config,
+                $this->communications(),
+                $this->audit(),
+                $transport
+            );
+        }
+        return $this->make(MailService::class, fn (): MailService => new MailService(
+            $this->config,
+            $this->communications(),
+            $this->audit()
+        ));
+    }
+
+    public function engagementService(): EngagementService
+    {
+        return $this->make(EngagementService::class, fn (): EngagementService => new EngagementService(
+            $this->database(),
+            $this->organizations(),
+            $this->engagements(),
+            $this->intakes(),
+            $this->timeline(),
+            $this->audit()
+        ));
+    }
+
+    public function intakeService(): IntakeService
+    {
+        return $this->make(IntakeService::class, fn (): IntakeService => new IntakeService(
+            $this->database(),
+            $this->clock(),
+            $this->intakes(),
+            $this->engagements(),
+            $this->engagementService(),
+            $this->audit()
+        ));
+    }
+
+    public function termsService(): TermsService
+    {
+        return $this->make(TermsService::class, fn (): TermsService => new TermsService(
+            $this->config,
+            $this->clock(),
+            $this->engagements(),
+            $this->intakes(),
+            $this->invitations(),
+            $this->communications(),
+            $this->engagementService(),
+            $this->mail(),
+            $this->audit()
+        ));
+    }
+
+    /**
+     * The legacy lead importer.
+     *
+     * $metricsPath is only ever passed by the tests, which point it at a
+     * fixture directory. In every other case it reads the real fs-metrics
+     * folder, and it only ever reads it.
+     */
+    public function importer(?string $metricsPath = null): LegacyLeadImporter
+    {
+        if ($metricsPath !== null) {
+            return $this->made[LegacyLeadImporter::class] = new LegacyLeadImporter(
+                $this->intakes(),
+                $this->audit(),
+                $metricsPath
+            );
+        }
+        return $this->make(LegacyLeadImporter::class, fn (): LegacyLeadImporter => new LegacyLeadImporter(
+            $this->intakes(),
+            $this->audit()
         ));
     }
 

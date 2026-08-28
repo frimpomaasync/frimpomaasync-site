@@ -135,6 +135,51 @@ def strip_php_strings_and_comments(text: str) -> str:
     return "".join(out)
 
 
+ALTERNATIVE_SYNTAX = {
+    "if": "endif",
+    "foreach": "endforeach",
+    "for": "endfor",
+    "while": "endwhile",
+    "switch": "endswitch",
+}
+
+
+def check_alternative_syntax(path: pathlib.Path, php_only: str) -> None:
+    """
+    Every `if (...):` in a view has a matching `endif;`.
+
+    Brace counting cannot see this. A view that mixes PHP with markup uses the
+    alternative syntax throughout, so a forgotten `endforeach;` leaves the brace
+    count perfectly balanced and produces a parse error that only a real PHP
+    binary would catch. On a machine with no PHP that means an empty 500 on the
+    Desk, discovered by loading it.
+
+    `elseif` and `else` open nothing and close nothing, so neither is counted.
+    """
+    opened = {keyword: 0 for keyword in ALTERNATIVE_SYNTAX}
+    closed = {keyword: 0 for keyword in ALTERNATIVE_SYNTAX}
+
+    for line in php_only.splitlines():
+        stripped = line.strip()
+        for keyword in ALTERNATIVE_SYNTAX:
+            # An opener is the keyword at the start of a statement, on a line
+            # that ends in a colon. A function with a return type ends in `{`,
+            # and a match arm ends in `,`, so neither is picked up.
+            if re.match(rf"^{keyword}\b", stripped) and stripped.endswith(":"):
+                opened[keyword] += 1
+        for keyword, ender in ALTERNATIVE_SYNTAX.items():
+            closed[keyword] += len(re.findall(rf"\b{ender}\s*;", stripped))
+
+    for keyword, ender in ALTERNATIVE_SYNTAX.items():
+        difference = opened[keyword] - closed[keyword]
+        if difference != 0:
+            fail(
+                path,
+                f"{opened[keyword]} `{keyword} ...:` against {closed[keyword]} `{ender};`"
+                f" (off by {difference:+d})",
+            )
+
+
 def check_php(path: pathlib.Path) -> None:
     global checked
     checked += 1
@@ -152,6 +197,12 @@ def check_php(path: pathlib.Path) -> None:
         fail(path, "ends with ?>, which can emit a stray newline")
 
     stripped = strip_php_strings_and_comments(php_regions_only(text))
+
+    # Views mix PHP with markup and use the alternative syntax throughout. A
+    # missing endforeach there is invisible to a brace count.
+    if "?>" in text:
+        check_alternative_syntax(path, stripped)
+
     for opener, closer, name in [("{", "}", "brace"), ("(", ")", "paren"), ("[", "]", "bracket")]:
         difference = stripped.count(opener) - stripped.count(closer)
         if difference != 0:
@@ -241,7 +292,15 @@ def main() -> int:
         list(SRC.rglob("*.php"))
         + list((REPO / "database").rglob("*.php"))
         + list((REPO / "cron").rglob("*.php"))
-        + [REPO / "sa-desk.php", REPO / "soft-appeals-login.php"]
+        # The Desk views. They interleave PHP with markup, they are the newest
+        # code in the project, and a parse error in one of them is an empty 500
+        # on the command centre. php_regions_only already handles the mixing.
+        + list((REPO / "templates").rglob("*.php"))
+        + [
+            REPO / "sa-desk.php",
+            REPO / "soft-appeals-login.php",
+            REPO / "soft-appeals-setup.php",
+        ]
     )
     for path in php_files:
         if path.exists():
