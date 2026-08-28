@@ -332,6 +332,18 @@ $e = static fn (?string $value): string => Desk::e($value);
               </div>
             <?php endif; ?>
 
+            <?php // Reading what is actually stored, out of the vault. ?>
+            <div class="sa-desk-card-a" style="margin-top:14px">
+              <a class="sa-btn is-sm"
+                 href="/sa-desk.php?view=documents&amp;e=<?= $e(urlencode($engagementRef)) ?>&amp;open=<?= $e(urlencode((string) $document['public_ref'])) ?>&amp;part=body"
+                 target="_blank" rel="noopener">Read the document</a>
+              <?php if ($document['executed_path'] !== null): ?>
+                <a class="sa-btn is-sm"
+                   href="/sa-desk.php?view=documents&amp;e=<?= $e(urlencode($engagementRef)) ?>&amp;open=<?= $e(urlencode((string) $document['public_ref'])) ?>"
+                   target="_blank" rel="noopener">Executed record and audit certificate</a>
+              <?php endif; ?>
+            </div>
+
             <?php // The actions this version allows, and only those. ?>
             <?php if ($status === DocumentStatus::DRAFT && $canGenerate && $eSignEnabled): ?>
               <form method="post" action="/sa-desk.php" style="margin-top:14px">

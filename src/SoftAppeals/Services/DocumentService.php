@@ -137,12 +137,27 @@ final class DocumentService
             ];
         }
 
-        if ($existing !== null && !DocumentStatus::isClosed((string) $existing['status'])) {
+        // Any version that is not void blocks a bare generate, INCLUDING an
+        // executed one.
+        //
+        // An executed agreement is closed, but closed is not the same as gone.
+        // Generating over it would leave version 1 executed and un-voided while
+        // version 2 quietly became the current one, so the agreement both
+        // parties actually signed would stop being the agreement the portal
+        // shows, with no reason recorded anywhere. Section 14.2 says a
+        // correction voids the previous version with an audit reason, and
+        // correct() is the only door that does both.
+        if ($existing !== null) {
+            $status = (string) $existing['status'];
             return [
                 'ok'     => false,
-                'reason' => 'Version ' . (int) $existing['version'] . ' is already open ('
-                    . DocumentStatus::staffLabel((string) $existing['status'])
-                    . '). Void it before generating another.',
+                'reason' => $status === DocumentStatus::EXECUTED
+                    ? 'Version ' . (int) $existing['version'] . ' is executed. Replacing an '
+                        . 'executed agreement voids it with a reason, so use "Void this and '
+                        . 'generate a replacement".'
+                    : 'Version ' . (int) $existing['version'] . ' is already open ('
+                        . DocumentStatus::staffLabel($status)
+                        . '). Void it before generating another.',
             ];
         }
 

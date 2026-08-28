@@ -175,6 +175,12 @@ $e = static fn (?string $value): string => Client::e($value);
               <?php if ($isSignable): ?>
                 <a class="sa-btn is-primary" href="/soft-appeals-sign.php" style="margin-left:8px">Sign</a>
               <?php endif; ?>
+              <?php if ($document['executed_at'] !== null): ?>
+                <a class="sa-btn is-sm" style="margin-left:8px" target="_blank" rel="noopener"
+                   href="/soft-appeals-room.php?document=<?= $e(urlencode((string) $document['public_ref'])) ?>">
+                  Open your copy
+                </a>
+              <?php endif; ?>
             </div>
           </div>
         <?php endforeach; ?>

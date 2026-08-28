@@ -187,6 +187,20 @@ $signContext = [
 
 $problem = $session->flash('client_problem');
 
+// What they typed, kept across a refusal.
+//
+// The consent box was left unticked on the first walk of this page and the
+// refusal came back with every field empty, so the signer had to retype their
+// legal name to try again. The preferences page keeps its answers on a
+// refusal; this one now does too.
+$typed = [
+    'typed_name'         => '',
+    'typed_title'        => null,
+    'typed_organization' => null,
+    'consent'            => false,
+    'confirm'            => false,
+];
+
 // ---------------------------------------------------------------------------
 // The write.
 // ---------------------------------------------------------------------------
@@ -236,6 +250,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         $problem = $e->getMessage();
         http_response_code(422);
     }
+
+    $typed = [
+        'typed_name'         => (string) ($_POST['typed_name'] ?? ''),
+        'typed_title'        => (string) ($_POST['typed_title'] ?? ''),
+        'typed_organization' => (string) ($_POST['typed_organization'] ?? ''),
+        'consent'            => (string) ($_POST['consent'] ?? '') === 'yes',
+        'confirm'            => (string) ($_POST['confirm'] ?? '') === 'yes',
+    ];
 }
 
 // ---------------------------------------------------------------------------
@@ -267,6 +289,7 @@ $render(
         'utcNow'           => $screen['utc_now'],
         'localNow'         => $screen['local_now'],
         'organizationName' => (string) $engagement['legal_name'],
+        'typed'            => $typed,
     ],
     // The character, not the entity. The shell escapes the title, so an entity
     // here prints as "&middot;" in the browser tab.

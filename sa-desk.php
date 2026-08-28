@@ -439,6 +439,80 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
 }
 
 // ---------------------------------------------------------------------------
+// Opening one stored document.
+//
+// The executed record and the document body live in the private vault, which
+// the web server denies outright. That is the point, and it is also why this
+// exists: without a door the application opens itself, an executed agreement
+// and its audit certificate were written, hashed, verified on every read, and
+// readable by nobody.
+//
+// The reference names a document, and the document is looked up THROUGH the
+// engagement it belongs to, so a reference alone reaches nothing.
+// ---------------------------------------------------------------------------
+$open = (string) ($_GET['open'] ?? '');
+if ($open !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
+    $ref = (string) ($_GET['e'] ?? '');
+    $engagement = $ref === '' ? null : $engagements->findByPublicRef($ref);
+    $document = null;
+    if ($engagement !== null) {
+        foreach ($app->documents()->forEngagement((string) $engagement['id']) as $row) {
+            if ((string) $row['public_ref'] === $open) {
+                $document = $row;
+            }
+        }
+    }
+
+    if ($document === null) {
+        $app->audit()->record('document.open', 'denied', 'document', null, [
+            'reason' => 'not a document on that engagement',
+        ]);
+        http_response_code(404);
+        exit('Not here.');
+    }
+
+    $which = (string) ($_GET['part'] ?? 'executed');
+    $service = $app->documentService();
+    $contents = $which === 'body'
+        ? $service->body($document)
+        : $service->executedRecord($document);
+
+    if ($contents === null) {
+        $app->audit()->record('document.open', 'failure', 'document', (string) $document['id'], [
+            'reason' => 'nothing stored for that part yet',
+        ], (string) $document['organization_id']);
+        $session->flash(
+            'desk_problem',
+            $which === 'body'
+                ? 'The document body is not in the vault.'
+                : 'There is no executed record yet. One is written when the document is executed.'
+        );
+        header('Location: /sa-desk.php?view=documents&e=' . urlencode($ref), true, 303);
+        exit;
+    }
+
+    $app->audit()->record('document.open', 'success', 'document', (string) $document['id'], [
+        'document_kind'    => (string) $document['kind'],
+        'document_version' => (string) $document['version'],
+        'source'           => $which,
+    ], (string) $document['organization_id']);
+
+    // Its own headers, not the Desk's. The record is a self-contained page with
+    // inline styles and nothing else: no script, no image, no font, no request
+    // of any kind. The policy below says exactly that, so even a record written
+    // years from now cannot reach the network from inside this tab.
+    header('Content-Type: ' . ($which === 'body' ? 'text/plain' : 'text/html') . '; charset=utf-8');
+    header("Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'");
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: no-referrer');
+    header('Cache-Control: no-store, private');
+    header('X-Robots-Tag: noindex, nofollow');
+    header('Content-Disposition: inline; filename="' . $open . ($which === 'body' ? '.txt' : '.html') . '"');
+    echo $contents;
+    exit;
+}
+
+// ---------------------------------------------------------------------------
 // Reads.
 // ---------------------------------------------------------------------------
 $app->audit()->record('desk.view', 'success', 'page', null);

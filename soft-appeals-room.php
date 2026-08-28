@@ -18,6 +18,7 @@ declare(strict_types=1);
  * organization id read from a request would be the whole leak.
  */
 
+use SoftAppeals\Domain\DocumentStatus;
 use SoftAppeals\Domain\Permission;
 use SoftAppeals\Domain\Role;
 use SoftAppeals\Domain\Stage;
@@ -218,6 +219,57 @@ if ($engagement === null) {
     exit;
 }
 
+// ---------------------------------------------------------------------------
+// Their own signed copy, out of the vault.
+//
+// The room tells a practice their agreements stay here rather than in an
+// inbox, which is only true if they can actually open one. The reference is
+// matched against the documents on THIS session's engagement, so a reference
+// belonging to another practice finds nothing, and only an executed record is
+// served: a draft is not theirs to read and an unsigned document is not a copy
+// of anything.
+// ---------------------------------------------------------------------------
+$wanted = (string) ($_GET['document'] ?? '');
+if ($wanted !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
+    $found = null;
+    foreach ($app->documents()->forClient((string) $engagement['id']) as $row) {
+        if ((string) $row['public_ref'] === $wanted
+            && (string) $row['organization_id'] === $organizationId
+        ) {
+            $found = $row;
+        }
+    }
+
+    $record = $found === null ? null : $app->documentService()->executedRecord($found);
+    if ($record === null) {
+        $app->audit()->record('document.open', 'denied', 'document', null, [
+            'reason' => 'no executed copy for that reference on this engagement',
+        ], $organizationId);
+        $session->flash(
+            'client_problem',
+            'That copy is not ready yet. A signed copy appears here once both of us have signed.'
+        );
+        header('Location: /soft-appeals-room.php', true, 303);
+        exit;
+    }
+
+    $app->audit()->record('document.open', 'success', 'document', (string) $found['id'], [
+        'document_kind'    => (string) $found['kind'],
+        'document_version' => (string) $found['version'],
+        'source'           => 'client',
+    ], $organizationId);
+
+    header('Content-Type: text/html; charset=utf-8');
+    header("Content-Security-Policy: default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'");
+    header('X-Content-Type-Options: nosniff');
+    header('Referrer-Policy: no-referrer');
+    header('Cache-Control: no-store, private');
+    header('X-Robots-Tag: noindex, nofollow');
+    header('Content-Disposition: inline; filename="' . $wanted . '.html"');
+    echo $record;
+    exit;
+}
+
 $engagementId = (string) $engagement['id'];
 $stage = (string) $engagement['stage'];
 $organization = (string) ($engagement['display_name'] ?? $engagement['legal_name'] ?? '');
@@ -243,6 +295,18 @@ $preferencesOpen = !$app->preferences()->isConfirmed($engagementId)
 // offered the button. Holding the role is not the same as being the person this
 // document names.
 $documents = $app->documents()->forClient($engagementId);
+
+// Anything they have signed that is not executed yet. While one exists, the
+// next move is hers and the room says so rather than repeating the stage.
+$awaitingHer = null;
+foreach ($documents as $row) {
+    if (in_array((string) $row['status'], [
+        DocumentStatus::CLIENT_SIGNED,
+        DocumentStatus::COUNTERSIGNED,
+    ], true)) {
+        $awaitingHer = $row;
+    }
+}
 $signable = $config->eSignEnabled()
     ? $app->signingService()->pending([
         'organization_id' => $organizationId,
@@ -259,7 +323,9 @@ Client::render('room-shell', [
     'showDetail'   => $showDetail,
     'organization' => $organization,
     'engagement'   => $engagement,
-    'stageLabel'   => Stage::clientLabel($stage),
+    'stageLabel'   => $awaitingHer === null
+        ? Stage::clientLabel($stage)
+        : 'Signed by you, with us to finish',
     'nextLine'     => 'Your denial-recovery work, in one place. See what was reviewed, '
         . 'what needs your attention, what is waiting on a payer, and what has been recovered.',
     'email'        => (string) $context['email'],
@@ -271,8 +337,16 @@ Client::render('room-shell', [
     // shell and the view inside it read one array.
     'timeline'        => $app->timeline()->forEngagement($engagementId),
     'chosen'          => $app->preferencesService()->summary($engagementId, true),
-    'nextOwner'       => Stage::clientNextOwner($stage),
-    'nextAction'      => Stage::clientNextAction($stage),
+    // The stage does not move when a practice signs. It moves when the
+    // agreement is EXECUTED, which needs her countersignature, so between the
+    // two the stage still reads "waiting for the client signature" and the room
+    // was telling a practice to sign a thing they had just signed. Seen on
+    // screen. The document they signed is the truer answer for those minutes,
+    // so it wins here.
+    'nextOwner'       => $awaitingHer === null ? Stage::clientNextOwner($stage) : 'Us',
+    'nextAction'      => $awaitingHer === null
+        ? Stage::clientNextAction($stage)
+        : 'You have signed. We are countersigning it now.',
     'preferencesOpen' => $preferencesOpen,
     'documents'       => $documents,
     'signable'        => $signable,

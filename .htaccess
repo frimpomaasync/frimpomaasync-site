@@ -100,6 +100,12 @@ RewriteRule ^index\.html$ / [R=301,L]
 # 404.html is exempt: ErrorDocument must be able to serve it by its real path.
 RewriteCond %{REQUEST_URI} !^/404\.html$
 RewriteCond %{THE_REQUEST} \s/+([^\s?]+)\.html[\s?] [NC]
+# The private tree is exempt. Everything under it is denied by its own
+# .htaccess, but the redirect above fires FIRST, so an executed agreement asked
+# for by its full path answered 301 and then 403 rather than 403 outright. Two
+# answers where there should be one, and the 301 is the one that confirms the
+# rewrite matched. Measured on staging 2026-08-28.
+RewriteCond %{REQUEST_URI} !^/storage-private/
 RewriteRule ^(.+)\.html$ /$1 [R=301,L]
 
 # /page -> serve page.html  (internal, invisible)

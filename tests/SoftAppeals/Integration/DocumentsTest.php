@@ -712,6 +712,112 @@ return [
             Expect::same(0, count($liveSent->getArrayCopy()), 'and nothing should have been emailed');
         },
 
+    'an executed agreement is replaced through the void door, not generated over' =>
+        static function (Bootstrap $app, Database $db) use (
+            $answers, $preferences, $boot, $confirmed, $signTokenFrom, $clientSigns, $owner
+        ): void {
+            [$app, $sent] = $boot($db);
+            $engagement = $confirmed($app, $sent, $answers, $preferences);
+
+            $document = $app->documentService()->generate($engagement, DocumentKind::BAA, null);
+            $app->documentService()->send($document, $engagement, null);
+            $document = $app->documents()->find((string) $document['id']);
+            $signed = $clientSigns($app, $document, $engagement, $signTokenFrom($sent));
+            $executed = $app->documentService()->countersign($signed, $engagement, [
+                'typed_name'  => 'Nana Frimpongmaa',
+                'typed_title' => 'Owner',
+                'consent'     => true,
+            ], $owner($app));
+
+            // Generating over it would leave version 1 executed and un-voided
+            // while version 2 quietly became the current one, so the agreement
+            // both parties signed would stop being the one the portal shows.
+            $engagement = $app->engagements()->findWithOrganization((string) $engagement['id']);
+            $check = $app->documentService()->canGenerate($engagement, DocumentKind::BAA);
+            Expect::false($check['ok'], 'a bare generate over an executed agreement should be refused');
+            Expect::true(
+                str_contains((string) $check['reason'], 'executed'),
+                'and the refusal should say why: ' . (string) $check['reason']
+            );
+
+            Expect::throws(
+                RuntimeException::class,
+                static fn () => $app->documentService()->generate($engagement, DocumentKind::BAA, null),
+                'and generate() should refuse it too, not only the button'
+            );
+
+            // The door that does work voids it with a reason first.
+            $replacement = $app->documentService()->correct(
+                $executed,
+                $engagement,
+                'The fee basis was wrong',
+                null
+            );
+            Expect::same(2, (int) $replacement['version'], 'the replacement should be version 2');
+
+            $old = $app->documents()->find((string) $executed['id']);
+            Expect::same(DocumentStatus::VOID, (string) $old['status'], 'the executed one should now be void');
+            Expect::same(
+                'The fee basis was wrong',
+                (string) $old['void_reason'],
+                'and it should carry the reason'
+            );
+            Expect::notNull(
+                $old['executed_sha256'],
+                'voiding must not erase what was executed'
+            );
+            Expect::same(
+                2,
+                count($app->signatures()->forDocument((string) $executed['id'])),
+                'and both signatures should still be on it'
+            );
+        },
+
+    'a client sees only executed copies, and only its own' =>
+        static function (Bootstrap $app, Database $db) use (
+            $answers, $preferences, $boot, $confirmed, $signTokenFrom, $clientSigns, $owner
+        ): void {
+            [$app, $sent] = $boot($db);
+            $engagement = $confirmed($app, $sent, $answers, $preferences);
+
+            $draft = $app->documentService()->generate($engagement, DocumentKind::BAA, null);
+            Expect::same(
+                0,
+                count($app->documents()->forClient((string) $engagement['id'])),
+                'a draft is not the practice business'
+            );
+            Expect::null(
+                $app->documentService()->executedRecord($draft),
+                'and there is no executed copy of a draft to open'
+            );
+
+            $app->documentService()->send($draft, $engagement, null);
+            $sentDoc = $app->documents()->find((string) $draft['id']);
+            Expect::same(
+                1,
+                count($app->documents()->forClient((string) $engagement['id'])),
+                'once it is out for signature the practice can see it'
+            );
+            Expect::null(
+                $app->documentService()->executedRecord($sentDoc),
+                'but there is still no copy to open until it is executed'
+            );
+
+            $signed = $clientSigns($app, $sentDoc, $engagement, $signTokenFrom($sent));
+            $executed = $app->documentService()->countersign($signed, $engagement, [
+                'typed_name'  => 'Nana Frimpongmaa',
+                'typed_title' => 'Owner',
+                'consent'     => true,
+            ], $owner($app));
+
+            $copy = $app->documentService()->executedRecord($executed);
+            Expect::notNull($copy, 'now there is a copy to open');
+            Expect::true(
+                str_contains((string) $copy, 'Audit certificate'),
+                'and it carries the audit certificate'
+            );
+        },
+
     'the vault refuses a path that tries to leave it' =>
         static function (Bootstrap $app, Database $db) use ($boot): void {
             [$app] = $boot($db);

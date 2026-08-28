@@ -37,6 +37,7 @@
  * @var string $utcNow
  * @var string $localNow
  * @var string $organizationName
+ * @var array{typed_name:string,typed_title:?string,typed_organization:?string,consent:bool,confirm:bool} $typed
  */
 
 use SoftAppeals\Views\Client;
@@ -108,7 +109,8 @@ $e = static fn (?string $value): string => Client::e($value);
         <p class="sa-client-warn">Consent wording version <?= $e($consentVersion) ?>.</p>
         <div class="sa-choices">
           <label class="sa-choice">
-            <input type="checkbox" name="consent" value="yes">
+            <input type="checkbox" name="consent" value="yes"
+                   <?= $typed['consent'] ? 'checked' : '' ?>>
             <span class="sa-choice-t"><b>I agree to sign this document electronically.</b></span>
           </label>
         </div>
@@ -122,19 +124,20 @@ $e = static fn (?string $value): string => Client::e($value);
           <span class="sa-fieldlabel">Your full legal name</span>
           <input class="sa-input" type="text" name="typed_name" maxlength="160"
                  autocomplete="name" spellcheck="false"
+                 value="<?= $e($typed['typed_name']) ?>"
                  placeholder="<?= $e($signer === null ? '' : (string) $signer['name']) ?>">
         </label>
 
         <label class="sa-field" style="margin-top:12px">
           <span class="sa-fieldlabel">Your title</span>
           <input class="sa-input" type="text" name="typed_title" maxlength="120"
-                 value="<?= $e($signer === null ? '' : (string) ($signer['role_title'] ?? '')) ?>">
+                 value="<?= $e($typed['typed_title'] ?? ($signer === null ? '' : (string) ($signer['role_title'] ?? ''))) ?>">
         </label>
 
         <label class="sa-field" style="margin-top:12px">
           <span class="sa-fieldlabel">The organization you are signing for</span>
           <input class="sa-input" type="text" name="typed_organization" maxlength="200"
-                 value="<?= $e($organizationName) ?>">
+                 value="<?= $e($typed['typed_organization'] ?? $organizationName) ?>">
         </label>
       </fieldset>
 
@@ -146,7 +149,8 @@ $e = static fn (?string $value): string => Client::e($value);
         </p>
         <div class="sa-choices">
           <label class="sa-choice">
-            <input type="checkbox" name="confirm" value="yes">
+            <input type="checkbox" name="confirm" value="yes"
+                   <?= $typed['confirm'] ? 'checked' : '' ?>>
             <span class="sa-choice-t"><b>I have read this document and I am signing it.</b></span>
           </label>
         </div>
