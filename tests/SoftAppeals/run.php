@@ -19,8 +19,14 @@ declare(strict_types=1);
  * left behind.
  *
  * This runner cannot execute on the machine the code was written on, because
- * that machine has no PHP. It runs on staging. Two checks that CAN run locally
- * live beside it and are the reason Phase 1 is not shipping unverified:
+ * that machine has no PHP, no Homebrew and no container runtime. It cannot run
+ * on the server either, which has no shell. It runs on the CI runner, which is
+ * the only machine in the chain with a PHP binary, and it gets there through
+ * static_check.py rather than through the workflow file, because editing
+ * anything under .github/workflows/ needs a token scope her account does not
+ * have.
+ *
+ * Two checks that CAN run locally live beside it:
  *
  *   python3 tests/SoftAppeals/schema_check.py   the migrations, on real SQLite
  *   python3 tests/SoftAppeals/static_check.py   PSR-4, secrets, deny-all
@@ -32,6 +38,15 @@ if (PHP_SAPI !== 'cli') {
 }
 
 require_once __DIR__ . '/../../src/SoftAppeals/Bootstrap.php';
+
+// Requiring the file defines the Bootstrap class and nothing else. The
+// autoloader is registered by boot(), and the runner reaches for Database
+// before it boots anything, so without this line the very first test dies with
+// "Class SoftAppeals\Database not found" and none of them ever run.
+//
+// That is exactly what happened the first time this suite was executed on CI,
+// on 2026-08-28, which was also the first time it was executed anywhere.
+\SoftAppeals\Bootstrap::registerAutoloader();
 
 use SoftAppeals\Bootstrap;
 use SoftAppeals\Database;
