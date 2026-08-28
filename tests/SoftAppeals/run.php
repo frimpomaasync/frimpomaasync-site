@@ -48,6 +48,24 @@ require_once __DIR__ . '/../../src/SoftAppeals/Bootstrap.php';
 // on 2026-08-28, which was also the first time it was executed anywhere.
 \SoftAppeals\Bootstrap::registerAutoloader();
 
+// Buffer everything this runner prints.
+//
+// PHP counts any output as headers being sent, in CLI as much as anywhere, and
+// once headers are sent session_set_cookie_params() warns and
+// session_regenerate_id() quietly does nothing. So the moment the runner
+// printed its own heading, every session in every later test stopped being able
+// to rotate its id, and the one acceptance test that checks rotation failed for
+// a reason that had nothing to do with the application.
+//
+// Buffering keeps headers_sent() false for the whole run. Nothing in
+// SessionManager is relaxed to make the tests pass: the security properties it
+// sets are exactly the ones production needs, and a test environment that
+// cannot exercise them is the thing that was wrong.
+//
+// PHP flushes the buffer on shutdown, including on exit(), so the output still
+// arrives in full.
+ob_start();
+
 use SoftAppeals\Bootstrap;
 use SoftAppeals\Database;
 
