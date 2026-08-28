@@ -152,7 +152,7 @@ if ($engagement === null) {
     $closed(
         'There is nothing to confirm here yet.',
         'This sign-in works, but no engagement is open against it. '
-            . 'Write to hello@frimpomaasync.com and it gets sorted the same day.'
+            . 'Write to softappeals@frimpomaasync.com and it gets sorted the same day.'
     );
 }
 
@@ -172,7 +172,7 @@ try {
     $closed(
         'This page is not yours to fill in.',
         'The person who received the terms email is the one who confirms these '
-            . 'preferences. Ask them to open their link, or write to hello@frimpomaasync.com.'
+            . 'preferences. Ask them to open their link, or write to softappeals@frimpomaasync.com.'
     );
 }
 

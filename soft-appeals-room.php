@@ -101,7 +101,7 @@ if (!$config->portalEnabled()) {
 
         'headline'    => 'Your Recovery Room is not open yet.',
         'explanation' => 'Everything is being handled by email for now, and '
-            . 'nothing is waiting on you. Write to hello@frimpomaasync.com for '
+            . 'nothing is waiting on you. Write to softappeals@frimpomaasync.com for '
             . 'where anything stands.',
         'offerSignIn' => false,
     ], $showDetail);
@@ -128,7 +128,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             'email',
             $email,
             null,
-            'Signing in is not switched on yet. Write to hello@frimpomaasync.com '
+            'Signing in is not switched on yet. Write to softappeals@frimpomaasync.com '
                 . 'and you get an answer the same day.'
         );
     }
@@ -211,7 +211,7 @@ if ($engagement === null) {
 
         'headline'    => 'There is nothing open here yet.',
         'explanation' => 'You are signed in, but no engagement is running against '
-            . 'this organization. Write to hello@frimpomaasync.com and it is sorted '
+            . 'this organization. Write to softappeals@frimpomaasync.com and it is sorted '
             . 'the same day.',
         'offerSignIn' => false,
     ], $showDetail);

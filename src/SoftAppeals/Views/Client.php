@@ -66,7 +66,7 @@ final class Client
             . '<p class="sa-qnum">Soft Appeals</p>'
             . '<h1 class="sa-q">This page could not be shown.</h1>'
             . '<p class="sa-note">Nothing you did caused it and nothing was lost. '
-            . 'Write to hello@frimpomaasync.com and it gets sorted the same day.</p>';
+            . 'Write to softappeals@frimpomaasync.com and it gets sorted the same day.</p>';
 
         if ($showDetail) {
             $out .= '<p class="sa-note"><code>' . self::e($e::class) . ': '

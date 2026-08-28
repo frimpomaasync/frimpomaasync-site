@@ -52,7 +52,12 @@ final class Config
         'SA_DB_USER'              => '',
         'SA_DB_PASSWORD'          => '',
         'SA_MAIL_FROM'            => 'notify@frimpomaasync.com',
-        'SA_MAIL_REPLY_TO'        => 'hello@frimpomaasync.com',
+        // Soft Appeals has its own inbox. The client pages tell a practice to
+        // write to it, so replies to the terms email, the confirmation and the
+        // sign-in code have to land in the same place. A page pointing one way
+        // and a Reply-To pointing another is how a practice's question goes to
+        // an address nobody is watching for it.
+        'SA_MAIL_REPLY_TO'        => 'softappeals@frimpomaasync.com',
         'SA_OWNER_EMAIL'          => 'nanafrimpgskc@gmail.com',
         'SA_PRIVATE_STORAGE_PATH' => '',
 

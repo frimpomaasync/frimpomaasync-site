@@ -86,7 +86,7 @@ $e = static fn (?string $value): string => Client::e($value);
             <?php endforeach; ?>
           </dl>
           <p class="sa-note">
-            Any of this can change. Write to hello@frimpomaasync.com and say which.
+            Any of this can change. Write to softappeals@frimpomaasync.com and say which.
           </p>
         </div>
       <?php endif; ?>

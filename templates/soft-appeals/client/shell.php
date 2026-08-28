@@ -138,7 +138,7 @@ $e = static fn (?string $value): string => Client::e($value);
       <?php Client::render($view, $data, $showDetail); ?>
 
       <p class="sa-client-foot">
-        Questions about any of this go to hello@frimpomaasync.com.
+        Questions about any of this go to softappeals@frimpomaasync.com.
         Do not send patient, member, claim or clinical information by email.
       </p>
     </div>

@@ -38,6 +38,6 @@ $e = static fn (?string $value): string => Client::e($value);
            it in the footer of every client page, and the same sentence twice,
            three lines apart, reads as a stutter. Seen on screen 2026-08-28. */ ?>
   <p class="sa-note">
-    Write to hello@frimpomaasync.com and a new link goes out the same day.
+    Write to softappeals@frimpomaasync.com and a new link goes out the same day.
   </p>
 </div>
