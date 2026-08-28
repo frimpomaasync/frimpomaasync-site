@@ -58,6 +58,60 @@ final class LegacyLeadImporter
         return $this->metricsPath;
     }
 
+    /**
+     * The lead folders this installation can actually see.
+     *
+     * There are two, and the second one is the whole reason this method exists.
+     *
+     * Hostinger put staging INSIDE the live site, at public_html/staging. So a
+     * request served from staging has its own fs-metrics, which holds only what
+     * was submitted to staging, and that is close to nothing. Every real lead
+     * she has ever had is one directory up, in the live site's fs-metrics, and
+     * from staging that folder is an ordinary readable path on the same
+     * account.
+     *
+     * Both are offered, both are counted, and the Desk says which is which. The
+     * key is what a request sends; the path is resolved here and never comes
+     * from the browser, so no request can name a folder of its own.
+     *
+     * On production the parent of the document root is the account home, which
+     * has no fs-metrics in it, so only `self` comes back and the choice
+     * disappears on its own.
+     *
+     * @return array<string,array{path:string,label:string,note:string}>
+     */
+    public static function sources(?string $appRoot = null): array
+    {
+        $appRoot = rtrim($appRoot ?? dirname(__DIR__, 3), '/');
+        $own = $appRoot . '/fs-metrics';
+
+        $out = [
+            'self' => [
+                'path'  => $own,
+                'label' => 'This site',
+                'note'  => 'Whatever was submitted to the site you are looking at now.',
+            ],
+        ];
+
+        $up = dirname($appRoot) . '/fs-metrics';
+        if ($up !== $own && is_dir($up)) {
+            $out['parent'] = [
+                'path'  => $up,
+                'label' => 'The live site, one level up',
+                'note'  => 'Where every real lead has landed since the form went up. '
+                    . 'Read only: the import never writes to it, moves it or deletes from it.',
+            ];
+        }
+
+        return $out;
+    }
+
+    /** The path for a source key, or null for a key nobody offered. */
+    public static function pathForSource(string $key, ?string $appRoot = null): ?string
+    {
+        return self::sources($appRoot)[$key]['path'] ?? null;
+    }
+
     public function archivePath(): string
     {
         return $this->metricsPath . '/sa-leads';

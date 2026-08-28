@@ -26,6 +26,7 @@ use SoftAppeals\Domain\IntakeStatus;
 use SoftAppeals\Domain\Permission;
 use SoftAppeals\Domain\Stage;
 use SoftAppeals\Security\Headers;
+use SoftAppeals\Services\LegacyLeadImporter;
 use SoftAppeals\Views\Desk;
 
 $app = require __DIR__ . '/src/SoftAppeals/boot.php';
@@ -213,7 +214,18 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         $csrf->require('leads.import');
         $authorization->require(Permission::INTAKE_REVIEW);
 
-        $report = $app->importer()->import();
+        // The request names a source, never a folder. The key is looked up in
+        // the same short list the page offered, so no POST can point the
+        // importer at a directory nobody chose.
+        $source = (string) ($_POST['source'] ?? 'self');
+        $path = LegacyLeadImporter::pathForSource($source, __DIR__);
+        if ($path === null) {
+            $session->flash('desk_problem', 'That is not one of the two lead folders.');
+            header('Location: /sa-desk.php?view=import', true, 303);
+            exit;
+        }
+
+        $report = $app->importer($path)->import();
         $session->flash(
             'desk_ok',
             $report['created'] . ' imported, ' . $report['skipped'] . ' already there, '
@@ -222,7 +234,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
                 ? 'Source and database agree.'
                 : 'Source and database do not agree yet. The counts are below.')
         );
-        header('Location: /sa-desk.php?view=import', true, 303);
+        header('Location: /sa-desk.php?view=import&source=' . urlencode($source), true, 303);
         exit;
     }
 
@@ -325,8 +337,26 @@ if ($view === 'terms') {
 }
 
 if ($view === 'import') {
-    $data['report'] = $app->importer()->inspect();
-    $data['importerPath'] = $app->importer()->metricsPath();
+    // Every folder this installation can see, each with its own dry run. On
+    // staging that is two: its own, which holds nothing, and the live site's
+    // one level up, which holds every lead she has ever had.
+    $sources = LegacyLeadImporter::sources(__DIR__);
+    $chosen = (string) ($_GET['source'] ?? '');
+    if (!array_key_exists($chosen, $sources)) {
+        // Default to the folder that actually has leads in it.
+        $chosen = array_key_exists('parent', $sources) ? 'parent' : 'self';
+    }
+
+    $reports = [];
+    foreach ($sources as $key => $source) {
+        $reports[$key] = $app->importer($source['path'])->inspect();
+    }
+
+    $data['sources'] = $sources;
+    $data['reports'] = $reports;
+    $data['chosen'] = $chosen;
+    $data['report'] = $reports[$chosen];
+    $data['importerPath'] = $sources[$chosen]['path'];
 }
 
 if ($view === 'audit') {

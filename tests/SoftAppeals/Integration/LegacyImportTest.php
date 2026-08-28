@@ -22,6 +22,7 @@ use SoftAppeals\Bootstrap;
 use SoftAppeals\Database;
 use SoftAppeals\Domain\IntakeForms;
 use SoftAppeals\Domain\IntakeStatus;
+use SoftAppeals\Services\LegacyLeadImporter;
 
 /** The archive filename sa-lead.php builds: Ymd-His then eight hex of sha256(email . source). */
 $stamp = static function (string $whenUtc, string $source, string $email): string {
@@ -281,6 +282,56 @@ return [
                 }
             } finally {
                 $remove($root);
+            }
+        },
+
+    'the two lead folders are named, and a request cannot name a third' =>
+        static function (Bootstrap $app, Database $db): void {
+            $root = sys_get_temp_dir() . '/sa-roots-' . bin2hex(random_bytes(4));
+            // A site with its own lead folder, sitting inside a parent that has
+            // one too. That is exactly the shape staging has: Hostinger put it
+            // inside the live site, so the live site's leads are one level up.
+            mkdir($root . '/live/staging/fs-metrics', 0755, true);
+            mkdir($root . '/live/fs-metrics', 0755, true);
+
+            try {
+                $sources = LegacyLeadImporter::sources($root . '/live/staging');
+                Expect::same(2, count($sources), 'both folders are offered');
+                Expect::same(
+                    $root . '/live/staging/fs-metrics',
+                    $sources['self']['path'],
+                    'its own'
+                );
+                Expect::same(
+                    $root . '/live/fs-metrics',
+                    $sources['parent']['path'],
+                    'and the live site one directory up'
+                );
+
+                Expect::null(
+                    LegacyLeadImporter::pathForSource('../../etc', $root . '/live/staging'),
+                    'a key nobody offered resolves to nothing, so a POST cannot pick a folder'
+                );
+                Expect::null(
+                    LegacyLeadImporter::pathForSource('/var/log', $root . '/live/staging'),
+                    'and neither can an absolute path'
+                );
+
+                // The live site has no fs-metrics above it, so the choice
+                // disappears on its own rather than offering a folder that is
+                // not there.
+                $onLive = LegacyLeadImporter::sources($root . '/live');
+                Expect::same(1, count($onLive), 'production sees only its own folder');
+            } finally {
+                foreach ([
+                    $root . '/live/staging/fs-metrics',
+                    $root . '/live/staging',
+                    $root . '/live/fs-metrics',
+                    $root . '/live',
+                    $root,
+                ] as $directory) {
+                    @rmdir($directory);
+                }
             }
         },
 
