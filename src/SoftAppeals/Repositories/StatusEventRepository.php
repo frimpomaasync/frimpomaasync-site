@@ -65,6 +65,7 @@ final class StatusEventRepository extends Repository
         $this->db->insert('sa_status_events', [
             'id'            => $id,
             'engagement_id' => $engagementId,
+            'seq'           => $this->nextSequence($engagementId),
             'event_type'    => mb_substr($eventType, 0, 60),
             'public_label'  => mb_substr($publicLabel, 0, 160),
             'from_stage'    => $fromStage,
@@ -87,7 +88,7 @@ final class StatusEventRepository extends Repository
     {
         return $this->db->all(
             'SELECT * FROM sa_status_events WHERE engagement_id = :e'
-            . ' ORDER BY created_at ASC, id ASC',
+            . ' ORDER BY created_at ASC, seq ASC, id ASC',
             ['e' => $engagementId]
         );
     }
@@ -101,7 +102,28 @@ final class StatusEventRepository extends Repository
             . ' FROM sa_status_events s'
             . ' JOIN sa_engagements e ON e.id = s.engagement_id'
             . ' JOIN sa_organizations o ON o.id = e.organization_id'
-            . ' ORDER BY s.created_at DESC, s.id DESC LIMIT ' . $limit
+            . ' ORDER BY s.created_at DESC, s.seq DESC, s.id DESC LIMIT ' . $limit
+        );
+    }
+
+    /**
+     * The next position in this engagement's story.
+     *
+     * Timestamps are stored to the second and three events are written inside
+     * one transaction when an engagement opens, so the clock cannot tell them
+     * apart and `id` is a random UUID. Ordering on that put a practice's own
+     * history in a random order, which was on screen on 2026-08-28.
+     *
+     * This is read inside the caller's transaction, so two events written by
+     * one request cannot be handed the same number. Two separate requests
+     * racing on the same engagement could, and the timestamp separates those:
+     * the pair is what orders the row, never the sequence alone.
+     */
+    private function nextSequence(string $engagementId): int
+    {
+        return (int) $this->db->value(
+            'SELECT COALESCE(MAX(seq), 0) + 1 FROM sa_status_events WHERE engagement_id = :e',
+            ['e' => $engagementId]
         );
     }
 

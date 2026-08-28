@@ -72,6 +72,11 @@ EXPECTED_TABLES = {
         "sa_engagement_preferences",
         "sa_login_codes",
     ],
+    # 0004 creates no table. It adds one column to sa_status_events, so the
+    # list is empty on purpose rather than missing: a missing entry is a
+    # migration nobody checked, an empty one is a migration that was checked
+    # and creates nothing.
+    "0004_status_event_sequence.php": [],
 }
 
 
@@ -127,15 +132,25 @@ def strip_suffix_concat(sql: str) -> str:
     return re.sub(r"\)\s*'\s*\.\s*\$suffix\s*$", ")", sql).strip().rstrip("'")
 
 
-def split_halves(migration_path: pathlib.Path) -> tuple[list[str], list[str]]:
+def split_halves(migration_path: pathlib.Path) -> tuple[list[str], list[str], list[str]]:
     """
-    One migration, read into its up statements and its down table list.
+    One migration, read into its up statements and its down half.
 
-    The down half builds its SQL by concatenating a table name, so its
-    $db->run() call carries no complete statement and must never be swept into
-    the up list. The table names are read from the list the migration itself
-    loops over, which keeps this honest: a table added to `up` and forgotten in
-    `down` is caught by the leftover assertion at the end of the cycle.
+    There are two shapes of down half and they need reading differently.
+
+    A migration that CREATES tables drops them in a foreach over a list of
+    names. Its $db->run() call concatenates the table name, so it carries no
+    complete statement and must never be swept into a statement list; the names
+    are read from the list the migration itself loops over.
+
+    A migration that ALTERS an existing table has no such list. 0004 adds one
+    column and drops it again, and its down half is a complete statement. Those
+    are executed as written, which is also the only way this check means
+    anything for that kind of migration: dropping a table 0004 never created
+    would prove nothing about whether 0004 can be undone.
+
+    Returns (up statements, table names to drop, explicit down statements).
+    Exactly one of the last two is populated.
     """
     source = migration_path.read_text(encoding="utf-8")
     split_at = source.index("'down' =>")
@@ -146,11 +161,19 @@ def split_halves(migration_path: pathlib.Path) -> tuple[list[str], list[str]]:
     if not up_sql:
         raise Failure(f"No SQL found in {migration_path.name}")
 
-    down_tables = re.findall(r"'(sa_[a-z_]+)'", down_block)
-    if not down_tables:
-        raise Failure(f"No tables listed in the down half of {migration_path.name}")
+    if "foreach" in down_block:
+        down_tables = re.findall(r"'(sa_[a-z_]+)'", down_block)
+        if not down_tables:
+            raise Failure(f"No tables listed in the down half of {migration_path.name}")
+        return up_sql, down_tables, []
 
-    return up_sql, down_tables
+    down_sql = [strip_suffix_concat(one) for one in extract_statements(down_block, sqlite_branch=True)]
+    if not down_sql:
+        raise Failure(
+            f"The down half of {migration_path.name} neither lists tables to drop "
+            "nor carries a statement to run. It cannot be undone."
+        )
+    return up_sql, [], down_sql
 
 
 def tables_now(connection: sqlite3.Connection) -> list[str]:
@@ -502,10 +525,78 @@ def assert_preferences_and_client_access(connection: sqlite3.Connection) -> None
         raise Failure("deleting an organization left its login codes behind")
 
 
+def assert_status_event_sequence(connection: sqlite3.Connection) -> None:
+    """
+    What 0004 exists to guarantee: two events written in the same second come
+    back in the order they were recorded, not in the order of a random UUID.
+
+    This is the bug that was on screen on 2026-08-28. A practice's own history
+    read "terms prepared, reviewed for fit, enquiry received", which is
+    backwards, because those three are written inside one transaction and the
+    timestamp cannot tell them apart.
+    """
+    connection.execute(
+        "INSERT INTO sa_organizations (id, public_ref, legal_name, status, created_at, updated_at)"
+        f" VALUES ('org9', 'SA-ORG-EEEEEE', 'Fictional Primary Care', 'prospect', {STAMP}, {STAMP})"
+    )
+    connection.execute(
+        "INSERT INTO sa_engagements (id, organization_id, public_ref, stage, fee_basis,"
+        " opened_at, row_version)"
+        f" VALUES ('e9', 'org9', 'SA-ENG-BBBBBB', 'terms_ready', 'not_set', {STAMP}, 1)"
+    )
+
+    # Written in one second, and deliberately given ids that sort the wrong way
+    # round, which is exactly what a random UUID does one time in six.
+    for ident, seq, label in (
+        ("zzz", 1, "Your enquiry was received and opened for review."),
+        ("mmm", 2, "Your enquiry was reviewed for fit."),
+        ("aaa", 3, "Your assessment terms are being prepared."),
+    ):
+        connection.execute(
+            "INSERT INTO sa_status_events (id, engagement_id, event_type, public_label,"
+            f" actor_type, seq, created_at) VALUES ('{ident}', 'e9', 'engagement.step',"
+            f" '{label}', 'staff', {seq}, {STAMP})"
+        )
+
+    ordered = [
+        row[0]
+        for row in connection.execute(
+            "SELECT id FROM sa_status_events WHERE engagement_id = 'e9'"
+            " ORDER BY created_at ASC, seq ASC, id ASC"
+        )
+    ]
+    if ordered != ["zzz", "mmm", "aaa"]:
+        raise Failure(
+            "same-second timeline events did not come back in the order they were "
+            "recorded: got " + ", ".join(ordered)
+        )
+
+    # And the old ordering really was broken, so the fix is not decorative.
+    by_id = [
+        row[0]
+        for row in connection.execute(
+            "SELECT id FROM sa_status_events WHERE engagement_id = 'e9'"
+            " ORDER BY created_at ASC, id ASC"
+        )
+    ]
+    if by_id == ["zzz", "mmm", "aaa"]:
+        raise Failure("this fixture cannot prove anything: id order already matched")
+
+    # A row written without naming seq must still be accepted, because the
+    # column carries a default and older rows predate it.
+    accepts(
+        connection,
+        "INSERT INTO sa_status_events (id, engagement_id, event_type, public_label,"
+        f" actor_type, created_at) VALUES ('nnn', 'e9', 'x', 'y', 'system', {STAMP})",
+        "a status event written without a sequence was refused",
+    )
+
+
 ASSERTIONS = {
     "0001_foundation.php": assert_foundation,
     "0002_intake_and_engagement.php": assert_intake_and_engagement,
     "0003_preferences_and_client_access.php": assert_preferences_and_client_access,
+    "0004_status_event_sequence.php": assert_status_event_sequence,
 }
 
 
@@ -524,11 +615,11 @@ def run_cycle(migration_paths: list[pathlib.Path], db_path: pathlib.Path) -> dic
     connection.execute("PRAGMA foreign_keys = ON")
 
     per_file: list[dict] = []
-    all_down_tables: list[list[str]] = []
+    all_down_plans: list[tuple[list[str], list[str]]] = []
 
     for migration_path in migration_paths:
-        up_sql, down_tables = split_halves(migration_path)
-        all_down_tables.append(down_tables)
+        up_sql, down_tables, down_sql = split_halves(migration_path)
+        all_down_plans.append((down_tables, down_sql))
 
         before = set(tables_now(connection))
         applied = 0
@@ -569,12 +660,17 @@ def run_cycle(migration_paths: list[pathlib.Path], db_path: pathlib.Path) -> dic
                 "name": migration_path.name,
                 "statements": applied,
                 "created": created,
-                "dropped": down_tables,
+                "dropped": down_tables or down_sql,
             }
         )
 
     # Down, in reverse file order, which is the order a rollback runs in.
-    for down_tables in reversed(all_down_tables):
+    for down_tables, down_sql in reversed(all_down_plans):
+        for statement in down_sql:
+            try:
+                connection.execute(statement)
+            except sqlite3.Error as error:
+                raise Failure(f"a down statement failed: {statement}: {error}")
         for table in down_tables:
             connection.execute(f'DROP TABLE IF EXISTS "{table}"')
 
@@ -595,10 +691,14 @@ def structural_mysql_check(migration_path: pathlib.Path) -> list[str]:
     source = migration_path.read_text(encoding="utf-8")
     notes: list[str] = []
 
-    if "ENGINE=InnoDB" not in source:
-        notes.append("no ENGINE=InnoDB clause")
-    if "utf8mb4" not in source:
-        notes.append("no utf8mb4 charset")
+    # Only a migration that creates a table can carry an engine and a charset.
+    # 0004 adds a column to a table 0002 already created with both, and asking
+    # it for them again would be asking it to repeat something it does not own.
+    if "CREATE TABLE" in source:
+        if "ENGINE=InnoDB" not in source:
+            notes.append("no ENGINE=InnoDB clause")
+        if "utf8mb4" not in source:
+            notes.append("no utf8mb4 charset")
 
     # Constructs SQLite takes and MySQL does not.
     for banned, why in [
