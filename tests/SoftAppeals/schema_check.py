@@ -694,7 +694,12 @@ def structural_mysql_check(migration_path: pathlib.Path) -> list[str]:
     # Only a migration that creates a table can carry an engine and a charset.
     # 0004 adds a column to a table 0002 already created with both, and asking
     # it for them again would be asking it to repeat something it does not own.
-    if "CREATE TABLE" in source:
+    #
+    # The marker is CREATE TABLE with its opening quote, so it matches a real
+    # SQL string and not the phrase in a comment. 0004 explains itself by saying
+    # "the way CREATE TABLE IF NOT EXISTS is", and matching on the bare words
+    # made this check fire on a sentence about the check.
+    if "'CREATE TABLE" in source:
         if "ENGINE=InnoDB" not in source:
             notes.append("no ENGINE=InnoDB clause")
         if "utf8mb4" not in source:

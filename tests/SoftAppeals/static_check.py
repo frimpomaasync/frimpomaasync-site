@@ -18,6 +18,17 @@ live server:
   4. Balanced braces, parentheses and brackets outside strings and comments.
   5. Every private directory carries a deny-all .htaccess.
   6. A real `php -l` syntax check, WHEN a PHP binary exists.
+  7. The PHP test suite itself, WHEN a PHP binary exists.
+
+Point 7 is here rather than in the deploy workflow for one blunt reason: editing
+anything under .github/workflows/ needs a token carrying the `workflow` scope
+and hers does not have one, so a change there is a manual paste in the browser
+every time. This file is ordinary Python, the workflow already runs it, and the
+runner has PHP. Without this, every test under tests/SoftAppeals was written and
+never executed anywhere: her Mac has no PHP runtime and the server has no shell.
+
+The suite builds a throwaway SQLite database per case and touches nothing on any
+host, so running it from here is safe wherever here happens to be.
 
 On CI a PHP binary does exist, so the syntax check runs there and the deploy is
 blocked by it. On her Mac it does not, and the check reports itself as skipped
@@ -283,6 +294,51 @@ def php_lint(paths: list[pathlib.Path]) -> str:
     return f"php -l: {len(paths)} files, {bad} with syntax errors"
 
 
+def php_suite() -> str:
+    """
+    tests/SoftAppeals/run.php, when a PHP binary is available.
+
+    The suite is CLI-only and builds its own throwaway SQLite database for every
+    case, so it reaches no real database and no host. A failure here is added to
+    the same failure list as everything else, which is what makes it block a
+    deploy rather than scroll past in a log.
+    """
+    binary = shutil.which("php")
+    if binary is None:
+        return "php test suite: SKIPPED, no PHP on this machine (it runs on CI)"
+
+    runner = REPO / "tests" / "SoftAppeals" / "run.php"
+    if not runner.exists():
+        return "php test suite: SKIPPED, no runner found"
+
+    result = subprocess.run(
+        [binary, str(runner)],
+        capture_output=True,
+        text=True,
+        cwd=str(REPO),
+    )
+    output = (result.stdout + result.stderr).strip()
+
+    # The runner prints "N passed, M failed" as its last meaningful line.
+    summary = ""
+    for line in reversed(output.splitlines()):
+        if "passed" in line and "failed" in line:
+            summary = line.strip()
+            break
+
+    if result.returncode != 0:
+        # Carry the whole run into the failure list. A test that broke is worth
+        # every line it printed, and this is the only place anybody sees it.
+        failures.append("tests/SoftAppeals/run.php:\n" + indent_block(output))
+        return f"php test suite: FAILED ({summary or 'see below'})"
+
+    return f"php test suite: {summary or 'passed'}"
+
+
+def indent_block(text: str) -> str:
+    return "\n".join("           " + line for line in text.splitlines())
+
+
 def main() -> int:
     print()
     print("  Soft Appeals static check")
@@ -367,10 +423,17 @@ def main() -> int:
 
     lint_note = php_lint(php_files)
 
+    # The suite runs last, after the cheap checks have already had their say.
+    # A parse error found by php -l would make every test fail for one reason,
+    # and reading forty failures to find one missing brace is worse than being
+    # told about the brace.
+    suite_note = php_suite()
+
     print(f"  {checked} PHP files checked")
     print(f"  {len(directories)} private directories checked for a tracked deny-all")
     print("  secret scan: self-tested, then run over every tracked file")
     print(f"  {lint_note}")
+    print(f"  {suite_note}")
     print("  " + "-" * 58)
 
     if failures:
@@ -385,8 +448,8 @@ def main() -> int:
     print("  Clean. Namespaces match paths, no secret anywhere, every private folder denied.")
     print()
     if shutil.which("php") is None:
-        print("  No PHP on this machine, so `php -l` did not run here.")
-        print("  It runs on CI, and a parse error blocks the deploy there.")
+        print("  No PHP on this machine, so `php -l` and the test suite did not run here.")
+        print("  Both run on CI, and either one failing blocks the deploy there.")
     print()
     return 0
 

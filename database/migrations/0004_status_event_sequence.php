@@ -37,7 +37,12 @@ return [
     'name' => '0004_status_event_sequence',
 
     'up' => static function (\SoftAppeals\Database $db): void {
-        $db->run('ALTER TABLE sa_status_events ADD COLUMN seq INTEGER NOT NULL DEFAULT 0');
+        // An ALTER is not idempotent the way CREATE TABLE IF NOT EXISTS is, and
+        // SchemaService offers a half-applied migration its own down before it
+        // retries the up. Asking first is what makes a retry survivable.
+        if (!$db->columnExists('sa_status_events', 'seq')) {
+            $db->run('ALTER TABLE sa_status_events ADD COLUMN seq INTEGER NOT NULL DEFAULT 0');
+        }
 
         // The order the three opening events are actually written in, from
         // EngagementService::openFromIntake. Anything not listed sorts after
@@ -82,6 +87,14 @@ return [
     },
 
     'down' => static function (\SoftAppeals\Database $db): void {
+        // The test runner takes every migration down BEFORE it takes them up,
+        // against a database with no tables in it at all. DROP TABLE IF EXISTS
+        // shrugs at that; a bare ALTER throws and takes the whole suite with
+        // it. This is the guard that stops the down half from being the thing
+        // that breaks every test.
+        if (!$db->columnExists('sa_status_events', 'seq')) {
+            return;
+        }
         $db->run('ALTER TABLE sa_status_events DROP COLUMN seq');
     },
 ];

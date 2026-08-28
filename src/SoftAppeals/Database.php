@@ -283,6 +283,37 @@ final class Database
     }
 
     /**
+     * Whether one column is present on one table.
+     *
+     * A migration that alters a table has to ask this before it alters, because
+     * the down half of an ALTER is not idempotent the way DROP TABLE IF EXISTS
+     * is. The test runner takes every migration down before it takes them up,
+     * against a database that is empty, and a bare ALTER there throws and takes
+     * the whole suite with it.
+     */
+    public function columnExists(string $table, string $column): bool
+    {
+        if (!$this->tableExists($table)) {
+            return false;
+        }
+        if ($this->isSqlite()) {
+            // PRAGMA takes no bound parameters, so the name goes through the
+            // identifier check rather than through a placeholder.
+            foreach ($this->all('PRAGMA table_info(' . $this->quoteIdentifier($table) . ')') as $row) {
+                if ((string) ($row['name'] ?? '') === $column) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return $this->one(
+            'SELECT column_name FROM information_schema.columns'
+            . ' WHERE table_schema = DATABASE() AND table_name = :t AND column_name = :c',
+            ['t' => $table, 'c' => $column]
+        ) !== null;
+    }
+
+    /**
      * The only place an identifier is ever interpolated. Anything outside
      * [A-Za-z0-9_] is refused rather than escaped, because no table or column in
      * this schema needs another character and a name that does is a bug.
