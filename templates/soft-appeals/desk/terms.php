@@ -17,6 +17,8 @@
  * @var array<string,mixed>|null $preview
  * @var list<array<string,mixed>> $communications
  * @var list<array<string,mixed>> $awaitingTerms
+ * @var list<array{label:string,value:string}> $preferencesSummary
+ * @var array<string,mixed>|null $preferencesRow
  * @var bool $canSendTerms
  */
 
@@ -152,6 +154,36 @@ $e = static fn (?string $value): string => Desk::e($value);
           </tbody>
         </table>
       </div></div>
+    </section>
+  <?php endif; ?>
+
+  <?php /* Only once it is actually confirmed. A row that exists but carries no
+           confirmation stamp is a state nothing in the application creates, and
+           printing "Confirmed" against an empty date would be the one thing on
+           this screen that was not true. */ ?>
+  <?php if ($preferencesRow !== null && $preferencesRow['confirmed_at'] !== null): ?>
+    <section aria-labelledby="desk-terms-prefs">
+      <p class="sa-label" id="desk-terms-prefs">What they confirmed on their own form</p>
+      <div class="sa-panel">
+        <div class="sa-panel-h">
+          <span>
+            Confirmed <?= $e($clock->displayDateTime((string) $preferencesRow['confirmed_at'])) ?>
+          </span>
+          <span class="sa-pill is-ok">Preferences in</span>
+        </div>
+        <div style="padding:14px 18px">
+          <dl class="sa-dl">
+            <?php foreach ($preferencesSummary as $row): ?>
+              <dt><?= $e($row['label']) ?></dt>
+              <dd><?= $e($row['value']) ?></dd>
+            <?php endforeach; ?>
+          </dl>
+          <p class="sa-desk-note">
+            The people named here already hold their roles. The signer can be sent
+            the Business Associate Agreement the moment document generation exists.
+          </p>
+        </div>
+      </div>
     </section>
   <?php endif; ?>
 

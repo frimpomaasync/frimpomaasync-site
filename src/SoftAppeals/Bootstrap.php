@@ -7,11 +7,14 @@ use SoftAppeals\Auth\AuthorizationService;
 use SoftAppeals\Auth\AuthService;
 use SoftAppeals\Auth\SessionManager;
 use SoftAppeals\Repositories\CommunicationRepository;
+use SoftAppeals\Repositories\ContactRepository;
 use SoftAppeals\Repositories\EngagementRepository;
 use SoftAppeals\Repositories\IntakeRepository;
 use SoftAppeals\Repositories\InvitationRepository;
+use SoftAppeals\Repositories\LoginCodeRepository;
 use SoftAppeals\Repositories\MembershipRepository;
 use SoftAppeals\Repositories\OrganizationRepository;
+use SoftAppeals\Repositories\PreferenceRepository;
 use SoftAppeals\Repositories\StatusEventRepository;
 use SoftAppeals\Repositories\UserRepository;
 use SoftAppeals\Security\Csrf;
@@ -19,10 +22,12 @@ use SoftAppeals\Security\ErrorHandler;
 use SoftAppeals\Security\Hmac;
 use SoftAppeals\Security\RateLimiter;
 use SoftAppeals\Services\AuditService;
+use SoftAppeals\Services\ClientAccessService;
 use SoftAppeals\Services\EngagementService;
 use SoftAppeals\Services\IntakeService;
 use SoftAppeals\Services\LegacyLeadImporter;
 use SoftAppeals\Services\MailService;
+use SoftAppeals\Services\PreferencesService;
 use SoftAppeals\Services\SchemaService;
 use SoftAppeals\Services\SeedService;
 use SoftAppeals\Services\TermsService;
@@ -331,6 +336,31 @@ final class Bootstrap
         ));
     }
 
+    public function contacts(): ContactRepository
+    {
+        return $this->make(ContactRepository::class, fn (): ContactRepository => new ContactRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function preferences(): PreferenceRepository
+    {
+        return $this->make(PreferenceRepository::class, fn (): PreferenceRepository => new PreferenceRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function loginCodes(): LoginCodeRepository
+    {
+        return $this->make(LoginCodeRepository::class, fn (): LoginCodeRepository => new LoginCodeRepository(
+            $this->database(),
+            $this->clock(),
+            $this->hmac()
+        ));
+    }
+
     public function communications(): CommunicationRepository
     {
         return $this->make(CommunicationRepository::class, fn (): CommunicationRepository => new CommunicationRepository(
@@ -407,6 +437,50 @@ final class Bootstrap
             $this->invitations(),
             $this->communications(),
             $this->engagementService(),
+            $this->mail(),
+            $this->audit()
+        ));
+    }
+
+    /**
+     * The two client-side services, Phase 3.
+     *
+     * Both are built the same way every other service is, and both are given
+     * the mailer through mail() so a test that swaps the transport swaps it for
+     * these as well. A sign-in code that reached a real address from a test run
+     * would be the one failure nobody could take back.
+     */
+    public function clientAccess(): ClientAccessService
+    {
+        return $this->make(ClientAccessService::class, fn (): ClientAccessService => new ClientAccessService(
+            $this->database(),
+            $this->clock(),
+            $this->session(),
+            $this->csrf(),
+            $this->invitations(),
+            $this->loginCodes(),
+            $this->contacts(),
+            $this->users(),
+            $this->memberships(),
+            $this->engagements(),
+            $this->rateLimiter(),
+            $this->mail(),
+            $this->audit(),
+            $this->hmac()
+        ));
+    }
+
+    public function preferencesService(): PreferencesService
+    {
+        return $this->make(PreferencesService::class, fn (): PreferencesService => new PreferencesService(
+            $this->database(),
+            $this->preferences(),
+            $this->contacts(),
+            $this->users(),
+            $this->memberships(),
+            $this->engagements(),
+            $this->engagementService(),
+            $this->timeline(),
             $this->mail(),
             $this->audit()
         ));

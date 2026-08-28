@@ -357,6 +357,17 @@ if ($view === 'terms') {
         ? []
         : $communications->forEngagement((string) $joined['id']);
     $data['awaitingTerms'] = $termsReady;
+
+    // What the practice answered on its own form, once it has. Phase 3 put the
+    // preferences page in front of them; this is the only place she sees what
+    // came back, and without it a confirmation would be a stage change with
+    // nothing behind it.
+    $data['preferencesSummary'] = $joined === null
+        ? []
+        : $app->preferencesService()->summary((string) $joined['id']);
+    $data['preferencesRow'] = $joined === null
+        ? null
+        : $app->preferences()->forEngagement((string) $joined['id']);
 }
 
 if ($view === 'import') {

@@ -68,8 +68,15 @@ final class Config
         // Never in production, and never once real rows exist.
         'SA_AUTO_SEED' => null,
 
-        'SA_PORTAL_ENABLED'           => false,
-        'SA_CLIENT_LOGIN_ENABLED'     => false,
+        // The client side of the application: the preferences page, the
+        // passwordless sign-in, and the Recovery Room. Unset means "anywhere
+        // but production", the same rule the two above use, so staging can be
+        // walked end to end while the live site stays shut until she says
+        // otherwise. Section 20 asks for false in production and that is what
+        // an unset value produces there.
+        'SA_PORTAL_ENABLED'           => null,
+        'SA_CLIENT_LOGIN_ENABLED'     => null,
+
         'SA_E_SIGN_ENABLED'           => false,
         'SA_RECOVERY_FINANCE_ENABLED' => false,
         'SA_DEADLINE_CRON_ENABLED'    => false,
@@ -247,6 +254,37 @@ final class Config
         $value = $this->values['SA_AUTO_SEED'] ?? null;
         if ($value === null || $value === '') {
             return !$this->isProduction() && $this->bool('SA_DEMO_MODE');
+        }
+        return self::toBool($value);
+    }
+
+    /**
+     * Whether the Recovery Room and the preferences page answer at all.
+     *
+     * A practice that follows a link into a closed portal is told plainly that
+     * it is not open yet, rather than being shown a 404 that reads as a broken
+     * link in an email she sent.
+     */
+    public function portalEnabled(): bool
+    {
+        return $this->flagOrNotProduction('SA_PORTAL_ENABLED');
+    }
+
+    /** Whether the six-digit sign-in code door is open. */
+    public function clientLoginEnabled(): bool
+    {
+        return $this->flagOrNotProduction('SA_CLIENT_LOGIN_ENABLED');
+    }
+
+    /**
+     * The pattern the three switchable capabilities share: unset means anywhere
+     * but production, and an explicit value in the config file wins either way.
+     */
+    private function flagOrNotProduction(string $key): bool
+    {
+        $value = $this->values[$key] ?? null;
+        if ($value === null || $value === '') {
+            return !$this->isProduction();
         }
         return self::toBool($value);
     }

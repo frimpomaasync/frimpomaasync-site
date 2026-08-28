@@ -295,6 +295,55 @@ final class Stage
         };
     }
 
+    /**
+     * The same two questions as nextOwner and nextAction, answered for the
+     * practice instead of for her.
+     *
+     * They are separate methods rather than a translation of the staff ones,
+     * because "Open the secure channel" is her task list and "We are opening the
+     * secure route for you" is what the practice is owed. A portal that shows a
+     * client the inside of somebody else's to-do list reads as an accident.
+     */
+    public static function clientNextOwner(string $stage): string
+    {
+        return match (self::nextOwner($stage)) {
+            'Soft Appeals' => 'Us',
+            'Client'       => 'You',
+            'Payer'        => 'The payer',
+            default        => 'Nobody',
+        };
+    }
+
+    public static function clientNextAction(string $stage): string
+    {
+        return match ($stage) {
+            self::INQUIRY_RECEIVED, self::FIT_REVIEW => 'We are reading what you sent',
+            self::TERMS_READY            => 'Your assessment terms are being written',
+            self::TERMS_SENT             => 'Confirm your onboarding preferences',
+            self::PREFERENCES_CONFIRMED  => 'We are preparing the Business Associate Agreement',
+            self::BAA_PENDING            => 'Sign the Business Associate Agreement',
+            self::BAA_EXECUTED           => 'We are preparing the review authorization',
+            self::REVIEW_AUTH_PENDING    => 'Sign the review authorization',
+            self::REVIEW_AUTH_EXECUTED   => 'We are opening the secure route',
+            self::SECURE_INTAKE_READY    => 'Send your denials through the secure route',
+            self::RECEIPT_CONFIRMED      => 'We have your denials and are starting',
+            self::ASSESSMENT_IN_PROGRESS => 'We are reviewing them',
+            self::ASSESSMENT_QA          => 'We are checking the assessment before it comes to you',
+            self::ASSESSMENT_DELIVERED   => 'Read your assessment',
+            self::CLIENT_DECISION_PENDING => 'Tell us whether you want recovery work',
+            self::RECOVERY_SCOPE_SELECTED => 'We are preparing the recovery agreement',
+            self::RECOVERY_AGREEMENT_PENDING  => 'Sign the recovery agreement',
+            self::RECOVERY_AGREEMENT_EXECUTED => 'We are opening the first work batch',
+            self::RECOVERY_ACTIVE        => 'The payer is deciding',
+            self::RECONCILIATION         => 'We are verifying what actually came back',
+            self::FINAL_REPORT           => 'We are writing your final report',
+            self::ACCESS_REVIEW, self::DATA_DISPOSITION => 'We are closing this out',
+            self::DECLINED               => 'Nothing. This one was closed',
+            self::CLOSED, self::CLOSED_NO_RECOVERY => 'Nothing. This one is closed',
+            default                      => 'Nothing right now',
+        };
+    }
+
     /** What she reads, for the internal token. */
     public static function staffLabel(string $stage): string
     {

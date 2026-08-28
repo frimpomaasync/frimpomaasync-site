@@ -175,6 +175,16 @@ foreach ($files as $file) {
         }
 
         Bootstrap::resetInstance();
+
+        // The session lives in the process, not in the container, so resetting
+        // Bootstrap does not clear it. Without this a test that signs somebody
+        // in hands the next test an authenticated session, and the next test
+        // passes or fails on a fixture it never asked for.
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            $_SESSION = [];
+            session_destroy();
+        }
+        $_SESSION = [];
     }
 }
 

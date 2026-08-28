@@ -146,6 +146,11 @@ final class EngagementService
     /**
      * Move one engagement one step, and write the line a client will read.
      *
+     * $actorType is who moved it. It defaults to staff because that is who
+     * moves most things, and the preferences page passes 'client' because a
+     * timeline that credits her with a decision the practice made is a timeline
+     * that misdescribes the only history the practice is ever shown.
+     *
      * @param array<string,scalar|null> $metadata
      * @throws \RuntimeException when the move is not an allowed edge, or when
      *         somebody else moved the record first
@@ -157,7 +162,8 @@ final class EngagementService
         string $eventType,
         ?string $actorId = null,
         array $metadata = [],
-        ?int $expectedVersion = null
+        ?int $expectedVersion = null,
+        string $actorType = StatusEventRepository::ACTOR_STAFF
     ): void {
         $before = $this->engagements->find($engagementId);
         if ($before === null) {
@@ -182,7 +188,7 @@ final class EngagementService
             $publicLabel,
             $from,
             $to,
-            StatusEventRepository::ACTOR_STAFF,
+            $actorType,
             $actorId,
             $metadata
         );

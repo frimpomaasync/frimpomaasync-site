@@ -296,10 +296,17 @@ def main() -> int:
         # code in the project, and a parse error in one of them is an empty 500
         # on the command centre. php_regions_only already handles the mixing.
         + list((REPO / "templates").rglob("*.php"))
+        # The test suite itself. It cannot run on this machine, so a parse error
+        # in a test file would go unseen until somebody had a PHP runtime, and
+        # the whole point of these checks is that nothing ships unread.
+        + list((REPO / "tests" / "SoftAppeals").rglob("*.php"))
         + [
             REPO / "sa-desk.php",
             REPO / "soft-appeals-login.php",
             REPO / "soft-appeals-setup.php",
+            REPO / "soft-appeals-preferences.php",
+            REPO / "soft-appeals-confirmed.php",
+            REPO / "soft-appeals-room.php",
         ]
     )
     for path in php_files:

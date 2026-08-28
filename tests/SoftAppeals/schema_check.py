@@ -68,6 +68,10 @@ EXPECTED_TABLES = {
         "sa_communications",
         "sa_status_events",
     ],
+    "0003_preferences_and_client_access.php": [
+        "sa_engagement_preferences",
+        "sa_login_codes",
+    ],
 }
 
 
@@ -394,9 +398,114 @@ def assert_intake_and_engagement(connection: sqlite3.Connection) -> None:
         raise Failure("deleting an engagement left its status events behind")
 
 
+def assert_preferences_and_client_access(connection: sqlite3.Connection) -> None:
+    """
+    The constraints 0003 exists to enforce.
+
+    The one that matters most is the uniqueness on engagement_id. "Preferences
+    update the engagement state once" is a Phase 3 acceptance line, and it is
+    only actually true if a second row for the same engagement is impossible at
+    the layer no code path can go around.
+    """
+    connection.execute(
+        "INSERT INTO sa_organizations (id, public_ref, legal_name, status, created_at, updated_at)"
+        f" VALUES ('org1', 'SA-ORG-DDDDDD', 'Fictional Family Practice', 'prospect', {STAMP}, {STAMP})"
+    )
+    connection.execute(
+        "INSERT INTO sa_engagements (id, organization_id, public_ref, stage, fee_basis,"
+        " opened_at, row_version)"
+        f" VALUES ('e1', 'org1', 'SA-ENG-AAAAAA', 'terms_sent', 'contingency_25', {STAMP}, 1)"
+    )
+    connection.execute(
+        "INSERT INTO sa_contacts (id, organization_id, name, work_email, active, created_at)"
+        f" VALUES ('c1', 'org1', 'A Person', 'person@example.org', 1, {STAMP})"
+    )
+
+    def preferences(
+        ident: str,
+        engagement: str = "'e1'",
+        cadence: str = "weekly",
+        channel: str = "client_system",
+        partner: str = "yes",
+        signer: str = "'c1'",
+    ) -> str:
+        return (
+            "INSERT INTO sa_engagement_preferences (id, engagement_id, organization_id,"
+            " communication_cadence, secure_channel, billing_partner, signer_contact_id,"
+            " created_at, updated_at)"
+            f" VALUES ('{ident}', {engagement}, 'org1', '{cadence}', '{channel}',"
+            f" '{partner}', {signer}, {STAMP}, {STAMP})"
+        )
+
+    accepts(connection, preferences("p1"), "a plain preferences row was refused")
+
+    refuses(
+        connection,
+        preferences("p2"),
+        "two preference rows for one engagement were accepted, so confirming twice"
+        " could confirm twice",
+    )
+    refuses(
+        connection,
+        preferences("p3", cadence="fortnightly"),
+        "a cadence nobody offers was accepted",
+    )
+    refuses(
+        connection,
+        preferences("p4", channel="email"),
+        "a secure channel nobody offers was accepted",
+    )
+    refuses(
+        connection,
+        preferences("p5", partner="maybe"),
+        "a billing-partner answer nobody offers was accepted",
+    )
+    refuses(
+        connection,
+        preferences("p6", signer="'nobody'"),
+        "a signer pointing at a contact that does not exist was accepted",
+    )
+
+    # A contact who leaves must not take the practice's recorded choice with
+    # them. The pointer clears; the row stays.
+    connection.execute("DELETE FROM sa_contacts WHERE id = 'c1'")
+    left = connection.execute(
+        "SELECT signer_contact_id FROM sa_engagement_preferences WHERE id = 'p1'"
+    ).fetchone()
+    if left is None:
+        raise Failure("removing a contact deleted the preferences row with them")
+    if left[0] is not None:
+        raise Failure("removing a contact left a signer pointer behind")
+
+    def code(ident: str, purpose: str = "client_login", attempts: int = 0, org: str = "'org1'") -> str:
+        return (
+            "INSERT INTO sa_login_codes (id, organization_id, email, code_digest, purpose,"
+            " expires_at, attempts, created_at)"
+            f" VALUES ('{ident}', {org}, 'person@example.org', '{'a' * 64}', '{purpose}',"
+            f" {STAMP}, {attempts}, {STAMP})"
+        )
+
+    accepts(connection, code("k1"), "a plain login code was refused")
+
+    # Two codes may carry the same digest. Six digits is a million values and a
+    # unique constraint here would eventually refuse a legitimate code.
+    accepts(connection, code("k2"), "two codes with the same digest were refused")
+
+    refuses(connection, code("k3", purpose="magic_link"), "a code purpose nobody offers was accepted")
+    refuses(connection, code("k4", attempts=-1), "a code with negative attempts was accepted")
+    refuses(connection, code("k5", org="'does-not-exist'"), "a code for an unknown organization was accepted")
+
+    # Closing a practice must take its live codes with it.
+    connection.execute("DELETE FROM sa_organizations WHERE id = 'org1'")
+    remaining = connection.execute("SELECT COUNT(*) FROM sa_login_codes").fetchone()[0]
+    if remaining != 0:
+        raise Failure("deleting an organization left its login codes behind")
+
+
 ASSERTIONS = {
     "0001_foundation.php": assert_foundation,
     "0002_intake_and_engagement.php": assert_intake_and_engagement,
+    "0003_preferences_and_client_access.php": assert_preferences_and_client_access,
 }
 
 
