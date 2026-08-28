@@ -18,6 +18,8 @@
  * @var \SoftAppeals\Repositories\IntakeRepository $intakeRepository
  * @var \SoftAppeals\Repositories\EngagementRepository $engagementRepository
  * @var bool $canReview
+ * @var string $ownerEmail
+ * @var int $selfAddressed
  */
 
 use SoftAppeals\Domain\EngagementTerms;
@@ -28,6 +30,34 @@ use SoftAppeals\Views\Desk;
 
 $e = static fn (?string $value): string => Desk::e($value);
 ?>
+
+<?php if ($canReview && $selfAddressed > 0): ?>
+  <div class="sa-desk-card">
+    <div class="sa-desk-card-t">
+      <b><?= (int) $selfAddressed ?> <?= $e(Desk::plural($selfAddressed, 'enquiry')) ?> came from your own address</b>
+      <span>
+        Every form on the site was run end to end before it went live, and each
+        run wrote a real lead file addressed to
+        <span class="sa-desk-mono"><?= $e($ownerEmail) ?></span>.
+        They import like any other lead because they are like any other lead.
+      </span>
+    </div>
+    <div class="sa-desk-card-a">
+      <form method="post" action="/sa-desk.php" style="margin:0">
+        <?= $csrf->field('intake.dismiss_self') ?>
+        <input type="hidden" name="action" value="intake.dismiss_self">
+        <button type="submit" class="sa-btn is-action is-sm">
+          Clear all <?= (int) $selfAddressed ?>
+        </button>
+      </form>
+    </div>
+  </div>
+  <p class="sa-desk-note">
+    The rule is the address and nothing else. Nothing is inferred from a name or
+    from how a submission reads. They are marked <strong>Not a real enquiry</strong>,
+    which takes them off the board and leaves them on the record.
+  </p>
+<?php endif; ?>
 
 <section aria-labelledby="desk-queue">
   <p class="sa-label" id="desk-queue">Inquiries &middot; newest first</p>
@@ -59,6 +89,9 @@ $e = static fn (?string $value): string => Desk::e($value);
             <td>
               <?= $e((string) $row['contact_name']) ?>
               <div class="sa-desk-mono"><?= $e((string) $row['contact_email']) ?></div>
+              <?php if (strtolower((string) $row['contact_email']) === $ownerEmail): ?>
+                <div class="sa-desk-quiet">Your own address</div>
+              <?php endif; ?>
             </td>
             <td><?= $e(IntakeForms::ownerLabel($source)) ?></td>
             <td title="<?= $e($clock->displayDateTime((string) $row['submitted_at'])) ?>">

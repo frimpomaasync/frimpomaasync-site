@@ -186,6 +186,74 @@ return [
             );
         },
 
+    'the ones sent to her own address clear in one action' =>
+        static function (Bootstrap $app, Database $db) use ($answers, $submit): void {
+            $owner = 'nanafrimpgskc@gmail.com';
+
+            // Three of her own test runs, and one real practice.
+            foreach (['a', 'b', 'c'] as $seed) {
+                $submit($app, ['organization' => 'E2E Harbor Family Medicine',
+                    'name' => 'Browser Start', 'email' => $owner], 'self-' . $seed);
+            }
+            $real = $submit($app, $answers, 'a-real-one')['id'];
+
+            Expect::same(4, count($app->intakes()->unresolved()), 'four are open');
+
+            $cleared = $app->intakeService()->dismissSelfAddressed($owner, null);
+
+            Expect::same(3, $cleared, 'the three addressed to her cleared');
+            Expect::same(
+                1,
+                count($app->intakes()->unresolved()),
+                'the real practice is untouched and still waiting'
+            );
+            Expect::same(
+                $real,
+                (string) $app->intakes()->unresolved()[0]['id'],
+                'and it is the right one'
+            );
+
+            $one = $db->one("SELECT * FROM sa_intakes WHERE payload_sha256 = :h",
+                ['h' => hash('sha256', 'self-a')]);
+            Expect::same(IntakeStatus::DUPLICATE, (string) $one['status'], 'marked as not real');
+            Expect::same(FitDecision::NOT_REAL, (string) $one['fit_decision'], 'with the decision kept');
+            Expect::true(
+                str_contains((string) $one['fit_note'], $owner),
+                'and a note saying why, naming the address it matched on'
+            );
+
+            // Still on the record. Cleared is not deleted.
+            Expect::same(4, (int) $db->value('SELECT COUNT(*) FROM sa_intakes'), 'nothing was deleted');
+            Expect::same(
+                0,
+                (int) $db->value('SELECT COUNT(*) FROM sa_engagements'),
+                'and clearing opens nothing'
+            );
+
+            Expect::same(
+                0,
+                $app->intakeService()->dismissSelfAddressed($owner, null),
+                'running it again clears nothing, because nothing is left open'
+            );
+        },
+
+    'an address that is not hers clears nothing' =>
+        static function (Bootstrap $app, Database $db) use ($answers, $submit): void {
+            $submit($app, $answers);
+            Expect::same(
+                0,
+                $app->intakeService()->dismissSelfAddressed('someone.else@example.org', null),
+                'the rule is one exact address, not a pattern'
+            );
+            Expect::same(1, count($app->intakes()->unresolved()), 'the inquiry is still there');
+            Expect::same(
+                0,
+                $app->intakeService()->dismissSelfAddressed('', null),
+                'a blank address clears nothing rather than everything'
+            );
+            Expect::same(1, count($app->intakes()->unresolved()), 'still there');
+        },
+
     'an invented decision is refused' =>
         static function (Bootstrap $app, Database $db) use ($answers, $submit): void {
             $id = $submit($app, $answers)['id'];

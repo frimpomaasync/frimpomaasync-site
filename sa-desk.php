@@ -210,6 +210,27 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         exit;
     }
 
+    if ($action === 'intake.dismiss_self') {
+        $csrf->require('intake.dismiss_self');
+        $authorization->require(Permission::INTAKE_REVIEW);
+
+        // The address comes from the configuration, never from the request, so
+        // this button can only ever clear her own inbox and no one else's.
+        $cleared = $app->intakeService()->dismissSelfAddressed(
+            $config->string('SA_OWNER_EMAIL'),
+            $userId
+        );
+
+        $session->flash(
+            'desk_ok',
+            $cleared === 0
+                ? 'Nothing was addressed to you, so nothing changed.'
+                : $cleared . ' cleared as not a real enquiry. They are off the board and still on the record.'
+        );
+        header('Location: /sa-desk.php?view=inquiries', true, 303);
+        exit;
+    }
+
     if ($action === 'leads.import') {
         $csrf->require('leads.import');
         $authorization->require(Permission::INTAKE_REVIEW);
@@ -320,6 +341,8 @@ if ($view === 'inquiries') {
     $data['inquiries'] = $intakes->recent(50);
     $data['intakeRepository'] = $intakes;
     $data['engagementRepository'] = $engagements;
+    $data['ownerEmail'] = strtolower($config->string('SA_OWNER_EMAIL'));
+    $data['selfAddressed'] = count($intakes->unresolvedForEmail($data['ownerEmail']));
 }
 
 if ($view === 'terms') {

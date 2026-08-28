@@ -156,6 +156,28 @@ final class IntakeRepository extends Repository
         );
     }
 
+    /**
+     * Open inquiries whose contact address is one particular mailbox.
+     *
+     * Used for exactly one thing: her own test submissions. Every Soft Appeals
+     * form was exercised end to end before it went live, and each of those runs
+     * wrote a real lead file with her own address on it. They are
+     * indistinguishable from a genuine enquiry in every way except the address,
+     * so the address is what the rule matches on. It is a fact, not a guess:
+     * either the form was filled in with her own inbox or it was not.
+     *
+     * @return list<array<string,mixed>>
+     */
+    public function unresolvedForEmail(string $email): array
+    {
+        return $this->db->all(
+            "SELECT * FROM sa_intakes WHERE contact_email = :e AND status IN"
+            . " ('received', 'in_review', 'clarification', 'hold')"
+            . ' ORDER BY submitted_at ASC',
+            ['e' => strtolower(trim($email))]
+        );
+    }
+
     /** @return array<string,int> status => count, every status present */
     public function countsByStatus(): array
     {

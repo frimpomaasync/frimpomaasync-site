@@ -19,8 +19,8 @@ use SoftAppeals\Support\Clock;
  * same archive file all land on the record that is already there. One
  * submission, one intake, however many times the request arrives.
  *
- * Deciding is the drawer in section 12.5. Four outcomes, and the server accepts
- * exactly those four. Accepting is the only one that creates anything: it opens
+ * Deciding is the drawer in section 12.5. Five outcomes, and the server accepts
+ * exactly those five. Accepting is the only one that creates anything: it opens
  * an engagement and leaves it at "terms ready", which is a preview waiting to
  * be approved and not an email that has already gone. Nothing in this class
  * sends anything to anybody.
@@ -90,6 +90,41 @@ final class IntakeService
         );
 
         return $result;
+    }
+
+    /**
+     * Clear the inquiries that came from her own inbox.
+     *
+     * Every form on the site was run end to end before it went live, and each
+     * of those runs wrote a real lead file with her own address on it. They
+     * import like any other lead, because they are like any other lead, and
+     * nine of them at the top of a board is nine things that look like work.
+     *
+     * The rule is the address and nothing else. No wording is sniffed, no name
+     * pattern is matched, nothing is inferred from how a submission looks. Each
+     * one goes through the ordinary review path, so each gets its own audit row
+     * and stays on the record rather than disappearing.
+     *
+     * @return int how many were cleared
+     */
+    public function dismissSelfAddressed(string $ownerEmail, ?string $userId): int
+    {
+        $ownerEmail = strtolower(trim($ownerEmail));
+        if ($ownerEmail === '') {
+            return 0;
+        }
+
+        $cleared = 0;
+        foreach ($this->intakes->unresolvedForEmail($ownerEmail) as $intake) {
+            $this->review(
+                (string) $intake['id'],
+                FitDecision::NOT_REAL,
+                'Sent to ' . $ownerEmail . ', which is her own address. Cleared in bulk.',
+                $userId
+            );
+            $cleared++;
+        }
+        return $cleared;
     }
 
     /**
