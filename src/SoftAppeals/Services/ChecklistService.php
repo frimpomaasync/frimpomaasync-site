@@ -50,10 +50,29 @@ final class ChecklistService
             Checklist::DECISION_RECORDED     => [Stage::RECOVERY_SCOPE_SELECTED, Stage::CLOSED_NO_RECOVERY],
             Checklist::SCOPE_SELECTED        => [Stage::RECOVERY_SCOPE_SELECTED],
             Checklist::RECOVERY_AGREEMENT    => [Stage::RECOVERY_AGREEMENT_EXECUTED],
-            // The last three complete on events later phases write.
+            // The last three complete on events, not stages. See
+            // completingEvents().
             Checklist::APPROVER_CONFIRMED    => [],
             Checklist::FIRST_APPROVAL        => [],
             Checklist::FIRST_SUBMISSION      => [],
+        ];
+    }
+
+    /**
+     * item key => the event types whose first arrival completes it.
+     *
+     * Phase 6 writes these. Naming an approver is not a stage, a first
+     * approval is not a stage, and a first submission is not a stage; each
+     * is one line on the timeline, and the checklist reads that line.
+     *
+     * @return array<string,list<string>>
+     */
+    public static function completingEvents(): array
+    {
+        return [
+            Checklist::APPROVER_CONFIRMED => ['recovery.approver_confirmed'],
+            Checklist::FIRST_APPROVAL     => ['approval.approved'],
+            Checklist::FIRST_SUBMISSION   => ['submission.recorded'],
         ];
     }
 
@@ -72,10 +91,15 @@ final class ChecklistService
         // that is visited twice (quality review and back) was first reached
         // once, and that is the completion.
         $arrivedAt = [];
+        $firstOfType = [];
         foreach ($events as $event) {
             $to = $event['to_stage'] === null ? '' : (string) $event['to_stage'];
             if ($to !== '' && !array_key_exists($to, $arrivedAt)) {
                 $arrivedAt[$to] = $event;
+            }
+            $type = (string) $event['event_type'];
+            if (!array_key_exists($type, $firstOfType)) {
+                $firstOfType[$type] = $event;
             }
         }
 
@@ -90,6 +114,25 @@ final class ChecklistService
             foreach ($stages as $stage) {
                 if (array_key_exists($stage, $arrivedAt)) {
                     $event = $arrivedAt[$stage];
+                    $this->items->complete(
+                        $engagementId,
+                        $key,
+                        (string) $event['created_at'],
+                        $event['actor_id'] === null ? null : (string) $event['actor_id'],
+                        (string) $event['id']
+                    );
+                    break;
+                }
+            }
+        }
+
+        foreach (self::completingEvents() as $key => $types) {
+            if (!$this->items->hasKey($engagementId, $key)) {
+                continue;
+            }
+            foreach ($types as $type) {
+                if (array_key_exists($type, $firstOfType)) {
+                    $event = $firstOfType[$type];
                     $this->items->complete(
                         $engagementId,
                         $key,

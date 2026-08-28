@@ -19,6 +19,7 @@ declare(strict_types=1);
  */
 
 use SoftAppeals\Domain\ActionRequestKind;
+use SoftAppeals\Domain\ApprovalState;
 use SoftAppeals\Domain\ClientDecision;
 use SoftAppeals\Domain\DocumentStatus;
 use SoftAppeals\Domain\Permission;
@@ -249,6 +250,64 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         exit;
     }
 
+    // -----------------------------------------------------------------
+    // Phase 6. Gate C, decided by the practice. The request is found
+    // THROUGH the session's engagement, the permission is checked against
+    // the session's organization, and the same click twice is one decision.
+    // -----------------------------------------------------------------
+    if ($action === 'client.approval_decide') {
+        $context = $access->context();
+        if ($context === null || $context['engagement'] === null) {
+            header('Location: /soft-appeals-room.php', true, 303);
+            exit;
+        }
+        $engagement = $context['engagement'];
+        $organizationId = (string) $context['organization_id'];
+
+        try {
+            $csrf->require('client.approval_decide');
+            $app->authorization()->require(Permission::APPROVAL_DECIDE, $organizationId);
+
+            $request = $app->approvalRequests()->findForEngagement(
+                (string) ($_POST['approval'] ?? ''),
+                (string) $engagement['id']
+            );
+            if ($request === null) {
+                throw new \RuntimeException('That approval request is not one of yours.');
+            }
+            $state = (string) ($_POST['decision'] ?? '');
+            if (!ApprovalState::isDecision($state)) {
+                throw new \RuntimeException('Choose approve or return.');
+            }
+            if ($state === ApprovalState::APPROVED && (string) ($_POST['reviewed'] ?? '') !== 'yes') {
+                throw new \RuntimeException(
+                    'Tick the box to say you reviewed the materials in the secure route.'
+                );
+            }
+            $result = $app->recoveryService()->decide($engagement, $request, $state, (string) ($_POST['note'] ?? ''), [
+                'organization_id' => $organizationId,
+                'user_id'         => (string) $context['user']['id'],
+                'contact_id'      => $context['contact_id'],
+            ]);
+            $session->flash('client_ok', $result['already']
+                ? 'That was already recorded. Nothing was recorded twice.'
+                : ($state === ApprovalState::APPROVED
+                    ? 'Approved. We submit it to the payer and you see the status here.'
+                    : 'Returned with your note. We revise it and ask again.'));
+        } catch (CsrfException) {
+            $session->flash('client_problem', 'That form had expired. Try again.');
+        } catch (AuthorizationException) {
+            $session->flash('client_problem', 'Your sign-in cannot decide this. The organization admin or the named submission approver can.');
+        } catch (RateLimitException) {
+            $session->flash('client_problem', 'Too many attempts. Try again in a minute.');
+        } catch (\RuntimeException $e) {
+            $session->flash('client_problem', $e->getMessage());
+        }
+
+        header('Location: /soft-appeals-room.php?section=approvals', true, 303);
+        exit;
+    }
+
     // An action nobody offers. Recorded, then treated as a visit.
     $app->audit()->record('client.unknown_action', 'denied', 'page', null, ['reason' => 'unknown action']);
     header('Location: /soft-appeals-room.php', true, 303);
@@ -394,7 +453,7 @@ $signable = $config->eSignEnabled()
 // Phase 5. Which section of the room, section 15.3. Anything unknown is the
 // overview, never a 404: a practice following an old link lands somewhere.
 $section = (string) ($_GET['section'] ?? 'overview');
-if (!in_array($section, ['overview', 'assessment', 'batches', 'requests'], true)) {
+if (!in_array($section, ['overview', 'assessment', 'batches', 'requests', 'approvals', 'recovery'], true)) {
     $section = 'overview';
 }
 
@@ -409,10 +468,22 @@ if ($section === 'assessment' && $stage === Stage::ASSESSMENT_DELIVERED) {
 }
 
 $overview = $assessmentService->overview($engagement);
-$batchCards = array_map(
-    static fn (array $b): array => $app->workBatchService()->card($b),
-    $app->workBatches()->forEngagement($engagementId)
-);
+// Phase 6. The board carries each batch with its newest approval, so a
+// batch the practice has approved reads "approved, submission next" rather
+// than asking them to approve it again.
+$recovery = $app->recoveryService();
+$board = $recovery->board($engagement);
+$batchCards = array_map(static fn (array $row): array => $row['card'], $board);
+$approvalRows = $recovery->approvals($engagementId);
+$pendingApprovals = array_values(array_filter(
+    $approvalRows,
+    static fn (array $r): bool => (string) $r['state'] === ApprovalState::PENDING
+));
+$decidedApprovals = array_values(array_filter(
+    $approvalRows,
+    static fn (array $r): bool => (string) $r['state'] !== ApprovalState::PENDING
+));
+$canApprove = $app->authorization()->can(Permission::APPROVAL_DECIDE, $organizationId);
 $clientRequests = $assessmentService->requestsFor($engagementId, ActionRequestKind::OWNER_CLIENT);
 $answered = array_values(array_filter(
     $assessmentService->requestsFor($engagementId, ActionRequestKind::OWNER_SOFT_APPEALS),
@@ -472,4 +543,15 @@ Client::render('room-shell', [
     'canDecide'         => $canDecide,
     'canConfirmReceipt' => $canConfirmReceipt,
     'stage'             => $stage,
+
+    // Phase 6.
+    'board'             => $board,
+    'pendingApprovals'  => $pendingApprovals,
+    'decidedApprovals'  => $decidedApprovals,
+    'pendingApprovalCount' => count($pendingApprovals),
+    'canApprove'        => $canApprove,
+    'submissions'       => $recovery->submissions($engagementId),
+    'feeBlock'          => $recovery->feeBlock($engagement),
+    'agreementStatus'   => $recovery->agreementStatus($engagement),
+    'scope'             => $recovery->scope($engagement),
 ], $showDetail);

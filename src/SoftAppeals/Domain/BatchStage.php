@@ -47,9 +47,13 @@ final class BatchStage
     }
 
     /**
-     * The ones the Desk offers in Phase 5. The rest arrive with the recovery
-     * phases, and offering them now would let a batch say "submitted" while
-     * nothing in the application can record a submission.
+     * The ones the Desk's batch form offers directly.
+     *
+     * The recovery stages are not on this list on purpose. A batch reaches
+     * "awaiting approval" by an approval request being raised, "submitted" by
+     * a submission being recorded against an approval, and the payer stages by
+     * a payer response being recorded. Offering them in a dropdown would let a
+     * batch say "submitted" with no approval and no submission behind it.
      *
      * @return list<string>
      */
@@ -62,6 +66,42 @@ final class BatchStage
             self::NOT_RECOMMENDED,
             self::CLOSED,
         ];
+    }
+
+    /**
+     * from => the stages a recovery event may move a batch to. Section 7.3.
+     *
+     * The form's own moves (received, in review, recommended, not
+     * recommended, closed) are not here; this table is for the moves that
+     * only an approval, a submission or a payer response may make.
+     *
+     * @return array<string,list<string>>
+     */
+    public static function recoveryTransitions(): array
+    {
+        return [
+            self::RECOMMENDED      => [self::APPROVAL_PENDING],
+            self::APPROVAL_PENDING => [self::RECOMMENDED, self::SUBMITTED],
+            self::SUBMITTED        => [self::PAYER_REVIEW, self::OVERTURNED, self::UPHELD, self::CLOSED],
+            self::PAYER_REVIEW     => [self::PAYER_REVIEW, self::OVERTURNED, self::UPHELD, self::CLOSED],
+        ];
+    }
+
+    public static function canMove(string $from, string $to): bool
+    {
+        return in_array($to, self::recoveryTransitions()[$from] ?? [], true);
+    }
+
+    /** True while the batch is with a payer or waiting on an approval. */
+    public static function isInRecovery(string $stage): bool
+    {
+        return in_array($stage, [
+            self::APPROVAL_PENDING,
+            self::SUBMITTED,
+            self::PAYER_REVIEW,
+            self::OVERTURNED,
+            self::UPHELD,
+        ], true);
     }
 
     public static function isValid(string $stage): bool

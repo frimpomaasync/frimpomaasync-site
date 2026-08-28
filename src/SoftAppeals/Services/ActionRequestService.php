@@ -167,6 +167,12 @@ final class ActionRequestService
         ], (string) $engagement['organization_id']);
     }
 
+    /** @return array<string,mixed>|null the open request of one kind, if any */
+    public function openOfKind(string $engagementId, string $kind): ?array
+    {
+        return $this->requests->openOfKind($engagementId, $kind);
+    }
+
     /** @return array<string,mixed>|null the named authorized signer */
     public function signerContact(string $engagementId): ?array
     {

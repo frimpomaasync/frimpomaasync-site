@@ -41,18 +41,36 @@ final class DocumentKind
     }
 
     /**
-     * The two Phase 4 actually generates, sends and executes.
+     * The kinds that have a workflow behind them.
      *
-     * The other four are defined and refused. A Desk button that generated a
-     * recovery agreement Phase 4 has no workflow for would produce a document
-     * nobody could countersign and an engagement stuck at a stage with no way
-     * out of it.
+     * Phase 4 drove the BAA and the review authorization. Phase 6 adds the
+     * Recovery Services Agreement and the Approved Recovery Scope, which are
+     * generated together and signed one after the other. The last two are
+     * defined and refused until the phase that drives them: a Desk button
+     * that generated a closeout record nobody can execute would leave an
+     * engagement stuck at a stage with no way out of it.
      *
      * @return list<string>
      */
     public static function live(): array
     {
-        return [self::BAA, self::REVIEW_AUTHORIZATION];
+        return [self::BAA, self::REVIEW_AUTHORIZATION, self::RECOVERY_AGREEMENT, self::APPROVED_SCOPE];
+    }
+
+    /**
+     * The two documents Gate B is made of, section 6. Generated as a pair
+     * from the recorded scope, sent together, signed one after the other.
+     *
+     * @return list<string>
+     */
+    public static function recoveryPair(): array
+    {
+        return [self::RECOVERY_AGREEMENT, self::APPROVED_SCOPE];
+    }
+
+    public static function isRecoveryPair(string $kind): bool
+    {
+        return in_array($kind, self::recoveryPair(), true);
     }
 
     public static function isValid(string $kind): bool
@@ -106,7 +124,8 @@ final class DocumentKind
         return match ($kind) {
             self::BAA                  => Stage::PREFERENCES_CONFIRMED,
             self::REVIEW_AUTHORIZATION => Stage::BAA_EXECUTED,
-            self::RECOVERY_AGREEMENT   => Stage::RECOVERY_SCOPE_SELECTED,
+            self::RECOVERY_AGREEMENT,
+            self::APPROVED_SCOPE       => Stage::RECOVERY_SCOPE_SELECTED,
             default                    => null,
         };
     }
@@ -151,11 +170,10 @@ final class DocumentKind
     /**
      * Whether Soft Appeals has to countersign before the document is executed.
      *
-     * Both agreements are two-party, so both are countersigned. A one-party
-     * record, like a submission approval the practice gives on its own, is
-     * executed the moment the client signs it. Phase 4 does not generate one of
-     * those, and the flag is here so that the day it does, the executed path
-     * does not need a second shape.
+     * The three agreements are two-party, so all three are countersigned. The
+     * Approved Recovery Scope is the practice's own statement of what it is
+     * authorizing, so it is one-party: it is executed the moment the practice
+     * signs it, and SigningService does that on the same request.
      */
     public static function requiresCountersignature(string $kind): bool
     {
@@ -174,9 +192,10 @@ final class DocumentKind
     public static function nextForStage(string $stage): ?string
     {
         return match ($stage) {
-            Stage::PREFERENCES_CONFIRMED => self::BAA,
-            Stage::BAA_EXECUTED          => self::REVIEW_AUTHORIZATION,
-            default                      => null,
+            Stage::PREFERENCES_CONFIRMED    => self::BAA,
+            Stage::BAA_EXECUTED             => self::REVIEW_AUTHORIZATION,
+            Stage::RECOVERY_SCOPE_SELECTED  => self::RECOVERY_AGREEMENT,
+            default                         => null,
         };
     }
 }

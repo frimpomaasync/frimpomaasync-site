@@ -16,11 +16,13 @@ use SoftAppeals\Repositories\DocumentRepository;
 use SoftAppeals\Repositories\EngagementRepository;
 use SoftAppeals\Repositories\InvitationRepository;
 use SoftAppeals\Repositories\PreferenceRepository;
+use SoftAppeals\Repositories\RecoveryScopeRepository;
 use SoftAppeals\Repositories\SettingsRepository;
 use SoftAppeals\Repositories\SignatureRepository;
 use SoftAppeals\Repositories\StatusEventRepository;
 use SoftAppeals\Security\Hmac;
 use SoftAppeals\Support\Clock;
+use SoftAppeals\Support\Money;
 
 /**
  * Her half of section 14: generating a document, sending it for signature,
@@ -62,6 +64,7 @@ final class DocumentService
     private AuditService $audit;
     private Hmac $hmac;
     private SettingsRepository $settings;
+    private RecoveryScopeRepository $scopes;
 
     public function __construct(
         Config $config,
@@ -79,10 +82,12 @@ final class DocumentService
         MailService $mail,
         AuditService $audit,
         Hmac $hmac,
-        SettingsRepository $settings
+        SettingsRepository $settings,
+        RecoveryScopeRepository $scopes
     ) {
         $this->config = $config;
         $this->settings = $settings;
+        $this->scopes = $scopes;
         $this->db = $db;
         $this->clock = $clock;
         $this->documents = $documents;
@@ -182,7 +187,56 @@ final class DocumentService
             ];
         }
 
+        // Gate B, section 6. The two recovery documents are generated FROM
+        // the recorded scope. No scope, no fee basis, no batches, no approver
+        // means no document, and the reason names which.
+        if (DocumentKind::isRecoveryPair($kind)) {
+            $scope = $this->scopes->forEngagement((string) $engagement['id']);
+            if ($scope === null) {
+                return [
+                    'ok'     => false,
+                    'reason' => 'The recovery scope has not been recorded. Record it on the Recovery '
+                        . 'screen first: the fee basis, the batches in scope and the approver '
+                        . 'are what these two documents are written from.',
+                ];
+            }
+            if ($scope['approver_contact_id'] === null) {
+                return [
+                    'ok'     => false,
+                    'reason' => 'No submission approver is named on the scope. Both recovery '
+                        . 'documents name that person, so name one first.',
+                ];
+            }
+            if ($this->scopes->batchIds((string) $scope['id']) === []) {
+                return [
+                    'ok'     => false,
+                    'reason' => 'The scope covers no batches. Choose at least one recommended batch.',
+                ];
+            }
+        }
+
         return ['ok' => true, 'reason' => null];
+    }
+
+    /**
+     * Generate the Recovery Services Agreement and the Approved Recovery
+     * Scope together, from the recorded scope, in one transaction.
+     *
+     * Together because they are one gate. An agreement with no scope behind
+     * it names nothing, and a scope with no agreement authorizes work under
+     * no terms. Both are drafts until sent, and sending the agreement sends
+     * the scope alongside it.
+     *
+     * @param array<string,mixed> $engagement joined with its organization
+     * @return array{agreement:array<string,mixed>,scope:array<string,mixed>}
+     */
+    public function generateRecoveryPair(array $engagement, ?string $userId = null): array
+    {
+        return $this->db->transaction(function () use ($engagement, $userId): array {
+            $agreement = $this->generate($engagement, DocumentKind::RECOVERY_AGREEMENT, $userId);
+            $scope = $this->generate($engagement, DocumentKind::APPROVED_SCOPE, $userId);
+            return ['agreement' => $agreement, 'scope' => $scope];
+        });
     }
 
     /**
@@ -235,9 +289,7 @@ final class DocumentService
             'content_sha256'    => $sha,
             'private_path'      => $path,
             'signer_contact_id' => (string) $signer['id'],
-            'fee_basis'         => $kind === DocumentKind::REVIEW_AUTHORIZATION
-                ? null
-                : (string) $engagement['fee_basis'],
+            'fee_basis'         => $this->feeBasisFor($kind, $engagement),
             'created_by'        => $userId,
         ]);
 
@@ -347,6 +399,16 @@ final class DocumentService
             hash('sha256', 'document-send:' . $documentId)
         );
 
+        // The Approved Recovery Scope goes out with the agreement, on the
+        // same invitation. It is one gate and one email; the room offers the
+        // scope for signature the moment the agreement is signed.
+        if ((string) $document['kind'] === DocumentKind::RECOVERY_AGREEMENT) {
+            $scope = $this->documents->current($engagementId, DocumentKind::APPROVED_SCOPE);
+            if ($scope !== null && (string) $scope['status'] === DocumentStatus::DRAFT) {
+                $this->sendAlongside($scope, $engagement, $userId);
+            }
+        }
+
         $pending = DocumentKind::pendingStage((string) $document['kind']);
         if ($pending !== null && Stage::canMove($this->currentStage($engagementId), $pending)) {
             $this->engagementService->move(
@@ -376,6 +438,37 @@ final class DocumentService
             'link'       => $this->config->isProduction() ? null : $link,
             'expires_at' => (string) $invitation['expires_at'],
         ];
+    }
+
+    /**
+     * Mark a draft as sent without its own email or its own link. Used for
+     * the Approved Recovery Scope, which travels with the agreement.
+     *
+     * @param array<string,mixed> $document
+     * @param array<string,mixed> $engagement joined with its organization
+     */
+    public function sendAlongside(array $document, array $engagement, ?string $userId = null): void
+    {
+        $documentId = (string) $document['id'];
+        if ((string) $document['status'] !== DocumentStatus::DRAFT) {
+            throw new \RuntimeException(
+                'Only a draft goes out for signature. This one is: '
+                . DocumentStatus::staffLabel((string) $document['status']) . '.'
+            );
+        }
+        if (!$this->config->eSignEnabled()) {
+            throw new \RuntimeException('Signing is switched off here. Nothing was sent.');
+        }
+        if (!$this->documents->moveStatus($documentId, DocumentStatus::DRAFT, DocumentStatus::SENT, [
+            'sent_at' => $this->clock->nowUtc(),
+        ])) {
+            throw new \RuntimeException('This document moved while you were looking at it. Reload and try again.');
+        }
+        $this->audit->record('document.send', 'success', 'document', $documentId, [
+            'document_kind'    => (string) $document['kind'],
+            'document_version' => (string) $document['version'],
+            'reason'           => 'sent alongside the agreement',
+        ], (string) $engagement['organization_id']);
     }
 
     // ------------------------------------------------------------------
@@ -737,7 +830,31 @@ final class DocumentService
     }
 
     /**
+     * The fee basis stamped on the row. The review authorization carries
+     * none, the recovery pair carry the scope's, the BAA carries the
+     * engagement's.
+     *
+     * @param array<string,mixed> $engagement
+     */
+    private function feeBasisFor(string $kind, array $engagement): ?string
+    {
+        if ($kind === DocumentKind::REVIEW_AUTHORIZATION) {
+            return null;
+        }
+        if (DocumentKind::isRecoveryPair($kind)) {
+            $scope = $this->scopes->forEngagement((string) $engagement['id']);
+            return $scope === null ? (string) $engagement['fee_basis'] : (string) $scope['fee_basis'];
+        }
+        return (string) $engagement['fee_basis'];
+    }
+
+    /**
      * Everything DocumentTemplates needs, resolved.
+     *
+     * The scope keys are present only once a scope is recorded. The BAA and
+     * the review authorization never read them; the recovery pair refuse to
+     * generate without them, and DocumentTemplates::value() names the one
+     * that is missing.
      *
      * @param array<string,mixed> $engagement
      * @param array<string,mixed> $signer
@@ -755,7 +872,10 @@ final class DocumentService
             ? (string) ($engagement['secure_channel_type'] ?? '')
             : (string) $preferences['secure_channel'];
 
-        return [
+        // The scope's keys sit on the left, so its fee basis wins on the
+        // recovery pair. The BAA and the review authorization never print a
+        // fee basis, so nothing else changes.
+        return $this->scopeContext($engagement) + [
             'document_ref'        => $documentRef,
             'version'             => (string) $version,
             'effective_date'      => $effectiveDate,
@@ -772,6 +892,50 @@ final class DocumentService
                 ? 'agreed with you before the review starts'
                 : (string) $engagement['assessment_window'],
             'fee_basis'           => EngagementTerms::feeLabel((string) $engagement['fee_basis']),
+        ];
+    }
+
+    /**
+     * The scope, as strings, for the recovery pair.
+     *
+     * @param array<string,mixed> $engagement
+     * @return array<string,string>
+     */
+    private function scopeContext(array $engagement): array
+    {
+        $scope = $this->scopes->forEngagement((string) $engagement['id']);
+        if ($scope === null) {
+            return [];
+        }
+        $batches = $this->scopes->batches((string) $scope['id']);
+        $lines = [];
+        $count = 0;
+        $cents = 0;
+        foreach ($batches as $batch) {
+            $count += (int) $batch['claim_count'];
+            $cents += (int) $batch['denied_amount_cents'];
+            $lines[] = '  ' . (string) $batch['public_ref'] . '  ' . (string) $batch['label']
+                . ((int) $batch['payer_label_approved'] === 1 && $batch['payer_label'] !== null
+                    ? ' (' . (string) $batch['payer_label'] . ')'
+                    : '')
+                . ': ' . (int) $batch['claim_count'] . ' denied claims, '
+                . Money::format((int) $batch['denied_amount_cents']);
+        }
+        $approver = $scope['approver_contact_id'] === null
+            ? null
+            : $this->contacts->find((string) $scope['approver_contact_id']);
+        $rateBps = $scope['fee_rate_bps'] === null ? null : (int) $scope['fee_rate_bps'];
+
+        return [
+            'fee_basis'           => EngagementTerms::feeLabel((string) $scope['fee_basis']),
+            'fee_rate'            => RecoveryService::feeRateLabel((string) $scope['fee_basis'], $rateBps),
+            'scope_summary'       => (string) $scope['summary'],
+            'scope_batches'       => implode("\n", $lines),
+            'scope_batches_count' => (string) count($batches),
+            'scope_count'         => (string) $count,
+            'scope_amount'        => Money::format($cents),
+            'approver_name'       => $approver === null ? '' : (string) $approver['name'],
+            'approver_email'      => $approver === null ? '' : (string) $approver['work_email'],
         ];
     }
 
@@ -1021,6 +1185,17 @@ final class DocumentService
         $lines[] = '';
         $lines[] = '  ' . $link;
         $lines[] = '';
+        if ((string) $document['kind'] === DocumentKind::RECOVERY_AGREEMENT) {
+            $lines[] = wordwrap(
+                'The Approved Recovery Scope, the schedule that names the batches, '
+                . 'follows it in your Recovery Room and is signed the same way. Recovery '
+                . 'work starts once both are signed.',
+                72,
+                "\n",
+                false
+            );
+            $lines[] = '';
+        }
         $lines[] = wordwrap(
             'The link works once and stops working on '
             . $this->clock->displayDateTime($expiresAt) . '. If it has expired, write '

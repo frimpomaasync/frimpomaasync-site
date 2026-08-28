@@ -47,6 +47,13 @@ final class StatusEventRepository extends Repository
 
         // Phase 5. Which of the four answers the practice gave.
         'decision',
+
+        // Phase 6. Which batch an approval or a submission was about, and
+        // what the event was. A reference, never a claim.
+        'batch_ref',
+        'event_type',
+        'approval_state',
+        'amount_cents',
     ];
 
     protected function table(): string

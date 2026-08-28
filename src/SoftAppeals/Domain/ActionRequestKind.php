@@ -46,6 +46,7 @@ final class ActionRequestKind
     public const ACTION_CONFIRM_RECEIPT = 'confirm_receipt';
     public const ACTION_READ_ASSESSMENT = 'read_assessment';
     public const ACTION_DECIDE          = 'decide';
+    public const ACTION_APPROVE         = 'approve';
 
     /** @return list<string> */
     public static function all(): array
@@ -113,6 +114,7 @@ final class ActionRequestKind
             self::CONFIRM_RECEIPT_COUNT => self::ACTION_CONFIRM_RECEIPT,
             self::REVIEW_ASSESSMENT     => self::ACTION_READ_ASSESSMENT,
             self::CHOOSE_SCOPE          => self::ACTION_DECIDE,
+            self::APPROVE_SUBMISSION    => self::ACTION_APPROVE,
             default                     => null,
         };
     }
@@ -145,7 +147,7 @@ final class ActionRequestKind
             self::CONFIRM_RECEIPT_COUNT => 'We have recorded how many denials arrived. Confirm the count matches what you sent. Counts only, no claim detail.',
             self::REVIEW_ASSESSMENT     => 'Your assessment is ready in the Assessment section. It is written at aggregate level; the claim-level detail stays in the secure route.',
             self::CHOOSE_SCOPE          => 'Tell us what you want to do next: keep the assessment for internal use, ask for more information, choose a recovery scope, or take no further action.',
-            self::APPROVE_SUBMISSION    => 'Approve or return the submission in the approved secure workflow. Nothing is sent to a payer without your approval there.',
+            self::APPROVE_SUBMISSION    => 'Review the appeal materials in the approved secure workflow, then record your approval or return it with a note under Approvals in this room. Nothing is sent to a payer without that approval.',
             self::PROVIDE_INFORMATION   => 'The information we need is claim-level, so please send it through the approved secure route rather than through this portal.',
             self::VERIFY_REIMBURSEMENT  => 'Confirm the payer reimbursement that actually arrived, so the recovery can be verified.',
             self::REVIEW_CLOSEOUT       => 'Read the closeout record and confirm the access and data-disposition steps.',

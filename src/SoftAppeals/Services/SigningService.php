@@ -46,6 +46,7 @@ final class SigningService
     private AuthorizationService $authorization;
     private AuditService $audit;
     private Hmac $hmac;
+    private DocumentService $documentService;
 
     public function __construct(
         Config $config,
@@ -58,9 +59,11 @@ final class SigningService
         DocumentVault $vault,
         AuthorizationService $authorization,
         AuditService $audit,
-        Hmac $hmac
+        Hmac $hmac,
+        DocumentService $documentService
     ) {
         $this->config = $config;
+        $this->documentService = $documentService;
         $this->db = $db;
         $this->clock = $clock;
         $this->documents = $documents;
@@ -92,6 +95,7 @@ final class SigningService
             return null;
         }
 
+        $candidates = [];
         foreach ($this->documents->forEngagement((string) $engagement['id']) as $document) {
             if ((string) $document['status'] !== DocumentStatus::SENT) {
                 continue;
@@ -102,10 +106,18 @@ final class SigningService
             if ((string) $document['signer_contact_id'] !== (string) $context['contact_id']) {
                 continue;
             }
-            return $document;
+            $candidates[] = $document;
         }
 
-        return null;
+        // The Approved Recovery Scope is the schedule to the agreement, and
+        // it is signed after it. While both are waiting, the agreement is the
+        // one offered; the scope follows the moment the agreement is signed.
+        foreach ($candidates as $document) {
+            if ((string) $document['kind'] !== DocumentKind::APPROVED_SCOPE) {
+                return $document;
+            }
+        }
+        return $candidates[0] ?? null;
     }
 
     /**
@@ -328,6 +340,15 @@ final class SigningService
             'document_version' => (string) $document['version'],
             'idempotency_key'  => $idempotencyKey,
         ], $organizationId);
+
+        // A one-party document is executed by the one signature it takes.
+        // The Approved Recovery Scope is the practice's own statement of what
+        // it authorizes, so there is nobody to countersign it, and waiting
+        // for a signature that is never coming would leave it stuck at
+        // "signed by you, with us to finish" for ever.
+        if (!DocumentKind::requiresCountersignature((string) $document['kind']) && $context['engagement'] !== null) {
+            $this->documentService->execute($documentId, $context['engagement'], $context['user_id']);
+        }
 
         return ['signed' => true, 'already' => false, 'signature_id' => $signatureId];
     }

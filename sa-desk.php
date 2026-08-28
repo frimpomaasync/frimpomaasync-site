@@ -21,6 +21,7 @@ declare(strict_types=1);
  */
 
 use SoftAppeals\Domain\ActionRequestKind;
+use SoftAppeals\Domain\BatchStage;
 use SoftAppeals\Domain\DocumentKind;
 use SoftAppeals\Domain\DocumentStatus;
 use SoftAppeals\Domain\EngagementTerms;
@@ -283,6 +284,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
     // -----------------------------------------------------------------
     $documentActions = [
         'document.generate',
+        'document.generate_recovery',
         'document.send',
         'document.countersign',
         'document.correct',
@@ -330,6 +332,19 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
                     'desk_ok',
                     DocumentKind::label($kind) . ' generated as version '
                     . (int) $document['version'] . '. Read it before it goes anywhere.'
+                );
+            }
+
+            if ($action === 'document.generate_recovery') {
+                // Gate B, section 6. Both documents, from the recorded scope,
+                // in one transaction. Drafts until sent.
+                $authorization->require(Permission::DOCUMENT_GENERATE);
+                $pair = $documents->generateRecoveryPair($joined, $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Generated: the Recovery Services Agreement as version '
+                    . (int) $pair['agreement']['version'] . ' and the Approved Recovery Scope as version '
+                    . (int) $pair['scope']['version'] . '. Read both before they go anywhere.'
                 );
             }
 
@@ -639,6 +654,162 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         exit;
     }
 
+    // -----------------------------------------------------------------
+    // Phase 6. The recovery scope, the work starting, approvals,
+    // submissions and payer responses.
+    //
+    // The same rule again: the engagement by public reference, and the
+    // batch, the approval or the event found THROUGH it.
+    // -----------------------------------------------------------------
+    $recoveryActions = [
+        'recovery.scope_save',
+        'recovery.activate',
+        'approval.request',
+        'approval.cancel',
+        'submission.record',
+        'payer.response',
+        'followup.done',
+    ];
+
+    if (in_array($action, $recoveryActions, true)) {
+        $csrf->require($action);
+
+        $ref = (string) ($_POST['engagement'] ?? '');
+        $engagement = $engagements->findByPublicRef($ref);
+        $joined = $engagement === null
+            ? null
+            : $engagements->findWithOrganization((string) $engagement['id']);
+
+        if ($joined === null) {
+            $session->flash('desk_problem', 'That engagement reference is not one of hers.');
+            header('Location: /sa-desk.php?view=recovery', true, 303);
+            exit;
+        }
+
+        $recovery = $app->recoveryService();
+        $back = '/sa-desk.php?view=recovery&e=' . urlencode($ref);
+
+        /** One batch on this engagement, by reference. */
+        $findBatch = static function (string $batchRef) use ($app, $joined): array {
+            $batch = $batchRef === ''
+                ? null
+                : $app->workBatches()->findForEngagement($batchRef, (string) $joined['id']);
+            if ($batch === null) {
+                throw new \RuntimeException('That batch is not on this engagement.');
+            }
+            return $batch;
+        };
+
+        try {
+            if ($action === 'recovery.scope_save') {
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $refs = $_POST['batch_refs'] ?? [];
+                $recovery->recordScope($joined, [
+                    'fee_basis'        => (string) ($_POST['fee_basis'] ?? ''),
+                    'fee_rate'         => (string) ($_POST['fee_rate'] ?? ''),
+                    'summary'          => (string) ($_POST['summary'] ?? ''),
+                    'batch_refs'       => is_array($refs) ? array_map('strval', $refs) : [],
+                    'approver_contact' => (string) ($_POST['approver_contact'] ?? ''),
+                    'approver_name'    => (string) ($_POST['approver_name'] ?? ''),
+                    'approver_email'   => (string) ($_POST['approver_email'] ?? ''),
+                    'approver_role'    => (string) ($_POST['approver_role'] ?? ''),
+                ], $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Scope recorded. The Recovery Services Agreement and the Approved Recovery '
+                    . 'Scope are generated from it on the Agreements screen. Documents already '
+                    . 'generated are unchanged: void and replace them to carry a changed scope.'
+                );
+            }
+
+            if ($action === 'recovery.activate') {
+                $authorization->require(Permission::ENGAGEMENT_MANAGE);
+                $recovery->activate($joined, $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Recovery is active. Put each batch in scope up for approval when its '
+                    . 'materials are ready in the secure route.'
+                );
+            }
+
+            if ($action === 'approval.request') {
+                $authorization->require(Permission::WORK_BATCH_MANAGE);
+                $batch = $findBatch((string) ($_POST['batch'] ?? ''));
+                $row = $recovery->requestApproval($joined, $batch, [
+                    'safe_summary' => (string) ($_POST['safe_summary'] ?? ''),
+                    'claim_count'  => (string) ($_POST['claim_count'] ?? ''),
+                    'amount'       => (string) ($_POST['amount'] ?? ''),
+                    'due'          => (string) ($_POST['due'] ?? ''),
+                ], $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Asked. ' . (string) $row['public_ref'] . ' is with the approver, who has been '
+                    . 'emailed that something is waiting. Nothing goes to the payer until they answer.'
+                );
+            }
+
+            if ($action === 'approval.cancel') {
+                $authorization->require(Permission::WORK_BATCH_MANAGE);
+                $request = $app->approvalRequests()->findForEngagement((string) ($_POST['approval'] ?? ''), (string) $joined['id']);
+                if ($request === null) {
+                    throw new \RuntimeException('That approval request is not on this engagement.');
+                }
+                $recovery->cancelApproval($joined, $request, $userId);
+                $session->flash('desk_ok', 'Withdrawn. The batch is back to recommended and the request stays on the record.');
+            }
+
+            if ($action === 'submission.record') {
+                $authorization->require(Permission::WORK_BATCH_MANAGE);
+                $batch = $findBatch((string) ($_POST['batch'] ?? ''));
+                $row = $recovery->recordSubmission($joined, $batch, [
+                    'claim_count' => (string) ($_POST['claim_count'] ?? ''),
+                    'amount'      => (string) ($_POST['amount'] ?? ''),
+                    'occurred'    => (string) ($_POST['occurred'] ?? ''),
+                    'follow_up'   => (string) ($_POST['follow_up'] ?? ''),
+                    'note'        => (string) ($_POST['note'] ?? ''),
+                ], $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Recorded as submitted, ' . (string) $row['public_ref'] . '. The practice has been '
+                    . 'told there is a status update. No fee was created; none is until reimbursement is verified.'
+                );
+            }
+
+            if ($action === 'payer.response') {
+                $authorization->require(Permission::WORK_BATCH_MANAGE);
+                $batch = $findBatch((string) ($_POST['batch'] ?? ''));
+                $row = $recovery->recordPayerResponse($joined, $batch, [
+                    'event_type'  => (string) ($_POST['event_type'] ?? ''),
+                    'claim_count' => (string) ($_POST['claim_count'] ?? ''),
+                    'amount'      => (string) ($_POST['amount'] ?? ''),
+                    'occurred'    => (string) ($_POST['occurred'] ?? ''),
+                    'follow_up'   => (string) ($_POST['follow_up'] ?? ''),
+                    'note'        => (string) ($_POST['note'] ?? ''),
+                ], $userId);
+                $session->flash(
+                    'desk_ok',
+                    'Recorded: ' . \SoftAppeals\Domain\SubmissionEventType::staffLabel((string) $row['event_type'])
+                    . '. No fee was created; a decision is not a reimbursement.'
+                );
+            }
+
+            if ($action === 'followup.done') {
+                $authorization->require(Permission::WORK_BATCH_MANAGE);
+                $event = $app->submissionEvents()->findForEngagement((string) ($_POST['event'] ?? ''), (string) $joined['id']);
+                if ($event === null) {
+                    throw new \RuntimeException('That follow-up is not on this engagement.');
+                }
+                $recovery->completeFollowUp($joined, $event, $userId);
+                $session->flash('desk_ok', 'Follow-up closed.');
+            }
+        } catch (\RuntimeException $e) {
+            $session->flash('desk_problem', $e->getMessage());
+        }
+
+        header('Location: ' . $back, true, 303);
+        exit;
+    }
+
     // An action nobody offers. Recorded, then treated as a visit.
     $app->audit()->record('desk.unknown_action', 'denied', 'page', null, ['reason' => 'unknown action']);
     header('Location: /sa-desk.php', true, 303);
@@ -725,7 +896,7 @@ if ($open !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
 $app->audit()->record('desk.view', 'success', 'page', null);
 
 $view = (string) ($_GET['view'] ?? 'home');
-$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'assessments', 'import', 'audit', 'settings'];
+$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'assessments', 'recovery', 'import', 'audit', 'settings'];
 if (!in_array($view, $allowedViews, true)) {
     $view = 'home';
 }
@@ -807,6 +978,22 @@ $data['assessmentsWaiting'] = array_merge(
     $engagements->atStage(Stage::ASSESSMENT_QA)
 );
 $data['assessmentsNeedingHer'] = count($requestsForHer) + count($data['assessmentsWaiting']);
+
+// Phase 6. What is waiting across every recovery: approvals with a practice,
+// approved batches she has not submitted, follow-ups due, and engagements
+// sitting at the recovery gates. Read on every view for the rail count.
+$data['pendingApprovals'] = $app->approvalRequests()->pendingEverywhere();
+$data['awaitingSubmission'] = $app->approvalRequests()->approvedAwaitingSubmission();
+$data['followUps'] = $app->submissionEvents()->openFollowUps();
+$data['recoveryWaiting'] = array_merge(
+    $engagements->atStage(Stage::RECOVERY_SCOPE_SELECTED),
+    $engagements->atStage(Stage::RECOVERY_AGREEMENT_EXECUTED)
+);
+$data['recoveryNeedingHer'] = count($data['awaitingSubmission']) + count($data['recoveryWaiting'])
+    + count(array_filter(
+        $data['followUps'],
+        static fn (array $row): bool => ($clock->daysUntil((string) $row['follow_up_due_at']) ?? 1) <= 0
+    ));
 
 if ($view === 'inquiries') {
     $data['inquiries'] = $intakes->recent(50);
@@ -930,6 +1117,50 @@ if ($view === 'assessments') {
         $data['requests'] = $service->requestsFor((string) $joined['id']);
         $data['timeline'] = $app->timeline()->forEngagement((string) $joined['id']);
         $data['signer'] = $app->actionRequestService()->signerContact((string) $joined['id']);
+    }
+}
+
+if ($view === 'recovery') {
+    $ref = (string) ($_GET['e'] ?? '');
+    $engagement = $ref === '' ? null : $engagements->findByPublicRef($ref);
+    $joined = $engagement === null
+        ? null
+        : $engagements->findWithOrganization((string) $engagement['id']);
+
+    $data['engagement'] = $joined;
+    $data['canManage'] = $authorization->can(Permission::ENGAGEMENT_MANAGE);
+    $data['canBatches'] = $authorization->can(Permission::WORK_BATCH_MANAGE);
+
+    if ($joined === null) {
+        // Every engagement that has chosen recovery, at whatever point.
+        $rows = [];
+        foreach ($engagements->withOrganizations(false) as $row) {
+            if (in_array((string) $row['stage'], [
+                Stage::RECOVERY_SCOPE_SELECTED,
+                Stage::RECOVERY_AGREEMENT_PENDING,
+                Stage::RECOVERY_AGREEMENT_EXECUTED,
+                Stage::RECOVERY_ACTIVE,
+                Stage::RECONCILIATION,
+            ], true)) {
+                $rows[] = $row;
+            }
+        }
+        $data['recoveryRows'] = $rows;
+    } else {
+        $recovery = $app->recoveryService();
+        $data['scope'] = $recovery->scope($joined);
+        $data['preferredApprover'] = $recovery->preferredApprover($joined);
+        $data['orgContacts'] = $app->contacts()->forOrganization((string) $joined['organization_id']);
+        $data['agreementStatus'] = $recovery->agreementStatus($joined);
+        $data['board'] = $recovery->board($joined);
+        $data['approvals'] = $recovery->approvals((string) $joined['id']);
+        $data['submissions'] = $recovery->submissions((string) $joined['id']);
+        $data['feeBlock'] = $recovery->feeBlock($joined);
+        $data['timeline'] = $app->timeline()->forEngagement((string) $joined['id']);
+        $data['overview'] = $app->assessmentService()->overview($joined);
+        $data['generateCheck'] = $app->documentService()->canGenerate($joined, DocumentKind::RECOVERY_AGREEMENT);
+        $data['eSignEnabled'] = $config->eSignEnabled();
+        $data['canGenerate'] = $authorization->can(Permission::DOCUMENT_GENERATE);
     }
 }
 

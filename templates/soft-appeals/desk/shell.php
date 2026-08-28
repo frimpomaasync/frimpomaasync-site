@@ -30,7 +30,8 @@ $demo = $config->bool('SA_DEMO_MODE');
 $greeting = (int) $clock->now()->setTimezone(new DateTimeZone($config->string('SA_BUSINESS_TIMEZONE')))->format('G');
 $greetingWord = $greeting < 12 ? 'Good morning' : ($greeting < 18 ? 'Good afternoon' : 'Good evening');
 
-$needsYou = count($awaitingReview) + count($termsReady) + ($documentsNeedingHer ?? 0) + count($requestsForHer ?? []);
+$needsYou = count($awaitingReview) + count($termsReady) + ($documentsNeedingHer ?? 0) + count($requestsForHer ?? [])
+    + ($recoveryNeedingHer ?? 0);
 
 /** The rail. Built here, in the plan's own order, so the map is visible even
  *  where the page behind it is not written yet. Section 12.3. */
@@ -40,10 +41,11 @@ $navBuilt = [
     ['terms',       'Terms',       count($termsReady) ?: null],
     ['documents',   'Agreements',  ($documentsNeedingHer ?? 0) ?: null],
     ['assessments', 'Assessments', ($assessmentsNeedingHer ?? 0) ?: null],
+    ['recovery',    'Recovery',    ($recoveryNeedingHer ?? 0) ?: null],
 ];
 $navLater = [
-    'Organizations', 'Engagements', 'Approvals',
-    'Communications', 'Recoveries', 'Deadlines',
+    'Organizations', 'Engagements',
+    'Communications', 'Deadlines',
 ];
 ?><!doctype html>
 <html lang="en">

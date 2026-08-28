@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace SoftAppeals\Services;
 
+use SoftAppeals\Domain\ApprovalState;
 use SoftAppeals\Domain\BatchStage;
 use SoftAppeals\Domain\SafeText;
 use SoftAppeals\Domain\Stage;
@@ -221,14 +222,23 @@ final class WorkBatchService
      * The card, section 15.7, as the practice reads it. Only the permitted
      * fields, with the payer label held back unless approved.
      *
+     * Phase 6: a batch at "awaiting approval" whose newest approval is
+     * approved reads "approved, submission next", because the stage moves
+     * on the submission and the practice would otherwise be told to approve
+     * a thing they just approved.
+     *
      * @param array<string,mixed> $batch
+     * @param array<string,mixed>|null $approval the newest approval on it
      * @return array<string,mixed>
      */
-    public function card(array $batch): array
+    public function card(array $batch, ?array $approval = null): array
     {
         $deadline = $batch['earliest_deadline_at'] === null ? null : (string) $batch['earliest_deadline_at'];
         $confirmed = (int) $batch['deadline_confirmed'] === 1;
         $stage = (string) $batch['stage'];
+        $approved = $stage === BatchStage::APPROVAL_PENDING
+            && $approval !== null
+            && (string) $approval['state'] === ApprovalState::APPROVED;
 
         return [
             'ref'            => (string) $batch['public_ref'],
@@ -238,7 +248,8 @@ final class WorkBatchService
                 : null,
             'count'          => (int) $batch['claim_count'],
             'denied'         => Money::format((int) $batch['denied_amount_cents']),
-            'stage'          => BatchStage::clientLabel($stage),
+            'stage'          => $approved ? 'Approved by you, submission next' : BatchStage::clientLabel($stage),
+            'staff_stage'    => $approved ? 'Approved, submission next' : BatchStage::staffLabel($stage),
             'owner'          => BatchStage::ownerLabel((string) $batch['next_owner'], true),
             'action'         => $batch['next_action'] === null
                 ? BatchStage::defaultNextAction($stage)

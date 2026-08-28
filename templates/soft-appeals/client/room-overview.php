@@ -243,9 +243,9 @@ $e = static fn (?string $value): string => Client::e($value);
   <p class="sa-label" id="room-later">Not here yet</p>
   <div class="sa-panel"><div class="sa-panel-b" style="padding:14px 18px">
     <p style="margin:0 0 10px">
-      Approvals, what has actually been recovered, messages and access each
-      appear in this room as they start. Nothing is kept from you: a section
-      that is marked "later" has not begun.
+      Messages and access each appear in this room as they start. Nothing is
+      kept from you: a section that is marked "later" has not begun. Approvals
+      and recovery are in the rail now, and fill in if you choose recovery.
     </p>
     <p class="sa-room-note">
       Nothing in this room ever holds patient, member or claim-level information.

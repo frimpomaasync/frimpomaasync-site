@@ -49,13 +49,15 @@ $e = static fn (?string $value): string => Client::e($value);
  * come out of this list and into the one above it. The rest stay listed and
  * marked: a practice that can see the whole map knows what is coming.
  */
-$navLater = ['Approvals', 'Recovery', 'Messages', 'Access'];
+$navLater = ['Messages', 'Access'];
 $section = $section ?? 'overview';
 $navNow = [
     ['overview',   'Overview',        '/soft-appeals-room.php',                    null],
     ['assessment', 'Assessment',      '/soft-appeals-room.php?section=assessment', null],
     ['batches',    'Work batches',    '/soft-appeals-room.php?section=batches',    count($batchCards ?? []) ?: null],
     ['requests',   'Action requests', '/soft-appeals-room.php?section=requests',   ($openRequestCount ?? 0) ?: null],
+    ['approvals',  'Approvals',       '/soft-appeals-room.php?section=approvals',  ($pendingApprovalCount ?? 0) ?: null],
+    ['recovery',   'Recovery',        '/soft-appeals-room.php?section=recovery',   null],
 ];
 ?><!doctype html>
 <html lang="en">

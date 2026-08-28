@@ -55,7 +55,7 @@ final class Config
     private const PRODUCTION_SIGNING_BLOCKERS = [
         'the BAA text has not been approved',
         'the review-authorization text has not been approved',
-        'the recovery-agreement text has not been written or approved',
+        'the recovery-agreement and approved-scope text has not been approved',
         'the legal entity and trade-name language are not confirmed',
         'the signature consent and evidence requirements have not been reviewed',
         'the retention requirements have not been confirmed',

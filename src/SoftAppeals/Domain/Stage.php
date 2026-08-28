@@ -252,7 +252,9 @@ final class Stage
             self::CLIENT_DECISION_PENDING,
             self::RECOVERY_AGREEMENT_PENDING => 'Client',
 
-            self::RECOVERY_ACTIVE => 'Payer',
+            // Recovery is worked batch by batch, and the batch board says who
+            // each one waits on. At engagement level the work is hers.
+            self::RECOVERY_ACTIVE => 'Soft Appeals',
 
             default => 'Nobody',
         };
@@ -283,8 +285,8 @@ final class Stage
             self::CLIENT_DECISION_PENDING => 'Waiting for the recovery decision',
             self::RECOVERY_SCOPE_SELECTED => 'Generate the recovery agreement',
             self::RECOVERY_AGREEMENT_PENDING  => 'Waiting for the client signature',
-            self::RECOVERY_AGREEMENT_EXECUTED => 'Open the first work batch',
-            self::RECOVERY_ACTIVE        => 'Waiting on the payer',
+            self::RECOVERY_AGREEMENT_EXECUTED => 'Start the recovery work',
+            self::RECOVERY_ACTIVE        => 'Approvals, submissions and payer responses, per batch',
             self::RECONCILIATION         => 'Verify what actually came back',
             self::FINAL_REPORT           => 'Write the final report',
             self::ACCESS_REVIEW          => 'Review who still has access',
@@ -333,8 +335,8 @@ final class Stage
             self::CLIENT_DECISION_PENDING => 'Tell us whether you want recovery work',
             self::RECOVERY_SCOPE_SELECTED => 'We are preparing the recovery agreement',
             self::RECOVERY_AGREEMENT_PENDING  => 'Sign the recovery agreement',
-            self::RECOVERY_AGREEMENT_EXECUTED => 'We are opening the first work batch',
-            self::RECOVERY_ACTIVE        => 'The payer is deciding',
+            self::RECOVERY_AGREEMENT_EXECUTED => 'We are starting the recovery work',
+            self::RECOVERY_ACTIVE        => 'Approve each submission; the payer decides each one',
             self::RECONCILIATION         => 'We are verifying what actually came back',
             self::FINAL_REPORT           => 'We are writing your final report',
             self::ACCESS_REVIEW, self::DATA_DISPOSITION => 'We are closing this out',

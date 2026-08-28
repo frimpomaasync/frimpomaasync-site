@@ -75,6 +75,12 @@ foreach ($clientRequests as $row) {
             <a class="sa-btn is-primary" href="/soft-appeals-room.php?section=assessment">Read the assessment</a>
           <?php elseif ($portal === ActionRequestKind::ACTION_DECIDE): ?>
             <a class="sa-btn is-primary" href="/soft-appeals-room.php?section=assessment">Go to the decision</a>
+          <?php elseif ($portal === ActionRequestKind::ACTION_APPROVE): ?>
+            <a class="sa-btn is-primary" href="/soft-appeals-room.php?section=approvals">Go to the approvals</a>
+            <p class="sa-room-note" style="margin:10px 0 0">
+              The materials are in the approved secure channel you chose. The
+              approval itself is recorded here, and nothing goes to a payer without it.
+            </p>
           <?php elseif ($secure): ?>
             <p class="sa-room-note" style="margin:0">
               This one happens in the approved secure channel you chose, not in this

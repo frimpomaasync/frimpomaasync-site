@@ -205,24 +205,33 @@ $e = static fn (?string $value): string => Desk::e($value);
     <p class="sa-label" id="desk-doc-make">Generate</p>
     <div class="sa-desk-cards">
       <?php foreach (DocumentKind::live() as $kind): ?>
-        <?php $check = $generateChecks[$kind] ?? ['ok' => false, 'reason' => 'Not checked.']; ?>
+        <?php if ($kind === DocumentKind::APPROVED_SCOPE): ?>
+          <?php continue; ?>
+        <?php endif; ?>
+        <?php
+        $check = $generateChecks[$kind] ?? ['ok' => false, 'reason' => 'Not checked.'];
+        // Gate B is two documents from one scope, generated together.
+        $pair = $kind === DocumentKind::RECOVERY_AGREEMENT;
+        ?>
         <div class="sa-desk-card<?= $nextKind === $kind ? ' is-urgent' : '' ?>">
           <div class="sa-desk-card-t">
-            <b><?= $e(DocumentKind::label($kind)) ?></b>
+            <b><?= $e(DocumentKind::label($kind)) ?><?= $pair ? ' and ' . $e(DocumentKind::label(DocumentKind::APPROVED_SCOPE)) : '' ?></b>
             <span>
               <?= $check['ok']
-                ? $e('Ready to generate. It is a draft until you send it.')
+                ? $e($pair
+                    ? 'Ready to generate, both from the recorded scope. Drafts until you send the agreement; the scope goes with it.'
+                    : 'Ready to generate. It is a draft until you send it.')
                 : $e((string) $check['reason']) ?>
             </span>
           </div>
           <div class="sa-desk-card-a">
             <?php if ($check['ok']): ?>
               <form method="post" action="/sa-desk.php" style="margin:0">
-                <?= $csrf->field('document.generate') ?>
-                <input type="hidden" name="action" value="document.generate">
+                <?= $csrf->field($pair ? 'document.generate_recovery' : 'document.generate') ?>
+                <input type="hidden" name="action" value="<?= $pair ? 'document.generate_recovery' : 'document.generate' ?>">
                 <input type="hidden" name="engagement" value="<?= $e($engagementRef) ?>">
                 <input type="hidden" name="kind" value="<?= $e($kind) ?>">
-                <button type="submit" class="sa-btn is-action is-sm">Generate</button>
+                <button type="submit" class="sa-btn is-action is-sm"><?= $pair ? 'Generate both' : 'Generate' ?></button>
               </form>
             <?php endif; ?>
           </div>
@@ -345,7 +354,9 @@ $e = static fn (?string $value): string => Desk::e($value);
             </div>
 
             <?php // The actions this version allows, and only those. ?>
-            <?php if ($status === DocumentStatus::DRAFT && $canGenerate && $eSignEnabled): ?>
+            <?php if ($status === DocumentStatus::DRAFT && $canGenerate && $eSignEnabled && (string) $document['kind'] === DocumentKind::APPROVED_SCOPE): ?>
+              <p class="sa-desk-note" style="margin-top:14px">Goes out with the Recovery Services Agreement. Send that one.</p>
+            <?php elseif ($status === DocumentStatus::DRAFT && $canGenerate && $eSignEnabled): ?>
               <form method="post" action="/sa-desk.php" style="margin-top:14px">
                 <?= $csrf->field('document.send') ?>
                 <input type="hidden" name="action" value="document.send">

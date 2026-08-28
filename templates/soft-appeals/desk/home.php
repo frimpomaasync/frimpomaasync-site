@@ -21,6 +21,10 @@
  * @var list<array<string,mixed>> $assessmentsWaiting
  * @var list<array<string,mixed>> $awaitingCountersignature
  * @var list<array<string,mixed>> $recentTimeline
+ * @var list<array<string,mixed>> $awaitingSubmission
+ * @var list<array<string,mixed>> $followUps
+ * @var list<array<string,mixed>> $recoveryWaiting
+ * @var list<array<string,mixed>> $pendingApprovals
  * @var bool $canReview
  * @var bool $canSendTerms
  */
@@ -96,6 +100,48 @@ foreach ($requestsForHer ?? [] as $row) {
         'line'   => (string) ($row['display_name'] ?? $row['legal_name']) . ' · ' . Desk::ago($clock, (string) $row['created_at']),
         'action' => ['Answer', '/sa-desk.php?view=assessments&e=' . urlencode((string) $row['engagement_ref']) . '#desk-as-requests'],
         'view'   => ['View', '/sa-desk.php?view=assessments&e=' . urlencode((string) $row['engagement_ref'])],
+        'allowed' => true,
+    ];
+}
+
+// Phase 6. Recovery: the two gates that are hers, approved batches she has
+// not submitted, and follow-ups that have come due.
+foreach ($recoveryWaiting ?? [] as $row) {
+    $stage = (string) $row['stage'];
+    $cards[] = [
+        'urgent' => false,
+        'title'  => $stage === Stage::RECOVERY_SCOPE_SELECTED
+            ? 'Recovery chosen, scope and agreement next'
+            : 'Recovery agreement executed, work ready to start',
+        'line'   => (string) ($row['display_name'] ?? $row['legal_name']) . ' · ' . Stage::nextAction($stage),
+        'action' => ['Open', '/sa-desk.php?view=recovery&e=' . urlencode((string) $row['public_ref'])],
+        'view'   => ['View', '/sa-desk.php?view=recovery&e=' . urlencode((string) $row['public_ref'])],
+        'allowed' => true,
+    ];
+}
+foreach ($awaitingSubmission ?? [] as $row) {
+    $cards[] = [
+        'urgent' => true,
+        'title'  => 'Approved by the practice, waiting on your submission',
+        'line'   => (string) ($row['display_name'] ?? $row['legal_name']) . ' · batch ' . (string) $row['batch_label']
+            . ' · approved ' . Desk::ago($clock, (string) $row['decision_at']),
+        'action' => ['Record the submission', '/sa-desk.php?view=recovery&e=' . urlencode((string) $row['engagement_ref']) . '#desk-rc-board'],
+        'view'   => ['View', '/sa-desk.php?view=recovery&e=' . urlencode((string) $row['engagement_ref'])],
+        'allowed' => true,
+    ];
+}
+foreach ($followUps ?? [] as $row) {
+    $days = $clock->daysUntil((string) $row['follow_up_due_at']);
+    if ($days === null || $days > 0) {
+        continue;
+    }
+    $cards[] = [
+        'urgent' => true,
+        'title'  => 'Payer follow-up due',
+        'line'   => (string) ($row['display_name'] ?? $row['legal_name']) . ' · batch ' . (string) $row['batch_label']
+            . ' · ' . Desk::deadlineWords($days, true),
+        'action' => ['Open', '/sa-desk.php?view=recovery&e=' . urlencode((string) $row['engagement_ref']) . '#desk-rc-events'],
+        'view'   => ['View', '/sa-desk.php?view=recovery&e=' . urlencode((string) $row['engagement_ref'])],
         'allowed' => true,
     ];
 }
@@ -364,14 +410,42 @@ $hidden = count($cards) - count($shown);
 </section>
 <?php endif; ?>
 
+<?php if (($pendingApprovals ?? []) !== []): ?>
+<section aria-labelledby="desk-approvals">
+  <p class="sa-label" id="desk-approvals">With a practice for approval</p>
+  <div class="sa-panel"><div class="sa-tablewrap">
+    <table class="sa-table">
+      <thead><tr><th>Organization</th><th>Batch</th><th>Asked</th><th>By</th></tr></thead>
+      <tbody>
+      <?php foreach ($pendingApprovals as $row): ?>
+        <?php $days = $row['due_at'] === null ? null : $clock->daysUntil((string) $row['due_at']); ?>
+        <tr>
+          <td class="sa-strong"><?= $e((string) ($row['display_name'] ?? $row['legal_name'])) ?></td>
+          <td><?= $e((string) $row['batch_label']) ?> <div class="sa-desk-mono"><?= $e((string) $row['public_ref']) ?></div></td>
+          <td><?= $e(Desk::ago($clock, (string) $row['created_at'])) ?></td>
+          <td>
+            <?php if ($days === null): ?>
+              <span class="sa-desk-quiet">No date</span>
+            <?php else: ?>
+              <span class="<?= $e(Desk::deadlinePill($days, true)) ?>"><?= $e(Desk::deadlineWords($days, true)) ?></span>
+            <?php endif; ?>
+            <div><a class="sa-btn is-quiet is-sm" href="/sa-desk.php?view=recovery&amp;e=<?= $e(urlencode((string) $row['engagement_ref'])) ?>">Open</a></div>
+          </td>
+        </tr>
+      <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div></div>
+</section>
+<?php endif; ?>
+
 <section>
   <p class="sa-label">Not on this screen yet, and why</p>
   <p class="sa-desk-note">
-    The recovery summary counts denied dollars accepted, dollars submitted,
-    verified reimbursement and the fee calculated from it. None of those numbers
-    exists until recoveries are recorded, and a row of zeros where money belongs
-    reads like a result rather than an unbuilt feature. It arrives with the
-    money phase. Approvals and payer submissions arrive with the recovery
-    phase.
+    The recovery summary counts verified reimbursement and the fee calculated
+    from it. Neither number exists until a reimbursement is verified, and a
+    row of zeros where money belongs reads like a result rather than an unbuilt
+    feature. It arrives with the money phase. Submitted and overturned figures,
+    per practice, are on the Recovery screen.
   </p>
 </section>

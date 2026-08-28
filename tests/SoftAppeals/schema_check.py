@@ -88,6 +88,12 @@ EXPECTED_TABLES = {
         "sa_checklist_items",
         "sa_action_requests",
     ],
+    "0007_recovery_agreement_and_approvals.php": [
+        "sa_recovery_scopes",
+        "sa_recovery_scope_batches",
+        "sa_approval_requests",
+        "sa_submission_events",
+    ],
 }
 
 
@@ -923,6 +929,130 @@ def assert_assessment_and_recovery_room(connection: sqlite3.Connection) -> None:
             raise Failure(f"deleting an engagement left {table} rows behind")
 
 
+def assert_recovery_agreement_and_approvals(connection: sqlite3.Connection) -> None:
+    """
+    The constraints 0007 exists to enforce.
+
+    Gate C as a CHECK: a submitted event needs an approval behind it. A
+    decided approval carries its stamp and a pending one does not. One scope
+    per engagement, with a bounded rate. And there is no fee column anywhere
+    in these four tables, which is section 19 stated as an absence.
+    """
+    connection.execute(
+        "INSERT INTO sa_organizations (id, public_ref, legal_name, status, created_at, updated_at)"
+        f" VALUES ('orgR', 'SA-ORG-RRRRRR', 'Fictional Recovery Practice', 'active', {STAMP}, {STAMP})"
+    )
+    connection.execute(
+        "INSERT INTO sa_engagements (id, organization_id, public_ref, stage, fee_basis,"
+        " opened_at, row_version)"
+        f" VALUES ('eR', 'orgR', 'SA-ENG-RRRRRR', 'recovery_active', 'contingency_25', {STAMP}, 1)"
+    )
+    connection.execute(
+        "INSERT INTO sa_contacts (id, organization_id, name, work_email, active, created_at)"
+        f" VALUES ('cR', 'orgR', 'Kofi Mensah', 'kofi@example.org', 1, {STAMP})"
+    )
+    connection.execute(
+        "INSERT INTO sa_work_batches (id, public_ref, engagement_id, organization_id, label,"
+        " payer_label_approved, claim_count, denied_amount_cents, received_count, in_review_count,"
+        " submitted_count, overturned_count, upheld_count, closed_count, stage,"
+        " earliest_deadline_at, deadline_confirmed, next_owner, created_at, updated_at, row_version)"
+        f" VALUES ('bR', 'SA-BAT-RRRRRR', 'eR', 'orgR', 'Initial set', 0, 20, 1840000, 20, 0,"
+        f" 0, 0, 0, 0, 'recommended', NULL, 0, 'soft_appeals', {STAMP}, {STAMP}, 1)"
+    )
+
+    for table in ("sa_recovery_scopes", "sa_recovery_scope_batches", "sa_approval_requests", "sa_submission_events"):
+        columns = [row[1] for row in connection.execute(f"PRAGMA table_info({table})").fetchall()]
+        for column in columns:
+            if "fee" in column and column != "fee_basis" and column != "fee_rate_bps":
+                raise Failure(f"{table}.{column}: a fee column in a Phase 6 table, section 19")
+            for word in ("patient", "member", "claim_number", "claim_id", "mrn", "dob", "date_of_service"):
+                if word in column:
+                    raise Failure(f"{table}.{column}: a patient-level column, section 5")
+
+    def scope(ident: str, engagement: str = "'eR'", fee: str = "contingency_25", rate: str = "2500",
+              summary: str = "The commercial denials in the initial set.", approver: str = "NULL",
+              confirmed: str = "NULL") -> str:
+        return (
+            "INSERT INTO sa_recovery_scopes (id, engagement_id, organization_id, fee_basis, fee_rate_bps,"
+            " summary, approver_contact_id, approver_confirmed_at, created_at, updated_at, row_version)"
+            f" VALUES ('{ident}', {engagement}, 'orgR', '{fee}', {rate}, '{summary}', {approver}, {confirmed},"
+            f" {STAMP}, {STAMP}, 1)"
+        )
+
+    accepts(connection, scope("s1", approver="'cR'", confirmed=STAMP), "a plain scope was refused")
+    refuses(connection, scope("s2"), "two scopes for one engagement were accepted")
+    connection.execute("DELETE FROM sa_recovery_scopes WHERE id = 's1'")
+    refuses(connection, scope("s3", fee="not_set"), "a scope with no fee basis was accepted")
+    refuses(connection, scope("s4", rate="12000"), "a rate above 100 percent was accepted")
+    refuses(connection, scope("s5", rate="-1"), "a negative rate was accepted")
+    refuses(connection, scope("s6", summary="short"), "an empty scope summary was accepted")
+    refuses(connection, scope("s7", confirmed=STAMP), "an approver confirmation with nobody behind it was accepted")
+    accepts(connection, scope("s8", rate="NULL", fee="custom"), "a custom basis with no rate was refused")
+
+    accepts(
+        connection,
+        f"INSERT INTO sa_recovery_scope_batches (scope_id, work_batch_id, created_at) VALUES ('s8', 'bR', {STAMP})",
+        "a batch in scope was refused",
+    )
+    refuses(
+        connection,
+        f"INSERT INTO sa_recovery_scope_batches (scope_id, work_batch_id, created_at) VALUES ('s8', 'bR', {STAMP})",
+        "the same batch was accepted in one scope twice",
+    )
+    refuses(
+        connection,
+        f"INSERT INTO sa_recovery_scope_batches (scope_id, work_batch_id, created_at) VALUES ('s8', 'no-batch', {STAMP})",
+        "a scope pointing at an unknown batch was accepted",
+    )
+
+    def approval(ident: str, ref: str, state: str = "pending", decided: str = "NULL", kind: str = "submission",
+                 summary: str = "First-level appeals to the commercial payer.", count: int = 12,
+                 cents: int = 1120000, key: str = "NULL") -> str:
+        return (
+            "INSERT INTO sa_approval_requests (id, public_ref, engagement_id, organization_id, work_batch_id,"
+            " kind, safe_summary, claim_count, amount_cents, state, decision_at, idempotency_key,"
+            " created_at, updated_at)"
+            f" VALUES ('{ident}', '{ref}', 'eR', 'orgR', 'bR', '{kind}', '{summary}', {count}, {cents},"
+            f" '{state}', {decided}, {key}, {STAMP}, {STAMP})"
+        )
+
+    accepts(connection, approval("a1", "SA-APR-AAAAAA"), "a plain pending approval was refused")
+    refuses(connection, approval("a2", "SA-APR-AAAAAA"), "two approvals with one reference were accepted")
+    refuses(connection, approval("a3", "SA-APR-BBBBBB", state="approved"), "an approved request with no stamp was accepted")
+    refuses(connection, approval("a4", "SA-APR-CCCCCC", decided=STAMP), "a pending request carrying a decision stamp was accepted")
+    refuses(connection, approval("a5", "SA-APR-DDDDDD", state="maybe", decided=STAMP), "a state nobody named was accepted")
+    refuses(connection, approval("a6", "SA-APR-EEEEEE", kind="upload"), "an approval kind nobody designed was accepted")
+    refuses(connection, approval("a7", "SA-APR-FFFFFF", count=-1), "a negative count was accepted")
+    refuses(connection, approval("a8", "SA-APR-GGGGGG", summary="tiny"), "an empty safe summary was accepted")
+    accepts(connection, approval("a9", "SA-APR-HHHHHH", state="approved", decided=STAMP, key="'k1'"), "a stamped approval was refused")
+    refuses(connection, approval("a10", "SA-APR-IIIIII", state="approved", decided=STAMP, key="'k1'"), "the same idempotency key was accepted twice")
+
+    def event(ident: str, ref: str, kind: str = "submitted", approval_id: str = "'a9'", count: int = 12,
+              cents: int = 1120000, due: str = "NULL", done: str = "NULL") -> str:
+        return (
+            "INSERT INTO sa_submission_events (id, public_ref, engagement_id, organization_id, work_batch_id,"
+            " approval_request_id, event_type, claim_count, amount_cents, occurred_at, follow_up_due_at,"
+            " follow_up_done_at, created_at)"
+            f" VALUES ('{ident}', '{ref}', 'eR', 'orgR', 'bR', {approval_id}, '{kind}', {count}, {cents},"
+            f" {STAMP}, {due}, {done}, {STAMP})"
+        )
+
+    accepts(connection, event("v1", "SA-SUB-AAAAAA"), "a submitted event with an approval behind it was refused")
+    refuses(connection, event("v2", "SA-SUB-BBBBBB", approval_id="NULL"), "Gate C: a submitted event with no approval was accepted")
+    accepts(connection, event("v3", "SA-SUB-CCCCCC", kind="decision_favorable", approval_id="NULL"), "a payer decision with no approval id was refused")
+    refuses(connection, event("v4", "SA-SUB-DDDDDD", kind="paid_in_full"), "an event type nobody named was accepted")
+    refuses(connection, event("v5", "SA-SUB-EEEEEE", cents=-1), "a negative amount was accepted")
+    refuses(connection, event("v6", "SA-SUB-FFFFFF", done=STAMP), "a follow-up marked done with no due date was accepted")
+    accepts(connection, event("v7", "SA-SUB-GGGGGG", due=STAMP, done=STAMP), "a dated, done follow-up was refused")
+
+    # Closing the engagement takes every Phase 6 row with it.
+    connection.execute("DELETE FROM sa_engagements WHERE id = 'eR'")
+    for table in ("sa_recovery_scopes", "sa_recovery_scope_batches", "sa_approval_requests", "sa_submission_events"):
+        left = connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        if left != 0:
+            raise Failure(f"deleting an engagement left {table} rows behind")
+
+
 ASSERTIONS = {
     "0001_foundation.php": assert_foundation,
     "0002_intake_and_engagement.php": assert_intake_and_engagement,
@@ -930,6 +1060,7 @@ ASSERTIONS = {
     "0004_status_event_sequence.php": assert_status_event_sequence,
     "0005_documents_and_signatures.php": assert_documents_and_signatures,
     "0006_assessment_and_recovery_room.php": assert_assessment_and_recovery_room,
+    "0007_recovery_agreement_and_approvals.php": assert_recovery_agreement_and_approvals,
 }
 
 

@@ -276,11 +276,16 @@ $e = static fn (?string $value): string => Desk::e($value);
         </p>
 
       <?php elseif ($stage === Stage::RECOVERY_SCOPE_SELECTED): ?>
-        <p style="margin:0">
+        <p style="margin:0 0 12px">
           They chose recovery. The next gate is the Recovery Services Agreement,
-          which arrives with Phase 6. Nothing can be submitted to a payer before it
-          is executed, and the state machine will not let this engagement past it.
+          generated from the scope you record on the Recovery screen. Nothing can
+          be submitted to a payer before it is executed.
         </p>
+        <a class="sa-btn is-primary" href="/sa-desk.php?view=recovery&amp;e=<?= $e($engagementRef) ?>">Record the scope</a>
+
+      <?php elseif (in_array($stage, [Stage::RECOVERY_AGREEMENT_PENDING, Stage::RECOVERY_AGREEMENT_EXECUTED, Stage::RECOVERY_ACTIVE], true)): ?>
+        <p style="margin:0 0 12px">Recovery is under way. The work is on the Recovery screen.</p>
+        <a class="sa-btn is-sm" href="/sa-desk.php?view=recovery&amp;e=<?= $e($engagementRef) ?>">Open the recovery</a>
 
       <?php elseif ($stage === Stage::CLOSED_NO_RECOVERY): ?>
         <p style="margin:0">

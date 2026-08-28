@@ -7,6 +7,7 @@ use SoftAppeals\Auth\AuthorizationService;
 use SoftAppeals\Auth\AuthService;
 use SoftAppeals\Auth\SessionManager;
 use SoftAppeals\Repositories\ActionRequestRepository;
+use SoftAppeals\Repositories\ApprovalRequestRepository;
 use SoftAppeals\Repositories\AssessmentRepository;
 use SoftAppeals\Repositories\ChecklistRepository;
 use SoftAppeals\Repositories\CommunicationRepository;
@@ -19,9 +20,11 @@ use SoftAppeals\Repositories\LoginCodeRepository;
 use SoftAppeals\Repositories\MembershipRepository;
 use SoftAppeals\Repositories\OrganizationRepository;
 use SoftAppeals\Repositories\PreferenceRepository;
+use SoftAppeals\Repositories\RecoveryScopeRepository;
 use SoftAppeals\Repositories\SettingsRepository;
 use SoftAppeals\Repositories\SignatureRepository;
 use SoftAppeals\Repositories\StatusEventRepository;
+use SoftAppeals\Repositories\SubmissionEventRepository;
 use SoftAppeals\Repositories\UserRepository;
 use SoftAppeals\Repositories\WorkBatchRepository;
 use SoftAppeals\Security\Csrf;
@@ -40,6 +43,7 @@ use SoftAppeals\Services\IntakeService;
 use SoftAppeals\Services\LegacyLeadImporter;
 use SoftAppeals\Services\MailService;
 use SoftAppeals\Services\PreferencesService;
+use SoftAppeals\Services\RecoveryService;
 use SoftAppeals\Services\SchemaService;
 use SoftAppeals\Services\SeedService;
 use SoftAppeals\Services\SigningService;
@@ -549,7 +553,8 @@ final class Bootstrap
             $this->mail(),
             $this->audit(),
             $this->hmac(),
-            $this->settings()
+            $this->settings(),
+            $this->recoveryScopes()
         ));
     }
 
@@ -566,7 +571,63 @@ final class Bootstrap
             $this->vault(),
             $this->authorization(),
             $this->audit(),
-            $this->hmac()
+            $this->hmac(),
+            $this->documentService()
+        ));
+    }
+
+    // ------------------------------------------------------------------
+    // Phase 6. The recovery agreement, approvals and submissions.
+    // ------------------------------------------------------------------
+
+    public function recoveryScopes(): RecoveryScopeRepository
+    {
+        return $this->make(RecoveryScopeRepository::class, fn (): RecoveryScopeRepository => new RecoveryScopeRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function approvalRequests(): ApprovalRequestRepository
+    {
+        return $this->make(ApprovalRequestRepository::class, fn (): ApprovalRequestRepository => new ApprovalRequestRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function submissionEvents(): SubmissionEventRepository
+    {
+        return $this->make(SubmissionEventRepository::class, fn (): SubmissionEventRepository => new SubmissionEventRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function recoveryService(): RecoveryService
+    {
+        return $this->make(RecoveryService::class, fn (): RecoveryService => new RecoveryService(
+            $this->config,
+            $this->database(),
+            $this->clock(),
+            $this->recoveryScopes(),
+            $this->approvalRequests(),
+            $this->submissionEvents(),
+            $this->workBatches(),
+            $this->engagements(),
+            $this->documents(),
+            $this->contacts(),
+            $this->users(),
+            $this->memberships(),
+            $this->preferences(),
+            $this->timeline(),
+            $this->engagementService(),
+            $this->workBatchService(),
+            $this->checklistService(),
+            $this->actionRequestService(),
+            $this->authorization(),
+            $this->mail(),
+            $this->audit()
         ));
     }
 
