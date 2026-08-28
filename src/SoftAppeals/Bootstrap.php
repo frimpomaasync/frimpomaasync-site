@@ -528,6 +528,7 @@ final class Bootstrap
             $this->database(),
             $this->clock(),
             $this->documents(),
+            $this->engagements(),
             $this->signatures(),
             $this->preferences(),
             $this->contacts(),

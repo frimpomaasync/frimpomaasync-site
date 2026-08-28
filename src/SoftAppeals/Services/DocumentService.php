@@ -13,6 +13,7 @@ use SoftAppeals\Domain\Role;
 use SoftAppeals\Domain\Stage;
 use SoftAppeals\Repositories\ContactRepository;
 use SoftAppeals\Repositories\DocumentRepository;
+use SoftAppeals\Repositories\EngagementRepository;
 use SoftAppeals\Repositories\InvitationRepository;
 use SoftAppeals\Repositories\PreferenceRepository;
 use SoftAppeals\Repositories\SignatureRepository;
@@ -48,6 +49,7 @@ final class DocumentService
     private Database $db;
     private Clock $clock;
     private DocumentRepository $documents;
+    private EngagementRepository $engagements;
     private SignatureRepository $signatures;
     private PreferenceRepository $preferences;
     private ContactRepository $contacts;
@@ -64,6 +66,7 @@ final class DocumentService
         Database $db,
         Clock $clock,
         DocumentRepository $documents,
+        EngagementRepository $engagements,
         SignatureRepository $signatures,
         PreferenceRepository $preferences,
         ContactRepository $contacts,
@@ -79,6 +82,7 @@ final class DocumentService
         $this->db = $db;
         $this->clock = $clock;
         $this->documents = $documents;
+        $this->engagements = $engagements;
         $this->signatures = $signatures;
         $this->preferences = $preferences;
         $this->contacts = $contacts;
@@ -123,7 +127,7 @@ final class DocumentService
         // replacement is that this kind of document belongs to this engagement
         // at all, and a version already existing is the proof of that.
         $required = DocumentKind::requiredStage($kind);
-        $stage = (string) $engagement['stage'];
+        $stage = $this->currentStage((string) $engagement['id']);
         if (!$everIssued && $required !== null && $stage !== $required) {
             return [
                 'ok'     => false,
@@ -325,7 +329,7 @@ final class DocumentService
         );
 
         $pending = DocumentKind::pendingStage((string) $document['kind']);
-        if ($pending !== null && Stage::canMove((string) $engagement['stage'], $pending)) {
+        if ($pending !== null && Stage::canMove($this->currentStage($engagementId), $pending)) {
             $this->engagementService->move(
                 $engagementId,
                 $pending,
@@ -514,7 +518,9 @@ final class DocumentService
         }
 
         $executedStage = DocumentKind::executedStage($kind);
-        if ($executedStage !== null && Stage::canMove((string) $engagement['stage'], $executedStage)) {
+        if ($executedStage !== null
+            && Stage::canMove($this->currentStage((string) $engagement['id']), $executedStage)
+        ) {
             $this->engagementService->move(
                 (string) $engagement['id'],
                 $executedStage,
@@ -672,6 +678,25 @@ final class DocumentService
     // ------------------------------------------------------------------
     // The pieces.
     // ------------------------------------------------------------------
+
+    /**
+     * The stage this engagement is at right now, read from the database.
+     *
+     * Never the stage on the array the caller is holding. Sending a document
+     * moves the engagement, and the caller is still holding the row as it was
+     * before that happened, so a later step checking the snapshot would be
+     * asking whether a move was legal from a stage the engagement left minutes
+     * ago. That is exactly how the BAA executed itself and left the engagement
+     * sitting at "out for signature" on the first CI run of this phase.
+     */
+    private function currentStage(string $engagementId): string
+    {
+        $row = $this->engagements->find($engagementId);
+        if ($row === null) {
+            throw new \RuntimeException('No such engagement.');
+        }
+        return (string) $row['stage'];
+    }
 
     /**
      * The contact the practice named as its authorized signer.
