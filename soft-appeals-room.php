@@ -251,7 +251,7 @@ Client::render('room-shell', [
     // Flat, for the same reason every other render on this page is flat: the
     // shell and the view inside it read one array.
     'timeline'        => $app->timeline()->forEngagement($engagementId),
-    'chosen'          => $app->preferencesService()->summary($engagementId),
+    'chosen'          => $app->preferencesService()->summary($engagementId, true),
     'nextOwner'       => Stage::clientNextOwner($stage),
     'nextAction'      => Stage::clientNextAction($stage),
     'preferencesOpen' => $preferencesOpen,

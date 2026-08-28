@@ -92,6 +92,26 @@ final class PreferenceForm
         ];
     }
 
+    /**
+     * The secure route as a noun, for reading back rather than choosing.
+     *
+     * channelChoices above is phrased as an instruction because it sits next to
+     * a radio button. This is what the same answer is called afterwards, on the
+     * confirmation page and in the Recovery Room. EngagementTerms has a third
+     * wording, "Their own approved environment", which is hers and is correct on
+     * the Desk. Three phrasings of one stored value, one for each person who
+     * reads it, and none of them shown to the wrong one.
+     */
+    public static function channelClientLabel(?string $value): string
+    {
+        return match ($value) {
+            EngagementTerms::CHANNEL_CLIENT_SYSTEM => 'Your own approved environment',
+            EngagementTerms::CHANNEL_SOFT_APPEALS  => 'The Soft Appeals secure transfer option',
+            EngagementTerms::CHANNEL_DECIDE_LATER  => 'Being decided with your compliance or IT',
+            default                                => 'Not chosen yet',
+        };
+    }
+
     /** @return array<string,string> */
     public static function billingPartners(): array
     {

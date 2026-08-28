@@ -333,9 +333,14 @@ final class PreferencesService
      * A question that was left blank is left out rather than printed empty: an
      * optional answer nobody gave is not a fact worth a row.
      *
+     * $forClient picks the wording. The Desk reads "Their own approved
+     * environment" and the practice reads "Your own approved environment", and
+     * showing a practice her half of that sentence is how a portal stops
+     * sounding like it was written for them. Seen on screen 2026-08-28.
+     *
      * @return list<array{label:string,value:string}>
      */
-    public function summary(string $engagementId): array
+    public function summary(string $engagementId, bool $forClient = false): array
     {
         $row = $this->preferences->forEngagement($engagementId);
         if ($row === null) {
@@ -349,7 +354,9 @@ final class PreferencesService
         ];
         $out[] = [
             'label' => 'Secure route',
-            'value' => EngagementTerms::channelLabel((string) $row['secure_channel']),
+            'value' => $forClient
+                ? PreferenceForm::channelClientLabel((string) $row['secure_channel'])
+                : EngagementTerms::channelLabel((string) $row['secure_channel']),
         ];
 
         foreach (PreferenceForm::contactQuestions() as $key => $question) {

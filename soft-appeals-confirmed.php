@@ -90,6 +90,6 @@ Client::render('shell', [
     'headerNote'   => 'Onboarding',
 
     'engagement'   => $engagement,
-    'chosen'       => $app->preferencesService()->summary($engagementId),
+    'chosen'       => $app->preferencesService()->summary($engagementId, true),
     'roomOpen'     => $config->portalEnabled(),
 ], $showDetail);
