@@ -61,6 +61,19 @@
   max-width: 1320px;
 }
 
+/* A grid item's minimum width is its content, so a wide worklist inside a
+   section pushed the whole body past the viewport and the page scrolled
+   sideways. Seen on Home 2026-08-28. Zero lets the table scroll inside its
+   own wrap instead. */
+.sa-desk-shell .sa-work-body > * {
+  min-width: 0;
+}
+
+.sa-desk-shell .sa-tablewrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* Section labels: a small grey caption, then the tile. */
 .sa-desk-shell .sa-work-body .sa-label {
   font-size: 10.5px;
