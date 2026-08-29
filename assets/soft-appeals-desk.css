@@ -96,7 +96,7 @@
 /* Metric tiles: a caption, a big serif number, a line under it. */
 .sa-desk-shell .sa-metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
   gap: 14px;
 }
 
@@ -149,7 +149,7 @@
 
 /* Tables: quiet rows inside the tile, grey column captions, no header band. */
 .sa-desk-shell .sa-table {
-  font-size: 14px;
+  font-size: 13.5px;
 }
 
 .sa-desk-shell .sa-table th {
@@ -166,7 +166,7 @@
   text-transform: uppercase;
   font-weight: 500;
   color: var(--sa-mute);
-  padding: 14px 18px 12px;
+  padding: 13px 14px 11px;
   text-align: left;
   white-space: nowrap;
 }
@@ -177,7 +177,7 @@
 }
 
 .sa-desk-shell .sa-table td {
-  padding: 16px 18px;
+  padding: 14px 14px;
   border-bottom: 1px solid var(--sa-line);
   vertical-align: middle;
   line-height: 1.45;
