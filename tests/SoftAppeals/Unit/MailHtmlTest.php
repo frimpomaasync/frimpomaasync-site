@@ -59,7 +59,7 @@ return [
             $html = MailHtml::render("Hello there,\n\nSign in at https://frimpomaasync.com/soft-appeals-room with this address.\n\nNana Frimpongmaa\nSoft Appeals\n", 's');
             Expect::true(str_contains($html, '<a href="https://frimpomaasync.com/soft-appeals-room"'), 'linked');
             Expect::false(str_contains($html, '>Open</a>'), 'but not a button');
-            Expect::same(1, substr_count($html, '<ol'), 'no list is invented');
+            Expect::same(0, substr_count($html, '<ol'), 'no list is invented');
         },
 
     'the footer sentence is carried and a text with no signature is still whole' =>
