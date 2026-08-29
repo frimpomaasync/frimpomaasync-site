@@ -445,6 +445,21 @@
   .sa-desk-shell .sa-table td {
     padding: 12px 14px;
   }
+  /* A worklist with five columns squeezed into 390px and every cell
+     wrapped into a tall sliver. A floor on the width keeps the columns
+     readable and lets the tile scroll sideways under a thumb instead. */
+  .sa-desk-shell .sa-table {
+    min-width: 640px;
+  }
+  .sa-desk-shell .sa-tablewrap {
+    overflow-x: auto;
+  }
+  .sa-desk-shell .sa-desk-grid2 {
+    grid-template-columns: 1fr;
+  }
+  .sa-desk-shell .sa-work-top h1 {
+    font-size: 26px;
+  }
 }
 
 @media print {
