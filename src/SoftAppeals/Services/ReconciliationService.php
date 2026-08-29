@@ -475,6 +475,19 @@ final class ReconciliationService
                 'note'                  => $note,
             ], $userId);
 
+            // The batch card stops asking for a verification it has. Seen on
+            // the walk: after the money was verified the room still read
+            // "Verify the reimbursement when it arrives", waiting on the payer.
+            $fresh = $this->batches->find($batchId);
+            if ($fresh !== null) {
+                $this->batches->patch($batchId, [
+                    'next_owner'  => BatchStage::OWNER_SOFT_APPEALS,
+                    'next_action' => $cents === 0
+                        ? 'Verified: nothing arrived. Nothing further on this batch'
+                        : 'Reimbursement verified. Nothing further on this batch',
+                ], (int) $fresh['row_version']);
+            }
+
             $this->timeline->record(
                 $engagementId,
                 'recovery.verified',
