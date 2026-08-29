@@ -29,6 +29,10 @@
  * @var list<array<string,mixed>> $pendingApprovals
  * @var bool $canReview
  * @var bool $canSendTerms
+ * @var list<array<string,mixed>> $attentionOpen
+ * @var bool $canDismiss
+ * @var ?string $jobsNote
+ * @var \SoftAppeals\Security\Csrf $csrf
  */
 
 use SoftAppeals\Domain\IntakeStatus;
@@ -183,12 +187,35 @@ foreach ($closeoutOpen ?? [] as $row) {
     ];
 }
 
+// Phase 8. What the jobs surfaced: deadline groups at a threshold, favorable
+// decisions waiting on payment, open access at closeout, overdue internal
+// work, a failed job, a backup that did not verify. Section 17.2.
+foreach ($attentionOpen ?? [] as $item) {
+    $kind = (string) $item['kind'];
+    $cards[] = [
+        'urgent'  => (string) $item['severity'] === \SoftAppeals\Repositories\AttentionRepository::SEVERITY_URGENT,
+        'title'   => \SoftAppeals\Repositories\AttentionRepository::kindLabel($kind),
+        'line'    => (string) $item['label'] . ($item['detail'] === null ? '' : ' · ' . (string) $item['detail']),
+        'action'  => ['Open', (string) ($item['link'] ?? '/sa-desk.php?view=jobs')],
+        'view'    => ['Seen', '/sa-desk.php?view=jobs'],
+        'allowed' => true,
+        'dismiss' => ($canDismiss ?? false) ? (string) $item['id'] : null,
+    ];
+}
+
 // Urgent first, then in the order they were added, which is oldest first
 // inside each group because that is how the repositories return them.
 usort($cards, static fn (array $a, array $b): int => ($b['urgent'] <=> $a['urgent']));
 $shown = array_slice($cards, 0, 8);
 $hidden = count($cards) - count($shown);
 ?>
+
+<?php if (($jobsNote ?? null) !== null): ?>
+  <p class="sa-desk-note" style="margin-bottom:12px">
+    <?= $e((string) $jobsNote) ?>
+    <a href="/sa-desk.php?view=jobs">Automation</a> has the detail and the button to run them now.
+  </p>
+<?php endif; ?>
 
 <section aria-labelledby="desk-needs">
   <p class="sa-label" id="desk-needs">Needs you</p>
@@ -207,7 +234,17 @@ $hidden = count($cards) - count($shown);
           <?php if ($card['allowed']): ?>
             <div class="sa-desk-card-a">
               <a class="sa-btn is-action is-sm" href="<?= $e($card['action'][1]) ?>"><?= $e($card['action'][0]) ?></a>
-              <a class="sa-btn is-quiet is-sm" href="<?= $e($card['view'][1]) ?>"><?= $e($card['view'][0]) ?></a>
+              <?php if (($card['dismiss'] ?? null) !== null): ?>
+                <form method="post" action="/sa-desk.php">
+                  <?= $csrf->field('attention.dismiss') ?>
+                  <input type="hidden" name="action" value="attention.dismiss">
+                  <input type="hidden" name="item" value="<?= $e((string) $card['dismiss']) ?>">
+                  <input type="hidden" name="back" value="home">
+                  <button type="submit" class="sa-btn is-quiet is-sm">Seen</button>
+                </form>
+              <?php else: ?>
+                <a class="sa-btn is-quiet is-sm" href="<?= $e($card['view'][1]) ?>"><?= $e($card['view'][0]) ?></a>
+              <?php endif; ?>
             </div>
           <?php endif; ?>
         </div>

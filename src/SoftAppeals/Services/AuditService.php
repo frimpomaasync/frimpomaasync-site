@@ -53,6 +53,10 @@ final class AuditService
         // Phase 5.
         'decision',
         'setting',
+
+        // Phase 8. Which job, and which run.
+        'job',
+        'trigger',
     ];
 
     /** Outcomes. Anything else is refused. */

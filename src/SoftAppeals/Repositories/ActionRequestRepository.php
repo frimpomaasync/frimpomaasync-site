@@ -147,6 +147,45 @@ final class ActionRequestRepository extends Repository
         );
     }
 
+    /**
+     * Everything open that is waiting on a PRACTICE, across every open
+     * engagement, with the organization joined on. The reminder job's source.
+     *
+     * @return list<array<string,mixed>>
+     */
+    public function openForClientsEverywhere(): array
+    {
+        return $this->db->all(
+            'SELECT r.*, e.public_ref AS engagement_ref, o.legal_name, o.display_name'
+            . ' FROM sa_action_requests r'
+            . ' JOIN sa_engagements e ON e.id = r.engagement_id'
+            . ' JOIN sa_organizations o ON o.id = e.organization_id'
+            . ' WHERE r.owner = :o AND r.status = :s AND e.closed_at IS NULL'
+            . ' ORDER BY r.created_at ASC',
+            ['o' => ActionRequestKind::OWNER_CLIENT, 's' => ActionRequestKind::STATUS_OPEN]
+        );
+    }
+
+    /**
+     * Open requests owned by Soft Appeals whose date has passed. Section
+     * 17.2: "surface overdue internal tasks".
+     *
+     * @return list<array<string,mixed>>
+     */
+    public function overdueForSoftAppeals(): array
+    {
+        return $this->db->all(
+            'SELECT r.*, e.public_ref AS engagement_ref, o.legal_name, o.display_name'
+            . ' FROM sa_action_requests r'
+            . ' JOIN sa_engagements e ON e.id = r.engagement_id'
+            . ' JOIN sa_organizations o ON o.id = e.organization_id'
+            . ' WHERE r.owner = :o AND r.status = :s AND r.due_at IS NOT NULL AND r.due_at < :now'
+            . ' AND e.closed_at IS NULL'
+            . ' ORDER BY r.due_at ASC',
+            ['o' => ActionRequestKind::OWNER_SOFT_APPEALS, 's' => ActionRequestKind::STATUS_OPEN, 'now' => $this->clock->nowUtc()]
+        );
+    }
+
     private function uniquePublicRef(): string
     {
         for ($attempt = 0; $attempt < 8; $attempt++) {

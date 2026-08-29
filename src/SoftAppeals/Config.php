@@ -121,13 +121,22 @@ final class Config
         // ("enable recovery finance after reconciliation tests") and she sets
         // it to true by hand. See recoveryFinanceEnabled().
         'SA_RECOVERY_FINANCE_ENABLED' => null,
-        'SA_DEADLINE_CRON_ENABLED'    => false,
+
+        // The scheduled jobs: reminders, deadline surfacing, the digest, the
+        // backup. Same unset rule again, so staging can run them and prove
+        // them while production stays quiet until section 25 step 11,
+        // "enable cron last". The Desk's own "Run the jobs now" button is
+        // her explicit act and does not read this flag. See cronEnabled().
+        'SA_DEADLINE_CRON_ENABLED'    => null,
         'SA_DEMO_MODE'                => true,
 
         // Staging must never be able to email a real practice. Any recipient
         // outside this list is refused by the mail layer, not merely discouraged.
         // Empty means no restriction, which is only correct in production.
         'SA_MAIL_ALLOWLIST' => '',
+
+        // The hour of her day the morning digest goes out. Section 17.3.
+        'SA_DIGEST_HOUR' => '6',
     ];
 
     /** @var array<string,mixed> */
@@ -327,6 +336,29 @@ final class Config
     public function recoveryFinanceEnabled(): bool
     {
         return $this->flagOrNotProduction('SA_RECOVERY_FINANCE_ENABLED');
+    }
+
+    /**
+     * Whether the scheduled jobs may run on their own.
+     *
+     * Read by the cron entry point and by nothing else: a run she starts from
+     * the Desk is a click, not a schedule, and section 25 says the schedule
+     * is the last thing to switch on. Unset is on off production and off on
+     * production, like the portal flags.
+     */
+    public function cronEnabled(): bool
+    {
+        return $this->flagOrNotProduction('SA_DEADLINE_CRON_ENABLED');
+    }
+
+    /**
+     * The hour, in her timezone, at which the morning digest is sent. A
+     * job run earlier in the day does nothing; a run later sends it once.
+     */
+    public function digestHour(): int
+    {
+        $value = (int) $this->string('SA_DIGEST_HOUR');
+        return $value >= 0 && $value <= 23 ? $value : 6;
     }
 
     /**

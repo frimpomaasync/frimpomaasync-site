@@ -9,6 +9,7 @@ use SoftAppeals\Auth\SessionManager;
 use SoftAppeals\Repositories\ActionRequestRepository;
 use SoftAppeals\Repositories\ApprovalRequestRepository;
 use SoftAppeals\Repositories\AssessmentRepository;
+use SoftAppeals\Repositories\AttentionRepository;
 use SoftAppeals\Repositories\ChecklistRepository;
 use SoftAppeals\Repositories\CloseoutRepository;
 use SoftAppeals\Repositories\CommunicationRepository;
@@ -16,6 +17,7 @@ use SoftAppeals\Repositories\ContactRepository;
 use SoftAppeals\Repositories\DocumentRepository;
 use SoftAppeals\Repositories\EngagementRepository;
 use SoftAppeals\Repositories\IntakeRepository;
+use SoftAppeals\Repositories\JobRepository;
 use SoftAppeals\Repositories\InvitationRepository;
 use SoftAppeals\Repositories\InvoiceRepository;
 use SoftAppeals\Repositories\LoginCodeRepository;
@@ -37,17 +39,21 @@ use SoftAppeals\Security\RateLimiter;
 use SoftAppeals\Services\ActionRequestService;
 use SoftAppeals\Services\AssessmentService;
 use SoftAppeals\Services\AuditService;
+use SoftAppeals\Services\BackupService;
 use SoftAppeals\Services\ChecklistService;
 use SoftAppeals\Services\ClientAccessService;
 use SoftAppeals\Services\CloseoutService;
 use SoftAppeals\Services\DocumentService;
+use SoftAppeals\Services\DigestService;
 use SoftAppeals\Services\DocumentVault;
 use SoftAppeals\Services\EngagementService;
 use SoftAppeals\Services\IntakeService;
+use SoftAppeals\Services\JobService;
 use SoftAppeals\Services\LegacyLeadImporter;
 use SoftAppeals\Services\MailService;
 use SoftAppeals\Services\PreferencesService;
 use SoftAppeals\Services\ReconciliationService;
+use SoftAppeals\Services\ReminderService;
 use SoftAppeals\Services\RecoveryService;
 use SoftAppeals\Services\SchemaService;
 use SoftAppeals\Services\SeedService;
@@ -272,6 +278,21 @@ final class Bootstrap
         return $this->make(Clock::class, fn (): Clock => new Clock(
             $this->config->string('SA_BUSINESS_TIMEZONE')
         ));
+    }
+
+    /**
+     * Pin "now". Tests only.
+     *
+     * A reminder that fires once per cadence period cannot be proved without
+     * moving the calendar, and nothing here sleeps for a fortnight. Every
+     * service and repository already built is dropped, because each one holds
+     * the clock it was handed, and a frozen clock that half the application
+     * cannot see would prove the wrong thing.
+     */
+    public function useClock(Clock $clock): void
+    {
+        $this->made = [];
+        $this->made[Clock::class] = $clock;
     }
 
     public function hmac(): Hmac
@@ -811,6 +832,99 @@ final class Bootstrap
             $this->checklistService(),
             $this->actionRequestService(),
             $this->mail(),
+            $this->audit()
+        ));
+    }
+
+    // ------------------------------------------------------------------
+    // Phase 8. Automation: the jobs, what they surface, the reminders, the
+    // digest and the backup.
+    // ------------------------------------------------------------------
+
+    public function jobs(): JobRepository
+    {
+        return $this->make(JobRepository::class, fn (): JobRepository => new JobRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function attention(): AttentionRepository
+    {
+        return $this->make(AttentionRepository::class, fn (): AttentionRepository => new AttentionRepository(
+            $this->database(),
+            $this->clock()
+        ));
+    }
+
+    public function backupService(): BackupService
+    {
+        return $this->make(BackupService::class, fn (): BackupService => new BackupService(
+            $this->config,
+            $this->database(),
+            $this->clock(),
+            $this->audit()
+        ));
+    }
+
+    public function reminderService(): ReminderService
+    {
+        return $this->make(ReminderService::class, fn (): ReminderService => new ReminderService(
+            $this->config,
+            $this->clock(),
+            $this->actionRequests(),
+            $this->approvalRequests(),
+            $this->documents(),
+            $this->contacts(),
+            $this->preferences(),
+            $this->engagements(),
+            $this->mail(),
+            $this->audit()
+        ));
+    }
+
+    public function digestService(): DigestService
+    {
+        return $this->make(DigestService::class, fn (): DigestService => new DigestService(
+            $this->config,
+            $this->clock(),
+            $this->intakes(),
+            $this->engagements(),
+            $this->documents(),
+            $this->actionRequests(),
+            $this->approvalRequests(),
+            $this->submissionEvents(),
+            $this->workBatches(),
+            $this->recoveries(),
+            $this->invoices(),
+            $this->closeouts(),
+            $this->attention(),
+            $this->jobs(),
+            $this->mail()
+        ));
+    }
+
+    public function jobService(): JobService
+    {
+        return $this->make(JobService::class, fn (): JobService => new JobService(
+            $this->config,
+            $this->database(),
+            $this->clock(),
+            $this->jobs(),
+            $this->attention(),
+            $this->invitations(),
+            $this->rateLimiter(),
+            $this->reminderService(),
+            $this->digestService(),
+            $this->backupService(),
+            $this->workBatches(),
+            $this->recoveries(),
+            $this->closeouts(),
+            $this->documents(),
+            $this->approvalRequests(),
+            $this->submissionEvents(),
+            $this->actionRequests(),
+            $this->invoices(),
             $this->audit()
         ));
     }

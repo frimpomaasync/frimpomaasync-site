@@ -1014,6 +1014,51 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         exit;
     }
 
+    // -----------------------------------------------------------------
+    // Phase 8. Running the jobs by hand, and marking a surfaced item seen.
+    //
+    // Running is the owner's: it sends reminders and the digest. Marking an
+    // item seen is anyone who can manage an engagement.
+    // -----------------------------------------------------------------
+    if ($action === 'jobs.run') {
+        $csrf->require('jobs.run');
+        $authorization->require(Permission::CONFIG_MANAGE);
+
+        $only = trim((string) ($_POST['job'] ?? ''));
+        try {
+            $jobs = $app->jobService();
+            $results = $only === ''
+                ? $jobs->runAll(\SoftAppeals\Repositories\JobRepository::TRIGGER_DESK)
+                : [$jobs->run($only, \SoftAppeals\Repositories\JobRepository::TRIGGER_DESK)];
+            $failed = array_filter($results, static fn (array $r): bool => $r['outcome'] === 'failed');
+            $skipped = array_filter($results, static fn (array $r): bool => $r['outcome'] === 'skipped');
+            $session->flash(
+                $failed === [] ? 'desk_ok' : 'desk_problem',
+                count($results) . ' job' . (count($results) === 1 ? '' : 's') . ' ran: '
+                . (count($results) - count($failed) - count($skipped)) . ' clean, '
+                . count($failed) . ' failed, ' . count($skipped) . ' skipped. The rows below say what each did.'
+            );
+        } catch (\RuntimeException $e) {
+            $session->flash('desk_problem', $e->getMessage());
+        }
+        header('Location: /sa-desk.php?view=jobs', true, 303);
+        exit;
+    }
+
+    if ($action === 'attention.dismiss') {
+        $csrf->require('attention.dismiss');
+        $authorization->require(Permission::ENGAGEMENT_MANAGE);
+
+        $item = (string) ($_POST['item'] ?? '');
+        $done = $item !== '' && $app->attention()->dismiss($item, $userId);
+        $app->audit()->record('attention.dismiss', $done ? 'success' : 'failure', 'attention_item', $item === '' ? null : $item);
+        $session->flash($done ? 'desk_ok' : 'desk_problem', $done
+            ? 'Marked seen. The row stays; the card is gone until the condition ends and comes back.'
+            : 'That item is not open.');
+        header('Location: /sa-desk.php?view=' . ((string) ($_POST['back'] ?? '') === 'home' ? 'home' : 'jobs'), true, 303);
+        exit;
+    }
+
     // An action nobody offers. Recorded, then treated as a visit.
     $app->audit()->record('desk.unknown_action', 'denied', 'page', null, ['reason' => 'unknown action']);
     header('Location: /sa-desk.php', true, 303);
@@ -1141,7 +1186,7 @@ if ($open !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
 $app->audit()->record('desk.view', 'success', 'page', null);
 
 $view = (string) ($_GET['view'] ?? 'home');
-$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'assessments', 'recovery', 'money', 'closeout', 'import', 'audit', 'settings'];
+$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'assessments', 'recovery', 'money', 'closeout', 'import', 'audit', 'settings', 'jobs', 'launch'];
 if (!in_array($view, $allowedViews, true)) {
     $view = 'home';
 }
@@ -1156,7 +1201,7 @@ if ($view === 'audit' && !$canAudit) {
 if (($view === 'import') && !$canReview) {
     $view = 'home';
 }
-if ($view === 'settings' && !$authorization->can(Permission::CONFIG_MANAGE)) {
+if (($view === 'settings' || $view === 'launch') && !$authorization->can(Permission::CONFIG_MANAGE)) {
     $view = 'home';
 }
 
@@ -1494,6 +1539,119 @@ if ($view === 'closeout') {
         $data['stepCheck'] = $closeoutService->stepCheck($joined);
         $data['timeline'] = $app->timeline()->forEngagement((string) $joined['id']);
     }
+}
+
+// Phase 8. What the jobs are holding up, on every view for the rail count
+// and the Home cards. Cheap: one query.
+$data['attentionOpen'] = $app->attention()->open();
+$data['attentionCount'] = count($data['attentionOpen']);
+$data['canRunJobs'] = $authorization->can(Permission::CONFIG_MANAGE);
+$data['canDismiss'] = $authorization->can(Permission::ENGAGEMENT_MANAGE);
+$data['isOwner'] = $authorization->can(Permission::CONFIG_MANAGE);
+
+if ($view === 'home') {
+    // One line at the top of Home when the schedule has gone quiet or a job
+    // failed, so a silent cron is noticed on the screen she opens every day.
+    $lastJob = $app->jobs()->lastRunAnywhere();
+    $data['jobsNote'] = null;
+    $failures = $app->jobs()->failuresSince(7);
+    if ($failures > 0) {
+        $data['jobsNote'] = $failures . ' job run' . ($failures === 1 ? '' : 's') . ' failed in the last seven days.';
+    } elseif ($lastJob === null) {
+        $data['jobsNote'] = 'The scheduled jobs have never run here.';
+    } elseif (($clock->daysUntil((string) $lastJob['finished_at']) ?? 0) < -1) {
+        $data['jobsNote'] = 'The scheduled jobs last ran ' . Desk::ago($clock, (string) $lastJob['finished_at']) . '.';
+    }
+}
+
+if ($view === 'jobs') {
+    $jobService = $app->jobService();
+    $data['jobHealth'] = $jobService->health();
+    $data['jobRuns'] = $app->jobs()->recentRuns(30);
+    $data['attentionResolved'] = $app->attention()->recentlyResolved(7, 20);
+    $data['digestPreview'] = $app->digestService()->build();
+    $data['digestText'] = $app->digestService()->text($data['digestPreview']);
+    $data['backupFiles'] = $app->backupService()->all();
+    $data['backupCheck'] = $app->backupService()->verify();
+    $data['cronCommand'] = $jobService->cronCommand();
+    $data['cronEnabled'] = $config->cronEnabled();
+    $data['jobLog'] = $jobService->logTail(25);
+}
+
+if ($view === 'launch') {
+    $health = $app->jobService()->health();
+    $backup = $app->backupService()->verify();
+    $legalSource = $app->settings()->legalEntitySource($config);
+    $smtp = \SoftAppeals\Services\MailService::smtpConfigPath($config->isProduction(), __DIR__);
+    $ownerCount = (int) $app->database()->value("SELECT COUNT(*) FROM sa_memberships WHERE role = 'owner_admin'");
+    $realOrganizations = (int) $app->database()->value('SELECT COUNT(*) FROM sa_intakes');
+    $env = $config->string('SA_APP_ENV');
+    $flag = static fn (string $key): string => (string) ($config->get($key) ?? '') === '' ? 'unset' : ($config->bool($key) ? 'true' : 'false');
+
+    $data['blockers'] = \SoftAppeals\Config::productionSigningBlockers();
+    $data['launchSteps'] = [
+        ['step' => 1, 'title' => 'Back up files and database',
+         'state' => $backup['ok'] ? 'done' : 'open',
+         'detail' => $backup['ok'] ? 'Newest database backup verified, ' . $backup['age_hours'] . 'h old.' : 'Database backup: ' . $backup['reason'] . '. The host\'s file backup covers the vault.',
+         'how' => 'Automation, "Run every job", or the daily job once cron is on. Files: hPanel, Files, Backups.'],
+        ['step' => 2, 'title' => 'Run migrations in staging first',
+         'state' => $app->schema()->hasPending() ? 'blocked' : 'done',
+         'detail' => $app->schema()->hasPending() ? 'This installation has migrations pending.' : 'Every migration is applied here (' . count($app->schema()->appliedNames()) . ').',
+         'how' => 'Staging migrates itself on the first request after a deploy. Production does when SA_AUTO_MIGRATE is true, or by hand.'],
+        ['step' => 3, 'title' => 'Deploy with every new flag disabled',
+         'state' => $config->isProduction() ? (($config->portalEnabled() || $config->clientLoginEnabled() || $config->eSignEnabled() || $config->recoveryFinanceEnabled() || $config->cronEnabled()) ? 'open' : 'done') : 'manual',
+         'detail' => 'Portal ' . $flag('SA_PORTAL_ENABLED') . ' · client login ' . $flag('SA_CLIENT_LOGIN_ENABLED') . ' · e-sign ' . $flag('SA_E_SIGN_ENABLED') . ' · finance ' . $flag('SA_RECOVERY_FINANCE_ENABLED') . ' · cron ' . $flag('SA_DEADLINE_CRON_ENABLED') . '. On production an unset flag is off.',
+         'how' => 'Merge the branch to main. deploy.yml ships it. The private config on production carries no true flag yet.'],
+        ['step' => 4, 'title' => 'Run health checks',
+         'state' => ($config->isConfigured() && $ownerCount > 0 && !$health['stale_any']) ? 'done' : 'open',
+         'detail' => 'Config ' . ($config->isConfigured() ? 'complete' : 'incomplete') . ' · owner accounts ' . $ownerCount . ' · mail credentials ' . ($smtp === null ? 'not in reach' : 'found') . ' · jobs ' . ($health['stale_any'] ? 'not all run in 26h' : 'all run in 26h') . '.',
+         'how' => 'Open the Desk, sign in, run the jobs once, read the Automation screen.'],
+        ['step' => 5, 'title' => 'Enable demo mode with fictional data',
+         'state' => $config->bool('SA_DEMO_MODE') ? 'done' : 'manual',
+         'detail' => 'SA_DEMO_MODE is ' . ($config->bool('SA_DEMO_MODE') ? 'on: the sticky notice shows and the six invented practices seed an empty database off production.' : 'off.') . ' Real inquiries stored here: ' . $realOrganizations . '.',
+         'how' => 'Leave demo mode on until a real practice is in the database, then set SA_DEMO_MODE to false.'],
+        ['step' => 6, 'title' => 'Test owner login and client isolation',
+         'state' => 'manual',
+         'detail' => 'The suite proves isolation on every CI run (ClientAccessTest, SigningTest, ApprovalTest, CloseoutTest). The walk on staging is yours.',
+         'how' => 'Sign in as owner; open the room as a practice with the printed code; confirm neither sees the other.'],
+        ['step' => 7, 'title' => 'Enable intake database writes',
+         'state' => 'done',
+         'detail' => 'sa-lead.php has always written leads to fs-metrics; the importer brings them into the database from the Desk, and never writes back.',
+         'how' => 'Records, Import old leads.'],
+        ['step' => 8, 'title' => 'Enable client login',
+         'state' => $config->clientLoginEnabled() && $config->portalEnabled() ? 'done' : 'open',
+         'detail' => 'Portal ' . ($config->portalEnabled() ? 'open' : 'shut') . ', six-digit sign-in ' . ($config->clientLoginEnabled() ? 'open' : 'shut') . ' on this installation.',
+         'how' => 'SA_PORTAL_ENABLED and SA_CLIENT_LOGIN_ENABLED to true in the server config, after step 6.'],
+        ['step' => 9, 'title' => 'Enable documents after legal approval',
+         'state' => $config->eSignEnabled() ? 'done' : ($data['blockers'] === [] ? 'open' : 'blocked'),
+         'detail' => $config->eSignEnabled() ? 'Signing is live here.' : count($data['blockers']) . ' of the section 14.5 blockers still stand; production signing is clamped shut in code while any does. Legal entity name: ' . ($legalSource === 'none' ? 'not set' : 'set (' . $legalSource . ')') . '.',
+         'how' => 'Approve the BAA, review authorization, recovery agreement and scope text; confirm the entity and trade name; review consent and retention; clear PRODUCTION_SIGNING_BLOCKERS in Config.php; deploy; set SA_E_SIGN_ENABLED.'],
+        ['step' => 10, 'title' => 'Enable recovery finance after reconciliation tests',
+         'state' => $config->recoveryFinanceEnabled() ? 'done' : 'open',
+         'detail' => 'ReconciliationTest and CloseoutTest run on every CI push. Finance is ' . ($config->recoveryFinanceEnabled() ? 'on' : 'off') . ' here.',
+         'how' => 'SA_RECOVERY_FINANCE_ENABLED to true in the server config, after a walk of verify, invoice, closeout on staging.'],
+        ['step' => 11, 'title' => 'Enable cron last',
+         'state' => $config->cronEnabled() ? 'done' : 'open',
+         'detail' => 'The schedule is ' . ($config->cronEnabled() ? 'on' : 'off') . ' here. Last run: ' . ($health['last_any'] === null ? 'never' : Desk::ago($clock, (string) $health['last_any']['finished_at'])) . '.',
+         'how' => 'Add the cron line from the Automation screen in hPanel, then set SA_DEADLINE_CRON_ENABLED to true.'],
+    ];
+
+    $tradeName = $app->settings()->tradeName($config);
+    $data['launchRegister'] = [
+        ['decision' => 'Legal entity and trade-name wording', 'state' => $legalSource === 'none' ? 'blocked' : 'done',
+         'detail' => $legalSource === 'none' ? 'Not set anywhere. Settings on the Desk takes it; production refuses to generate a document until it is there.' : 'Set from the ' . ($legalSource === 'desk' ? 'Desk' : 'config file') . ', operating as "' . $tradeName . '".'],
+        ['decision' => 'Approved BAA text', 'state' => 'manual', 'detail' => 'Template stub in Domain\\DocumentTemplates, version ' . \SoftAppeals\Domain\DocumentTemplates::TEMPLATE_VERSION . '. Needs counsel\'s approval; blocker 1 of 14.5.'],
+        ['decision' => 'Review Authorization text', 'state' => 'manual', 'detail' => 'Template stub, same version. Blocker 2 of 14.5.'],
+        ['decision' => 'Recovery Services Agreement', 'state' => 'manual', 'detail' => 'Template stub carrying section 19 on its face, with the Approved Scope generated as its pair. Blocker 3 of 14.5.'],
+        ['decision' => 'Secure channel', 'state' => 'done', 'detail' => 'The application stores the route type only and has no credential field; PortalBoundaryTest fails the build if a file input appears.'],
+        ['decision' => 'E-sign method', 'state' => $config->isProduction() && !$config->eSignEnabled() ? 'done' : 'manual', 'detail' => 'Typed name, consent version, document hash copied onto the signature, executed record hashed. Clamped shut on production in code.'],
+        ['decision' => 'Document retention', 'state' => 'manual', 'detail' => 'Nothing is deleted automatically: no job removes a document, a signature or an audit row. Backups keep ' . \SoftAppeals\Services\BackupService::KEEP_DAYS . ' days. The retention period itself is blocker 6 of 14.5.'],
+        ['decision' => 'Standard 25 percent fee', 'state' => 'done', 'detail' => 'Displayed from EngagementTerms only; the rate on every recovery row is a snapshot in basis points under the agreement that produced it.'],
+        ['decision' => 'Government-program claims', 'state' => 'manual', 'detail' => 'No standard terms apply; the fit review carries the custom basis. Your call per inquiry.'],
+        ['decision' => 'Dental or other fixed-fee work', 'state' => 'done', 'detail' => 'The fixed basis exists for Maryland dental and is offered only when chosen on the fit review.'],
+        ['decision' => 'Sender identity', 'state' => $smtp === null ? 'blocked' : 'done', 'detail' => 'From ' . $config->string('SA_MAIL_FROM') . ', replies to ' . $config->string('SA_MAIL_REPLY_TO') . '. Mail credentials ' . ($smtp === null ? 'are not in reach on this installation' : 'found') . '. Allowlist: ' . ($config->mailAllowlist() === [] ? 'none (unrestricted)' : implode(', ', $config->mailAllowlist())) . '.'],
+        ['decision' => 'Client support expectations', 'state' => 'done', 'detail' => 'The cadence is the practice\'s own answer to question 1; reminders follow it, once per period, and never twice.'],
+    ];
 }
 
 if ($view === 'settings') {

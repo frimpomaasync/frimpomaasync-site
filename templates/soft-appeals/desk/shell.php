@@ -31,7 +31,7 @@ $greeting = (int) $clock->now()->setTimezone(new DateTimeZone($config->string('S
 $greetingWord = $greeting < 12 ? 'Good morning' : ($greeting < 18 ? 'Good afternoon' : 'Good evening');
 
 $needsYou = count($awaitingReview) + count($termsReady) + ($documentsNeedingHer ?? 0) + count($requestsForHer ?? [])
-    + ($recoveryNeedingHer ?? 0) + ($moneyNeedingHer ?? 0) + ($closeoutNeedingHer ?? 0);
+    + ($recoveryNeedingHer ?? 0) + ($moneyNeedingHer ?? 0) + ($closeoutNeedingHer ?? 0) + ($attentionCount ?? 0);
 
 /** The rail. Built here, in the plan's own order, so the map is visible even
  *  where the page behind it is not written yet. Section 12.3. */
@@ -44,10 +44,11 @@ $navBuilt = [
     ['recovery',    'Recovery',    ($recoveryNeedingHer ?? 0) ?: null],
     ['money',       'Money',       ($moneyNeedingHer ?? 0) ?: null],
     ['closeout',    'Closeout',    ($closeoutNeedingHer ?? 0) ?: null],
+    ['jobs',        'Automation',  ($attentionCount ?? 0) ?: null],
 ];
 $navLater = [
     'Organizations', 'Engagements',
-    'Communications', 'Deadlines',
+    'Communications',
 ];
 ?><!doctype html>
 <html lang="en">
@@ -132,10 +133,21 @@ $navLater = [
   .sa-rail-nav .is-later {
     opacity: .38; cursor: default; pointer-events: none;
   }
+
+  /* A skip link for keyboard and screen-reader users. Off screen until it
+     has focus, then a plain bar at the top. */
+  .sa-desk-skip {
+    position: absolute; left: -9999px; top: 0; z-index: 50;
+    padding: 10px 16px; background: var(--sa-ink, #101426); color: #fff;
+    font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  }
+  .sa-desk-skip:focus { left: 0; outline: 2px solid var(--sa-action); }
+  .sa-desk-card-a form { margin: 0; }
   .sa-rail-nav .is-later .sa-count { font-size: 9px; letter-spacing: .12em; }
 </style>
 </head>
 <body>
+<a class="sa-desk-skip" href="#desk-main">Skip to the work</a>
 <div class="sa sa-desk-shell">
 
 <?php if ($demo): ?>
@@ -188,6 +200,11 @@ $navLater = [
           <span>Settings</span>
         </a>
       </li>
+      <li>
+        <a href="/sa-desk.php?view=launch" <?= $view === 'launch' ? 'aria-current="page"' : '' ?>>
+          <span>Launch</span>
+        </a>
+      </li>
     <?php endif; ?>
   </ul>
 
@@ -232,7 +249,7 @@ $navLater = [
     </div>
   </header>
 
-  <div class="sa-work-body">
+  <main class="sa-work-body" id="desk-main" tabindex="-1">
     <?php if ($ok !== null): ?>
       <p class="sa-desk-flash" role="status"><?= $e($ok) ?></p>
     <?php endif; ?>
@@ -241,7 +258,7 @@ $navLater = [
     <?php endif; ?>
 
     <?php Desk::render($view, $data, $showDetail); ?>
-  </div>
+  </main>
 </div>
 
 </div><!-- /.sa-console -->

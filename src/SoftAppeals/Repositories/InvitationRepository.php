@@ -132,6 +132,23 @@ final class InvitationRepository extends Repository
     }
 
     /**
+     * Section 17.2: "expire unused invitations". A link past its date that
+     * was never used is revoked, so the table says plainly that it is dead
+     * rather than leaving that to a comparison on every read.
+     *
+     * @return int how many were closed
+     */
+    public function expireLapsed(): int
+    {
+        $now = $this->clock->nowUtc();
+        return $this->db->run(
+            'UPDATE sa_invitations SET revoked_at = :now'
+            . ' WHERE used_at IS NULL AND revoked_at IS NULL AND expires_at <= :cutoff',
+            ['now' => $now, 'cutoff' => $now]
+        )->rowCount();
+    }
+
+    /**
      * Look one up by the token a person presented. Returns null for a token
      * that is unknown, used, revoked or expired, all four for the same reason:
      * a caller must not be able to tell those apart.

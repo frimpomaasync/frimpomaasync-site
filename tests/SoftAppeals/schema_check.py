@@ -101,6 +101,11 @@ EXPECTED_TABLES = {
         "sa_closeout_steps",
         "sa_access_reviews",
     ],
+    "0009_automation.php": [
+        "sa_job_locks",
+        "sa_job_runs",
+        "sa_attention_items",
+    ],
 }
 
 
@@ -1202,6 +1207,92 @@ def assert_reconciliation_and_closeout(connection: sqlite3.Connection) -> None:
             raise Failure(f"deleting an engagement left {table} rows behind")
 
 
+def assert_automation(connection: sqlite3.Connection) -> None:
+    """
+    The constraints 0009 exists to enforce.
+
+    A job is safe to rerun because its attention items are keyed: the UNIQUE
+    on item_key is what turns a second run into a touch rather than a second
+    row. A finished run carries an outcome and an open one does not. A lock
+    is one row per job. And no column names a person.
+    """
+    connection.execute(
+        "INSERT INTO sa_organizations (id, public_ref, legal_name, status, created_at, updated_at)"
+        f" VALUES ('orgJ', 'SA-ORG-JJJJJJ', 'Fictional Automation Practice', 'active', {STAMP}, {STAMP})"
+    )
+    connection.execute(
+        "INSERT INTO sa_engagements (id, organization_id, public_ref, stage, fee_basis,"
+        " opened_at, row_version)"
+        f" VALUES ('eJ', 'orgJ', 'SA-ENG-JJJJJJ', 'recovery_active', 'contingency_25', {STAMP}, 1)"
+    )
+
+    for table in ("sa_job_locks", "sa_job_runs", "sa_attention_items"):
+        columns = [row[1] for row in connection.execute(f"PRAGMA table_info({table})").fetchall()]
+        for column in columns:
+            for word in ("patient", "member", "claim_number", "claim_id", "mrn", "dob", "date_of_service", "email"):
+                if word in column:
+                    raise Failure(f"{table}.{column}: a person-level column in an automation table, section 5")
+
+    accepts(
+        connection,
+        f"INSERT INTO sa_job_locks (job_key, token, locked_until, updated_at) VALUES ('digest.morning', 't1', {STAMP}, {STAMP})",
+        "a plain lock was refused",
+    )
+    refuses(
+        connection,
+        f"INSERT INTO sa_job_locks (job_key, token, locked_until, updated_at) VALUES ('digest.morning', 't2', {STAMP}, {STAMP})",
+        "two locks for one job were accepted, so two crons could hold it at once",
+    )
+    refuses(
+        connection,
+        f"INSERT INTO sa_job_locks (job_key, token, locked_until, updated_at) VALUES ('x', 't3', {STAMP}, {STAMP})",
+        "a lock with a two-character key was accepted",
+    )
+
+    def run(ident: str, trigger: str = "cron", finished: str = "NULL", outcome: str = "NULL", items: int = 0) -> str:
+        return (
+            "INSERT INTO sa_job_runs (id, job_key, trigger_by, started_at, finished_at, outcome, items, created_at)"
+            f" VALUES ('{ident}', 'digest.morning', '{trigger}', {STAMP}, {finished}, {outcome}, {items}, {STAMP})"
+        )
+
+    accepts(connection, run("j1"), "an open run was refused")
+    accepts(connection, run("j2", finished=STAMP, outcome="'ok'", items=3), "a finished run was refused")
+    refuses(connection, run("j3", finished=STAMP), "a finished run with no outcome was accepted")
+    refuses(connection, run("j4", outcome="'ok'"), "an outcome with no finish stamp was accepted")
+    refuses(connection, run("j5", finished=STAMP, outcome="'exploded'"), "an outcome nobody named was accepted")
+    refuses(connection, run("j6", trigger="robot"), "a trigger nobody named was accepted")
+    refuses(connection, run("j7", items=-1), "a negative item count was accepted")
+
+    def item(ident: str, key: str, kind: str = "deadline", severity: str = "action", engagement: str = "'eJ'",
+             label: str = "Deadline group under 7 days", dismissed_at: str = "NULL", dismissed_by: str = "NULL") -> str:
+        return (
+            "INSERT INTO sa_attention_items (id, item_key, kind, severity, engagement_id, organization_id,"
+            " label, first_seen_at, last_seen_at, dismissed_at, dismissed_by, created_at)"
+            f" VALUES ('{ident}', '{key}', '{kind}', '{severity}', {engagement}, 'orgJ', '{label}',"
+            f" {STAMP}, {STAMP}, {dismissed_at}, {dismissed_by}, {STAMP})"
+        )
+
+    accepts(connection, item("a1", "deadline:b1:7"), "a plain attention item was refused")
+    refuses(connection, item("a2", "deadline:b1:7"), "the same item key was accepted twice, so a rerun would duplicate")
+    accepts(connection, item("a3", "deadline:b1:3"), "a second threshold on the same batch was refused")
+    refuses(connection, item("a4", "x:1", kind="gossip"), "a kind nobody named was accepted")
+    refuses(connection, item("a5", "x:2", severity="loud"), "a severity nobody named was accepted")
+    refuses(connection, item("a6", "x:3", label="no"), "a two-character label was accepted")
+    refuses(connection, item("a7", "x:4", engagement="'no-such-engagement'"), "an item on an unknown engagement was accepted")
+    refuses(connection, item("a8", "x:5", dismissed_by="'u1'"), "a dismisser with no dismissal stamp was accepted")
+    accepts(connection, item("a9", "x:6", dismissed_at=STAMP, dismissed_by="'u1'"), "a stamped dismissal was refused")
+    accepts(connection, item("a10", "backup:stale", kind="backup", engagement="NULL"), "an item with no engagement was refused")
+
+    # Closing the engagement takes its items with it, and leaves the global one.
+    connection.execute("DELETE FROM sa_engagements WHERE id = 'eJ'")
+    left = connection.execute("SELECT COUNT(*) FROM sa_attention_items WHERE engagement_id IS NOT NULL").fetchone()[0]
+    if left != 0:
+        raise Failure("deleting an engagement left its attention items behind")
+    kept = connection.execute("SELECT COUNT(*) FROM sa_attention_items WHERE item_key = 'backup:stale'").fetchone()[0]
+    if kept != 1:
+        raise Failure("deleting an engagement took a global attention item with it")
+
+
 ASSERTIONS = {
     "0001_foundation.php": assert_foundation,
     "0002_intake_and_engagement.php": assert_intake_and_engagement,
@@ -1211,6 +1302,7 @@ ASSERTIONS = {
     "0006_assessment_and_recovery_room.php": assert_assessment_and_recovery_room,
     "0007_recovery_agreement_and_approvals.php": assert_recovery_agreement_and_approvals,
     "0008_reconciliation_and_closeout.php": assert_reconciliation_and_closeout,
+    "0009_automation.php": assert_automation,
 }
 
 
