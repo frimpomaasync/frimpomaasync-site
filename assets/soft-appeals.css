@@ -100,6 +100,17 @@
      inside a shell parks under the site bar instead of sliding beneath it. */
   --sa-navh: 64px;
 
+  /* The three type stacks, as journey.css defines them, so a shell that
+     loads this file alone (the Desk, the Recovery Room) still resolves them.
+     Found 2026-08-28: neither page loads journey.css, so every font on both
+     was the browser's default serif. Same values, so a page that does load
+     journey.css sees no change. System fonts only. */
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Hoefler Text",
+    Garamond, serif;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial,
+    sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
   color: var(--sa-ink);
   font-family: var(--sans);
   -webkit-text-size-adjust: 100%;

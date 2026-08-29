@@ -1,0 +1,472 @@
+/* ---------------------------------------------------------------------------
+   THE DESK, restyled 2026-08-28 from her three references:
+   a warm putty ground, white rounded tiles floating on it with a hairline
+   and almost no shadow, tables as quiet rows inside a tile with small grey
+   column labels, ink pill buttons, big serif numerals on the metric tiles,
+   and a system sans for everything that is data.
+
+   Scope: the WORK AREA of the Desk only (.sa-desk-shell .sa-work). The rail
+   is untouched. The Recovery Room, the Recovery Lab and every marketing page
+   load soft-appeals.css alone and never see this file.
+
+   Found while doing it: the Desk loaded soft-appeals.css and nothing else,
+   and that file reads --sans, --serif and --mono from journey.css, which the
+   Desk never loads. Every font on the Desk was therefore the browser default
+   serif. The three variables are defined here, on the shell, so the console
+   primitives resolve them the way they do everywhere else on the site.
+
+   System fonts only. A remote font request crashes her iPhone.
+   --------------------------------------------------------------------------- */
+
+.sa-desk-shell {
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Helvetica, Arial, sans-serif;
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* The putty ground and the tile on it. Warmer than the console's grey,
+     which is what all three references share. */
+  --sa-canvas: #f1efe9;
+  --sa-canvas-2: #e9e6df;
+  --sa-surface: #ffffff;
+  --sa-surface-2: #f8f7f3;
+  --sa-line: #e6e2d9;
+  --sa-line-strong: #d3cec3;
+  --sa-r: 16px;
+  --sa-r-lg: 22px;
+  --sa-shadow: 0 1px 0 rgba(16, 20, 38, 0.02);
+  --sa-shadow-lift: 0 18px 40px -28px rgba(16, 20, 38, 0.25);
+
+  font-family: var(--sans);
+}
+
+.sa-desk-shell .sa-console {
+  background: linear-gradient(90deg, var(--sa-deep) 0 248px, var(--sa-canvas) 248px);
+}
+
+/* The sticky header sits on the ground, not on a white bar. */
+.sa-desk-shell .sa-work-top {
+  background: rgba(241, 239, 233, 0.9);
+  border-bottom: 1px solid rgba(16, 20, 38, 0.06);
+  padding: 22px clamp(18px, 3.4vw, 40px) 18px;
+}
+
+.sa-desk-shell .sa-work-top h1 {
+  font-size: clamp(26px, 2.8vw, 34px);
+  letter-spacing: -0.01em;
+}
+
+.sa-desk-shell .sa-work-body {
+  padding: clamp(18px, 3.4vw, 40px);
+  gap: clamp(18px, 2.6vw, 28px);
+  max-width: 1320px;
+}
+
+/* A grid item's minimum width is its content, so a wide worklist inside a
+   section pushed the whole body past the viewport and the page scrolled
+   sideways. Seen on Home 2026-08-28. Zero lets the table scroll inside its
+   own wrap instead. */
+.sa-desk-shell .sa-work-body > * {
+  min-width: 0;
+}
+
+.sa-desk-shell .sa-tablewrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Section labels: a small grey caption, then the tile. */
+.sa-desk-shell .sa-work-body .sa-label {
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  margin: 0 0 10px 4px;
+}
+
+/* Tiles. Hairline, big radius, no lift. */
+.sa-desk-shell .sa-panel {
+  border-radius: var(--sa-r-lg);
+  border: 1px solid var(--sa-line);
+  box-shadow: var(--sa-shadow);
+}
+
+.sa-desk-shell .sa-panel-h {
+  background: transparent;
+  border-bottom: 1px solid var(--sa-line);
+  padding: 16px 22px;
+  font-size: 13px;
+  color: var(--sa-mute);
+}
+
+.sa-desk-shell .sa-panel-b {
+  padding: 22px;
+}
+
+.sa-desk-shell .sa-empty {
+  padding: 40px 22px;
+  font-size: 14.5px;
+  color: var(--sa-mute);
+}
+
+/* Metric tiles: a caption, a big serif number, a line under it. */
+.sa-desk-shell .sa-metrics {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 14px;
+}
+
+.sa-desk-shell .sa-metric {
+  border-radius: var(--sa-r-lg);
+  border: 1px solid var(--sa-line);
+  padding: 20px 22px 18px;
+  box-shadow: var(--sa-shadow);
+  min-height: 132px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sa-desk-shell .sa-metric-k {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+  margin: 0;
+}
+
+.sa-desk-shell .sa-metric-v {
+  font-family: var(--serif);
+  font-size: clamp(30px, 3.4vw, 40px);
+  line-height: 1.05;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  margin: 2px 0 0;
+  color: var(--sa-ink);
+}
+
+.sa-desk-shell .sa-metric-c {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--sa-mute);
+  margin: 4px 0 0;
+}
+
+.sa-desk-shell .sa-metric.is-lead {
+  background: #fbf3ee;
+  border-color: rgba(194, 80, 28, 0.28);
+}
+
+.sa-desk-shell .sa-metric.is-urgent {
+  background: #fdf1f2;
+  border-color: rgba(228, 34, 44, 0.28);
+}
+
+/* Tables: quiet rows inside the tile, grey column captions, no header band. */
+.sa-desk-shell .sa-table {
+  font-size: 13.5px;
+}
+
+.sa-desk-shell .sa-table th {
+  background: transparent;
+  border-bottom: 1px solid var(--sa-line);
+}
+
+.sa-desk-shell .sa-table th button,
+.sa-desk-shell .sa-table th .sa-th,
+.sa-desk-shell .sa-table th {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--sa-mute);
+  padding: 13px 14px 11px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.sa-desk-shell .sa-table th button,
+.sa-desk-shell .sa-table th .sa-th {
+  padding: 0;
+}
+
+.sa-desk-shell .sa-table td {
+  padding: 14px 14px;
+  border-bottom: 1px solid var(--sa-line);
+  vertical-align: middle;
+  line-height: 1.45;
+}
+
+.sa-desk-shell .sa-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.sa-desk-shell .sa-table td.sa-strong {
+  font-weight: 600;
+  color: var(--sa-ink);
+}
+
+@media (hover: hover) {
+  .sa-desk-shell .sa-table tbody tr:hover {
+    background: var(--sa-surface-2);
+  }
+}
+
+.sa-desk-shell .sa-table tbody tr.is-urgent td:first-child {
+  box-shadow: inset 3px 0 0 var(--sa-urgent);
+}
+
+/* The mono second line under a cell (a reference, a stamp). */
+.sa-desk-shell .sa-desk-mono {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--sa-mute);
+  margin-top: 3px;
+  letter-spacing: 0.01em;
+}
+
+.sa-desk-shell .sa-desk-quiet {
+  color: var(--sa-mute);
+  font-style: italic;
+}
+
+/* Pills: softer, rounder, a touch smaller. */
+.sa-desk-shell .sa-pill {
+  padding: 5px 11px;
+  font-size: 11.5px;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+/* Buttons. Primary is ink, action is copper, quiet is a hairline pill. */
+.sa-desk-shell .sa-btn {
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 42px;
+  padding: 9px 18px;
+}
+
+.sa-desk-shell .sa-btn.is-sm {
+  min-height: 36px;
+  padding: 6px 14px;
+  font-size: 13px;
+}
+
+.sa-desk-shell .sa-btn.is-quiet {
+  background: var(--sa-surface);
+  border-color: var(--sa-line-strong);
+  color: var(--sa-ink);
+}
+
+@media (hover: hover) {
+  .sa-desk-shell .sa-btn.is-quiet:hover {
+    border-color: var(--sa-ink);
+  }
+}
+
+/* Fields */
+.sa-desk-shell .sa-input,
+.sa-desk-shell .sa-select,
+.sa-desk-shell .sa-textarea {
+  border-radius: 14px;
+  border-color: var(--sa-line-strong);
+  background: var(--sa-surface);
+  font-size: 16px;
+}
+
+.sa-desk-shell .sa-fieldlabel,
+.sa-desk-shell .sa-field > span {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sa-mute);
+}
+
+/* The "needs you" cards: tiles in a bento grid, an accent dot instead of a
+   coloured left edge. */
+.sa-desk-shell .sa-desk-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 14px;
+}
+
+.sa-desk-shell .sa-desk-card {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 16px;
+  padding: 20px 22px 18px;
+  border: 1px solid var(--sa-line);
+  border-left: 1px solid var(--sa-line);
+  border-radius: var(--sa-r-lg);
+  box-shadow: var(--sa-shadow);
+  position: relative;
+}
+
+.sa-desk-shell .sa-desk-card::before {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--sa-action);
+  margin-bottom: 2px;
+}
+
+.sa-desk-shell .sa-desk-card.is-urgent::before {
+  background: var(--sa-urgent);
+}
+
+.sa-desk-shell .sa-desk-card-t b {
+  font-family: var(--serif);
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 1.25;
+  letter-spacing: -0.005em;
+}
+
+.sa-desk-shell .sa-desk-card-t span {
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin-top: 6px;
+}
+
+.sa-desk-shell .sa-desk-card-a {
+  margin-top: auto;
+}
+
+/* Notes and flashes */
+.sa-desk-shell .sa-desk-note {
+  border: 1px solid var(--sa-line);
+  border-style: solid;
+  background: rgba(255, 255, 255, 0.55);
+  border-radius: var(--sa-r);
+  padding: 14px 18px;
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--sa-slate);
+}
+
+.sa-desk-shell .sa-desk-flash {
+  border-radius: var(--sa-r);
+  padding: 14px 18px;
+  font-size: 14px;
+}
+
+.sa-desk-shell .sa-desk-email {
+  border-radius: var(--sa-r);
+  background: var(--sa-surface);
+  border: 1px solid var(--sa-line);
+  padding: 20px 22px;
+  font-size: 12.5px;
+}
+
+.sa-desk-shell .sa-desk-list {
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.sa-desk-shell .sa-desk-grid2 {
+  gap: 14px;
+}
+
+/* The demo notice and the sign-out control pick up the ground. */
+.sa-desk-shell .sa-fiction {
+  background: #faf3e7;
+}
+
+.sa-desk-shell .sa-desk-signout {
+  border-radius: 999px;
+  border-color: var(--sa-line-strong);
+  background: var(--sa-surface);
+}
+
+/* Tablet and phone: the shared console rule turns the rail into a chip
+   strip at 900px and paints the ground plain. The rule above that paints
+   the 248px navy band is more specific than the shared one, so without
+   this the band stayed under the content on a phone. Seen 2026-08-28.
+
+   The strip itself is trimmed: the group captions and the "not built yet"
+   row go, so the sticky rail is two rows of chips and not five, and the
+   demo notice stops being sticky so the two together do not eat a third of
+   the screen. */
+@media (max-width: 900px) {
+  .sa-desk-shell .sa-console {
+    background: var(--sa-canvas);
+  }
+  .sa-desk-shell .sa-fiction {
+    position: static;
+  }
+  .sa-desk-shell .sa-rail {
+    top: 0;
+    padding: 10px 0 8px;
+  }
+  .sa-desk-shell .sa-rail-brand,
+  .sa-desk-shell .sa-rail-sub,
+  .sa-desk-shell .sa-rail-group,
+  .sa-desk-shell .sa-rail-foot,
+  .sa-desk-shell .sa-rail-nav .is-later,
+  .sa-desk-shell .sa-rail-group + .sa-rail-nav:has(.is-later) {
+    display: none;
+  }
+  .sa-desk-shell .sa-rail-nav {
+    padding: 4px 12px;
+  }
+  .sa-desk-shell .sa-work-top {
+    position: static;
+  }
+}
+
+/* Phone: tiles go full width, tables scroll inside their tile, and the
+   header stops being sticky so it does not eat a third of the screen. */
+@media (max-width: 720px) {
+  .sa-desk-shell .sa-work-top {
+    position: static;
+    padding: 16px 16px 14px;
+  }
+  .sa-desk-shell .sa-work-body {
+    padding: 16px;
+    gap: 18px;
+  }
+  .sa-desk-shell .sa-metrics {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .sa-desk-shell .sa-metric {
+    padding: 16px 16px 14px;
+    min-height: 0;
+  }
+  .sa-desk-shell .sa-metric-v {
+    font-size: 26px;
+  }
+  .sa-desk-shell .sa-desk-cards {
+    grid-template-columns: 1fr;
+  }
+  .sa-desk-shell .sa-table td {
+    padding: 12px 14px;
+  }
+  /* A worklist with five columns squeezed into 390px and every cell
+     wrapped into a tall sliver. A floor on the width keeps the columns
+     readable and lets the tile scroll sideways under a thumb instead. */
+  .sa-desk-shell .sa-table {
+    min-width: 640px;
+  }
+  .sa-desk-shell .sa-tablewrap {
+    overflow-x: auto;
+  }
+  .sa-desk-shell .sa-desk-grid2 {
+    grid-template-columns: 1fr;
+  }
+  .sa-desk-shell .sa-work-top h1 {
+    font-size: 26px;
+  }
+}
+
+@media print {
+  .sa-desk-shell .sa-panel,
+  .sa-desk-shell .sa-metric,
+  .sa-desk-shell .sa-desk-card {
+    box-shadow: none;
+    break-inside: avoid;
+  }
+}

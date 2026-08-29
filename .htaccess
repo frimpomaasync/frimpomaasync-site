@@ -6,6 +6,20 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI} ^/os-fad13324c3/ [NC]
 RewriteRule ^ - [L]
 
+# Staging lives at public_html/staging, so frimpomaasync.com/staging reaches
+# the same folder as staging.frimpomaasync.com. Send the path form to the
+# subdomain, high up, before any generic rule or Apache's own directory-slash
+# redirect can claim the request.
+#
+# One address for staging means one set of cookies. A session started at
+# frimpomaasync.com/staging would otherwise be scoped to the production host,
+# and the session cookie is SameSite=Strict and host-bound.
+#
+# 302 rather than 301: staging is temporary infrastructure and must never be
+# cached into anyone's browser as permanent.
+RewriteCond %{HTTP_HOST} !^staging\. [NC]
+RewriteRule ^staging(/.*)?$ https://staging.frimpomaasync.com$1 [R=302,L]
+
 # Retired: Som used to ship as a zip. Anyone holding that link from an older
 # email lands on the app instead of a 404.
 RewriteRule ^Som\.zip$ /som-app/ [R=301,L,NC]
@@ -86,6 +100,12 @@ RewriteRule ^index\.html$ / [R=301,L]
 # 404.html is exempt: ErrorDocument must be able to serve it by its real path.
 RewriteCond %{REQUEST_URI} !^/404\.html$
 RewriteCond %{THE_REQUEST} \s/+([^\s?]+)\.html[\s?] [NC]
+# The private tree is exempt. Everything under it is denied by its own
+# .htaccess, but the redirect above fires FIRST, so an executed agreement asked
+# for by its full path answered 301 and then 403 rather than 403 outright. Two
+# answers where there should be one, and the 301 is the one that confirms the
+# rewrite matched. Measured on staging 2026-08-28.
+RewriteCond %{REQUEST_URI} !^/storage-private/
 RewriteRule ^(.+)\.html$ /$1 [R=301,L]
 
 # /page -> serve page.html  (internal, invisible)
@@ -94,10 +114,58 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME}.html -f
 RewriteRule ^(.+)$ $1.html [L]
 
+# /page -> serve page.php  (internal, invisible)  ADDED 2026-08-27
+#
+# Every Soft Appeals URL on this site is extensionless, and the Desk, the
+# preferences page, the signing screen and the Recovery Room are PHP. Without
+# this a practice would be emailed a link to sign an agreement that ends .php.
+#
+# It sits AFTER the .html rule on purpose, so an existing page always wins and
+# no URL that works today can move. It fires only when the .php file exists.
+#
+# There is deliberately NO counterpart redirect from /page.php to /page. The
+# .html rule above has one; the .php equivalent must never be added, because
+# sa-lead.php and audit-lead.php are POST endpoints and a 301 on a POST is
+# downgraded to a GET by every browser, which would silently break both live
+# forms.
+#
+# One known behaviour change, harmless: /stats used to 404 and now resolves to
+# stats.php, which returns its own 404 because no key is present. Same status,
+# same outcome.
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME}.php -f
+RewriteRule ^(.+)$ $1.php [L]
+
 # The hero loop ships as WebM as well as MP4; make sure the host labels it.
 <IfModule mod_mime.c>
   AddType video/webm .webm
   AddType image/webp .webp
+</IfModule>
+
+# ---------------------------------------------------------------------------
+# Staging, added 2026-08-27.
+#
+# Hostinger placed the staging subdomain INSIDE public_html, at public_html/
+# staging, so staging.frimpomaasync.com and frimpomaasync.com/staging are the
+# same folder. That folder receives its own deploy from the Soft Appeals branch
+# and holds invented practices.
+#
+# Two things follow from that, and both are handled here rather than in a
+# second file, because the deploy ships one .htaccess to both places:
+#
+#   1. Nothing on the staging host may ever be indexed. A test site carrying
+#      fictional practice names, on her real domain, in Google, would compete
+#      with the pages that pay for themselves.
+#   2. frimpomaasync.com/staging must not be a second front door to it. The
+#      subdomain is the only way in.
+#
+# Both rules are conditional on the host or the path, so neither does anything
+# at all on the live site.
+# ---------------------------------------------------------------------------
+<IfModule mod_headers.c>
+  SetEnvIfNoCase Host ^staging\. SA_STAGING=1
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet" env=SA_STAGING
 </IfModule>
 
 # Custom 404. Replaces the host's generic error page, keeps visitors on the site.
@@ -110,8 +178,38 @@ ErrorDocument 404 /404.html
 <IfModule mod_headers.c>
   Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
   Header always set X-Content-Type-Options "nosniff"
-  Header always set X-Frame-Options "SAMEORIGIN"
-  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+  # Added 2026-08-27, Phase 0 finding R-04. Every PHP response was announcing
+  # its exact patch level in x-powered-by.
+  Header always unset X-Powered-By
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+
+  # -------------------------------------------------------------------------
+  # The Soft Appeals application pages want stricter headers than the rest of
+  # the site, and setting them in PHP is not enough.
+  #
+  # Measured on staging 2026-08-27: Headers::send() sets X-Frame-Options DENY
+  # and a full Content-Security-Policy, and the response carried SAMEORIGIN and
+  # the host's bare "upgrade-insecure-requests" instead. `Header always set`
+  # runs after PHP and overwrites it, and Hostinger's edge supplies a default
+  # CSP where nothing else claims one.
+  #
+  # So the strict values are set here, where they win. The PHP calls stay as
+  # they are: they are the correct behaviour for any host that does not do
+  # this, and belt and braces is the right posture for a signing page.
+  #
+  # The marketing pages keep SAMEORIGIN, because /synkasa-demo/ frames its own
+  # pages and DENY would break it.
+  # -------------------------------------------------------------------------
+  SetEnvIf Request_URI "^/(sa-desk|soft-appeals-(login|setup|preferences|sign|room|confirmed))(\.php)?$" SA_APP=1
+
+  Header always set X-Frame-Options "SAMEORIGIN" env=!SA_APP
+  Header always set Referrer-Policy "strict-origin-when-cross-origin" env=!SA_APP
+
+  Header always set X-Frame-Options "DENY" env=SA_APP
+  Header always set Referrer-Policy "no-referrer" env=SA_APP
+  Header always set Content-Security-Policy "default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'; font-src 'self'; connect-src 'self'; object-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'self'" env=SA_APP
+  Header always set Cache-Control "no-store, private, max-age=0" env=SA_APP
 </IfModule>
 
 # Cache policy, added 2026-07-30. The site sent no Cache-Control at all, so
