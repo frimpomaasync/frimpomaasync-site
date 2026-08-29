@@ -112,12 +112,16 @@ final class MailHtml
             return self::button($lines[0]);
         }
 
-        // A section label: one short line, all capitals in the text. In the
-        // HTML it is the serif headline of the section, in sentence case,
-        // the way the reference email she chose sets its sections.
-        if (count($lines) === 1 && self::isLabel($lines[0])) {
-            return '<p style="margin:30px 0 10px;font-family:' . self::SERIF . ';font-size:24px;line-height:1.25;'
+        // A section label: a short line in capitals, on its own or as the
+        // first line of its block. In the HTML it is the serif headline of
+        // the section, in sentence case, the way the reference email she
+        // chose sets its sections. Whatever follows it is read as its own
+        // block.
+        if (self::isLabel($lines[0])) {
+            $heading = '<p style="margin:30px 0 10px;font-family:' . self::SERIF . ';font-size:24px;line-height:1.25;'
                 . 'letter-spacing:-0.01em;color:' . self::INK . ';">' . self::e(self::sentenceCase($lines[0])) . '</p>';
+            $rest = array_slice($lines, 1);
+            return $heading . ($rest === [] ? '' : self::block(implode("\n", $rest)));
         }
 
         // Numbered steps: every line starts "1. ".
@@ -148,7 +152,7 @@ final class MailHtml
         $html = '';
         foreach ($lines as $i => $line) {
             $html .= ($i === 0 ? '' : (self::isUrl($line) || self::isUrl($lines[$i - 1]) ? '<br>' : ' '))
-                . (self::isUrl($line) ? self::link($line) : self::e($line));
+                . self::linkify($line);
         }
         return '<p style="margin:0 0 16px;font-family:' . self::SANS . ';font-size:16px;line-height:1.6;color:' . self::INK . ';">'
             . $html . '</p>';
@@ -163,6 +167,29 @@ final class MailHtml
             . '</div>'
             . '<p style="margin:0 0 16px;font-family:' . self::MONO . ';font-size:12px;line-height:1.5;word-break:break-all;color:' . self::MUTE . ';">'
             . 'If the button does not work, copy this into your browser:<br>' . self::link($url) . '</p>';
+    }
+
+    /**
+     * Escape a line and turn any address inside it into a link. A trailing
+     * full stop or comma belongs to the sentence, not the address.
+     */
+    private static function linkify(string $line): string
+    {
+        $parts = preg_split('~(https?://[^\s<>"]+)~', $line, -1, PREG_SPLIT_DELIM_CAPTURE) ?: [$line];
+        $out = '';
+        foreach ($parts as $i => $part) {
+            if ($i % 2 === 0) {
+                $out .= self::e($part);
+                continue;
+            }
+            $trail = '';
+            while ($part !== '' && str_contains('.,;:)', substr($part, -1))) {
+                $trail = substr($part, -1) . $trail;
+                $part = substr($part, 0, -1);
+            }
+            $out .= self::link($part) . self::e($trail);
+        }
+        return $out;
     }
 
     private static function link(string $url): string
