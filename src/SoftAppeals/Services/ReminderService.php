@@ -114,6 +114,12 @@ final class ReminderService
         $out = [];
 
         foreach ($this->requests->openForClientsEverywhere() as $row) {
+            // An approval has its own card below, keyed on the approval
+            // request, and the practice must not get two reminders for one
+            // batch. The action request opened alongside it is skipped here.
+            if ((string) $row['kind'] === ActionRequestKind::APPROVE_SUBMISSION) {
+                continue;
+            }
             $candidate = $this->candidate(
                 'request',
                 (string) $row['id'],

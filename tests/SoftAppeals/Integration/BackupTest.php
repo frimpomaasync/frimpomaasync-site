@@ -88,9 +88,16 @@ return [
             $done = $app->backupService()->restore($target, $made['path']);
             Expect::same($made['rows'], $done['rows'], 'every row went in');
 
+            // Writing the backup and restoring it each record an audit row in
+            // the SOURCE, after the rows were read, so the audit trail is the
+            // one table that is legitimately two rows ahead of the copy.
             $source = $counts($db);
             $restored = $counts($target);
             foreach ($source as $table => $n) {
+                if ($table === 'sa_audit_events') {
+                    Expect::same($n - 2, $restored[$table] ?? -1, 'the audit trail is behind by exactly the create and the restore');
+                    continue;
+                }
                 Expect::same($n, $restored[$table] ?? -1, $table . ' should hold the same number of rows');
             }
 
