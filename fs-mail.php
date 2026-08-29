@@ -12,7 +12,11 @@ function fs_mail_config() {
   return (is_array($j) && !empty($j['user']) && !empty($j['pass'])) ? $j : null;
 }
 
-function fs_smtp_send($cfg, $to, $subject, $body, $replyTo = '') {
+// $html, when given, is sent as a multipart/alternative beside the text, so
+// a phone shows the styled version and a text-only client the plain one.
+// $fromName is the display name on the From line. The site's own forms keep
+// the default; the Soft Appeals application passes a person's name.
+function fs_smtp_send($cfg, $to, $subject, $body, $replyTo = '', $html = '', $fromName = 'frimpomaasync.com') {
   $fp = @stream_socket_client('ssl://smtp.hostinger.com:465', $errno, $err, 10);
   if (!$fp) { return false; }
   stream_set_timeout($fp, 12);
@@ -34,17 +38,31 @@ function fs_smtp_send($cfg, $to, $subject, $body, $replyTo = '') {
      && $step('RCPT TO:<' . $to . '>', '250')
      && $step('DATA', '354');
   if ($ok) {
-    $headers = 'From: frimpomaasync.com <' . $cfg['user'] . ">\r\n"
+    $fromName = preg_replace('/[\r\n"<>]/', '', (string) $fromName);
+    $headers = 'From: "' . $fromName . '" <' . $cfg['user'] . ">\r\n"
              . 'To: <' . $to . ">\r\n"
              . ($replyTo !== '' ? 'Reply-To: ' . $replyTo . "\r\n" : '')
              . 'Subject: ' . $subject . "\r\n"
              . 'Date: ' . gmdate('r') . "\r\n"
              . 'Message-ID: <' . bin2hex(random_bytes(12)) . '@frimpomaasync.com>' . "\r\n"
-             . "MIME-Version: 1.0\r\n"
-             . "Content-Type: text/plain; charset=UTF-8\r\n";
-    $text = str_replace("\r\n", "\n", $body);
-    $text = preg_replace('/^\./m', '..', str_replace("\n", "\r\n", $text)); // dot-stuffing
-    $say($headers . "\r\n" . $text . "\r\n.");
+             . "MIME-Version: 1.0\r\n";
+    if ($html === '') {
+      $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+      $text = str_replace("\r\n", "\n", $body);
+      $text = preg_replace('/^\./m', '..', str_replace("\n", "\r\n", $text)); // dot-stuffing
+      $say($headers . "\r\n" . $text . "\r\n.");
+    } else {
+      // Two bodies, base64 so long lines and leading dots need no care.
+      $boundary = 'fs-' . bin2hex(random_bytes(12));
+      $headers .= 'Content-Type: multipart/alternative; boundary="' . $boundary . '"' . "\r\n";
+      $part = function ($type, $content) use ($boundary) {
+        return '--' . $boundary . "\r\n"
+             . 'Content-Type: ' . $type . "; charset=UTF-8\r\n"
+             . "Content-Transfer-Encoding: base64\r\n\r\n"
+             . chunk_split(base64_encode($content), 76, "\r\n");
+      };
+      $say($headers . "\r\n" . $part('text/plain', $body) . $part('text/html', $html) . '--' . $boundary . "--\r\n.");
+    }
     $ok = $reply() === '250';
   }
   $say('QUIT');
