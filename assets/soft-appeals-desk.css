@@ -381,6 +381,42 @@
   background: var(--sa-surface);
 }
 
+/* Tablet and phone: the shared console rule turns the rail into a chip
+   strip at 900px and paints the ground plain. The rule above that paints
+   the 248px navy band is more specific than the shared one, so without
+   this the band stayed under the content on a phone. Seen 2026-08-28.
+
+   The strip itself is trimmed: the group captions and the "not built yet"
+   row go, so the sticky rail is two rows of chips and not five, and the
+   demo notice stops being sticky so the two together do not eat a third of
+   the screen. */
+@media (max-width: 900px) {
+  .sa-desk-shell .sa-console {
+    background: var(--sa-canvas);
+  }
+  .sa-desk-shell .sa-fiction {
+    position: static;
+  }
+  .sa-desk-shell .sa-rail {
+    top: 0;
+    padding: 10px 0 8px;
+  }
+  .sa-desk-shell .sa-rail-brand,
+  .sa-desk-shell .sa-rail-sub,
+  .sa-desk-shell .sa-rail-group,
+  .sa-desk-shell .sa-rail-foot,
+  .sa-desk-shell .sa-rail-nav .is-later,
+  .sa-desk-shell .sa-rail-group + .sa-rail-nav:has(.is-later) {
+    display: none;
+  }
+  .sa-desk-shell .sa-rail-nav {
+    padding: 4px 12px;
+  }
+  .sa-desk-shell .sa-work-top {
+    position: static;
+  }
+}
+
 /* Phone: tiles go full width, tables scroll inside their tile, and the
    header stops being sticky so it does not eat a third of the screen. */
 @media (max-width: 720px) {
