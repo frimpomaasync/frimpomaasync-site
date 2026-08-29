@@ -36,7 +36,7 @@ $e = static fn (?string $value): string => Client::e($value);
 <meta name="robots" content="noindex, nofollow">
 <title><?= $e($pageTitle ?? 'Soft Appeals') ?></title>
 <link rel="icon" href="/favicon.svg">
-<link rel="stylesheet" href="/assets/soft-appeals.css?v=2">
+<link rel="stylesheet" href="/assets/soft-appeals.css?v=3">
 <style>
   /* No site nav on this page, so the shell's sticky chrome parks at the top of
      the window instead of under a bar that is not there. The override sits on

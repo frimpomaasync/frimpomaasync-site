@@ -71,7 +71,7 @@ if ($inCloseout ?? false) {
 <meta name="robots" content="noindex, nofollow">
 <title>Your Recovery Room &middot; Soft Appeals</title>
 <link rel="icon" href="/favicon.svg">
-<link rel="stylesheet" href="/assets/soft-appeals.css?v=2">
+<link rel="stylesheet" href="/assets/soft-appeals.css?v=3">
 <style>
   /* No site nav on this page, so the shell's sticky chrome parks at the top of
      the window. Same override the Desk carries, same reason. */

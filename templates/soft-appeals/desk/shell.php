@@ -58,7 +58,8 @@ $navLater = [
 <meta name="robots" content="noindex, nofollow">
 <title>The Desk &middot; Soft Appeals</title>
 <link rel="icon" href="/favicon.svg">
-<link rel="stylesheet" href="/assets/soft-appeals.css?v=2">
+<link rel="stylesheet" href="/assets/soft-appeals.css?v=3">
+<link rel="stylesheet" href="/assets/soft-appeals-desk.css?v=1">
 <style>
   /* The Desk carries no site navigation, so the shell's sticky chrome parks at
      the top of the window rather than under a bar that is not there. Without
