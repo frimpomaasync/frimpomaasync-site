@@ -116,6 +116,17 @@
   -webkit-text-size-adjust: 100%;
 }
 
+/* Every box measures itself border to border. journey.css sets this for the
+   whole site, but the Desk and the Room load this file alone, and without it
+   a card at width: 100% plus its padding was wider than an iPhone screen and
+   the page wobbled sideways. Seen on her phone 2026-08-29. */
+.sa,
+.sa *,
+.sa *::before,
+.sa *::after {
+  box-sizing: border-box;
+}
+
 /* Data anywhere in a shell is tabular. Money that jitters column to column
    reads as a mock-up, not a system. */
 .sa [data-num],
