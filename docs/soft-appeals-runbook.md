@@ -96,7 +96,11 @@ step's state from the live installation.
     hPanel, Advanced, Cron Jobs. Once a day, early morning, the exact line
     shown on the Automation screen:
 
-        /usr/bin/php /home/u286380648/public_html/cron/soft-appeals-jobs.php run
+        /usr/bin/php /home/u286380648/domains/frimpomaasync.com/public_html/cron/soft-appeals-jobs.php run
+
+    (Staging's line, printed on its own Automation screen, ends in
+    `public_html/staging/cron/...`. The Desk prints the real path for the
+    installation it runs on; copy it from there rather than from here.)
 
     Then set `SA_DEADLINE_CRON_ENABLED` to `true`. Until it is, that line
     prints a refusal and exits 3, and the Desk's "Run every job" button is
