@@ -9,7 +9,7 @@ declare(strict_types=1);
  * are in this file.
  *
  * The token is exchanged for a session and then leaves the URL. A GET carrying
- * ?t= redeems it and answers with a 303 to the bare path, so the link is used
+ * ?t= shows an Open button; the button posts the token, the post redeems it and
  * once, the address bar holds nothing, and nothing that carries a token lands in
  * browser history, in a Referer header, or in a screenshot.
  *
@@ -121,9 +121,28 @@ if (!$config->portalEnabled()) {
 // ---------------------------------------------------------------------------
 // The invitation exchange. A token in the URL is redeemed and then removed.
 // ---------------------------------------------------------------------------
+//
+// Two steps, not one. The GET that carries the token shows a button and
+// changes nothing; the POST behind the button is what redeems. Mail systems
+// follow links before a person does (a spam filter, a safe-links scanner, a
+// preview), every one of those is a GET, and on 2026-08-29 the first
+// production terms email arrived with its link already burned by one of
+// them. A scanner does not press buttons.
 $token = (string) ($_GET['t'] ?? '');
 if ($token !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
-    $redeemed = $access->redeemInvitation($token, InvitationRepository::PURPOSE_PREFERENCES);
+    $render('open-link', [
+        'headline'    => 'Open your assessment terms.',
+        'explanation' => 'One tap and your onboarding questions are on the next screen. '
+            . 'Eight questions, about ten minutes, and nothing about a patient.',
+        'action'      => '/soft-appeals-preferences.php',
+        'token'       => $token,
+        'button'      => 'Open the terms',
+    ], 'Soft Appeals', 'Onboarding');
+}
+
+$posted = (string) ($_POST['t'] ?? '');
+if ($posted !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+    $redeemed = $access->redeemInvitation($posted, InvitationRepository::PURPOSE_PREFERENCES);
     if ($redeemed === null) {
         $closed(
             'This link has already been used, or it has expired.',

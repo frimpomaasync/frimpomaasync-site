@@ -126,9 +126,25 @@ if (!$config->eSignEnabled()) {
 // ---------------------------------------------------------------------------
 // The invitation exchange. A token in the URL is redeemed and then removed.
 // ---------------------------------------------------------------------------
+//
+// Two steps, not one: the GET shows a button, the POST redeems. Mail
+// scanners and previews follow a link before the signer does, and each of
+// those is a GET. See soft-appeals-preferences.php for the day it bit.
 $token = (string) ($_GET['t'] ?? '');
 if ($token !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
-    $redeemed = $access->redeemInvitation($token, InvitationRepository::PURPOSE_SIGN);
+    $render('open-link', [
+        'headline'    => 'Open your agreement.',
+        'explanation' => 'One tap and the document is on the next screen to read and sign. '
+            . 'Nothing is signed until you type your name and say so.',
+        'action'      => '/soft-appeals-sign.php',
+        'token'       => $token,
+        'button'      => 'Open the agreement',
+    ], 'Soft Appeals');
+}
+
+$posted = (string) ($_POST['t'] ?? '');
+if ($posted !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
+    $redeemed = $access->redeemInvitation($posted, InvitationRepository::PURPOSE_SIGN);
     if ($redeemed === null) {
         $closed(
             'This link has already been used, or it has expired.',
