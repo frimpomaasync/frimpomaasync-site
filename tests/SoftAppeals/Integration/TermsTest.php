@@ -97,9 +97,9 @@ return [
             $preview = $app->termsService()->preview($engagement);
 
             Expect::same(
-                'Your Soft Appeals assessment onboarding terms',
+                "Fictional Behavioral Health LLC: your free denial review starts with eight questions",
                 (string) $preview['subject'],
-                'the subject from section 13.1'
+                'the subject names the practice'
             );
             Expect::same('a.person@example.org', (string) $preview['recipient_email'], 'to the person who asked');
             Expect::false($preview['is_resend'], 'nothing has gone yet');
@@ -115,7 +115,7 @@ return [
                 'and by the first name only, not the whole name'
             );
             Expect::true(
-                str_contains($body, "Fictional Behavioral Health LLC's denial situation"),
+                str_contains($body, "Fictional Behavioral Health LLC's denials"),
                 'and names their practice'
             );
             Expect::true(

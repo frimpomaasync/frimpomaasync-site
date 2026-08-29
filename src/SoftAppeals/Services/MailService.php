@@ -132,7 +132,16 @@ final class MailService
         $replyTo = $this->config->string('SA_MAIL_REPLY_TO');
         $accepted = false;
         try {
-            $accepted = ($this->transport)($to, $subject, $body, $replyTo);
+            // The styled alternative, built from the same text. Test
+            // transports take four arguments and ignore the rest; the SMTP
+            // one sends both bodies.
+            $html = MailHtml::render(
+                $body,
+                $subject,
+                'Do not send patient, member, claim or clinical information by email. '
+                . 'Questions go to ' . $replyTo . '.'
+            );
+            $accepted = ($this->transport)($to, $subject, $body, $replyTo, $html, $this->config->string('SA_MAIL_FROM_NAME'));
         } catch (NoMailCredentials) {
             // Not a refusal by the mail server: this installation has no
             // credentials to offer it. Recorded as its own category so the
@@ -255,7 +264,7 @@ final class MailService
      */
     private static function smtpTransport(Config $config): callable
     {
-        return static function (string $to, string $subject, string $body, string $replyTo) use ($config): bool {
+        return static function (string $to, string $subject, string $body, string $replyTo, string $html = '', string $fromName = '') use ($config): bool {
             $mailer = dirname(__DIR__, 3) . '/fs-mail.php';
             if (!is_file($mailer)) {
                 throw new NoMailCredentials('fs-mail.php is not here');
@@ -273,7 +282,7 @@ final class MailService
             if (!is_array($cfg) || empty($cfg['user']) || empty($cfg['pass'])) {
                 throw new NoMailCredentials('smtp.json is incomplete');
             }
-            return (bool) fs_smtp_send($cfg, $to, $subject, $body, $replyTo);
+            return (bool) fs_smtp_send($cfg, $to, $subject, $body, $replyTo, $html, $fromName === '' ? 'Soft Appeals' : $fromName);
         };
     }
 }

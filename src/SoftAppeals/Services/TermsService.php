@@ -35,7 +35,14 @@ use SoftAppeals\Support\Clock;
 final class TermsService
 {
     public const TEMPLATE_KEY = 'assessment_terms';
-    public const SUBJECT      = 'Your Soft Appeals assessment onboarding terms';
+    /** The subject carries the practice's own name, so it reads as theirs in a full inbox. */
+    public const SUBJECT      = 'Your free denial review: eight questions, then it starts';
+
+    public static function subjectFor(string $organization): string
+    {
+        $organization = trim($organization);
+        return $organization === '' ? self::SUBJECT : $organization . ': your free denial review starts with eight questions';
+    }
 
     private Config $config;
     private Clock $clock;
@@ -100,7 +107,7 @@ final class TermsService
             'organization'    => $organization,
             'recipient_name'  => $recipientName,
             'recipient_email' => $recipientEmail,
-            'subject'         => self::SUBJECT,
+            'subject'         => self::subjectFor($organization),
 
             'scope' => [
                 'A review of 20 recent denied claims, at business level.',
@@ -230,7 +237,7 @@ final class TermsService
 
         $result = $this->mail->send(
             $recipient,
-            self::SUBJECT,
+            self::subjectFor((string) $preview['organization']),
             $body,
             self::TEMPLATE_KEY,
             $engagementId,
@@ -299,41 +306,45 @@ final class TermsService
         $organization = $organization === '' ? 'your practice' : $organization;
 
         $lines = [];
+        $room = rtrim($this->config->string('SA_APP_URL'), '/') . '/soft-appeals-room';
+        $replyTo = $this->config->string('SA_MAIL_REPLY_TO');
+
+        // Short lines are section labels; the HTML half sets them as
+        // headlines. Paragraphs are one line each: the client wraps them,
+        // and a hard wrap at 72 columns read as broken on a phone.
         $lines[] = 'Hello ' . ($first === '' ? 'there' : $first) . ',';
         $lines[] = '';
-        $lines[] = 'Thank you for telling me about ' . $organization . "'s denial situation.";
+        $lines[] = 'Thank you for telling me about ' . $organization . "'s denials. "
+            . 'The next step is a free review of 20 recent denied claims, and it starts once you answer eight short questions.';
         $lines[] = '';
-        $lines[] = 'Based on what you sent, the next step is a free review of 20 recent';
-        $lines[] = 'denied claims.';
-        $lines[] = '';
-        $lines[] = 'That review is an assessment. It does not produce 20 finished appeals.';
-        $lines[] = 'It sorts the denials it looks at by what to do about each one, what it';
-        $lines[] = 'is worth, which ones cannot wait, what information is missing, and who';
-        $lines[] = 'owns the next step.';
-        $lines[] = '';
-
-        if ($window !== null && trim($window) !== '') {
-            $lines[] = 'Timing: ' . trim($window) . '.';
-            $lines[] = '';
-        }
-
-        $lines[] = 'Nothing is due for the assessment. You keep it whether or not you go';
-        $lines[] = 'ahead with recovery work afterwards.';
-        $lines[] = '';
-        $lines[] = wordwrap(EngagementTerms::feeSentence($feeBasis), 72, "\n", false);
-        $lines[] = '';
-        $lines[] = 'Do not reply with claim or patient information. The Business Associate';
-        $lines[] = 'Agreement and the secure route are both in place before anything at';
-        $lines[] = 'patient level moves.';
-        $lines[] = '';
-        $lines[] = 'Confirm how you want this run:';
+        $lines[] = 'WHAT TO DO NOW';
+        $lines[] = 'Open the link below and tap "Open the terms". Eight questions, about ten minutes: '
+            . 'how often you want to hear from me, how you will send the denials, who signs for the practice, '
+            . 'and who approves a submission later. Nothing about a patient.';
         $lines[] = '';
         $lines[] = $link;
         $lines[] = '';
-        $lines[] = 'The link stops working at ' . $expiresDisplay . '.';
+        $lines[] = 'The link works once and stops working at ' . $expiresDisplay . '. '
+            . 'After that, sign in at ' . $room . ' with this email address and a six-digit code.';
+        $lines[] = '';
+        $lines[] = 'WHAT HAPPENS AFTER THAT';
+        $lines[] = '1. Two short agreements go to the person you name: a Business Associate Agreement and a review authorization. '
+            . 'Nothing at patient level moves before both are signed.';
+        $lines[] = '2. Your secure route opens and you send 20 recent denied claims through it.';
+        $lines[] = '3. The review. It does not produce 20 finished appeals. It sorts every denial by what to do about it, '
+            . 'what it is worth, which ones cannot wait, what information is missing, and who owns the next step.'
+            . ($window !== null && trim($window) !== '' ? ' Timing: ' . trim($window) . '.' : '');
+        $lines[] = '4. You decide. Keep the assessment for your own team, ask me questions, '
+            . 'or ask Soft Appeals to pursue the claims worth pursuing.';
+        $lines[] = '';
+        $lines[] = 'WHAT IT COSTS';
+        $lines[] = 'The assessment is free and yours to keep, whichever way you decide. '
+            . EngagementTerms::feeSentence($feeBasis);
+        $lines[] = '';
+        $lines[] = 'Do not reply with claim or patient information. Replies go to ' . $replyTo . ', a mailbox I read myself.';
         $lines[] = '';
         $lines[] = 'Nana Frimpongmaa';
-        $lines[] = 'Soft Appeals';
+        $lines[] = 'Founder, Soft Appeals';
 
         return implode("\n", $lines) . "\n";
     }

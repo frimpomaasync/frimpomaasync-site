@@ -69,6 +69,8 @@ final class Config
         'SA_DB_USER'              => '',
         'SA_DB_PASSWORD'          => '',
         'SA_MAIL_FROM'            => 'notify@frimpomaasync.com',
+        // The name on the From line, the way a person's mail shows a person.
+        'SA_MAIL_FROM_NAME'       => 'Nana Frimpongmaa from Soft Appeals',
         // Soft Appeals has its own inbox. The client pages tell a practice to
         // write to it, so replies to the terms email, the confirmation and the
         // sign-in code have to land in the same place. A page pointing one way
