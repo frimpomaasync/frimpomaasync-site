@@ -69,7 +69,9 @@ final class IntakeService
         ?string $submittedAtUtc = null,
         ?string $legacyRecordPath = null
     ): array {
-        if (!IntakeForms::isKnown($source) && $source !== IntakeForms::SOURCE_LEGACY_LOG) {
+        if (!IntakeForms::isKnown($source)
+            && !in_array($source, [IntakeForms::SOURCE_LEGACY_LOG, IntakeForms::SOURCE_EMAIL], true)
+        ) {
             throw new \RuntimeException('Unknown intake source: ' . $source);
         }
 

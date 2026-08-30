@@ -33,6 +33,7 @@ final class Config
         'SA_TOKEN_SECRET',
         'SA_IP_HMAC_SECRET',
         'SA_CRON_SECRET',
+        'SA_INTAKE_MAILBOX_PASS',
     ];
 
     /** Secrets that must be present before the application will serve a request. */
@@ -139,6 +140,19 @@ final class Config
 
         // The hour of her day the morning digest goes out. Section 17.3.
         'SA_DIGEST_HOUR' => '6',
+
+        // The forwarded-email intake. An address a practice manager can
+        // forward a denial letter or a voice note to, read on the job
+        // schedule by intake.mailbox, each message becoming an inquiry row.
+        // The username and password are written into the private config on
+        // the server once she creates the mailbox in hPanel; until both are
+        // there the job reports "no mailbox credentials" and touches nothing.
+        // The flag follows the portal rule: unset is on anywhere but
+        // production, and production waits for an explicit true.
+        'SA_INTAKE_MAILBOX_ENABLED' => null,
+        'SA_INTAKE_MAILBOX_HOST'    => 'imap.hostinger.com',
+        'SA_INTAKE_MAILBOX_PORT'    => '993',
+        'SA_INTAKE_MAILBOX_USER'    => '',
     ];
 
     /** @var array<string,mixed> */
@@ -351,6 +365,17 @@ final class Config
     public function cronEnabled(): bool
     {
         return $this->flagOrNotProduction('SA_DEADLINE_CRON_ENABLED');
+    }
+
+    /**
+     * Whether the intake.mailbox job may read the forwarded-email inbox.
+     * Same unset rule as the portal flags. Credentials are checked
+     * separately, so an enabled job with no mailbox reports that plainly
+     * rather than failing.
+     */
+    public function intakeMailboxEnabled(): bool
+    {
+        return $this->flagOrNotProduction('SA_INTAKE_MAILBOX_ENABLED');
     }
 
     /**

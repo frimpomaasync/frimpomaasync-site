@@ -237,7 +237,9 @@ if ($cfg) {
     $email,
     $form['subject'],
     sa_confirmation($source, $form, $name, $answers, $full),
-    'hello@frimpomaasync.com'
+    'hello@frimpomaasync.com',
+    '',
+    'Nana Frimpongmaa from Soft Appeals'
   );
 }
 

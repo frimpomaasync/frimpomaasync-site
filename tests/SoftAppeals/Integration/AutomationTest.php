@@ -520,7 +520,8 @@ return [
             Expect::same($items, (int) $db->value('SELECT COUNT(*) FROM sa_attention_items'), 'no new attention rows');
             Expect::same($mail, (int) $db->value('SELECT COUNT(*) FROM sa_communications'), 'no new email');
             Expect::same($backups + 1, count($app->backupService()->all()), 'a backup is the one thing that is new each run, by design');
-            Expect::same(20, (int) $db->value('SELECT COUNT(*) FROM sa_job_runs'), 'ten jobs, two runs, twenty rows');
+            $jobCount = count($app->jobService()->definitions());
+            Expect::same($jobCount * 2, (int) $db->value('SELECT COUNT(*) FROM sa_job_runs'), 'every job, two runs, one row each');
         },
 
     'an attention item can be marked seen, stays on the record, and is not shown again' =>

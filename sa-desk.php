@@ -162,6 +162,36 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
         exit;
     }
 
+    if ($action === 'intake.reply') {
+        $csrf->require('intake.reply');
+        $authorization->require(Permission::INTAKE_REVIEW);
+
+        // The same-day fit reply. Drafted by the machine, edited or not by
+        // her, sent by this press and nothing else. The inquiry's status does
+        // not move: the fit review stays the only place a decision is made.
+        $intakeId = (string) ($_POST['intake'] ?? '');
+        $kind = (string) ($_POST['kind'] ?? '');
+        $subject = (string) ($_POST['subject'] ?? '');
+        $body = (string) ($_POST['body'] ?? '');
+
+        try {
+            $result = $app->fitReplyService()->send($intakeId, $kind, $subject, $body, $userId);
+            $session->flash(
+                $result['sent'] ? 'desk_ok' : 'desk_problem',
+                $result['sent']
+                    ? ($result['reason'] === 'already sent'
+                        ? 'That exact reply already went. Nothing was sent twice.'
+                        : 'Sent. The inquiry stays on the board until you record the fit decision.')
+                    : 'Not sent: ' . $result['reason'] . '. The attempt is on the record.'
+            );
+        } catch (\RuntimeException $e) {
+            $session->flash('desk_problem', $e->getMessage());
+        }
+
+        header('Location: /sa-desk.php?view=home', true, 303);
+        exit;
+    }
+
     if ($action === 'terms.send') {
         $csrf->require('terms.send');
         $authorization->require(Permission::TERMS_SEND);
@@ -1252,6 +1282,19 @@ if ($view === 'home') {
     }
     $data['activeEngagements'] = $rows;
     $data['recentIntakes'] = $intakes->recent(10);
+
+    // The same-day reply drafts, one set per inquiry still waiting on a fit
+    // review. Capped so a busy morning is cards, not a wall.
+    $fitReplies = [];
+    if ($canReview) {
+        foreach (array_slice($awaitingReview, 0, 5) as $waiting) {
+            $fitReplies[] = [
+                'intake' => $waiting,
+                'drafts' => $app->fitReplyService()->drafts($waiting),
+            ];
+        }
+    }
+    $data['fitReplies'] = $fitReplies;
     $data['deadlines'] = $engagements->withDecisionDates();
     $data['batchDeadlines'] = $app->workBatches()->withDeadlines();
     $data['recentTimeline'] = $app->timeline()->recent(8);
