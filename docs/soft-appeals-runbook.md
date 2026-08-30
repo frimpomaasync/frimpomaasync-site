@@ -155,6 +155,7 @@ that deletes either.
 
 | Job | What | Safe to rerun because |
 |---|---|---|
+| `intake.mailbox` | reads unread messages in the intake mailbox and makes each one an inquiry row; the raw email is kept whole under `intake-mail/`; nothing is ever deleted from the mailbox | payload hash on `sa_intakes`; a message is marked read only after its row is stored |
 | `invitations.expire` | marks a lapsed unused one-time link revoked | the WHERE names unrevoked rows only |
 | `tasks.internal` | countersignatures waiting 2+ days, approved batches unsubmitted 3+ days, follow-ups due, her questions past date, invoices past due | keyed attention items |
 | `deadlines.batches` | every batch deadline crossing 30, 14, 7, 3, 1 day; unconfirmed dates labelled and never called controlling | keyed per batch and threshold |
@@ -165,6 +166,13 @@ that deletes either.
 | `backup.verify` | verifies the newest | reads only |
 | `housekeeping` | drops rate-limit rows, run rows and resolved items past 90 days | deletes are idempotent |
 | `digest.morning` | emails the counts once a day after the digest hour | idempotency key = the date |
+
+The intake mailbox needs three things before it reads anything: a mailbox
+created in hPanel (its address is the one practices forward to), its
+username and password written into the private config as
+`SA_INTAKE_MAILBOX_USER` / `SA_INTAKE_MAILBOX_PASS`, and on production
+`SA_INTAKE_MAILBOX_ENABLED => true`. Until then the job runs green and says
+"no mailbox credentials here" or "switched off here".
 
 Every job takes a database lock first (`sa_job_locks`), so two crons cannot
 run one job at once. A lock lapses after ten minutes, so a job that died

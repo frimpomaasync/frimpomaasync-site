@@ -118,6 +118,15 @@ final class IntakeForms
      */
     public const SOURCE_LEGACY_LOG = 'legacy-log';
 
+    /**
+     * An inquiry that arrived as a forwarded email rather than through a
+     * form. The intake.mailbox job creates these: sender, subject, the
+     * message text, and the names of any attachments. The raw email itself
+     * is kept beside the private storage, so nothing the parser did not
+     * understand is gone.
+     */
+    public const SOURCE_EMAIL = 'email-forward';
+
     /** @return list<string> */
     public static function sources(): array
     {
@@ -140,6 +149,9 @@ final class IntakeForms
     {
         if ($source === self::SOURCE_LEGACY_LOG) {
             return 'Lead line, archive file no longer on the server';
+        }
+        if ($source === self::SOURCE_EMAIL) {
+            return 'Forwarded email';
         }
         return self::all()[$source]['owner'] ?? $source;
     }
@@ -175,6 +187,17 @@ final class IntakeForms
                 'name'         => 'Their name',
                 'email'        => 'Work email',
                 'organization' => 'Organization',
+            ];
+        }
+        if ($source === self::SOURCE_EMAIL) {
+            // What an email actually carries. No band, no state, no role:
+            // the drawer prints "not asked" for those, which is the truth.
+            return [
+                'name'        => 'Their name',
+                'email'       => 'From',
+                'subject'     => 'Subject',
+                'message'     => 'Their message',
+                'attachments' => 'Attachments',
             ];
         }
         return self::all()[$source]['fields'] ?? [];

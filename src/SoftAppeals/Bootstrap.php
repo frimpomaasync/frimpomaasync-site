@@ -47,8 +47,10 @@ use SoftAppeals\Services\DocumentService;
 use SoftAppeals\Services\DigestService;
 use SoftAppeals\Services\DocumentVault;
 use SoftAppeals\Services\EngagementService;
+use SoftAppeals\Services\FitReplyService;
 use SoftAppeals\Services\IntakeService;
 use SoftAppeals\Services\JobService;
+use SoftAppeals\Services\MailboxService;
 use SoftAppeals\Services\LegacyLeadImporter;
 use SoftAppeals\Services\MailService;
 use SoftAppeals\Services\PreferencesService;
@@ -487,6 +489,19 @@ final class Bootstrap
         ));
     }
 
+    /**
+     * The same-day fit reply: three drafts per new inquiry, sent by her hand.
+     */
+    public function fitReplyService(): FitReplyService
+    {
+        return $this->make(FitReplyService::class, fn (): FitReplyService => new FitReplyService(
+            $this->config,
+            $this->intakes(),
+            $this->mail(),
+            $this->audit()
+        ));
+    }
+
     public function termsService(): TermsService
     {
         return $this->make(TermsService::class, fn (): TermsService => new TermsService(
@@ -904,6 +919,27 @@ final class Bootstrap
         ));
     }
 
+    /**
+     * The intake mailbox reader.
+     *
+     * $session exists for the tests, which must never open a socket. Passing
+     * one rebuilds the service AND drops a cached JobService, which would
+     * otherwise still hold the mailbox built earlier and quietly ignore the
+     * fake. Same shape as mail().
+     *
+     * @param (callable():array{unseen:callable(int):list<array{uid:string,raw:string}>,seen:callable(string):void,close:callable():void})|null $session
+     */
+    public function mailbox(?callable $session = null): MailboxService
+    {
+        if ($session !== null) {
+            unset($this->made[JobService::class]);
+            return $this->made[MailboxService::class] = new MailboxService($this->config, $session);
+        }
+        return $this->make(MailboxService::class, fn (): MailboxService => new MailboxService(
+            $this->config
+        ));
+    }
+
     public function jobService(): JobService
     {
         return $this->make(JobService::class, fn (): JobService => new JobService(
@@ -925,7 +961,9 @@ final class Bootstrap
             $this->submissionEvents(),
             $this->actionRequests(),
             $this->invoices(),
-            $this->audit()
+            $this->audit(),
+            $this->mailbox(),
+            $this->intakeService()
         ));
     }
 

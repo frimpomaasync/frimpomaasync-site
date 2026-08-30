@@ -14,6 +14,7 @@
  * @var array<string,int> $pipeline
  * @var array<string,int> $intakeCounts
  * @var list<array<string,mixed>> $awaitingReview
+ * @var list<array{intake:array<string,mixed>,drafts:array<string,array{subject:string,body:string}>}> $fitReplies
  * @var list<array<string,mixed>> $termsReady
  * @var list<array<string,mixed>> $activeEngagements
  * @var list<array<string,mixed>> $recentIntakes
@@ -255,6 +256,59 @@ $hidden = count($cards) - count($shown);
     </div>
   <?php endif; ?>
 </section>
+
+<?php if (($fitReplies ?? []) !== []): ?>
+<section aria-labelledby="desk-replies">
+  <p class="sa-label" id="desk-replies">Same-day replies, drafted for you</p>
+  <p class="sa-desk-note" style="margin-bottom:12px">
+    One per new inquiry, written from their own answers. Open the one that is
+    true, change any word, press Send. Sending answers the person; it does not
+    record the fit decision, which still happens under Inquiries.
+  </p>
+  <?php foreach ($fitReplies as $pair): ?>
+    <?php $intake = $pair['intake']; ?>
+    <div class="sa-panel" style="margin-bottom:14px">
+      <div class="sa-panel-h">
+        <span>
+          <b><?= $e((string) $intake['organization_name']) ?></b>
+          &middot; <?= $e((string) $intake['contact_name']) ?>
+          &middot; <?= $e(\SoftAppeals\Domain\IntakeForms::ownerLabel((string) $intake['source'])) ?>
+          &middot; <?= $e(Desk::ago($clock, (string) $intake['submitted_at'])) ?>
+        </span>
+        <a class="sa-btn is-quiet is-sm"
+           href="/sa-desk.php?view=inquiries#<?= $e((string) $intake['public_ref']) ?>">The inquiry</a>
+      </div>
+      <div class="sa-panel-b" style="padding:6px 18px 14px">
+        <?php foreach ($pair['drafts'] as $kind => $draft): ?>
+          <details style="margin-top:8px">
+            <summary style="cursor:pointer">
+              <?= $e(\SoftAppeals\Services\FitReplyService::kindLabel((string) $kind)) ?>
+            </summary>
+            <form method="post" action="/sa-desk.php" style="margin-top:10px">
+              <?= $csrf->field('intake.reply') ?>
+              <input type="hidden" name="action" value="intake.reply">
+              <input type="hidden" name="intake" value="<?= $e((string) $intake['id']) ?>">
+              <input type="hidden" name="kind" value="<?= $e((string) $kind) ?>">
+              <p style="margin:0 0 6px">
+                <label>Subject
+                  <input type="text" name="subject" value="<?= $e($draft['subject']) ?>"
+                         maxlength="200" style="width:100%">
+                </label>
+              </p>
+              <p style="margin:0 0 6px">
+                <label>To <?= $e((string) $intake['contact_email']) ?>, as you wrote it
+                  <textarea name="body" rows="12" style="width:100%"><?= $e($draft['body']) ?></textarea>
+                </label>
+              </p>
+              <button type="submit" class="sa-btn is-action is-sm">Send this reply</button>
+            </form>
+          </details>
+        <?php endforeach; ?>
+      </div>
+    </div>
+  <?php endforeach; ?>
+</section>
+<?php endif; ?>
 
 <section aria-labelledby="desk-pipeline">
   <p class="sa-label" id="desk-pipeline">Pipeline</p>

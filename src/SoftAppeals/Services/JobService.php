@@ -74,6 +74,8 @@ final class JobService
     private ActionRequestRepository $requests;
     private InvoiceRepository $invoices;
     private AuditService $audit;
+    private MailboxService $mailbox;
+    private IntakeService $intakeService;
 
     /** @var array<string,array{label:string,what:string,work:callable():array{summary:string,items:int}}> */
     private array $extra = [];
@@ -97,7 +99,9 @@ final class JobService
         SubmissionEventRepository $events,
         ActionRequestRepository $requests,
         InvoiceRepository $invoices,
-        AuditService $audit
+        AuditService $audit,
+        MailboxService $mailbox,
+        IntakeService $intakeService
     ) {
         $this->config = $config;
         $this->db = $db;
@@ -118,6 +122,8 @@ final class JobService
         $this->requests = $requests;
         $this->invoices = $invoices;
         $this->audit = $audit;
+        $this->mailbox = $mailbox;
+        $this->intakeService = $intakeService;
     }
 
     /**
@@ -129,6 +135,12 @@ final class JobService
     public function definitions(): array
     {
         $out = [
+            // First, so everything downstream of it this run, the digest
+            // included, already sees whatever the inbox brought.
+            'intake.mailbox' => [
+                'label' => 'Forwarded-email intake',
+                'what'  => 'Unread messages in the intake mailbox become inquiry rows on the board. Nothing is deleted.',
+            ],
             'invitations.expire' => [
                 'label' => 'Expire unused links',
                 'what'  => 'A one-time link past its date that was never used is marked dead.',
@@ -336,6 +348,7 @@ final class JobService
             return ($this->extra[$key]['work'])();
         }
         return match ($key) {
+            'intake.mailbox'     => $this->emailIntake(),
             'invitations.expire' => $this->expireInvitations(),
             'tasks.internal'     => $this->internalTasks(),
             'deadlines.batches'  => $this->deadlines(),
@@ -348,6 +361,80 @@ final class JobService
             'digest.morning'     => $this->morningDigest(),
             default              => throw new \RuntimeException('There is no job called "' . $key . '".'),
         };
+    }
+
+    /**
+     * The no-form intake. Every unread message in the intake mailbox becomes
+     * an ordinary inquiry row, reviewed on the Desk like any submitted form.
+     *
+     * The raw email is stored whole in private storage before anything is
+     * parsed out of it, so a message the parser half-understood is never the
+     * only record. A message is marked read only after its row is stored; a
+     * crash between the two leaves it unread for the next run, and the
+     * payload hash makes that rerun land on the row this one made.
+     */
+    private function emailIntake(): array
+    {
+        if (!$this->config->intakeMailboxEnabled()) {
+            return ['summary' => 'switched off here (SA_INTAKE_MAILBOX_ENABLED)', 'items' => 0];
+        }
+        if (!$this->mailbox->configured()) {
+            return ['summary' => 'no mailbox credentials here', 'items' => 0];
+        }
+
+        return $this->mailbox->withMailbox(function (callable $unseen, callable $seen): array {
+            $read = 0;
+            $created = 0;
+            foreach ($unseen(MailboxService::BATCH) as $message) {
+                $read++;
+                $mail = MailboxService::parse((string) $message['raw']);
+
+                // No sender address means no way to answer and no way to
+                // review fit. It stays unread, visible in the mailbox itself,
+                // rather than becoming a row nobody can act on.
+                if ($mail['from_email'] === '') {
+                    continue;
+                }
+
+                // The original, whole, before any interpretation of it.
+                $key = $mail['message_id'] !== '' ? $mail['message_id'] : (string) $message['raw'];
+                $hash = hash('sha256', $key);
+                $dir = $this->config->privateStoragePath('intake-mail');
+                if (!is_dir($dir)) {
+                    @mkdir($dir, 0750, true);
+                }
+                @file_put_contents($dir . '/' . $hash . '.eml', (string) $message['raw'], LOCK_EX);
+
+                $clean = static fn (string $s, int $max): string => mb_substr(
+                    trim(preg_replace('/[\x00-\x08\x0B\x0C\x0E-\x1F\x7F]/', '', $s) ?? ''),
+                    0,
+                    $max
+                );
+                $answers = array_filter([
+                    'name'        => $clean($mail['from_name'], 120),
+                    'email'       => $clean($mail['from_email'], 120),
+                    'subject'     => $clean($mail['subject'], 200),
+                    'message'     => $clean($mail['body'], 4000),
+                    'attachments' => $clean(implode(', ', $mail['attachments']), 500),
+                ], static fn (string $v): bool => $v !== '');
+
+                $result = $this->intakeService->record(
+                    \SoftAppeals\Domain\IntakeForms::SOURCE_EMAIL,
+                    $answers,
+                    $key,
+                    $mail['date']
+                );
+                if ($result['created']) {
+                    $created++;
+                }
+                $seen((string) $message['uid']);
+            }
+            return [
+                'summary' => $read . ' read, ' . $created . ' new '
+                    . ($created === 1 ? 'inquiry' : 'inquiries') . ' on the board',
+                'items'   => $created,
+            ];
+        });
     }
 
     private function expireInvitations(): array
