@@ -167,12 +167,15 @@ that deletes either.
 | `housekeeping` | drops rate-limit rows, run rows and resolved items past 90 days | deletes are idempotent |
 | `digest.morning` | emails the counts once a day after the digest hour | idempotency key = the date |
 
-The intake mailbox needs three things before it reads anything: a mailbox
-created in hPanel (its address is the one practices forward to), its
-username and password written into the private config as
-`SA_INTAKE_MAILBOX_USER` / `SA_INTAKE_MAILBOX_PASS`, and on production
-`SA_INTAKE_MAILBOX_ENABLED => true`. Until then the job runs green and says
-"no mailbox credentials here" or "switched off here".
+The intake address is `start@frimpomaasync.com`, an ALIAS on the notify@
+mailbox (created 2026-08-30; the email plan holds two mailboxes and both
+are taken). The reader signs in as the site's own sending account from
+`fs-metrics/smtp.json` when `SA_INTAKE_MAILBOX_USER` / `_PASS` are blank,
+so no new credential exists. On production the one switch is
+`SA_INTAKE_MAILBOX_ENABLED => true` in the private config. Until then the
+job runs green and says "no mailbox credentials here" or "switched off
+here". Strays in notify@'s inbox (a bounce, an odd reply) become inquiry
+rows too; clear them on the Desk as not real.
 
 Every job takes a database lock first (`sa_job_locks`), so two crons cannot
 run one job at once. A lock lapses after ten minutes, so a job that died

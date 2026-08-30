@@ -55,8 +55,40 @@ final class MailboxService
     /** True when this installation has an address and a password to read it. */
     public function configured(): bool
     {
-        return trim($this->config->string('SA_INTAKE_MAILBOX_USER')) !== ''
-            && trim($this->config->string('SA_INTAKE_MAILBOX_PASS')) !== '';
+        return $this->credentials() !== null;
+    }
+
+    /**
+     * The account the reader signs in as.
+     *
+     * First choice: an account named in the config. When none is named, the
+     * site's own sending account (fs-metrics/smtp.json, the same file
+     * fs-mail.php sends with) is the mailbox: her email plan holds two
+     * mailboxes and both are taken, so the intake address is an alias of
+     * notify@ rather than a third account, and reading notify@'s inbox with
+     * the credentials the server already holds means no new secret exists
+     * anywhere. Off production the same one-level-up rule MailService uses
+     * applies, and a machine with neither file simply reports unconfigured.
+     *
+     * @return array{user:string,pass:string}|null
+     */
+    private function credentials(): ?array
+    {
+        $user = trim($this->config->string('SA_INTAKE_MAILBOX_USER'));
+        $pass = trim($this->config->string('SA_INTAKE_MAILBOX_PASS'));
+        if ($user !== '' && $pass !== '') {
+            return ['user' => $user, 'pass' => $pass];
+        }
+
+        $path = MailService::smtpConfigPath($this->config->isProduction());
+        if ($path === null) {
+            return null;
+        }
+        $json = json_decode((string) file_get_contents($path), true);
+        if (!is_array($json) || empty($json['user']) || empty($json['pass'])) {
+            return null;
+        }
+        return ['user' => (string) $json['user'], 'pass' => (string) $json['pass']];
     }
 
     /**
@@ -296,11 +328,15 @@ final class MailboxService
     private function imapSession(): callable
     {
         $config = $this->config;
-        return static function () use ($config): array {
+        return function () use ($config): array {
             $host = trim($config->string('SA_INTAKE_MAILBOX_HOST'));
             $port = (int) $config->string('SA_INTAKE_MAILBOX_PORT');
-            $user = trim($config->string('SA_INTAKE_MAILBOX_USER'));
-            $pass = (string) $config->get('SA_INTAKE_MAILBOX_PASS', '');
+            $account = $this->credentials();
+            if ($account === null) {
+                throw new \RuntimeException('No mailbox credentials in reach.');
+            }
+            $user = $account['user'];
+            $pass = $account['pass'];
 
             $fp = @stream_socket_client('ssl://' . $host . ':' . ($port > 0 ? $port : 993), $errno, $err, 15);
             if ($fp === false) {
