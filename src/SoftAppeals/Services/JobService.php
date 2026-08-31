@@ -76,6 +76,7 @@ final class JobService
     private AuditService $audit;
     private MailboxService $mailbox;
     private IntakeService $intakeService;
+    private MailService $mail;
 
     /** @var array<string,array{label:string,what:string,work:callable():array{summary:string,items:int}}> */
     private array $extra = [];
@@ -101,7 +102,8 @@ final class JobService
         InvoiceRepository $invoices,
         AuditService $audit,
         MailboxService $mailbox,
-        IntakeService $intakeService
+        IntakeService $intakeService,
+        MailService $mail
     ) {
         $this->config = $config;
         $this->db = $db;
@@ -124,6 +126,7 @@ final class JobService
         $this->audit = $audit;
         $this->mailbox = $mailbox;
         $this->intakeService = $intakeService;
+        $this->mail = $mail;
     }
 
     /**
@@ -172,6 +175,10 @@ final class JobService
             'backup.verify' => [
                 'label' => 'Verify the newest backup',
                 'what'  => 'Exists, is under 36 hours old, matches its hash, and decodes.',
+            ],
+            'backup.offsite' => [
+                'label' => 'Off-site backup copy',
+                'what'  => 'The newest backup file, emailed to you once per day. The copy that survives the server.',
             ],
             'housekeeping' => [
                 'label' => 'Housekeeping',
@@ -357,6 +364,7 @@ final class JobService
             'reminders.client'   => $this->clientReminders(),
             'backup.daily'       => $this->backupDaily(),
             'backup.verify'      => $this->backupVerify(),
+            'backup.offsite'     => $this->backupOffsite(),
             'housekeeping'       => $this->housekeeping(),
             'digest.morning'     => $this->morningDigest(),
             default              => throw new \RuntimeException('There is no job called "' . $key . '".'),
@@ -426,6 +434,20 @@ final class JobService
                 );
                 if ($result['created']) {
                     $created++;
+                    // The instant acknowledgment: the person who forwarded a
+                    // letter at nine hears something human before the fit
+                    // review, or concludes nobody is home. Keyed on the
+                    // inquiry, so the same message reappearing sends nothing
+                    // twice, and the allowlist rules it like every send.
+                    $this->mail->send(
+                        $mail['from_email'],
+                        'Your email reached Soft Appeals',
+                        $this->intakeAckBody($mail['from_name']),
+                        'intake_email_ack',
+                        null,
+                        null,
+                        'intake-ack:' . $result['id']
+                    );
                 }
                 $seen((string) $message['uid']);
             }
@@ -435,6 +457,65 @@ final class JobService
                 'items'   => $created,
             ];
         });
+    }
+
+    /** The words a forwarded email is answered with, before any review. */
+    private function intakeAckBody(string $name): string
+    {
+        $first = trim(explode(' ', trim($name))[0] ?? '');
+        return ($first === '' ? 'Hello,' : 'Hello ' . $first . ',') . "\n\n"
+            . "Your email came through at Soft Appeals. I read these myself, and you hear back within one business day with a straight answer: it fits, it does not, or one question first.\n\n"
+            . "Nothing starts and nothing is owed from sending this. If we work together, paperwork comes first and a secure route for records comes after it. From here on, please keep patient details out of regular email.\n\n"
+            . "Nana Frimpongmaa\nfrimpomaasync.com/soft-appeals";
+    }
+
+    /**
+     * The off-site copy. Every backup lives on the same server as the site,
+     * and a dead server would take them with it. The newest backup file is
+     * emailed to the owner once per day, keyed on the date, so the inbox
+     * becomes the copy that survives. The backup holds business rows only;
+     * nothing patient-level exists in this database by design.
+     */
+    private function backupOffsite(): array
+    {
+        $latest = $this->backups->latest();
+        if ($latest === null) {
+            return ['summary' => 'no backup to send yet', 'items' => 0];
+        }
+        if ($latest['bytes'] > 8_000_000) {
+            return ['summary' => 'newest backup is ' . $latest['bytes'] . ' bytes, past the email cap; download a copy by hand', 'items' => 0];
+        }
+
+        $bytes = (string) @file_get_contents((string) $latest['path']);
+        if ($bytes === '') {
+            return ['summary' => 'newest backup could not be read', 'items' => 0];
+        }
+
+        $result = $this->mail->send(
+            $this->config->string('SA_OWNER_EMAIL'),
+            'Soft Appeals off-site backup: ' . (string) $latest['name'],
+            "The newest database backup is attached.\n\n"
+                . 'File: ' . (string) $latest['name'] . "\n"
+                . 'Size: ' . (int) $latest['bytes'] . " bytes\n"
+                . 'SHA-256: ' . hash('sha256', $bytes) . "\n\n"
+                . "Keep this email. It is the copy that survives the server, and restoring from it is in the runbook.\n\n"
+                . "Soft Appeals",
+            'backup_offsite',
+            null,
+            null,
+            'backup-offsite:' . substr($this->clock->nowUtc(), 0, 10),
+            [['name' => (string) $latest['name'], 'bytes' => $bytes]]
+        );
+
+        if ($result['reason'] === 'already sent') {
+            return ['summary' => 'already sent today', 'items' => 0];
+        }
+        return [
+            'summary' => $result['sent']
+                ? 'sent ' . (string) $latest['name'] . ' (' . (int) $latest['bytes'] . ' bytes)'
+                : 'not taken: ' . $result['reason'],
+            'items'   => $result['sent'] ? 1 : 0,
+        ];
     }
 
     private function expireInvitations(): array

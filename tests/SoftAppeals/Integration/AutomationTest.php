@@ -524,6 +524,29 @@ return [
             Expect::same($jobCount * 2, (int) $db->value('SELECT COUNT(*) FROM sa_job_runs'), 'every job, two runs, one row each');
         },
 
+    'the off-site copy emails the newest backup once per day, and only once' =>
+        static function (Bootstrap $app, Database $db) use ($boot): void {
+            [$app, $sent] = $boot($db);
+            $none = $app->jobService()->run('backup.offsite', JobRepository::TRIGGER_TEST);
+            Expect::same(JobRepository::OUTCOME_OK, $none['outcome'], 'no backup yet is a state, not a failure');
+            Expect::true(str_contains($none['summary'], 'no backup'), 'and it says so');
+
+            $app->jobService()->run('backup.daily', JobRepository::TRIGGER_TEST);
+            $first = $app->jobService()->run('backup.offsite', JobRepository::TRIGGER_TEST);
+            Expect::same(1, $first['items'], 'the newest backup went out');
+            $offsite = array_values(array_filter(
+                iterator_to_array($sent),
+                static fn (array $m): bool => str_starts_with($m['subject'], 'Soft Appeals off-site backup')
+            ));
+            Expect::same(1, count($offsite), 'one email, to the owner');
+            Expect::same('owner@example.org', $offsite[0]['to'], 'the owner address from the config');
+            Expect::true(str_contains($offsite[0]['body'], 'SHA-256:'), 'carrying the hash to check against');
+
+            $second = $app->jobService()->run('backup.offsite', JobRepository::TRIGGER_TEST);
+            Expect::same(0, $second['items'], 'the same day sends nothing twice');
+            Expect::true(str_contains($second['summary'], 'already sent'), 'and says why');
+        },
+
     'an attention item can be marked seen, stays on the record, and is not shown again' =>
         static function (Bootstrap $app, Database $db) use ($boot, $overturned, $ownerId): void {
             [$app, $sent] = $boot($db);

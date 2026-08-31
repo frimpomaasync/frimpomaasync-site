@@ -963,7 +963,8 @@ final class Bootstrap
             $this->invoices(),
             $this->audit(),
             $this->mailbox(),
-            $this->intakeService()
+            $this->intakeService(),
+            $this->mail()
         ));
     }
 
