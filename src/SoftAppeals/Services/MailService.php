@@ -74,6 +74,7 @@ final class MailService
      *
      * @return array{state:string,communication_id:string,sent:bool,reason:string}
      */
+    /** @param list<array{name:string,bytes:string}>|null $attachments files to ride along; only the off-site backup uses this */
     public function send(
         string $to,
         string $subject,
@@ -81,7 +82,8 @@ final class MailService
         string $templateKey,
         ?string $engagementId = null,
         ?string $organizationId = null,
-        ?string $idempotencyKey = null
+        ?string $idempotencyKey = null,
+        ?array $attachments = null
     ): array {
         $to = strtolower(trim($to));
 
@@ -141,7 +143,7 @@ final class MailService
                 'Do not send patient, member, claim or clinical information by email. '
                 . 'Questions go to ' . $replyTo . '.'
             );
-            $accepted = ($this->transport)($to, $subject, $body, $replyTo, $html, $this->config->string('SA_MAIL_FROM_NAME'));
+            $accepted = ($this->transport)($to, $subject, $body, $replyTo, $html, $this->config->string('SA_MAIL_FROM_NAME'), $attachments ?? []);
         } catch (NoMailCredentials) {
             // Not a refusal by the mail server: this installation has no
             // credentials to offer it. Recorded as its own category so the
@@ -264,7 +266,7 @@ final class MailService
      */
     private static function smtpTransport(Config $config): callable
     {
-        return static function (string $to, string $subject, string $body, string $replyTo, string $html = '', string $fromName = '') use ($config): bool {
+        return static function (string $to, string $subject, string $body, string $replyTo, string $html = '', string $fromName = '', array $attachments = []) use ($config): bool {
             $mailer = dirname(__DIR__, 3) . '/fs-mail.php';
             if (!is_file($mailer)) {
                 throw new NoMailCredentials('fs-mail.php is not here');
@@ -282,7 +284,7 @@ final class MailService
             if (!is_array($cfg) || empty($cfg['user']) || empty($cfg['pass'])) {
                 throw new NoMailCredentials('smtp.json is incomplete');
             }
-            return (bool) fs_smtp_send($cfg, $to, $subject, $body, $replyTo, $html, $fromName === '' ? 'Soft Appeals' : $fromName);
+            return (bool) fs_smtp_send($cfg, $to, $subject, $body, $replyTo, $html, $fromName === '' ? 'Soft Appeals' : $fromName, $attachments);
         };
     }
 }

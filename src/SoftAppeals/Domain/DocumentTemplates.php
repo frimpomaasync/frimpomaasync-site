@@ -38,7 +38,7 @@ final class DocumentTemplates
      * number so that a document found in three years says when its wording was
      * written without anybody having to look up a changelog.
      */
-    public const TEMPLATE_VERSION = '2026-08-30';
+    public const TEMPLATE_VERSION = '2026-08-31';
 
     /** The electronic-record consent, versioned separately from the documents. */
     public const CONSENT_VERSION = '2026-08-28';
@@ -191,10 +191,20 @@ final class DocumentTemplates
      * The Business Associate Agreement.
      *
      * Gate A of section 6: this is the document that has to be executed before
-     * a single claim-level file moves. Its clauses are written around what this
-     * application actually does, which is a narrower thing than most agreements
-     * of this kind describe, and saying so plainly is worth more than borrowed
-     * breadth.
+     * a single claim-level file moves.
+     *
+     * Rebuilt 2026-08-31 ON the Sample Business Associate Agreement Provisions
+     * published by HHS on January 25, 2013 (hhs.gov, "Business Associate
+     * Contracts"), which are US government work and carry the exact operative
+     * language OCR expects to see. Clauses 1 through 7 track that sample
+     * provision for provision, with the sample's bracketed choices resolved:
+     * requests under 164.524 and accountings under 164.528 go to the Practice
+     * (not the individual), permitted uses reference the engagement's own
+     * services, the management-and-administration provisions are included, the
+     * data-aggregation option is not, and termination keeps a cure period.
+     * Clauses 8 and 9 are Soft Appeals' own commitments over and above the
+     * sample. A reviewer's job is therefore to confirm nothing from the sample
+     * was dropped, not to draft.
      *
      * @param array<string,string> $context
      * @return list<array{heading:string,paragraphs:list<string>}>
@@ -203,40 +213,174 @@ final class DocumentTemplates
     {
         return [
             [
-                'heading'    => 'What this agreement covers',
+                'heading'    => 'Definitions',
                 'paragraphs' => [
-                    'The Practice is a covered entity. Soft Appeals works on denied '
-                    . 'claims on the Practice\'s behalf, which makes Soft Appeals a '
-                    . 'business associate. This agreement sets out how protected '
-                    . 'health information is handled between the two, and it applies '
-                    . 'to every piece of that information Soft Appeals receives, '
-                    . 'creates, keeps or sends on behalf of the Practice.',
-                ],
-            ],
-            [
-                'heading'    => 'What Soft Appeals may use the information for',
-                'paragraphs' => [
-                    'Soft Appeals uses protected health information only to do the '
-                    . 'work the Practice has asked for: reviewing denied claims, '
-                    . 'preparing appeals, and reporting back on what happened. It is '
-                    . 'not used for anything else, it is not sold, and it is not '
-                    . 'shared with anyone outside the people doing that work.',
+                    'The following terms used in this Agreement have the same meaning '
+                    . 'as those terms in the HIPAA Rules: Breach, Data Aggregation, '
+                    . 'Designated Record Set, Disclosure, Health Care Operations, '
+                    . 'Individual, Minimum Necessary, Notice of Privacy Practices, '
+                    . 'Protected Health Information, Required By Law, Secretary, '
+                    . 'Security Incident, Subcontractor, Unsecured Protected Health '
+                    . 'Information, and Use.',
 
-                    'Where the law requires a disclosure, Soft Appeals makes it and '
-                    . 'tells the Practice, unless telling the Practice is itself '
-                    . 'forbidden.',
+                    '"Business Associate" has the same meaning as the term "business '
+                    . 'associate" at 45 CFR 160.103, and in reference to a party to '
+                    . 'this Agreement means Soft Appeals. "Covered Entity" has the '
+                    . 'same meaning as the term "covered entity" at 45 CFR 160.103, '
+                    . 'and in reference to a party to this Agreement means the '
+                    . 'Practice. "HIPAA Rules" means the Privacy, Security, Breach '
+                    . 'Notification, and Enforcement Rules at 45 CFR Part 160 and '
+                    . 'Part 164.',
                 ],
             ],
             [
-                'heading'    => 'The minimum necessary',
+                'heading'    => 'Obligations and activities of Soft Appeals',
                 'paragraphs' => [
-                    'Soft Appeals asks for the smallest set of records that will '
-                    . 'answer the question in front of it. Where a redacted or '
-                    . 'limited record is enough, that is what is requested.',
+                    'Soft Appeals agrees to: (a) not use or disclose protected health '
+                    . 'information other than as permitted or required by this '
+                    . 'Agreement or as required by law; (b) use appropriate '
+                    . 'safeguards, and comply with Subpart C of 45 CFR Part 164 with '
+                    . 'respect to electronic protected health information, to prevent '
+                    . 'use or disclosure of protected health information other than '
+                    . 'as provided for by this Agreement; (c) report to the Practice '
+                    . 'any use or disclosure of protected health information not '
+                    . 'provided for by this Agreement of which it becomes aware, '
+                    . 'including breaches of unsecured protected health information '
+                    . 'as required at 45 CFR 164.410, and any security incident of '
+                    . 'which it becomes aware, without unreasonable delay and in no '
+                    . 'case later than five business days after discovery;',
+
+                    '(d) in accordance with 45 CFR 164.502(e)(1)(ii) and '
+                    . '164.308(b)(2), ensure that any subcontractors that create, '
+                    . 'receive, maintain, or transmit protected health information on '
+                    . 'behalf of Soft Appeals agree in writing to the same '
+                    . 'restrictions, conditions, and requirements that apply to Soft '
+                    . 'Appeals with respect to such information, before any such '
+                    . 'information reaches them; (e) make available protected health '
+                    . 'information in a designated record set to the Practice as '
+                    . 'necessary to satisfy the Practice\'s obligations under 45 CFR '
+                    . '164.524; (f) make any amendment to protected health '
+                    . 'information in a designated record set as directed or agreed '
+                    . 'to by the Practice pursuant to 45 CFR 164.526, or take other '
+                    . 'measures as necessary to satisfy the Practice\'s obligations '
+                    . 'under 45 CFR 164.526;',
+
+                    '(g) maintain and make available the information required to '
+                    . 'provide an accounting of disclosures to the Practice as '
+                    . 'necessary to satisfy the Practice\'s obligations under 45 CFR '
+                    . '164.528; (h) to the extent Soft Appeals is to carry out one or '
+                    . 'more of the Practice\'s obligations under Subpart E of 45 CFR '
+                    . 'Part 164, comply with the requirements of Subpart E that apply '
+                    . 'to the Practice in the performance of such obligations; and '
+                    . '(i) make its internal practices, books, and records available '
+                    . 'to the Secretary for purposes of determining compliance with '
+                    . 'the HIPAA Rules.',
+
+                    'A request under (e), (f) or (g) is answered within fifteen '
+                    . 'business days unless the Practice agrees to longer.',
                 ],
             ],
             [
-                'heading'    => 'How the information is protected',
+                'heading'    => 'Permitted uses and disclosures by Soft Appeals',
+                'paragraphs' => [
+                    'Soft Appeals may only use or disclose protected health '
+                    . 'information as necessary to perform the services this '
+                    . 'engagement names: reviewing the Practice\'s denied claims, '
+                    . 'preparing and pursuing appeals of them, and reporting back to '
+                    . 'the Practice on the outcome. Soft Appeals may use or disclose '
+                    . 'protected health information as required by law.',
+
+                    'Soft Appeals agrees to make uses and disclosures and requests '
+                    . 'for protected health information consistent with the '
+                    . 'Practice\'s minimum necessary policies and procedures, and in '
+                    . 'every case to ask for the smallest set of records that will '
+                    . 'answer the question in front of it.',
+
+                    'Soft Appeals may not use or disclose protected health '
+                    . 'information in a manner that would violate Subpart E of 45 CFR '
+                    . 'Part 164 if done by the Practice, except for the specific uses '
+                    . 'and disclosures set out in this paragraph: Soft Appeals may '
+                    . 'use protected health information for its own proper management '
+                    . 'and administration or to carry out its own legal '
+                    . 'responsibilities, and may disclose it for those purposes only '
+                    . 'where the disclosure is required by law, or where Soft Appeals '
+                    . 'obtains reasonable assurances from the person to whom the '
+                    . 'information is disclosed that it will remain confidential and '
+                    . 'be used or further disclosed only as required by law or for '
+                    . 'the purposes for which it was disclosed, and that person '
+                    . 'notifies Soft Appeals of any instance of which it is aware in '
+                    . 'which the confidentiality of the information has been '
+                    . 'breached. Protected health information is never sold, and is '
+                    . 'not used for data aggregation, marketing, or anything else '
+                    . 'this clause does not name.',
+                ],
+            ],
+            [
+                'heading'    => 'What the Practice tells Soft Appeals',
+                'paragraphs' => [
+                    'The Practice shall notify Soft Appeals of any limitation in its '
+                    . 'notice of privacy practices under 45 CFR 164.520, of any '
+                    . 'change in or revocation of an individual\'s permission to use '
+                    . 'or disclose their protected health information, and of any '
+                    . 'restriction on use or disclosure the Practice has agreed to or '
+                    . 'must abide by under 45 CFR 164.522, in each case to the extent '
+                    . 'it may affect Soft Appeals\' use or disclosure of protected '
+                    . 'health information.',
+                ],
+            ],
+            [
+                'heading'    => 'Permissible requests by the Practice',
+                'paragraphs' => [
+                    'The Practice shall not request Soft Appeals to use or disclose '
+                    . 'protected health information in any manner that would not be '
+                    . 'permissible under Subpart E of 45 CFR Part 164 if done by the '
+                    . 'Practice, except to the extent this Agreement permits Soft '
+                    . 'Appeals\' uses for its own management, administration and '
+                    . 'legal responsibilities.',
+                ],
+            ],
+            [
+                'heading'    => 'Term, termination, and what happens to the records',
+                'paragraphs' => [
+                    'This Agreement is effective on its effective date above and ends '
+                    . 'when the engagement it supports ends, or thirty days after '
+                    . 'either party gives written notice, or on the date the Practice '
+                    . 'terminates for cause, whichever comes first. Soft Appeals '
+                    . 'authorizes termination of this Agreement by the Practice if '
+                    . 'the Practice determines Soft Appeals has violated a material '
+                    . 'term of it and has not cured the violation within ten business '
+                    . 'days of being told of it in writing.',
+
+                    'Upon termination for any reason, Soft Appeals shall return to '
+                    . 'the Practice or, if the Practice agrees, destroy all protected '
+                    . 'health information received from the Practice, or created, '
+                    . 'maintained, or received by Soft Appeals on behalf of the '
+                    . 'Practice, that Soft Appeals still maintains in any form, '
+                    . 'retain no copies, and confirm in writing which was done. '
+                    . 'Where return or destruction is not feasible, or where a record '
+                    . 'must be retained for Soft Appeals\' proper management and '
+                    . 'administration or its legal responsibilities, Soft Appeals '
+                    . 'shall retain only what those purposes require, continue to '
+                    . 'apply every safeguard in this Agreement to it for as long as '
+                    . 'it is held, use or disclose it for no other purpose, and '
+                    . 'return or destroy it when it is no longer needed. The '
+                    . 'obligations in this clause survive termination.',
+                ],
+            ],
+            [
+                'heading'    => 'Regulatory references, amendment, interpretation',
+                'paragraphs' => [
+                    'A reference in this Agreement to a section in the HIPAA Rules '
+                    . 'means the section as in effect or as amended. The parties '
+                    . 'agree to take such action as is necessary to amend this '
+                    . 'Agreement from time to time as is necessary for compliance '
+                    . 'with the requirements of the HIPAA Rules and any other '
+                    . 'applicable law. Any ambiguity in this Agreement shall be '
+                    . 'interpreted to permit compliance with the HIPAA Rules.',
+                ],
+            ],
+            [
+                'heading'    => 'Soft Appeals\' own commitments, over and above the rules',
                 'paragraphs' => [
                     'Records travel through the route the Practice chose during '
                     . 'onboarding, which for this engagement is: '
@@ -247,53 +391,9 @@ final class DocumentTemplates
                     'This portal holds no patient-level information at any point. It '
                     . 'holds counts, totals, deadlines and business contacts. That is '
                     . 'a deliberate boundary and it does not change over the life of '
-                    . 'this agreement.',
-                ],
-            ],
-            [
-                'heading'    => 'If something goes wrong',
-                'paragraphs' => [
-                    'If Soft Appeals discovers a use or disclosure that this agreement '
-                    . 'does not allow, or a breach of unsecured protected health '
-                    . 'information, the Practice is told without unreasonable delay '
-                    . 'and in no case later than five business days after discovery. '
-                    . 'The notice says what happened, whose information was involved '
-                    . 'so far as it is known, and what is being done about it.',
-                ],
-            ],
-            [
-                'heading'    => 'Subcontractors',
-                'paragraphs' => [
-                    'Anyone Soft Appeals brings in who will touch protected health '
-                    . 'information agrees in writing to the same terms that appear '
-                    . 'here, before they touch any of it. The Practice can ask at any '
-                    . 'time who those parties are and the answer comes back in '
+                    . 'this agreement. The Practice can ask at any time who Soft '
+                    . 'Appeals\' subcontractors are, and the answer comes back in '
                     . 'writing.',
-                ],
-            ],
-            [
-                'heading'    => 'The Practice\'s rights over its own records',
-                'paragraphs' => [
-                    'On request, Soft Appeals makes available the information it holds '
-                    . 'so the Practice can meet a patient\'s right of access, make an '
-                    . 'amendment, or answer a request for an accounting of '
-                    . 'disclosures. Requests are answered within fifteen business days '
-                    . 'unless the Practice agrees to longer.',
-                ],
-            ],
-            [
-                'heading'    => 'Ending this agreement, and what happens to the records',
-                'paragraphs' => [
-                    'Either party may end this agreement with thirty days\' written '
-                    . 'notice. The Practice may end it immediately if Soft Appeals '
-                    . 'breaches it and does not fix the breach within ten business '
-                    . 'days of being told.',
-
-                    'When it ends, Soft Appeals returns or destroys the protected '
-                    . 'health information it holds and confirms in writing which was '
-                    . 'done. Where returning or destroying a record is not feasible, '
-                    . 'the protections in this agreement carry on applying to that '
-                    . 'record for as long as it is held.',
                 ],
             ],
             [

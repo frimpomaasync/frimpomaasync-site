@@ -73,9 +73,9 @@ return [
             Expect::true(str_contains($result['summary'], 'no mailbox credentials'), 'and it is named');
         },
 
-    'a forwarded email becomes an inquiry: row, raw copy, seen mark, and a rerun makes nothing new' =>
+    'a forwarded email becomes an inquiry: row, raw copy, seen mark, an instant acknowledgment, and a rerun makes nothing new' =>
         static function (Bootstrap $app, Database $db) use ($boot, $fakeMailbox, $message, $creds): void {
-            [$app] = $boot($db, $creds);
+            [$app, $sent] = $boot($db, $creds);
             $messages = new ArrayObject([
                 ['uid' => '7', 'raw' => $message('fwd1@example.org', 'Dana Owusu <dana@example.org>', 'Fwd: denied claims', 'About sixty denials sitting since spring. Attached is what the payer sent.')],
                 ['uid' => '9', 'raw' => $message('fwd2@example.org', 'sam@example.net', 'voice note', 'Forwarding the voicemail transcript from our billing lead.')],
@@ -106,10 +106,24 @@ return [
             $eml = glob($app->config()->privateStoragePath('intake-mail') . '/*.eml') ?: [];
             Expect::same(2, count($eml), 'the raw messages are kept whole');
 
+            // The instant acknowledgment: each sender heard back already.
+            $acks = array_values(array_filter(
+                iterator_to_array($sent),
+                static fn (array $m): bool => $m['subject'] === 'Your email reached Soft Appeals'
+            ));
+            Expect::same(2, count($acks), 'each sender got an acknowledgment');
+            Expect::true(str_contains($acks[0]['body'], 'Hello Dana,'), 'greeting them by their own first name');
+            Expect::true(str_contains($acks[0]['body'], 'one business day'), 'with the promise of a same-day-ish answer');
+            Expect::true(str_contains($acks[0]['body'], 'patient details out of regular email'), 'and the PHI rule');
+
             // The same mailbox again: everything is seen, nothing is made.
             $again = $app->jobService()->run('intake.mailbox', JobRepository::TRIGGER_TEST);
             Expect::same(0, $again['items'], 'a rerun creates nothing');
             Expect::same(2, count($app->intakes()->recent(10)), 'and the board did not grow');
+            Expect::same(2, count(array_filter(
+                iterator_to_array($sent),
+                static fn (array $m): bool => $m['subject'] === 'Your email reached Soft Appeals'
+            )), 'and nobody was acknowledged twice');
         },
 
     'the same message unseen again lands on the row it already made' =>

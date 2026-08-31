@@ -16,7 +16,10 @@ function fs_mail_config() {
 // a phone shows the styled version and a text-only client the plain one.
 // $fromName is the display name on the From line. The site's own forms keep
 // the default; the Soft Appeals application passes a person's name.
-function fs_smtp_send($cfg, $to, $subject, $body, $replyTo = '', $html = '', $fromName = 'frimpomaasync.com') {
+// $attachments, when given, is a list of ['name' => ..., 'bytes' => ...] and
+// wraps the whole message in multipart/mixed. The one caller today is the
+// off-site backup job, which mails the daily backup file to the owner.
+function fs_smtp_send($cfg, $to, $subject, $body, $replyTo = '', $html = '', $fromName = 'frimpomaasync.com', $attachments = []) {
   $fp = @stream_socket_client('ssl://smtp.hostinger.com:465', $errno, $err, 10);
   if (!$fp) { return false; }
   stream_set_timeout($fp, 12);
@@ -46,22 +49,47 @@ function fs_smtp_send($cfg, $to, $subject, $body, $replyTo = '', $html = '', $fr
              . 'Date: ' . gmdate('r') . "\r\n"
              . 'Message-ID: <' . bin2hex(random_bytes(12)) . '@frimpomaasync.com>' . "\r\n"
              . "MIME-Version: 1.0\r\n";
-    if ($html === '') {
-      $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
-      $text = str_replace("\r\n", "\n", $body);
-      $text = preg_replace('/^\./m', '..', str_replace("\n", "\r\n", $text)); // dot-stuffing
-      $say($headers . "\r\n" . $text . "\r\n.");
+    $textPart = function ($boundary, $type, $content) {
+      return '--' . $boundary . "\r\n"
+           . 'Content-Type: ' . $type . "; charset=UTF-8\r\n"
+           . "Content-Transfer-Encoding: base64\r\n\r\n"
+           . chunk_split(base64_encode($content), 76, "\r\n");
+    };
+    if (!is_array($attachments)) { $attachments = []; }
+    if ($attachments === []) {
+      if ($html === '') {
+        $headers .= "Content-Type: text/plain; charset=UTF-8\r\n";
+        $text = str_replace("\r\n", "\n", $body);
+        $text = preg_replace('/^\./m', '..', str_replace("\n", "\r\n", $text)); // dot-stuffing
+        $say($headers . "\r\n" . $text . "\r\n.");
+      } else {
+        // Two bodies, base64 so long lines and leading dots need no care.
+        $boundary = 'fs-' . bin2hex(random_bytes(12));
+        $headers .= 'Content-Type: multipart/alternative; boundary="' . $boundary . '"' . "\r\n";
+        $say($headers . "\r\n" . $textPart($boundary, 'text/plain', $body) . $textPart($boundary, 'text/html', $html) . '--' . $boundary . "--\r\n.");
+      }
     } else {
-      // Two bodies, base64 so long lines and leading dots need no care.
-      $boundary = 'fs-' . bin2hex(random_bytes(12));
-      $headers .= 'Content-Type: multipart/alternative; boundary="' . $boundary . '"' . "\r\n";
-      $part = function ($type, $content) use ($boundary) {
-        return '--' . $boundary . "\r\n"
-             . 'Content-Type: ' . $type . "; charset=UTF-8\r\n"
-             . "Content-Transfer-Encoding: base64\r\n\r\n"
-             . chunk_split(base64_encode($content), 76, "\r\n");
-      };
-      $say($headers . "\r\n" . $part('text/plain', $body) . $part('text/html', $html) . '--' . $boundary . "--\r\n.");
+      // The message, then its files, all inside one multipart/mixed.
+      $mixed = 'fs-x-' . bin2hex(random_bytes(12));
+      $headers .= 'Content-Type: multipart/mixed; boundary="' . $mixed . '"' . "\r\n";
+      if ($html === '') {
+        $inner = $textPart($mixed, 'text/plain', $body);
+      } else {
+        $alt = 'fs-a-' . bin2hex(random_bytes(12));
+        $inner = '--' . $mixed . "\r\n"
+               . 'Content-Type: multipart/alternative; boundary="' . $alt . '"' . "\r\n\r\n"
+               . $textPart($alt, 'text/plain', $body) . $textPart($alt, 'text/html', $html)
+               . '--' . $alt . "--\r\n";
+      }
+      foreach ($attachments as $one) {
+        $name = preg_replace('/[^A-Za-z0-9._-]/', '-', (string) ($one['name'] ?? 'file'));
+        $inner .= '--' . $mixed . "\r\n"
+                . 'Content-Type: application/octet-stream; name="' . $name . '"' . "\r\n"
+                . 'Content-Disposition: attachment; filename="' . $name . '"' . "\r\n"
+                . "Content-Transfer-Encoding: base64\r\n\r\n"
+                . chunk_split(base64_encode((string) ($one['bytes'] ?? '')), 76, "\r\n");
+      }
+      $say($headers . "\r\n" . $inner . '--' . $mixed . "--\r\n.");
     }
     $ok = $reply() === '250';
   }
