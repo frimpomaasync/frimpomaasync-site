@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Recovery Room, a live look &middot; Soft Appeals</title>
+<meta name="description" content="Walk through the Soft Appeals Recovery Room exactly as a practice sees it, filled with fictional numbers. Watch it work before you pay.">
+<link rel="icon" href="/favicon.svg">
+<link rel="stylesheet" href="/assets/soft-appeals.css?v=4">
+<style>
+  /* Same overrides the real Room carries: no site nav on this page, so the
+     shell's sticky chrome parks at the top of the window. */
+  body > .sa { --sa-navh: 0px; }
+  body { margin: 0; background: var(--sa-canvas, #ececed); }
+  .sa-room-shell { min-height: 100vh; }
+
+  .sa-room-quiet { color: var(--sa-mute); font-style: italic; }
+  .sa-room-list { margin: 0; padding-left: 18px; font-size: 13.5px; line-height: 1.65; }
+  .sa-room-list li { margin-bottom: 5px; }
+  .sa-room-grid2 {
+    display: grid; gap: clamp(14px, 2vw, 20px);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .sa-room-note {
+    font-size: 13px; line-height: 1.6; color: var(--sa-mute);
+    padding: 12px 14px; border: 1px dashed var(--sa-line-strong); border-radius: var(--sa-r);
+  }
+  .sa-rail-nav .is-later { opacity: .38; cursor: default; pointer-events: none; }
+  .sa-rail-nav .is-later .sa-count { font-size: 9px; letter-spacing: .12em; }
+
+  .sa-demo-cta {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 14px; flex-wrap: wrap;
+    padding: 16px 18px;
+  }
+  .sa-demo-cta p { margin: 0; max-width: 56ch; }
+</style>
+</head>
+<body>
+<div class="sa sa-room-shell">
+
+<p class="sa-fiction" role="note">
+  <b>Demo</b> A fictional practice. Every name and number on this page is invented, so you can see the room itself. Your own room holds only your engagement.
+</p>
+
+<div class="sa-console">
+
+<nav class="sa-rail" aria-label="Recovery Room sections">
+  <span class="sa-rail-brand">Soft Appeals</span>
+  <p class="sa-rail-sub">Your recovery room</p>
+
+  <p class="sa-rail-group">Now</p>
+  <ul class="sa-rail-nav">
+    <li><a href="#room-where" aria-current="page"><span>Overview</span></a></li>
+    <li><a href="#room-where"><span>Assessment</span></a></li>
+    <li><a href="#room-where"><span>Work batches</span><span class="sa-count">3</span></a></li>
+    <li><a href="#room-where"><span>Action requests</span><span class="sa-count">1</span></a></li>
+    <li><a href="#room-where"><span>Approvals</span></a></li>
+    <li><a href="#room-where"><span>Recovery</span></a></li>
+    <li><a href="#room-agreements"><span>Agreements</span><span class="sa-count">2</span></a></li>
+  </ul>
+
+  <p class="sa-rail-group">Not built yet</p>
+  <ul class="sa-rail-nav">
+    <li><button type="button" class="is-later" disabled><span>Messages</span><span class="sa-count">Later</span></button></li>
+    <li><button type="button" class="is-later" disabled><span>Access</span><span class="sa-count">Later</span></button></li>
+  </ul>
+
+  <div class="sa-rail-foot">
+    <span class="sa-rail-stamp">demo</span>
+    <div>office@harborlight.example</div>
+    <div>Practice owner<br>Signer</div>
+  </div>
+</nav>
+
+<div class="sa-work">
+  <header class="sa-work-top">
+    <div>
+      <p class="sa-label">Assessment delivered</p>
+      <h1>Harborlight Family Medicine</h1>
+      <p class="sa-note" style="max-width:60ch">The written assessment is in this room. The next move is yours: keep it for your own team, ask a question, or choose recovery.</p>
+    </div>
+    <div class="sa-work-actions">
+      <a class="sa-btn is-primary" href="/soft-appeals-start">Start your own &#8594;</a>
+    </div>
+  </header>
+
+  <div class="sa-work-body">
+
+    <section aria-labelledby="room-where-h" id="room-where">
+      <p class="sa-label" id="room-where-h">Where this is</p>
+      <div class="sa-metrics">
+        <div class="sa-metric">
+          <p class="sa-metric-k">Stage</p>
+          <p class="sa-metric-v">Assessment delivered</p>
+          <p class="sa-metric-c">Opened 12 August 2026</p>
+        </div>
+        <div class="sa-metric">
+          <p class="sa-metric-k">Waiting on</p>
+          <p class="sa-metric-v">Your practice</p>
+          <p class="sa-metric-c">Read the assessment and choose what happens next.</p>
+        </div>
+        <div class="sa-metric">
+          <p class="sa-metric-k">Denials received</p>
+          <p class="sa-metric-v">20</p>
+          <p class="sa-metric-c">Count confirmed by you.</p>
+        </div>
+        <div class="sa-metric">
+          <p class="sa-metric-k">Assessment</p>
+          <p class="sa-metric-v">Delivered</p>
+          <p class="sa-metric-c">14 recommended for action</p>
+        </div>
+        <div class="sa-metric is-lead">
+          <p class="sa-metric-k">Waiting on you</p>
+          <p class="sa-metric-v">1</p>
+          <p class="sa-metric-c">Your decision on the assessment.</p>
+        </div>
+      </div>
+      <p class="sa-room-note" style="margin-top:14px">
+        Your reference is SA-ENG-DEMO00. Quote it in any email and it finds this
+        engagement straight away.
+      </p>
+    </section>
+
+    <div class="sa-room-grid2">
+
+      <section aria-labelledby="room-chose">
+        <p class="sa-label" id="room-chose">What you chose</p>
+        <div class="sa-panel"><div class="sa-panel-b" style="padding:14px 18px">
+          <dl class="sa-dl">
+            <dt>Updates</dt><dd>Every two weeks</dd>
+            <dt>Secure route</dt><dd>Your own practice system</dd>
+            <dt>Signer</dt><dd>The practice owner</dd>
+            <dt>Sees money figures</dt><dd>Owner and billing lead</dd>
+          </dl>
+          <p class="sa-note">
+            Any of this can change. Write to softappeals@frimpomaasync.com and say which.
+          </p>
+        </div></div>
+      </section>
+
+      <section aria-labelledby="room-checklist">
+        <p class="sa-label" id="room-checklist">Checklist &middot; 5 of 8</p>
+        <div class="sa-panel"><div class="sa-panel-b" style="padding:14px 18px">
+          <ul class="sa-room-list" style="list-style:none;padding-left:0">
+            <li>&#10003; Onboarding preferences confirmed <span class="sa-room-quiet">13 August 2026</span></li>
+            <li>&#10003; Business associate agreement signed <span class="sa-room-quiet">14 August 2026</span></li>
+            <li>&#10003; Review authorization signed <span class="sa-room-quiet">15 August 2026</span></li>
+            <li>&#10003; Secure route opened <span class="sa-room-quiet">18 August 2026</span></li>
+            <li>&#10003; Twenty denials received and confirmed <span class="sa-room-quiet">21 August 2026</span></li>
+            <li>&middot; Your decision on the assessment</li>
+            <li>&middot; Recovery scope, if you choose recovery</li>
+            <li>&middot; Recovery agreement, if you choose recovery</li>
+          </ul>
+        </div></div>
+      </section>
+
+      <section aria-labelledby="room-history">
+        <p class="sa-label" id="room-history">Your history</p>
+        <div class="sa-panel"><div class="sa-panel-b" style="padding:14px 18px">
+          <ul class="sa-room-list">
+            <li>The written assessment was delivered to this room <span class="sa-room-quiet">29 August 2026</span></li>
+            <li>The assessment passed its quality review <span class="sa-room-quiet">28 August 2026</span></li>
+            <li>You confirmed twenty denials were received <span class="sa-room-quiet">21 August 2026</span></li>
+            <li>The secure route opened <span class="sa-room-quiet">18 August 2026</span></li>
+            <li>Both agreements were executed <span class="sa-room-quiet">15 August 2026</span></li>
+            <li>Your onboarding preferences were confirmed <span class="sa-room-quiet">13 August 2026</span></li>
+            <li>Assessment terms were accepted <span class="sa-room-quiet">12 August 2026</span></li>
+          </ul>
+        </div></div>
+      </section>
+
+    </div>
+
+    <section aria-labelledby="room-agreements-h" id="room-agreements">
+      <p class="sa-label" id="room-agreements-h">Your agreements</p>
+      <div class="sa-panel"><div class="sa-panel-b" style="padding:6px 18px 14px">
+        <div class="sa-client-docrow">
+          <div>
+            <b>Business associate agreement</b><br>
+            <span class="sa-room-quiet">SA-DOC-DEMO01 &middot; signed 14 August 2026</span>
+          </div>
+          <div><span class="sa-pill">Executed</span></div>
+        </div>
+        <div class="sa-client-docrow">
+          <div>
+            <b>Review authorization</b><br>
+            <span class="sa-room-quiet">SA-DOC-DEMO02 &middot; signed 15 August 2026</span>
+          </div>
+          <div><span class="sa-pill">Executed</span></div>
+        </div>
+        <p class="sa-note" style="margin-top:12px">
+          Signed copies stay in this room rather than being emailed, so your
+          agreements are never sitting in an inbox. Ask for a paper copy at any
+          time by writing to softappeals@frimpomaasync.com.
+        </p>
+      </div></div>
+    </section>
+
+    <section aria-labelledby="room-boundary">
+      <p class="sa-label" id="room-boundary">The boundary</p>
+      <div class="sa-panel"><div class="sa-panel-b" style="padding:14px 18px">
+        <p style="margin:0 0 10px">
+          Nothing in this room ever holds patient, member or claim-level
+          information. It holds counts, totals, dates and the people you named.
+          Records move through the secure route you choose, never through a
+          website.
+        </p>
+        <p class="sa-room-note">
+          What you are looking at is the real software, filled with invented
+          numbers. Your own room opens after the paperwork, with a six-digit
+          code to your work email. No password to remember, no account to make.
+        </p>
+      </div></div>
+    </section>
+
+    <section aria-labelledby="room-next">
+      <p class="sa-label" id="room-next">Your next step</p>
+      <div class="sa-panel"><div class="sa-demo-cta">
+        <p>
+          The review of your first twenty denials is free, and this room is
+          where you watch it happen. Maryland practices only.
+        </p>
+        <a class="sa-btn is-primary" href="/soft-appeals-start">Request your free review &#8594;</a>
+      </div></div>
+    </section>
+
+  </div>
+</div>
+
+</div><!-- /.sa-console -->
+</div><!-- /.sa -->
+</body>
+</html>
