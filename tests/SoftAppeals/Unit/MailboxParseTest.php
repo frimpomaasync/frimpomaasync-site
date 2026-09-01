@@ -61,6 +61,10 @@ return [
             Expect::same('2026-08-24 13:15:00', $mail['date'], 'the date, moved to UTC');
             Expect::true(str_contains($mail['body'], 'sixty denials'), 'the body text');
             Expect::same([], $mail['attachments'], 'and no attachment was invented');
+            Expect::same(['start@frimpomaasync.com'], $mail['visible_recipients'], 'the intake alias is visible');
+            $decision = MailboxService::intakeDecision($mail, 'start@frimpomaasync.com');
+            Expect::true($decision['accept'], 'a human message to the intake alias is accepted');
+            Expect::true($decision['acknowledge'], 'and may receive the intake acknowledgment');
         },
 
     'multipart/mixed: the nested text/plain wins, the PDF is a name and never a body' =>
@@ -97,5 +101,44 @@ return [
             Expect::same('', $mail['from_email'], 'no sender');
             Expect::same('orphan', $mail['subject'], 'the subject still reads');
             Expect::same('', $mail['body'], 'an empty body is an empty string');
+        },
+
+    'mail for the shared sending account is not intake' =>
+        static function (Bootstrap $app, Database $db): void {
+            $raw = "From: notices@example.org\r\n"
+                . "To: notify@frimpomaasync.com\r\n"
+                . "Subject: account notice\r\n\r\nhello";
+            $decision = MailboxService::intakeDecision(
+                MailboxService::parse($raw),
+                'start@frimpomaasync.com'
+            );
+            Expect::false($decision['accept'], 'a different alias never becomes a lead');
+            Expect::false($decision['acknowledge'], 'and is never answered by intake');
+        },
+
+    'delivery reports and automatic replies are never intake even when sent to the alias' =>
+        static function (Bootstrap $app, Database $db): void {
+            $bounce = "Return-Path: <>\r\n"
+                . "From: Mail Delivery System <mailer-daemon@example.org>\r\n"
+                . "To: start@frimpomaasync.com\r\n"
+                . "Subject: Delivery Status Notification (Failure)\r\n"
+                . "Content-Type: multipart/report; boundary=report\r\n\r\n";
+            $bounceDecision = MailboxService::intakeDecision(
+                MailboxService::parse($bounce),
+                'start@frimpomaasync.com'
+            );
+            Expect::false($bounceDecision['accept'], 'a delivery report is ignored');
+            Expect::false($bounceDecision['acknowledge'], 'a bounce cannot cause backscatter');
+
+            $auto = "From: person@example.org\r\n"
+                . "To: start@frimpomaasync.com\r\n"
+                . "Auto-Submitted: auto-replied\r\n"
+                . "Subject: Away from office\r\n\r\nback next week";
+            $autoDecision = MailboxService::intakeDecision(
+                MailboxService::parse($auto),
+                'start@frimpomaasync.com'
+            );
+            Expect::false($autoDecision['accept'], 'an automatic reply is ignored');
+            Expect::false($autoDecision['acknowledge'], 'and cannot create an acknowledgment loop');
         },
 ];

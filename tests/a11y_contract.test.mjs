@@ -70,6 +70,13 @@ test("the shared chrome ships the skip link and its own hidden-text styles", () 
   assert.match(nav, /\.skip-link:focus\{position:fixed/, "fsnav must define the focused skip link");
 });
 
+test("the public Recovery Room demo has a main landmark and keyboard skip link", () => {
+  const demo = read("soft-appeals-room-demo.html");
+  assert.match(demo, /<main\b[^>]*id="demo-main"/, "the demo needs one named main landmark");
+  assert.match(demo, /href="#demo-main"[^>]*>Skip to the Recovery Room</, "the skip link must target the main landmark");
+  assert.match(demo, /\.sa-demo-skip:focus\s*\{[^}]*left:\s*0/, "the skip link must become visible on focus");
+});
+
 test("the chat demo stays operable without a mouse", () => {
   const nav = read("fsnav.js");
   assert.match(nav, /id="fs-chat-x" aria-label="Close chat"/, "the close control needs a real name");

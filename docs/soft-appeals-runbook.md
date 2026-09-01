@@ -155,7 +155,7 @@ that deletes either.
 
 | Job | What | Safe to rerun because |
 |---|---|---|
-| `intake.mailbox` | reads unread messages in the intake mailbox and makes each one an inquiry row; the raw email is kept whole under `intake-mail/`; nothing is ever deleted from the mailbox | payload hash on `sa_intakes`; a message is marked read only after its row is stored |
+| `intake.mailbox` | reads unread messages in the shared mailbox; only human mail addressed to the configured intake alias becomes an inquiry row; unrelated mail, bounces, list mail and automatic replies are marked handled without a row or reply; accepted raw email is kept whole under `intake-mail/` | payload hash on `sa_intakes`; accepted mail is marked read only after its row is stored; filtered mail is marked read once classified |
 | `invitations.expire` | marks a lapsed unused one-time link revoked | the WHERE names unrevoked rows only |
 | `tasks.internal` | countersignatures waiting 2+ days, approved batches unsubmitted 3+ days, follow-ups due, her questions past date, invoices past due | keyed attention items |
 | `deadlines.batches` | every batch deadline crossing 30, 14, 7, 3, 1 day; unconfirmed dates labelled and never called controlling | keyed per batch and threshold |
@@ -168,17 +168,25 @@ that deletes either.
 | `housekeeping` | drops rate-limit rows, run rows and resolved items past 90 days | deletes are idempotent |
 | `digest.morning` | emails the counts once a day after the digest hour | idempotency key = the date |
 
-The intake address is `start@frimpomaasync.com`, an ALIAS on the notify@
+Schedule the Hostinger cron **after** `SA_DIGEST_HOUR`, not merely in the early
+morning. With the default 6:00 hour, use 6:15 a.m. Eastern. A too-early digest
+run is recorded as `skipped`, so it does not satisfy the Desk's 26-hour health
+check. If hPanel still shows the old 2:15 a.m. schedule, change that schedule;
+deploying code cannot change an account-level Hostinger cron time.
+
+The intake address is `start@frimpomaasync.com` (`SA_INTAKE_ADDRESS`), an ALIAS on the notify@
 mailbox (created 2026-08-30; the email plan holds two mailboxes and both
 are taken). The reader signs in as the site's own sending account from
 `fs-metrics/smtp.json` when `SA_INTAKE_MAILBOX_USER` / `_PASS` are blank,
 so no new credential exists. On production the one switch is
 `SA_INTAKE_MAILBOX_ENABLED => true` in the private config. Until then the
 job runs green and says "no mailbox credentials here" or "switched off
-here". Strays in notify@'s inbox (a bounce, an odd reply) become inquiry
-rows too; clear them on the Desk as not real. Every new email inquiry is
-acknowledged instantly by the job (template `intake_email_ack`), keyed on
-the inquiry so nobody is acknowledged twice.
+here". The reader requires the intake alias in a delivery or visible-recipient
+header and filters automated senders, bounces, delivery reports, bulk/list mail
+and automatic replies. Filtered mail is marked read without a Desk row or an
+acknowledgment. Every accepted human email inquiry is acknowledged instantly by
+the job (template `intake_email_ack`), keyed on the inquiry so nobody is
+acknowledged twice.
 
 Every job takes a database lock first (`sa_job_locks`), so two crons cannot
 run one job at once. A lock lapses after ten minutes, so a job that died

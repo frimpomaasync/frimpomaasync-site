@@ -72,6 +72,10 @@
     .guard b { font-weight: 600; }
     .guard label { display: flex; align-items: flex-start; gap: 10px; margin-top: 12px; font-size: 13.5px; cursor: pointer; }
     .guard input { width: 18px; height: 18px; flex: 0 0 18px; min-height: 0; padding: 0; margin-top: 2px; accent-color: var(--copper, #C2501C); }
+    .sa-honeypot {
+      position: absolute; left: -10000px; top: auto;
+      width: 1px; height: 1px; overflow: hidden;
+    }
 
     /* The do-not-send list. */
     .nolist { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 8px 22px; margin: 0; padding: 0; list-style: none; }
@@ -180,6 +184,9 @@
         <form class="form-shell" name="soft-appeals-contact" data-qual-form data-phi-guard data-success="/soft-appeals-contact-thanks" action="/sa-lead.php" method="post">
           <input type="hidden" name="_subject" value="Soft Appeals question">
           <input type="hidden" name="source" value="soft-appeals-contact">
+          <label class="sa-honeypot" aria-hidden="true">Leave this field empty
+            <input type="text" name="company_website" tabindex="-1" autocomplete="off">
+          </label>
           <div class="form-grid-fields">
 
             <label class="field full">What can we help with?
@@ -293,6 +300,9 @@
         <form class="form-shell" name="soft-appeals-due-diligence" data-qual-form data-phi-guard data-success="/soft-appeals-contact-thanks" action="/sa-lead.php" method="post">
           <input type="hidden" name="_subject" value="Soft Appeals vendor due-diligence request">
           <input type="hidden" name="source" value="soft-appeals-due-diligence">
+          <label class="sa-honeypot" aria-hidden="true">Leave this field empty
+            <input type="text" name="company_website" tabindex="-1" autocomplete="off">
+          </label>
           <div class="form-grid-fields">
 
             <label class="field">Your name

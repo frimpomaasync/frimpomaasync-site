@@ -96,6 +96,24 @@ return [
             }
         },
 
+    'every public Soft Appeals form carries the endpoint honeypot' =>
+        static function (Bootstrap $app): void {
+            $root = dirname(__DIR__, 3);
+            $expected = [
+                'soft-appeals.html' => 1,
+                'soft-appeals-start.html' => 1,
+                'soft-appeals-contact.html' => 2,
+            ];
+            foreach ($expected as $page => $count) {
+                $html = (string) file_get_contents($root . '/' . $page);
+                Expect::same(
+                    $count,
+                    substr_count($html, 'name="company_website"'),
+                    $page . ': every form needs its invisible bot trap'
+                );
+            }
+        },
+
     'a state name becomes a code, and an ambiguous one becomes nothing' =>
         static function (Bootstrap $app): void {
             Expect::same('MD', IntakeForms::stateCode('Maryland'), 'her own state');

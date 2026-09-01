@@ -121,7 +121,7 @@ final class MailboxService
      * is stored beside the inquiry by the job, so nothing this parser
      * declines to understand is lost.
      *
-     * @return array{from_name:string,from_email:string,subject:string,message_id:string,date:?string,body:string,attachments:list<string>}
+     * @return array{from_name:string,from_email:string,subject:string,message_id:string,date:?string,body:string,attachments:list<string>,routing_recipients:list<string>,visible_recipients:list<string>,auto_submitted:string,precedence:string,content_type:string,return_path:string,list_id:string,auto_response_suppress:string}
      */
     public static function parse(string $raw): array
     {
@@ -149,6 +149,21 @@ final class MailboxService
             0
         );
 
+        $routingRecipients = [];
+        foreach (['delivered-to', 'x-original-to', 'envelope-to', 'x-envelope-to'] as $key) {
+            $routingRecipients = array_merge(
+                $routingRecipients,
+                self::addresses((string) ($headers[$key] ?? ''))
+            );
+        }
+        $visibleRecipients = [];
+        foreach (['to', 'cc'] as $key) {
+            $visibleRecipients = array_merge(
+                $visibleRecipients,
+                self::addresses((string) ($headers[$key] ?? ''))
+            );
+        }
+
         return [
             'from_name'   => $from['name'],
             'from_email'  => $from['email'],
@@ -157,7 +172,82 @@ final class MailboxService
             'date'        => $date,
             'body'        => trim($text),
             'attachments' => $attachments,
+            'routing_recipients' => array_values(array_unique($routingRecipients)),
+            'visible_recipients' => array_values(array_unique($visibleRecipients)),
+            'auto_submitted' => strtolower(trim((string) ($headers['auto-submitted'] ?? ''))),
+            'precedence' => strtolower(trim((string) ($headers['precedence'] ?? ''))),
+            'content_type' => strtolower(trim((string) ($headers['content-type'] ?? 'text/plain'))),
+            'return_path' => trim((string) ($headers['return-path'] ?? '')),
+            'list_id' => trim((string) ($headers['list-id'] ?? '')),
+            'auto_response_suppress' => trim((string) ($headers['x-auto-response-suppress'] ?? '')),
         ];
+    }
+
+    /**
+     * Decide whether one message is a human inquiry for the intake alias.
+     *
+     * The account behind the alias is also used for ordinary site mail. A
+     * mailbox-wide UNSEEN search therefore needs a strict boundary here: the
+     * intake address must appear in a delivery or visible-recipient header,
+     * and automated mail must never become a lead or receive an acknowledgment.
+     *
+     * @param array<string,mixed> $mail
+     * @return array{accept:bool,acknowledge:bool,reason:string}
+     */
+    public static function intakeDecision(array $mail, string $intakeAddress): array
+    {
+        $target = strtolower(trim($intakeAddress));
+        $recipients = array_values(array_unique(array_merge(
+            is_array($mail['routing_recipients'] ?? null) ? $mail['routing_recipients'] : [],
+            is_array($mail['visible_recipients'] ?? null) ? $mail['visible_recipients'] : []
+        )));
+        if ($target === '' || !in_array($target, $recipients, true)) {
+            return ['accept' => false, 'acknowledge' => false, 'reason' => 'not addressed to the intake alias'];
+        }
+
+        $from = strtolower(trim((string) ($mail['from_email'] ?? '')));
+        if ($from === '') {
+            return ['accept' => false, 'acknowledge' => false, 'reason' => 'no sender address'];
+        }
+        $local = strstr($from, '@', true);
+        $systemLocals = ['mailer-daemon', 'postmaster', 'noreply', 'no-reply', 'donotreply', 'do-not-reply'];
+        if ($local !== false && in_array($local, $systemLocals, true)) {
+            return ['accept' => false, 'acknowledge' => false, 'reason' => 'automated sender'];
+        }
+
+        $autoSubmitted = strtolower(trim((string) ($mail['auto_submitted'] ?? '')));
+        if ($autoSubmitted !== '' && $autoSubmitted !== 'no') {
+            return ['accept' => false, 'acknowledge' => false, 'reason' => 'automated submission'];
+        }
+
+        $precedence = strtolower(trim((string) ($mail['precedence'] ?? '')));
+        if (in_array($precedence, ['bulk', 'list', 'junk', 'auto_reply'], true)) {
+            return ['accept' => false, 'acknowledge' => false, 'reason' => 'bulk or list message'];
+        }
+
+        $contentType = strtolower((string) ($mail['content_type'] ?? ''));
+        if (str_starts_with($contentType, 'multipart/report')
+            || str_starts_with($contentType, 'message/delivery-status')
+        ) {
+            return ['accept' => false, 'acknowledge' => false, 'reason' => 'delivery report'];
+        }
+
+        if (trim((string) ($mail['return_path'] ?? '')) === '<>'
+            || trim((string) ($mail['list_id'] ?? '')) !== ''
+            || trim((string) ($mail['auto_response_suppress'] ?? '')) !== ''
+        ) {
+            return ['accept' => false, 'acknowledge' => false, 'reason' => 'automated mail headers'];
+        }
+
+        $subject = (string) ($mail['subject'] ?? '');
+        if (preg_match(
+            '/\b(delivery status notification|undeliver(?:able|ed)|mail delivery (?:failed|failure)|failure notice|delivery failure|returned mail)\b/i',
+            $subject
+        ) === 1) {
+            return ['accept' => false, 'acknowledge' => false, 'reason' => 'delivery-failure subject'];
+        }
+
+        return ['accept' => true, 'acknowledge' => true, 'reason' => 'human inquiry to intake alias'];
     }
 
     /** @return array{0:string,1:string} head, body */
@@ -215,6 +305,15 @@ final class MailboxService
             return ['name' => '', 'email' => strtolower(trim($m[1], " \t<>\"'"))];
         }
         return ['name' => '', 'email' => ''];
+    }
+
+    /** @return list<string> every address named in a recipient header */
+    private static function addresses(string $value): array
+    {
+        if (preg_match_all('/[a-z0-9.!#$%&\'*+\/=?^_`{|}~-]+@[a-z0-9.-]+\.[a-z]{2,}/i', $value, $matches) < 1) {
+            return [];
+        }
+        return array_values(array_unique(array_map('strtolower', $matches[0])));
     }
 
     /**

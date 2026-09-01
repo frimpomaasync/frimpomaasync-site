@@ -237,11 +237,15 @@ $lastAny = $jobHealth['last_any'];
 <section aria-labelledby="desk-jobs-cron">
   <p class="sa-label" id="desk-jobs-cron">The host's cron line</p>
   <div class="sa-panel"><div class="sa-panel-b" style="padding:14px 18px">
-    <p style="margin:0 0 8px">In hPanel, Advanced, Cron Jobs: once a day, early morning, this exact command.</p>
+    <p style="margin:0 0 8px">In hPanel, Advanced, Cron Jobs: once a day, at least 15 minutes after the configured digest hour, this exact command.</p>
     <pre class="sa-desk-email" style="margin:0"><?= $e($cronCommand) ?></pre>
     <p class="sa-desk-note" style="margin-top:10px">
       Every job is safe to run more often than daily; nothing sends twice and
-      nothing is created twice. Until SA_DEADLINE_CRON_ENABLED is set to true
+      nothing is created twice. With the current <?= (int) $config->digestHour() ?>:00 digest hour,
+      schedule this no earlier than <?= sprintf('%02d:15', min(23, (int) $config->digestHour())) ?>
+      in <?= $e($config->string('SA_BUSINESS_TIMEZONE')) ?>. A run before that
+      is recorded as <b>Skipped</b>, not successful, so the Desk cannot look
+      healthy while the digest never sends. Until SA_DEADLINE_CRON_ENABLED is set to true
       in the server config, that line prints a refusal and exits, and this
       screen's button is the only thing that runs the jobs.
     </p>

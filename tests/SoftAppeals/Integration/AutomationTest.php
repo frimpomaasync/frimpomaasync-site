@@ -484,6 +484,7 @@ return [
             if ($hour < 23) {
                 $run = $app->jobService()->run('digest.morning', JobRepository::TRIGGER_TEST);
                 Expect::same(0, $run['items'], 'before the digest hour nothing goes');
+                Expect::same(JobRepository::OUTCOME_SKIPPED, $run['outcome'], 'a too-early run is visibly skipped, not a success');
                 Expect::true(str_contains($run['summary'], 'not yet'), 'and the run says why');
             }
         },
