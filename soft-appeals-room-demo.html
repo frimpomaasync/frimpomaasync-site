@@ -34,9 +34,15 @@
     padding: 16px 18px;
   }
   .sa-demo-cta p { margin: 0; max-width: 56ch; }
+  .sa-demo-skip {
+    position: fixed; left: -10000px; top: 0; z-index: 1000;
+    padding: 10px 14px; background: #fff; color: #101426;
+  }
+  .sa-demo-skip:focus { left: 0; outline: 3px solid #c2501c; }
 </style>
 </head>
 <body>
+<a class="sa-demo-skip" href="#demo-main">Skip to the Recovery Room</a>
 <div class="sa sa-room-shell">
 
 <p class="sa-fiction" role="note">
@@ -73,7 +79,7 @@
   </div>
 </nav>
 
-<div class="sa-work">
+<main class="sa-work" id="demo-main">
   <header class="sa-work-top">
     <div>
       <p class="sa-label">Assessment delivered</p>
@@ -226,7 +232,7 @@
     </section>
 
   </div>
-</div>
+</main><!-- /.sa-work -->
 
 </div><!-- /.sa-console -->
 </div><!-- /.sa -->

@@ -150,6 +150,11 @@ final class Config
         // The flag follows the portal rule: unset is on anywhere but
         // production, and production waits for an explicit true.
         'SA_INTAKE_MAILBOX_ENABLED' => null,
+        // The public alias a real inquiry must actually name in its delivery
+        // or visible-recipient headers. The mailbox itself is shared with the
+        // sending account, so this is the boundary between intake and ordinary
+        // account notices, replies and bounces.
+        'SA_INTAKE_ADDRESS'         => 'start@frimpomaasync.com',
         'SA_INTAKE_MAILBOX_HOST'    => 'imap.hostinger.com',
         'SA_INTAKE_MAILBOX_PORT'    => '993',
         'SA_INTAKE_MAILBOX_USER'    => '',

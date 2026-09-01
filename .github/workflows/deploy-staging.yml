@@ -2,9 +2,10 @@ name: Deploy staging.frimpomaasync.com
 
 # The Soft Appeals test site.
 #
-# WHY THIS IS A SEPARATE FILE, and why deploy.yml is untouched:
+# WHY THIS IS A SEPARATE FILE:
 # a mistake in a staging workflow must never be able to take the live site
-# down. Nothing here edits, imports from, or shares state with deploy.yml.
+# down. Nothing here edits, imports from, or shares deployment state with
+# deploy.yml; both workflows independently run the same safety gates.
 #
 # WHERE IT GOES:
 # Hostinger placed the staging subdomain inside public_html, at

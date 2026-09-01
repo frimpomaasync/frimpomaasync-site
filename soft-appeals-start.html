@@ -91,6 +91,10 @@
     fieldset.field > legend { padding: 0; margin-bottom: 8px; color: var(--ink); font-size: 13px; line-height: 1.45; }
     .field-note { margin: 8px 0 0; font-size: 12.5px; line-height: 1.5; color: #B4460F; }
     .form-shell .field.full > .field-note { margin-top: 6px; }
+    .sa-honeypot {
+      position: absolute; left: -10000px; top: auto;
+      width: 1px; height: 1px; overflow: hidden;
+    }
 
     /* The PHI guard message, shown only when a pattern is caught. */
     .guard {
@@ -207,6 +211,9 @@
         <form class="form-shell" name="soft-appeals-start" data-qual-form data-phi-guard data-success="/soft-appeals-start-thanks" action="/sa-lead.php" method="post">
           <input type="hidden" name="_subject" value="Soft Appeals denial review request">
           <input type="hidden" name="source" value="soft-appeals-start">
+          <label class="sa-honeypot" aria-hidden="true">Leave this field empty
+            <input type="text" name="company_website" tabindex="-1" autocomplete="off">
+          </label>
           <p class="sa-steps" id="wz-head">
             <span id="wz-n">Step 1 of 4</span>
             <span class="sa-steps-track" aria-hidden="true"><i id="wz-bar"></i></span>

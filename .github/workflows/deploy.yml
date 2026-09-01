@@ -32,6 +32,18 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
+      # Production gets the same gate as staging. static_check also runs PHP
+      # syntax checks and the full Soft Appeals suite when PHP is available on
+      # the runner. Nothing reaches Hostinger if any check exits non-zero.
+      - name: Schema check
+        run: python3 tests/SoftAppeals/schema_check.py
+
+      - name: Static, PHP and application checks
+        run: python3 tests/SoftAppeals/static_check.py
+
+      - name: Refuse to deploy a committed secret
+        run: python3 tests/SoftAppeals/secret_scan.py
+
       - name: Upload via FTPS
         id: ftp1
         continue-on-error: true

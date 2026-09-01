@@ -251,15 +251,22 @@ final class JobService
         $runId = $this->jobs->startRun($key, $trigger);
         try {
             $outcome = $this->work($key);
-            $this->jobs->finishRun($runId, JobRepository::OUTCOME_OK, $outcome['items'], $outcome['summary']);
-            $this->attention->resolve('job_failed:' . $key);
+            $runOutcome = (string) ($outcome['outcome'] ?? JobRepository::OUTCOME_OK);
+            if (!in_array($runOutcome, [JobRepository::OUTCOME_OK, JobRepository::OUTCOME_SKIPPED], true)) {
+                throw new \RuntimeException('The job returned an invalid outcome.');
+            }
+            $this->jobs->finishRun($runId, $runOutcome, $outcome['items'], $outcome['summary']);
+            if ($runOutcome === JobRepository::OUTCOME_OK) {
+                $this->attention->resolve('job_failed:' . $key);
+            }
             $this->audit->record('job.run', 'success', 'job', $runId, [
                 'job'     => $key,
                 'trigger' => $trigger,
+                'outcome' => $runOutcome,
                 'count'   => $outcome['items'],
                 'reason'  => $outcome['summary'],
             ]);
-            $result = ['job' => $key, 'outcome' => JobRepository::OUTCOME_OK, 'items' => $outcome['items'], 'summary' => $outcome['summary'], 'run_id' => $runId];
+            $result = ['job' => $key, 'outcome' => $runOutcome, 'items' => $outcome['items'], 'summary' => $outcome['summary'], 'run_id' => $runId];
         } catch (\Throwable $e) {
             // The class and a short message. Never a payload, never a value
             // from a row: application exceptions are written by the
@@ -348,7 +355,7 @@ final class JobService
     // The jobs themselves. Each returns a PHI-free summary and a count.
     // ------------------------------------------------------------------
 
-    /** @return array{summary:string,items:int} */
+    /** @return array{summary:string,items:int,outcome?:string} */
     private function work(string $key): array
     {
         if (isset($this->extra[$key])) {
@@ -393,14 +400,22 @@ final class JobService
         return $this->mailbox->withMailbox(function (callable $unseen, callable $seen): array {
             $read = 0;
             $created = 0;
+            $ignored = 0;
             foreach ($unseen(MailboxService::BATCH) as $message) {
                 $read++;
                 $mail = MailboxService::parse((string) $message['raw']);
 
-                // No sender address means no way to answer and no way to
-                // review fit. It stays unread, visible in the mailbox itself,
-                // rather than becoming a row nobody can act on.
-                if ($mail['from_email'] === '') {
+                // This mailbox is shared with the site's sending account.
+                // Only human mail for the intake alias crosses into the Desk;
+                // account notices, bounces and automated replies are handled
+                // as mailbox noise and never receive an acknowledgment.
+                $decision = MailboxService::intakeDecision(
+                    $mail,
+                    $this->config->string('SA_INTAKE_ADDRESS')
+                );
+                if (!$decision['accept']) {
+                    $ignored++;
+                    $seen((string) $message['uid']);
                     continue;
                 }
 
@@ -439,20 +454,22 @@ final class JobService
                     // review, or concludes nobody is home. Keyed on the
                     // inquiry, so the same message reappearing sends nothing
                     // twice, and the allowlist rules it like every send.
-                    $this->mail->send(
-                        $mail['from_email'],
-                        'Your email reached Soft Appeals',
-                        $this->intakeAckBody($mail['from_name']),
-                        'intake_email_ack',
-                        null,
-                        null,
-                        'intake-ack:' . $result['id']
-                    );
+                    if ($decision['acknowledge']) {
+                        $this->mail->send(
+                            $mail['from_email'],
+                            'Your email reached Soft Appeals',
+                            $this->intakeAckBody($mail['from_name']),
+                            'intake_email_ack',
+                            null,
+                            null,
+                            'intake-ack:' . $result['id']
+                        );
+                    }
                 }
                 $seen((string) $message['uid']);
             }
             return [
-                'summary' => $read . ' read, ' . $created . ' new '
+                'summary' => $read . ' read, ' . $ignored . ' automated or unrelated ignored, ' . $created . ' new '
                     . ($created === 1 ? 'inquiry' : 'inquiries') . ' on the board',
                 'items'   => $created,
             ];
@@ -785,7 +802,11 @@ final class JobService
     {
         $r = $this->digest->send();
         if ($r['state'] === 'skipped') {
-            return ['summary' => 'not yet: ' . $r['reason'] . ' (' . $this->config->digestHour() . ':00)', 'items' => 0];
+            return [
+                'summary' => 'not yet: ' . $r['reason'] . ' (' . $this->config->digestHour() . ':00)',
+                'items' => 0,
+                'outcome' => JobRepository::OUTCOME_SKIPPED,
+            ];
         }
         if ($r['reason'] === 'already sent') {
             return ['summary' => 'already sent for ' . $r['date'], 'items' => 0];

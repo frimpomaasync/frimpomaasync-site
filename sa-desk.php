@@ -1623,6 +1623,8 @@ if ($view === 'jobs') {
 
 if ($view === 'launch') {
     $health = $app->jobService()->health();
+    $digestHealthy = isset($health['jobs']['digest.morning'])
+        && !$health['jobs']['digest.morning']['stale'];
     $backup = $app->backupService()->verify();
     $legalSource = $app->settings()->legalEntitySource($config);
     $smtp = \SoftAppeals\Services\MailService::smtpConfigPath($config->isProduction(), __DIR__);
@@ -1674,9 +1676,9 @@ if ($view === 'launch') {
          'detail' => 'ReconciliationTest and CloseoutTest run on every CI push. Finance is ' . ($config->recoveryFinanceEnabled() ? 'on' : 'off') . ' here.',
          'how' => 'SA_RECOVERY_FINANCE_ENABLED to true in the server config, after a walk of verify, invoice, closeout on staging.'],
         ['step' => 11, 'title' => 'Enable cron last',
-         'state' => $config->cronEnabled() ? 'done' : 'open',
-         'detail' => 'The schedule is ' . ($config->cronEnabled() ? 'on' : 'off') . ' here. Last run: ' . ($health['last_any'] === null ? 'never' : Desk::ago($clock, (string) $health['last_any']['finished_at'])) . '.',
-         'how' => 'Add the cron line from the Automation screen in hPanel, then set SA_DEADLINE_CRON_ENABLED to true.'],
+         'state' => $config->cronEnabled() && $digestHealthy ? 'done' : 'open',
+         'detail' => 'The schedule is ' . ($config->cronEnabled() ? 'on' : 'off') . ' here. Morning digest ' . ($digestHealthy ? 'has succeeded within 26h' : 'has not succeeded within 26h') . '. Last run: ' . ($health['last_any'] === null ? 'never' : Desk::ago($clock, (string) $health['last_any']['finished_at'])) . '.',
+         'how' => 'Add the cron line from Automation in hPanel at least 15 minutes after SA_DIGEST_HOUR (default: 6:15 a.m. Eastern), then set SA_DEADLINE_CRON_ENABLED to true.'],
     ];
 
     $tradeName = $app->settings()->tradeName($config);

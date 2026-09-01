@@ -18,7 +18,7 @@ $walk = require __DIR__ . '/../Support/walk.php';
 $boot = $walk['boot'];
 
 $message = static fn (string $id, string $from, string $subject, string $body): string =>
-    "From: {$from}\r\nSubject: {$subject}\r\nMessage-ID: <{$id}>\r\n"
+    "From: {$from}\r\nTo: start@frimpomaasync.com\r\nSubject: {$subject}\r\nMessage-ID: <{$id}>\r\n"
     . "Date: Mon, 24 Aug 2026 09:15:00 -0400\r\n"
     . "Content-Type: text/plain; charset=UTF-8\r\n\r\n{$body}\r\n";
 
@@ -143,16 +143,52 @@ return [
             Expect::same(1, count($app->intakes()->recent(10)), 'one inquiry, once');
         },
 
-    'a message with no sender address is left unread and makes no row' =>
+    'a message with no sender address is handled without making a row' =>
         static function (Bootstrap $app, Database $db) use ($boot, $fakeMailbox, $creds): void {
             [$app] = $boot($db, $creds);
             $seen = new ArrayObject();
             $app->mailbox($fakeMailbox(new ArrayObject([
-                ['uid' => '2', 'raw' => "Subject: orphan\r\n\r\nno sender at all"],
+                ['uid' => '2', 'raw' => "To: start@frimpomaasync.com\r\nSubject: orphan\r\n\r\nno sender at all"],
             ]), $seen));
             $result = $app->jobService()->run('intake.mailbox', JobRepository::TRIGGER_TEST);
             Expect::same(JobRepository::OUTCOME_OK, $result['outcome'], 'not a failure');
             Expect::same(0, $result['items'], 'no row without an address to answer');
-            Expect::same(0, count((array) $seen->getArrayCopy()), 'and it stays visible in the mailbox itself');
+            Expect::same(1, count((array) $seen->getArrayCopy()), 'and it is handled instead of being retried forever');
+        },
+
+    'unrelated account mail, bounces and automatic replies are handled without rows or acknowledgments' =>
+        static function (Bootstrap $app, Database $db) use ($boot, $fakeMailbox, $creds): void {
+            [$app, $sent] = $boot($db, $creds);
+            $seen = new ArrayObject();
+            $messages = new ArrayObject([
+                [
+                    'uid' => '20',
+                    'raw' => "From: account-notices@example.org\r\nTo: notify@frimpomaasync.com\r\n"
+                        . "Subject: Your hosting account\r\n\r\nAn ordinary account notice.",
+                ],
+                [
+                    'uid' => '21',
+                    'raw' => "Return-Path: <>\r\nFrom: Mail Delivery System <mailer-daemon@example.org>\r\n"
+                        . "To: start@frimpomaasync.com\r\nSubject: Delivery Status Notification (Failure)\r\n"
+                        . "Content-Type: multipart/report; boundary=report\r\n\r\n",
+                ],
+                [
+                    'uid' => '22',
+                    'raw' => "From: person@example.org\r\nTo: start@frimpomaasync.com\r\n"
+                        . "Auto-Submitted: auto-replied\r\nSubject: Away from office\r\n\r\nBack next week.",
+                ],
+            ]);
+            $app->mailbox($fakeMailbox($messages, $seen));
+
+            $result = $app->jobService()->run('intake.mailbox', JobRepository::TRIGGER_TEST);
+            Expect::same(JobRepository::OUTCOME_OK, $result['outcome'], 'filtering mail is a clean run');
+            Expect::same(0, $result['items'], 'no automated or unrelated message becomes an inquiry');
+            Expect::true(str_contains($result['summary'], '3 automated or unrelated ignored'), 'the run reports what it filtered');
+            Expect::same(3, count((array) $seen->getArrayCopy()), 'all three are handled once');
+            Expect::same(0, count($app->intakes()->recent(10)), 'the board stays empty');
+            Expect::same(0, count(array_filter(
+                iterator_to_array($sent),
+                static fn (array $m): bool => $m['subject'] === 'Your email reached Soft Appeals'
+            )), 'no automated sender receives an acknowledgment');
         },
 ];
