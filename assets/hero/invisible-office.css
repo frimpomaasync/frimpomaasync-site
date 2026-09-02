@@ -1,0 +1,571 @@
+/* ---------------------------------------------------------------------------
+   The Invisible Office · home hero
+   ---------------------------------------------------------------------------
+   Code-built film. No video, no photograph. Paint is black, cream and
+   terracotta only. Every class is prefixed io- so nothing here can reach the
+   rest of journey.css.
+
+   States sit on the section and the script moves them forward:
+     .io-js        the script ran (without it the final scene shows on its own)
+     .is-intro     tasks pile up around the cursor
+     .is-pinned    the cursor is buried, BUILD THE SYSTEM appears
+     .is-built     the pile flies off, five windows travel in horizontally
+     .is-staffed   the windows stack vertically, the promise appears
+     .io-reduce    prefers-reduced-motion: every scene is final, no travel
+
+   Desktop pins the stage (sticky) inside a taller section so a short scroll
+   drives the transformation. Phones get four scenes stacked vertically at
+   100svh each, plain transforms only.
+   --------------------------------------------------------------------------- */
+.io-hero {
+  --io-black: #0b0b0f;
+  --io-panel: #14141a;
+  --io-cream: #f3ead9;
+  --io-cream-soft: rgba(243, 234, 217, 0.64);
+  --io-line: rgba(243, 234, 217, 0.18);
+  --io-terra: #c2501c;
+  --io-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  position: relative;
+  background: var(--io-black);
+  color: var(--io-cream);
+  font-family: var(--sans);
+}
+
+.io-stage {
+  position: relative;
+  overflow: hidden;
+  background: var(--io-black);
+}
+
+.io-scene {
+  position: relative;
+  box-sizing: border-box;
+  padding: clamp(24px, 5vw, 56px) clamp(20px, 5vw, 72px);
+}
+
+.io-mono {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.io-giant {
+  margin: 0;
+  font-weight: 800;
+  font-size: clamp(56px, 13vw, 176px);
+  line-height: 0.9;
+  letter-spacing: -0.045em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* ---- scene 1 · one owner, the pile, the cursor ---------------------------- */
+.io-s1 .io-owner {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s var(--io-ease), transform 0.9s var(--io-ease);
+}
+
+.io-hero.is-intro .io-owner {
+  opacity: 1;
+  transform: none;
+}
+
+.io-pile {
+  position: relative;
+}
+
+.io-chip {
+  position: absolute;
+  z-index: 2;
+  left: var(--x);
+  top: var(--y);
+  padding: 10px 14px;
+  border: 1px solid var(--io-line);
+  background: rgba(243, 234, 217, 0.06);
+  color: var(--io-cream);
+  font-family: var(--mono);
+  font-size: clamp(11px, 1.05vw, 13px);
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  opacity: 0;
+  transform: translate(0, 26px) rotate(var(--r)) scale(0.9);
+  transition: opacity 0.45s var(--io-ease) var(--d), transform 0.6s var(--io-ease) var(--d);
+}
+
+.io-hero.is-intro .io-chip {
+  opacity: 1;
+  transform: translate(0, 0) rotate(var(--r)) scale(1);
+}
+
+.io-hero.is-built .io-chip {
+  opacity: 0;
+  transform: translate(120vw, 0) rotate(var(--r)) scale(1);
+  transition: opacity 0.5s ease-in calc(var(--d) * 0.3 + 0.3s), transform 0.8s ease-in calc(var(--d) * 0.3);
+}
+
+.io-cursor {
+  position: absolute;
+  z-index: 1;
+  left: 12%;
+  top: 22%;
+  width: 26px;
+  height: 34px;
+  opacity: 0;
+}
+
+.io-cursor svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.8s var(--io-ease), transform 0.9s var(--io-ease);
+}
+
+.io-hero.is-intro .io-cursor {
+  animation: io-cursor 3.6s var(--io-ease) forwards;
+}
+
+.io-hero.is-pinned .io-cursor svg {
+  opacity: 0;
+  transform: translateY(44px) scale(0.5);
+}
+
+@keyframes io-cursor {
+  0% { left: 12%; top: 22%; opacity: 0; }
+  8% { opacity: 1; }
+  28% { left: 58%; top: 30%; }
+  52% { left: 34%; top: 62%; }
+  76% { left: 66%; top: 66%; }
+  100% { left: 46%; top: 48%; opacity: 1; }
+}
+
+/* ---- scene 2 · the button ------------------------------------------------- */
+.io-build {
+  display: inline-flex;
+  align-items: center;
+  min-height: 56px;
+  padding: 18px 30px;
+  border: 0;
+  border-radius: 4px;
+  background: var(--io-terra);
+  color: var(--io-cream);
+  font-family: var(--mono);
+  font-size: clamp(13px, 1.3vw, 16px);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  cursor: pointer;
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.6s var(--io-ease), transform 0.7s var(--io-ease), background 0.2s;
+}
+
+.io-build:hover,
+.io-build:focus-visible {
+  background: #a8441a;
+}
+
+.io-build:focus-visible {
+  outline: 3px solid var(--io-cream);
+  outline-offset: 3px;
+}
+
+.io-hero.is-pinned .io-build {
+  opacity: 1;
+  transform: none;
+}
+
+.io-hero.is-built .io-build {
+  opacity: 0;
+  pointer-events: none;
+  transition-delay: 0s;
+}
+
+/* ---- scene 3 · five live windows ----------------------------------------- */
+.io-windows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.io-win {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--io-line);
+  background: var(--io-panel);
+  opacity: 0;
+  transform: translateX(110vw);
+  transition:
+    transform 0.9s var(--io-ease) calc(var(--i) * 0.12s),
+    opacity 0.4s var(--io-ease) calc(var(--i) * 0.12s),
+    left 0.9s var(--io-ease) calc(var(--i) * 0.06s),
+    top 0.9s var(--io-ease) calc(var(--i) * 0.06s),
+    width 0.9s var(--io-ease) calc(var(--i) * 0.06s),
+    height 0.9s var(--io-ease) calc(var(--i) * 0.06s);
+}
+
+.io-hero.is-built .io-win {
+  opacity: 1;
+  transform: none;
+}
+
+.io-win-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.io-win-head .io-mono {
+  font-size: clamp(11px, 1vw, 13px);
+  font-weight: 700;
+}
+
+.io-live {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--io-cream-soft);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  opacity: 0;
+  transition: opacity 0.4s var(--io-ease) calc(0.9s + var(--i) * 0.28s);
+}
+
+.io-live::before {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--io-terra);
+  content: "";
+}
+
+.io-hero.is-built .io-live {
+  opacity: 1;
+}
+
+.io-hero.is-built .io-live::before {
+  animation: io-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes io-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(194, 80, 28, 0.7); }
+  60% { box-shadow: 0 0 0 7px rgba(194, 80, 28, 0); }
+}
+
+.io-win-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  font-family: var(--mono);
+  font-size: clamp(11px, 1vw, 13px);
+  letter-spacing: 0.04em;
+}
+
+.io-was,
+.io-now {
+  opacity: 0;
+  transition: opacity 0.4s var(--io-ease) calc(1s + var(--i) * 0.28s), text-decoration-color 0.4s;
+}
+
+.io-was {
+  color: var(--io-cream-soft);
+  text-decoration: line-through;
+  text-decoration-color: transparent;
+}
+
+.io-now {
+  color: var(--io-cream);
+  transition-delay: calc(1.35s + var(--i) * 0.28s);
+}
+
+.io-hero.is-built .io-was {
+  opacity: 1;
+  text-decoration-color: var(--io-cream-soft);
+}
+
+.io-hero.is-built .io-now {
+  opacity: 1;
+}
+
+/* ---- scene 4 · the promise ----------------------------------------------- */
+.io-final {
+  font-size: clamp(40px, 6.4vw, 92px);
+}
+
+.io-final span {
+  display: block;
+  color: var(--io-cream-soft);
+}
+
+.io-sub {
+  max-width: 34ch;
+  margin: clamp(18px, 2.4vw, 30px) 0 0;
+  color: var(--io-cream-soft);
+  font-family: var(--serif);
+  font-size: clamp(17px, 1.5vw, 21px);
+  line-height: 1.55;
+}
+
+.io-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: clamp(22px, 2.6vw, 34px);
+}
+
+.io-btn {
+  display: inline-flex;
+  min-height: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  border: 1px solid var(--io-terra);
+  border-radius: 5px;
+  background: var(--io-terra);
+  color: var(--io-cream);
+  font-size: 14px;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s, transform 0.2s;
+}
+
+.io-btn.io-ghost {
+  border-color: var(--io-line);
+  background: transparent;
+}
+
+.io-btn:hover,
+.io-btn:focus-visible {
+  background: #a8441a;
+  border-color: #a8441a;
+  transform: translateY(-1px);
+}
+
+.io-btn.io-ghost:hover,
+.io-btn.io-ghost:focus-visible {
+  background: rgba(243, 234, 217, 0.08);
+  border-color: var(--io-cream);
+}
+
+.io-btn:focus-visible {
+  outline: 3px solid var(--io-cream);
+  outline-offset: 3px;
+}
+
+.io-final,
+.io-sub,
+.io-actions {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s var(--io-ease), transform 0.9s var(--io-ease);
+}
+
+.io-sub { transition-delay: 0.15s; }
+.io-actions { transition-delay: 0.3s; }
+
+.io-hero.is-staffed .io-final,
+.io-hero.is-staffed .io-sub,
+.io-hero.is-staffed .io-actions {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---- no script: the promise, nothing else --------------------------------- */
+.io-hero:not(.io-js) .io-s1,
+.io-hero:not(.io-js) .io-s1b,
+.io-hero:not(.io-js) .io-s2 {
+  display: none;
+}
+
+.io-hero:not(.io-js) .io-final,
+.io-hero:not(.io-js) .io-sub,
+.io-hero:not(.io-js) .io-actions {
+  opacity: 1;
+  transform: none;
+}
+
+.io-hero:not(.io-js) .io-s3 {
+  min-height: calc(100vh - var(--nav-height, 76px));
+  min-height: calc(100svh - var(--nav-height, 76px));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* ---- reduced motion: no travel, no pulse ---------------------------------- */
+.io-hero.io-reduce *,
+.io-hero.io-reduce *::before {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* ---- desktop: one pinned stage ------------------------------------------- */
+@media (min-width: 761px) {
+  .io-hero.io-js {
+    height: 175vh;
+    height: 175svh;
+  }
+
+  .io-hero.io-js.io-reduce {
+    height: auto;
+  }
+
+  .io-hero.io-js .io-stage {
+    position: sticky;
+    top: var(--nav-height, 76px);
+    height: calc(100vh - var(--nav-height, 76px));
+    height: calc(100svh - var(--nav-height, 76px));
+  }
+
+  .io-hero.io-js.io-reduce .io-stage {
+    position: relative;
+  }
+
+  .io-hero.io-js .io-scene {
+    position: absolute;
+    inset: 0;
+  }
+
+  .io-s1 .io-owner {
+    position: absolute;
+    left: 5vw;
+    top: 9%;
+  }
+
+  .io-pile {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 34%;
+    bottom: 0;
+  }
+
+  .io-hero.is-built .io-s1 {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s var(--io-ease) 0.5s;
+  }
+
+  .io-s1b {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 9%;
+    pointer-events: none;
+  }
+
+  .io-s1b .io-build {
+    pointer-events: auto;
+  }
+
+  .io-s2 {
+    pointer-events: none;
+  }
+
+  .io-win {
+    position: absolute;
+    left: calc(4vw + var(--i) * 18.6vw);
+    top: 36%;
+    width: 17vw;
+    height: min(30vh, 250px);
+  }
+
+  .io-hero.is-staffed .io-win {
+    left: 56vw;
+    top: calc(9% + var(--i) * 16.6%);
+    width: 39vw;
+    height: 13.4%;
+    justify-content: center;
+    transition-delay: calc(var(--i) * 0.06s);
+  }
+
+  .io-s3 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 52vw;
+    pointer-events: none;
+  }
+
+  .io-hero.is-staffed .io-s3 {
+    pointer-events: auto;
+  }
+
+  .io-final {
+    font-size: clamp(40px, 5.3vw, 84px);
+  }
+}
+
+/* ---- phone: four scenes, stacked ------------------------------------------ */
+@media (max-width: 760px) {
+  .io-hero.io-js .io-s1 {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .io-owner {
+    font-size: clamp(52px, 17vw, 96px);
+  }
+
+  .io-pile {
+    flex: 1;
+    min-height: 46vh;
+    min-height: 46svh;
+    margin-top: 24px;
+  }
+
+  .io-chip {
+    left: min(var(--x), calc(100% - 190px));
+  }
+
+  .io-hero.io-js .io-s1b {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    min-height: 70svh;
+  }
+
+  .io-hero.io-js .io-s2 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .io-windows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .io-win {
+    min-height: 72px;
+  }
+
+  .io-hero.io-js .io-s3 {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 100vh;
+    min-height: 100svh;
+  }
+
+  .io-final {
+    font-size: clamp(38px, 11.5vw, 64px);
+  }
+
+  .io-actions .io-btn {
+    width: 100%;
+  }
+}

@@ -8,18 +8,17 @@
   <meta name="description" content="Done-for-you automation for owner-run service businesses. Find where work is slipping, take one useful fix, and see whether SynKasa or Siesie is the right next step. Live in 7 days, or you don't pay.">
   <link rel="canonical" href="https://frimpomaasync.com/">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="preload" as="image" href="/assets/hero/maze-hero-desktop.jpg" media="(min-width: 761px)">
-  <link rel="preload" as="image" href="/assets/hero/maze-hero-mobile.jpg" media="(max-width: 760px)">
-  <link rel="stylesheet" href="/assets/journey.css?v=30">
+  <link rel="stylesheet" href="/assets/journey.css?v=31">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <link rel="stylesheet" href="/assets/hero/invisible-office.css?v=1">
   <meta name="theme-color" content="#FFFFFF">
   <style>#page-leak-tool,#proof{scroll-margin-top:130px}</style>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
-  <meta property="og:title" content="Stop being the system">
+  <meta property="og:title" content="One owner. A business that feels fully staffed.">
   <meta property="og:description" content="Find the first leak, take one useful fix, and watch the right system work before you pay.">
   <meta property="og:url" content="https://frimpomaasync.com/">
-  <meta property="og:image" content="https://frimpomaasync.com/assets/hero/maze-hero-desktop.jpg">
+  <meta property="og:image" content="https://frimpomaasync.com/assets/hero-home-wide.jpg">
   <meta name="twitter:card" content="summary_large_image">
   <script type="application/ld+json">
     {
@@ -35,40 +34,68 @@
 </head>
 <body data-cinematic data-sk-sections="Hero,First fix,Nine seconds,Two systems,Different,Proof,About,Free,Practices,Guarantee,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
   <main>
-    <section class="photo-hero home-photo-hero vh-hero" data-photo-hero data-screen-label="Hero">
-      <div class="photo-hero-parallax" data-hero-parallax aria-hidden="true">
-        <!-- The cinematic loop. Sources are assigned by JS so phones never download the desktop file.
-             autoplay muted loop playsinline stay in the markup: iOS reads them at parse time. -->
-        <div class="photo-hero-media vh-frame">
-          <video class="vh-video" id="vh-video"
-            autoplay muted loop playsinline
-            preload="metadata"
-            aria-hidden="true" tabindex="-1"
-            data-desktop-webm="/assets/hero/maze-hero-desktop.webm"
-            data-desktop-mp4="/assets/hero/maze-hero-desktop.mp4"
-            data-desktop-poster="/assets/hero/maze-hero-desktop.jpg"
-            data-mobile-webm="/assets/hero/maze-hero-mobile.webm"
-            data-mobile-mp4="/assets/hero/maze-hero-mobile.mp4"
-            data-mobile-poster="/assets/hero/maze-hero-mobile.jpg"></video>
+    <!-- The Invisible Office. A code-built film: no video, no photograph.
+         data-photo-hero keeps the nav in normal flow above the stage (fsnav.js
+         floats a transparent bar only when that attribute is absent). Scenes and
+         states are documented in assets/hero/invisible-office.css. -->
+    <section class="io-hero" data-photo-hero data-screen-label="Hero" id="office">
+      <div class="io-stage">
+        <div class="io-scene io-s1" aria-hidden="true">
+          <p class="io-giant io-owner">One owner.</p>
+          <div class="io-pile">
+            <div class="io-cursor"><svg viewBox="0 0 26 34" aria-hidden="true"><path d="M2 2v26l7-6 5 11 5-2-5-11h9z" fill="#f3ead9" stroke="#0b0b0f" stroke-width="1.5"/></svg></div>
+            <span class="io-chip" style="--x:10%;--y:6%;--r:-3deg;--d:.6s">missed call</span>
+            <span class="io-chip" style="--x:36%;--y:14%;--r:2deg;--d:.8s">lead waiting</span>
+            <span class="io-chip" style="--x:58%;--y:4%;--r:-1deg;--d:1s">follow-up overdue</span>
+            <span class="io-chip" style="--x:18%;--y:30%;--r:4deg;--d:1.2s">booking unconfirmed</span>
+            <span class="io-chip" style="--x:46%;--y:36%;--r:-2deg;--d:1.4s">missed call</span>
+            <span class="io-chip" style="--x:68%;--y:26%;--r:1deg;--d:1.6s">lead waiting</span>
+            <span class="io-chip" style="--x:8%;--y:54%;--r:-4deg;--d:1.8s">follow-up overdue</span>
+            <span class="io-chip" style="--x:32%;--y:58%;--r:3deg;--d:2s">booking unconfirmed</span>
+            <span class="io-chip" style="--x:56%;--y:60%;--r:-2deg;--d:2.2s">missed call</span>
+            <span class="io-chip" style="--x:26%;--y:76%;--r:1deg;--d:2.4s">lead waiting</span>
+            <span class="io-chip" style="--x:50%;--y:82%;--r:-3deg;--d:2.6s">follow-up overdue</span>
+            <span class="io-chip" style="--x:70%;--y:72%;--r:2deg;--d:2.8s">booking unconfirmed</span>
+            <span class="io-chip" style="--x:40%;--y:46%;--r:5deg;--d:3s">missed call</span>
+            <span class="io-chip" style="--x:14%;--y:88%;--r:-1deg;--d:3.2s">lead waiting</span>
+          </div>
         </div>
-      </div>
-      <div class="photo-hero-angle" aria-hidden="true"></div>
-      <div class="photo-hero-vert" aria-hidden="true"></div>
-      <div class="photo-hero-plate" aria-hidden="true"></div>
-      <div class="photo-hero-well">
-        <div class="photo-hero-copy">
-          <h1 class="vh-title">
-            <span class="hero-line" data-rise="1"><span class="vh-red">Stop</span> being</span>
-            <span class="hero-line" data-rise="2">the system<span class="vh-red">.</span></span>
-          </h1>
-          <p class="photo-hero-sub" data-rise="3">I build the follow-up, booking, lead tracking and automation that keeps the work moving while you're doing something else.</p>
-          <div class="photo-hero-actions" data-rise="4">
-            <a class="button" href="#page-leak-tool">Find what is waiting on me <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
-            <a class="button secondary" href="#proof">Watch a system work <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+        <div class="io-scene io-s1b">
+          <button class="io-build" type="button">[ Build the system ]</button>
+        </div>
+        <div class="io-scene io-s2" aria-hidden="true">
+          <ul class="io-windows">
+            <li class="io-win" style="--i:0">
+              <div class="io-win-head"><span class="io-mono">Answering</span><span class="io-live">Live</span></div>
+              <div class="io-win-line"><span class="io-was">missed call</span><span class="io-now">✓ answered</span></div>
+            </li>
+            <li class="io-win" style="--i:1">
+              <div class="io-win-head"><span class="io-mono">Qualifying</span><span class="io-live">Live</span></div>
+              <div class="io-win-line"><span class="io-was">lead waiting</span><span class="io-now">✓ qualified</span></div>
+            </li>
+            <li class="io-win" style="--i:2">
+              <div class="io-win-head"><span class="io-mono">Booking</span><span class="io-live">Live</span></div>
+              <div class="io-win-line"><span class="io-was">booking unconfirmed</span><span class="io-now">✓ confirmed</span></div>
+            </li>
+            <li class="io-win" style="--i:3">
+              <div class="io-win-head"><span class="io-mono">Following up</span><span class="io-live">Live</span></div>
+              <div class="io-win-line"><span class="io-was">follow-up overdue</span><span class="io-now">✓ sent</span></div>
+            </li>
+            <li class="io-win" style="--i:4">
+              <div class="io-win-head"><span class="io-mono">Handing off</span><span class="io-live">Live</span></div>
+              <div class="io-win-line"><span class="io-was">waiting on you</span><span class="io-now">✓ nothing</span></div>
+            </li>
+          </ul>
+        </div>
+        <div class="io-scene io-s3">
+          <h1 class="io-giant io-final">One owner. <span>A business that feels fully staffed.</span></h1>
+          <p class="io-sub">I build the front desk and back office into accounts you own, so the business keeps moving without waiting for you.</p>
+          <div class="io-actions">
+            <a class="io-btn" href="#page-leak-tool">Find my missing system <span aria-hidden="true">&#8594;</span></a>
+            <a class="io-btn io-ghost" href="#proof">Watch the office work <span aria-hidden="true">&#8594;</span></a>
           </div>
         </div>
       </div>
-      <button class="vh-motion" id="vh-motion" type="button" aria-pressed="true" hidden>Pause motion</button>
     </section>
 
     <section class="section soft" data-screen-label="First fix">
@@ -313,6 +340,6 @@
 
   <script type="module" src="/assets/journey.js?v=8"></script>
   <script src="/fsnav.js?v=856" defer></script>
-  <script src="/assets/hero/vh.js?v=1" defer></script>
+  <script src="/assets/hero/invisible-office.js?v=1" defer></script>
 </body>
 </html>
