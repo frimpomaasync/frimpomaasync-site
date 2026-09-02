@@ -10,7 +10,7 @@
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=31">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
-  <link rel="stylesheet" href="/assets/hero/invisible-office.css?v=1">
+  <link rel="stylesheet" href="/assets/hero/invisible-office.css?v=2">
   <meta name="theme-color" content="#FFFFFF">
   <style>#page-leak-tool,#proof{scroll-margin-top:130px}</style>
   <meta property="og:type" content="website">
@@ -34,58 +34,23 @@
 </head>
 <body data-cinematic data-sk-sections="Hero,First fix,Nine seconds,Two systems,Different,Proof,About,Free,Practices,Guarantee,Close" data-sk-bar="Live in 7 days, or you don't pay." data-sk-biz="service business">
   <main>
-    <!-- The Invisible Office. A code-built film: no video, no photograph.
-         data-photo-hero keeps the nav in normal flow above the stage (fsnav.js
-         floats a transparent bar only when that attribute is absent). Scenes and
-         states are documented in assets/hero/invisible-office.css. -->
+    <!-- The Invisible Office. A 3D maze drawn on canvas (assets/hero/io-maze.js):
+         no video, no photograph. data-photo-hero keeps the nav in normal flow
+         above the stage (fsnav.js floats a transparent bar only when that
+         attribute is absent). Scenes and states are documented in
+         assets/hero/invisible-office.css. -->
     <section class="io-hero" data-photo-hero data-screen-label="Hero" id="office">
       <div class="io-stage">
-        <div class="io-scene io-s1" aria-hidden="true">
-          <p class="io-giant io-owner">One owner.</p>
-          <div class="io-pile">
-            <div class="io-cursor"><svg viewBox="0 0 26 34" aria-hidden="true"><path d="M2 2v26l7-6 5 11 5-2-5-11h9z" fill="#f3ead9" stroke="#0b0b0f" stroke-width="1.5"/></svg></div>
-            <span class="io-chip" style="--x:10%;--y:6%;--r:-3deg;--d:.6s">missed call</span>
-            <span class="io-chip" style="--x:36%;--y:14%;--r:2deg;--d:.8s">lead waiting</span>
-            <span class="io-chip" style="--x:58%;--y:4%;--r:-1deg;--d:1s">follow-up overdue</span>
-            <span class="io-chip" style="--x:18%;--y:30%;--r:4deg;--d:1.2s">booking unconfirmed</span>
-            <span class="io-chip" style="--x:46%;--y:36%;--r:-2deg;--d:1.4s">missed call</span>
-            <span class="io-chip" style="--x:68%;--y:26%;--r:1deg;--d:1.6s">lead waiting</span>
-            <span class="io-chip" style="--x:8%;--y:54%;--r:-4deg;--d:1.8s">follow-up overdue</span>
-            <span class="io-chip" style="--x:32%;--y:58%;--r:3deg;--d:2s">booking unconfirmed</span>
-            <span class="io-chip" style="--x:56%;--y:60%;--r:-2deg;--d:2.2s">missed call</span>
-            <span class="io-chip" style="--x:26%;--y:76%;--r:1deg;--d:2.4s">lead waiting</span>
-            <span class="io-chip" style="--x:50%;--y:82%;--r:-3deg;--d:2.6s">follow-up overdue</span>
-            <span class="io-chip" style="--x:70%;--y:72%;--r:2deg;--d:2.8s">booking unconfirmed</span>
-            <span class="io-chip" style="--x:40%;--y:46%;--r:5deg;--d:3s">missed call</span>
-            <span class="io-chip" style="--x:14%;--y:88%;--r:-1deg;--d:3.2s">lead waiting</span>
-          </div>
+        <div class="io-scene io-s1">
+          <canvas class="io-maze" data-maze aria-hidden="true"></canvas>
+          <p class="io-giant io-owner" aria-hidden="true">One owner.</p>
+          <p class="io-tag io-mono" aria-hidden="true">Every corridor. Every dead end. Every day.</p>
         </div>
         <div class="io-scene io-s1b">
           <button class="io-build" type="button">[ Build the system ]</button>
         </div>
         <div class="io-scene io-s2" aria-hidden="true">
-          <ul class="io-windows">
-            <li class="io-win" style="--i:0">
-              <div class="io-win-head"><span class="io-mono">Answering</span><span class="io-live">Live</span></div>
-              <div class="io-win-line"><span class="io-was">missed call</span><span class="io-now">✓ answered</span></div>
-            </li>
-            <li class="io-win" style="--i:1">
-              <div class="io-win-head"><span class="io-mono">Qualifying</span><span class="io-live">Live</span></div>
-              <div class="io-win-line"><span class="io-was">lead waiting</span><span class="io-now">✓ qualified</span></div>
-            </li>
-            <li class="io-win" style="--i:2">
-              <div class="io-win-head"><span class="io-mono">Booking</span><span class="io-live">Live</span></div>
-              <div class="io-win-line"><span class="io-was">booking unconfirmed</span><span class="io-now">✓ confirmed</span></div>
-            </li>
-            <li class="io-win" style="--i:3">
-              <div class="io-win-head"><span class="io-mono">Following up</span><span class="io-live">Live</span></div>
-              <div class="io-win-line"><span class="io-was">follow-up overdue</span><span class="io-now">✓ sent</span></div>
-            </li>
-            <li class="io-win" style="--i:4">
-              <div class="io-win-head"><span class="io-mono">Handing off</span><span class="io-live">Live</span></div>
-              <div class="io-win-line"><span class="io-was">waiting on you</span><span class="io-now">✓ nothing</span></div>
-            </li>
-          </ul>
+          <canvas class="io-maze" data-maze-solved></canvas>
         </div>
         <div class="io-scene io-s3">
           <h1 class="io-giant io-final">One owner. <span>A business that feels fully staffed.</span></h1>
@@ -340,6 +305,7 @@
 
   <script type="module" src="/assets/journey.js?v=8"></script>
   <script src="/fsnav.js?v=856" defer></script>
-  <script src="/assets/hero/invisible-office.js?v=1" defer></script>
+  <script src="/assets/hero/io-maze.js?v=1" defer></script>
+  <script src="/assets/hero/invisible-office.js?v=2" defer></script>
 </body>
 </html>
