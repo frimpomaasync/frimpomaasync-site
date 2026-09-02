@@ -7,9 +7,10 @@
   <meta name="description" content="Maryland carriers issued 117,519 adverse decisions last year and 89% were never appealed. Soft Appeals recovers denied claims for Maryland behavioral health, therapy, PT/OT and dental practices. Free review of your 20 most recent denials.">
   <link rel="canonical" href="https://frimpomaasync.com/soft-appeals">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/assets/journey.css?v=30">
+  <link rel="stylesheet" href="/assets/journey.css?v=31">
   <link rel="stylesheet" href="/assets/modules.css?v=7">
   <link rel="stylesheet" href="/assets/soft-appeals-md.css?v=2">
+  <link rel="stylesheet" href="/assets/hero/denial-xray.css?v=1">
   <meta name="theme-color" content="#101426">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="frimpomaasync.com">
@@ -94,16 +95,71 @@
        one, do not add one that is not sourced, and do not offer dental a percentage. -->
   <main id="main">
 
-    <section class="hero compact-hero" data-screen-label="Hero">
-      <div class="wrap">
-        <div class="eyebrow">Maryland practices only</div>
-        <h1>Denied claims, <em>recovered.</em></h1>
-        <p class="hero-copy">Your billers are not slow. Denials just arrive last, every single day, behind new claims, behind payment posting, behind the person on the phone. I take that queue and nothing else.</p>
-        <div class="actions">
-          <a class="button" href="#review">Review my 20 most recent denials, free <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
-          <a class="button secondary" href="/soft-appeals-recovery-lab">See the method first <span class="button-arrow" aria-hidden="true">&#8594;</span></a>
+    <!-- The Denial X-Ray. A code-built film around one fictional claim. .dx-wrap
+         holds the hero and the Maryland numbers so the numbers rise over the
+         pinned recovery room on a desktop. Scenes and states are documented in
+         assets/hero/denial-xray.css. Every figure inside the paper is invented
+         and labelled as such; the 180-day window is the statutory floor cited
+         further down this page. -->
+    <div class="dx-wrap">
+    <section class="dx-hero" data-screen-label="Hero" id="xray">
+      <div class="dx-stage">
+        <div class="dx-paper">
+          <article class="dx-doc" aria-label="Fictional denial document">
+            <div class="dx-doc-top dx-mono"><span>Remittance advice</span><span>Sample · fictional</span></div>
+            <p class="dx-doc-title">Claim adjustment notice</p>
+            <dl class="dx-grid">
+              <div><dt>Claim</dt><dd>SA-0000-SAMPLE</dd></div>
+              <div><dt>Patient</dt><dd>None · fictional</dd></div>
+              <div><dt>Date of service</dt><dd>12 Aug 2026</dd></div>
+              <div><dt>Service</dt><dd>90837 · psychotherapy, 60 min</dd></div>
+              <div><dt>Billed</dt><dd>$180.00</dd></div>
+              <div><dt>Paid</dt><dd>$0.00</dd></div>
+              <div class="dx-wide dx-reason"><dt>Reason</dt><dd>CO-197 · precertification / authorization absent</dd></div>
+              <div class="dx-wide"><dt>Appeal rights</dt><dd>See plan document</dd></div>
+            </dl>
+            <ol class="dx-finds" aria-label="What the scan found">
+            <li style="--i:0"><span class="dx-mono">What happened</span><b>Session billed without the authorization the plan required.</b></li>
+            <li style="--i:1"><span class="dx-mono">What is missing</span><b>The retro-authorization request and the visit note.</b></li>
+            <li style="--i:2"><span class="dx-mono">How much time remains</span><b>168 of 180 days.</b></li>
+            <li style="--i:3"><span class="dx-mono">What should happen next</span><b>Request retro-authorization, then file a first-level appeal.</b></li>
+            </ol>
+            <div class="dx-stamp" aria-hidden="true">Denied.</div>
+            <div class="dx-xray" aria-hidden="true">
+            <span class="dx-call" style="--x:28%;--y:64%"><span class="dx-mono">What happened</span><b>Session billed without the authorization the plan required.</b></span>
+            <span class="dx-call" style="--x:46%;--y:40%"><span class="dx-mono">What is missing</span><b>The retro-authorization request and the visit note.</b></span>
+            <span class="dx-call" style="--x:16%;--y:42%"><span class="dx-mono">How much time remains</span><b>168 of 180 days.</b></span>
+            <span class="dx-call" style="--x:34%;--y:84%"><span class="dx-mono">What should happen next</span><b>Request retro-authorization, then file a first-level appeal.</b></span>
+            </div>
+            <div class="dx-lens" aria-hidden="true"></div>
+            <p class="dx-hint dx-mono" aria-hidden="true">Move to scan</p>
+          </article>
         </div>
-        <p class="small-note">No obligation, no patient information, and an honest answer about whether you need me, including if you don't.</p>
+        <button class="dx-scan" type="button">Scan denial</button>
+        <ul class="dx-paths" aria-label="Three possible pathways">
+          <li class="dx-path" style="--i:0" data-pick><span class="dx-mono">Appeal</span><small>The plan required authorization. It can be requested after the fact.</small><span class="dx-pick dx-mono">Selected ✓</span></li>
+          <li class="dx-path" style="--i:1"><span class="dx-mono">Correct / resubmit</span><small>Only if the claim itself carried the error.</small></li>
+          <li class="dx-path" style="--i:2"><span class="dx-mono">Close</span><small>Only when the window is gone or the value is too small.</small></li>
+        </ul>
+        <div class="dx-room">
+          <div class="dx-record" aria-label="Fictional claim record">
+            <div class="dx-rec-head"><span class="dx-mono">Claim SA-0000-SAMPLE</span><span class="dx-status"><span class="dx-unassigned">Unassigned</span><span class="dx-owned">Owned</span></span></div>
+            <div class="dx-rec-row"><span>Denial</span><b>CO-197 · authorization absent</b></div>
+            <div class="dx-rec-row"><span>Pathway</span><b>Appeal</b></div>
+            <div class="dx-rec-row" data-owned><span>Deadline</span><b>Day 12 of 180 · 168 days remain</b></div>
+            <div class="dx-rec-row" data-owned><span>Next action</span><b>Request retro-authorization, then file the first-level appeal</b></div>
+            <div class="dx-rec-row" data-owned><span>Owner</span><b>Soft Appeals</b></div>
+          </div>
+          <div class="dx-final">
+            <h1>Denied is a status. <span>Not a workflow.</span></h1>
+            <p class="dx-sub">Soft Appeals examines what happened, identifies the appropriate next action, gives the work an owner and tracks it through reconciliation.</p>
+            <div class="dx-actions">
+              <a class="dx-btn" href="#review">Review my 20 most recent denials, free <span aria-hidden="true">&#8594;</span></a>
+              <a class="dx-btn dx-ghost" href="/soft-appeals-recovery-lab">Open the Recovery Lab <span aria-hidden="true">&#8594;</span></a>
+            </div>
+            <p class="dx-label dx-mono">Fictional demonstration · no patient data · no outcome promised</p>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -122,6 +178,8 @@
         <p class="small-note">Sources: Maryland Office of the Attorney General, Health Education &amp; Advocacy Unit, FY2025 report · Office of the Governor, 7 August 2026. These are Maryland state figures, not national estimates.</p>
       </div>
     </section>
+
+    </div>
 
     <section class="section soft" data-screen-label="Scope">
       <div class="wrap">
@@ -534,6 +592,7 @@
 
   <script type="module" src="/assets/journey.js?v=8"></script>
   <script src="/assets/soft-appeals-md.js?v=2" defer></script>
+  <script src="/assets/hero/denial-xray.js?v=1" defer></script>
   <script src="/fsnav.js?v=856" defer></script>
 </body>
 </html>
