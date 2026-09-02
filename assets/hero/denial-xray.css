@@ -1,37 +1,25 @@
 /* ---------------------------------------------------------------------------
    The Denial X-Ray · Soft Appeals hero
    ---------------------------------------------------------------------------
-   A giant fictional denial document, a scanning lens, three pathways, and a
-   navy recovery room behind the paper. Every class is prefixed dx- so nothing
-   here reaches journey.css, modules.css or the sam- Maryland additions.
+   A 3D field of falling claims on canvas (dx-field.js). A beam catches one
+   and traces it to OWNED. Every class is prefixed dx- so nothing here reaches
+   journey.css, modules.css or the sam- Maryland additions.
 
-   States sit on the section and the script moves them forward:
-     .dx-js        the script ran (without it the final scene shows on its own)
-     .is-stamped   DENIED. lands
-     .is-scanned   phone only: the four findings reveal one by one
-     .is-f1..f4    each finding pinned (desktop: the lens found it)
-     .is-split     the denial splits into three pathways
-     .is-chosen    APPEAL is selected
-     .is-room      the paper slides off, the recovery room is behind it
-     .is-owned     UNASSIGNED becomes OWNED
-     .is-final     the headline, the copy, the buttons, the label
-     .dx-reduce    prefers-reduced-motion: every state at once
+   States on the section, moved by denial-xray.js and read by the canvas:
+     .dx-js .is-stamped .is-f1..f4 .is-split .is-chosen .is-owned .is-final
+     .dx-reduce  prefers-reduced-motion: one finished frame
 
-   Desktop pins the hero (sticky) inside .dx-wrap so the next section, the
-   Maryland numbers, rises over the dark room: the horizontal slide of the
-   paper, then the vertical descent of the workspace.
+   Desktop pins the hero inside .dx-wrap so the Maryland numbers rise over the
+   dark field. Phones get the field at 100svh, SCAN DENIAL on it, the headline
+   under it.
    --------------------------------------------------------------------------- */
 .dx-hero {
   --dx-navy: #101426;
-  --dx-navy-deep: #0a0d1a;
   --dx-cream: #f3ead9;
   --dx-cream-soft: rgba(243, 234, 217, 0.64);
   --dx-cream-line: rgba(243, 234, 217, 0.18);
   --dx-orange: #c2501c;
-  --dx-paper: #fbfaf7;
   --dx-ink: #101426;
-  --dx-ink-soft: rgba(16, 20, 38, 0.6);
-  --dx-rule: rgba(16, 20, 38, 0.14);
   --dx-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
   position: relative;
   background: var(--dx-navy);
@@ -45,6 +33,13 @@
   background: var(--dx-navy);
 }
 
+.dx-field {
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
 .dx-mono {
   font-family: var(--mono);
   font-size: 11px;
@@ -52,399 +47,39 @@
   text-transform: uppercase;
 }
 
-/* ---- the paper ----------------------------------------------------------- */
-.dx-paper {
+.dx-eyebrow {
+  position: absolute;
+  left: clamp(20px, 5vw, 72px);
+  top: clamp(18px, 3vw, 32px);
+  z-index: 2;
+  color: var(--dx-cream-soft);
+  opacity: 0;
+  transition: opacity 0.8s var(--dx-ease) 0.6s;
+}
+
+.dx-hero.is-stamped .dx-eyebrow { opacity: 1; }
+.dx-hero.is-final .dx-eyebrow { opacity: 0; transition-delay: 0s; }
+
+/* ---- the final scene ------------------------------------------------------ */
+.dx-final {
   position: relative;
   z-index: 2;
   box-sizing: border-box;
-  padding: clamp(16px, 3vw, 32px) clamp(16px, 4vw, 48px);
+  padding: clamp(24px, 5vw, 56px) clamp(20px, 5vw, 72px);
 }
 
-.dx-doc {
-  position: relative;
-  box-sizing: border-box;
-  padding: clamp(18px, 2.6vw, 36px) clamp(18px, 2.8vw, 40px);
-  background: var(--dx-paper);
-  color: var(--dx-ink);
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.45);
-  opacity: 0;
-  transform: translateY(40px);
-  transition: opacity 0.7s var(--dx-ease), transform 0.9s var(--dx-ease);
-}
-
-.dx-hero.dx-js.is-stamped .dx-doc,
-.dx-hero:not(.dx-js) .dx-doc {
-  opacity: 1;
-  transform: none;
-}
-
-.dx-doc-top {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--dx-ink);
-  color: var(--dx-ink-soft);
-}
-
-.dx-doc-title {
-  margin: 18px 0 14px;
-  font-family: var(--serif);
-  font-size: clamp(22px, 2.6vw, 36px);
-  line-height: 1.1;
-  letter-spacing: -0.01em;
-}
-
-.dx-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px 20px;
-  margin: 0;
-}
-
-.dx-grid > div {
-  padding: 8px 0;
-  border-bottom: 1px solid var(--dx-rule);
-}
-
-.dx-grid .dx-wide {
-  grid-column: 1 / -1;
-}
-
-.dx-grid dt {
-  color: var(--dx-ink-soft);
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.dx-grid dd {
-  margin: 4px 0 0;
-  font-size: clamp(13px, 1.1vw, 15px);
-  line-height: 1.4;
-}
-
-.dx-grid .dx-reason dd {
-  font-weight: 700;
-}
-
-.dx-stamp {
-  position: absolute;
-  right: 6%;
-  top: 8%;
-  padding: 6px 18px;
-  border: 4px solid var(--dx-orange);
-  border-radius: 6px;
-  color: var(--dx-orange);
-  font-weight: 800;
-  font-size: clamp(38px, 6.5vw, 96px);
-  line-height: 1;
-  letter-spacing: -0.02em;
-  text-transform: uppercase;
-  pointer-events: none;
-  opacity: 0;
-  transform: rotate(-9deg) scale(3);
-  transition: opacity 0.25s ease-out, transform 0.45s cubic-bezier(0.2, 1.4, 0.4, 1);
-}
-
-.dx-hero.is-stamped .dx-stamp,
-.dx-hero:not(.dx-js) .dx-stamp {
-  opacity: 1;
-  transform: rotate(-9deg) scale(1);
-}
-
-/* ---- the lens and the hidden layers (desktop only) ----------------------- */
-.dx-xray {
-  position: absolute;
-  inset: 0;
-  display: none;
-  background: var(--dx-navy);
-  color: var(--dx-cream);
-  background-image:
-    linear-gradient(rgba(243, 234, 217, 0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(243, 234, 217, 0.06) 1px, transparent 1px);
-  background-size: 28px 28px;
-  clip-path: circle(var(--lr, 0px) at var(--lx, 50%) var(--ly, 50%));
-  pointer-events: none;
-}
-
-.dx-call {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-  max-width: 30ch;
-  padding: 8px 12px;
-  border-left: 2px solid var(--dx-orange);
-  transform: translate(-50%, -50%);
-}
-
-.dx-call .dx-mono {
-  display: block;
-  color: var(--dx-orange);
-  font-weight: 700;
-}
-
-.dx-call b {
-  display: block;
-  margin-top: 4px;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.dx-lens {
-  position: absolute;
-  z-index: 5;
-  left: var(--lx, 50%);
-  top: var(--ly, 50%);
-  width: calc(var(--lr, 0px) * 2);
-  height: calc(var(--lr, 0px) * 2);
-  border: 2px solid var(--dx-orange);
-  border-radius: 50%;
-  box-shadow: 0 0 0 1px rgba(243, 234, 217, 0.35), 0 0 40px rgba(194, 80, 28, 0.35);
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  display: none;
-}
-
-.dx-hint {
-  position: absolute;
-  left: clamp(18px, 2.8vw, 40px);
-  bottom: 14px;
-  color: var(--dx-ink-soft);
-  display: none;
-  opacity: 0;
-  transition: opacity 0.5s var(--dx-ease) 0.6s;
-}
-
-/* ---- the four findings --------------------------------------------------- */
-.dx-finds {
-  margin: 18px 0 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 8px;
-}
-
-.dx-finds li {
-  padding: 10px 12px;
-  border: 1px solid rgba(194, 80, 28, 0.35);
-  border-left: 3px solid var(--dx-orange);
-  background: rgba(194, 80, 28, 0.06);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.45s var(--dx-ease), transform 0.55s var(--dx-ease);
-}
-
-.dx-finds .dx-mono {
-  display: block;
-  color: var(--dx-orange);
-  font-weight: 700;
-}
-
-.dx-finds b {
-  display: block;
-  margin-top: 3px;
-  font-weight: 400;
-  font-size: 13px;
-  line-height: 1.4;
-}
-
-.dx-hero.is-f1 .dx-finds li:nth-child(1),
-.dx-hero.is-f2 .dx-finds li:nth-child(2),
-.dx-hero.is-f3 .dx-finds li:nth-child(3),
-.dx-hero.is-f4 .dx-finds li:nth-child(4),
-.dx-hero:not(.dx-js) .dx-finds li {
-  opacity: 1;
-  transform: none;
-}
-
-/* ---- the three pathways -------------------------------------------------- */
-.dx-paths {
-  display: grid;
-  gap: 10px;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.dx-path {
-  box-sizing: border-box;
-  padding: 14px 16px;
-  border: 1px solid var(--dx-cream-line);
-  background: rgba(243, 234, 217, 0.05);
-  color: var(--dx-cream);
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.5s var(--dx-ease) calc(var(--i) * 0.14s), transform 0.7s var(--dx-ease) calc(var(--i) * 0.14s), border-color 0.4s, background 0.4s;
-}
-
-.dx-path .dx-mono {
-  display: block;
-  font-weight: 700;
-}
-
-.dx-path small {
-  display: block;
-  margin-top: 6px;
-  color: var(--dx-cream-soft);
-  font-size: 12px;
-  line-height: 1.4;
-}
-
-.dx-path .dx-pick {
-  display: none;
-  margin-top: 8px;
-  color: var(--dx-orange);
-  font-weight: 700;
-}
-
-.dx-hero.is-split .dx-path,
-.dx-hero:not(.dx-js) .dx-path {
-  opacity: 1;
-  transform: none;
-}
-
-.dx-hero.is-chosen .dx-path[data-pick],
-.dx-hero:not(.dx-js) .dx-path[data-pick] {
-  border-color: var(--dx-orange);
-  background: rgba(194, 80, 28, 0.14);
-}
-
-.dx-hero.is-chosen .dx-path[data-pick] .dx-pick,
-.dx-hero:not(.dx-js) .dx-path[data-pick] .dx-pick {
-  display: block;
-}
-
-/* ---- the recovery room --------------------------------------------------- */
-.dx-room {
-  position: relative;
-  z-index: 1;
-  box-sizing: border-box;
-  padding: clamp(16px, 3vw, 32px) clamp(16px, 4vw, 48px);
-  background: var(--dx-navy);
-  color: var(--dx-cream);
-}
-
-.dx-record {
-  border: 1px solid var(--dx-cream-line);
-  background: rgba(243, 234, 217, 0.04);
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.6s var(--dx-ease) 0.35s, transform 0.8s var(--dx-ease) 0.35s;
-}
-
-.dx-hero.is-room .dx-record,
-.dx-hero:not(.dx-js) .dx-record {
-  opacity: 1;
-  transform: none;
-}
-
-.dx-rec-head {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--dx-cream-line);
-  color: var(--dx-cream-soft);
-}
-
-.dx-status {
-  position: relative;
-  display: inline-grid;
-  padding: 5px 10px;
-  border: 1px solid var(--dx-cream-line);
-  border-radius: 3px;
-  font-family: var(--mono);
-  font-size: 11px;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  transition: border-color 0.4s, background 0.4s, color 0.4s;
-}
-
-.dx-status span {
-  grid-area: 1 / 1;
-  transition: opacity 0.35s var(--dx-ease), transform 0.45s var(--dx-ease);
-}
-
-.dx-status .dx-owned {
-  opacity: 0;
-  transform: translateY(8px);
-}
-
-.dx-hero.is-owned .dx-status,
-.dx-hero:not(.dx-js) .dx-status {
-  border-color: var(--dx-orange);
-  background: var(--dx-orange);
-  color: var(--dx-cream);
-}
-
-.dx-hero.is-owned .dx-status .dx-unassigned,
-.dx-hero:not(.dx-js) .dx-status .dx-unassigned {
-  opacity: 0;
-  transform: translateY(-8px);
-}
-
-.dx-hero.is-owned .dx-status .dx-owned,
-.dx-hero:not(.dx-js) .dx-status .dx-owned {
-  opacity: 1;
-  transform: none;
-}
-
-.dx-rec-row {
-  display: grid;
-  grid-template-columns: minmax(96px, 30%) 1fr;
-  gap: 12px;
-  padding: 10px 16px;
-  border-bottom: 1px solid rgba(243, 234, 217, 0.08);
-  font-size: 14px;
-  line-height: 1.45;
-}
-
-.dx-rec-row:last-child {
-  border-bottom: 0;
-}
-
-.dx-rec-row span {
-  color: var(--dx-cream-soft);
-  font-family: var(--mono);
-  font-size: 10px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  padding-top: 3px;
-}
-
-.dx-rec-row b {
-  font-weight: 500;
-}
-
-.dx-rec-row[data-owned] {
-  opacity: 0.35;
-  transition: opacity 0.5s var(--dx-ease) 0.2s;
-}
-
-.dx-hero.is-owned .dx-rec-row[data-owned],
-.dx-hero:not(.dx-js) .dx-rec-row[data-owned] {
-  opacity: 1;
-}
-
-/* ---- the final scene ----------------------------------------------------- */
 .dx-final h1 {
   margin: 0;
   font-weight: 800;
-  font-size: clamp(38px, 5.4vw, 84px);
+  font-size: clamp(38px, 5.2vw, 82px);
   line-height: 0.94;
   letter-spacing: -0.04em;
   text-transform: uppercase;
   text-wrap: balance;
+  text-shadow: 0 2px 30px rgba(16, 20, 38, 0.9);
 }
 
-.dx-final h1 span {
-  display: block;
-  color: var(--dx-orange);
-}
+.dx-final h1 span { display: block; color: var(--dx-orange); }
 
 .dx-sub {
   max-width: 38ch;
@@ -455,12 +90,7 @@
   line-height: 1.55;
 }
 
-.dx-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: clamp(20px, 2.4vw, 30px);
-}
+.dx-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: clamp(20px, 2.4vw, 30px); }
 
 .dx-btn {
   display: inline-flex;
@@ -479,62 +109,32 @@
   transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
 }
 
-.dx-btn.dx-ghost {
-  border-color: var(--dx-cream-line);
-  background: transparent;
-  color: var(--dx-cream);
-}
+.dx-btn.dx-ghost { border-color: var(--dx-cream-line); background: rgba(16, 20, 38, 0.6); color: var(--dx-cream); }
+.dx-btn:hover, .dx-btn:focus-visible { background: var(--dx-orange); border-color: var(--dx-orange); color: var(--dx-cream); transform: translateY(-1px); }
+.dx-btn:focus-visible { outline: 3px solid var(--dx-cream); outline-offset: 3px; }
 
-.dx-btn:hover,
-.dx-btn:focus-visible {
-  background: var(--dx-orange);
-  border-color: var(--dx-orange);
-  color: var(--dx-cream);
-  transform: translateY(-1px);
-}
+.dx-label { margin: clamp(18px, 2vw, 26px) 0 0; color: var(--dx-cream-soft); }
 
-.dx-btn:focus-visible {
-  outline: 3px solid var(--dx-cream);
-  outline-offset: 3px;
-}
-
-.dx-label {
-  margin: clamp(18px, 2vw, 26px) 0 0;
-  color: var(--dx-cream-soft);
-}
-
-.dx-final h1,
-.dx-sub,
-.dx-actions,
-.dx-label {
+.dx-final h1, .dx-sub, .dx-actions, .dx-label {
   opacity: 0;
   transform: translateY(22px);
   transition: opacity 0.7s var(--dx-ease), transform 0.9s var(--dx-ease);
 }
-
 .dx-sub { transition-delay: 0.15s; }
 .dx-actions { transition-delay: 0.3s; }
 .dx-label { transition-delay: 0.45s; }
-
-.dx-hero.is-final .dx-final h1,
-.dx-hero.is-final .dx-sub,
-.dx-hero.is-final .dx-actions,
-.dx-hero.is-final .dx-label,
-.dx-hero:not(.dx-js) .dx-final h1,
-.dx-hero:not(.dx-js) .dx-sub,
-.dx-hero:not(.dx-js) .dx-actions,
-.dx-hero:not(.dx-js) .dx-label {
+.dx-hero.is-final .dx-final h1, .dx-hero.is-final .dx-sub, .dx-hero.is-final .dx-actions, .dx-hero.is-final .dx-label,
+.dx-hero:not(.dx-js) .dx-final h1, .dx-hero:not(.dx-js) .dx-sub, .dx-hero:not(.dx-js) .dx-actions, .dx-hero:not(.dx-js) .dx-label {
   opacity: 1;
   transform: none;
 }
 
-/* ---- the phone scan button ----------------------------------------------- */
+/* ---- the phone scan button -------------------------------------------------- */
 .dx-scan {
   display: none;
   align-items: center;
   justify-content: center;
   min-height: 56px;
-  margin: 0 16px;
   padding: 16px 26px;
   border: 0;
   border-radius: 4px;
@@ -547,201 +147,67 @@
   cursor: pointer;
 }
 
-.dx-scan:focus-visible {
-  outline: 3px solid var(--dx-cream);
-  outline-offset: 3px;
+.dx-scan:focus-visible { outline: 3px solid var(--dx-cream); outline-offset: 3px; }
+
+/* ---- the findings for screen readers only ---------------------------------- */
+.dx-finds {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
-/* ---- reduced motion ------------------------------------------------------ */
-.dx-hero.dx-reduce *,
-.dx-hero.dx-reduce *::before {
-  transition: none !important;
-  animation: none !important;
-}
+.dx-hero:not(.dx-js) .dx-field, .dx-hero:not(.dx-js) .dx-scan { display: none; }
+.dx-hero.dx-reduce *, .dx-hero.dx-reduce *::before { transition: none !important; animation: none !important; }
 
-/* ---- desktop: the pinned film -------------------------------------------- */
+/* ---- desktop: the pinned film ------------------------------------------------ */
 @media (min-width: 761px) {
-  .dx-wrap {
-    position: relative;
-  }
-
-  .dx-wrap > .section {
-    position: relative;
-    z-index: 3;
-    background: var(--paper);
-  }
-
-  .dx-hero.dx-js {
-    position: sticky;
-    top: var(--nav-height, 76px);
-    z-index: 1;
-  }
-
+  .dx-wrap { position: relative; }
+  .dx-wrap > .section { position: relative; z-index: 3; background: var(--paper); }
+  .dx-hero.dx-js { position: sticky; top: var(--nav-height, 76px); z-index: 1; }
+  .dx-hero.dx-js.dx-reduce { position: relative; }
   .dx-hero.dx-js .dx-stage {
     height: calc(100vh - var(--nav-height, 76px));
     height: calc(100svh - var(--nav-height, 76px));
   }
-
-  .dx-hero.dx-js .dx-paper {
+  .dx-hero.dx-js .dx-field { position: absolute; inset: 0; }
+  .dx-hero.dx-js .dx-final {
     position: absolute;
     inset: 0;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
-    transition: transform 1s cubic-bezier(0.6, 0, 0.4, 1), opacity 0.6s ease-in 0.5s;
-  }
-
-  .dx-hero.dx-js.is-room .dx-paper {
-    transform: translateX(-118vw);
-    opacity: 0;
+    width: 46vw;
     pointer-events: none;
   }
-
-  .dx-hero.dx-js .dx-doc {
-    width: min(92vw, 1180px);
-    height: 100%;
-    max-height: calc(100% - 96px);
-    overflow: hidden;
-    cursor: none;
-  }
-
-  .dx-hero.dx-js .dx-grid {
-    width: 58%;
-  }
-
-  .dx-hero.dx-js .dx-stamp {
-    right: 5%;
-    top: 7%;
-  }
-
-  .dx-hero.dx-js .dx-xray,
-  .dx-hero.dx-js .dx-lens,
-  .dx-hero.dx-js .dx-hint {
-    display: block;
-  }
-
-  .dx-hero.dx-js.is-stamped .dx-hint {
-    opacity: 1;
-  }
-
-  .dx-hero.dx-js .dx-finds {
-    position: absolute;
-    right: 4%;
-    top: 34%;
-    width: 33%;
-    margin: 0;
-  }
-
-  .dx-hero.dx-js .dx-paths {
-    position: absolute;
-    left: 50%;
-    bottom: 12px;
-    z-index: 4;
-    width: min(92vw, 1180px);
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    transform: translateX(-50%);
-  }
-
-  .dx-hero.dx-js .dx-path {
-    background: var(--dx-navy-deep);
-    transform: translateY(-40px);
-  }
-
-  .dx-hero.dx-js.is-split .dx-path {
-    transform: none;
-  }
-
-  /* The pathways leave with the paper. */
-  .dx-hero.dx-js.is-room .dx-path {
-    opacity: 0;
-    transform: translateX(-118vw);
-    transition: transform 1s cubic-bezier(0.6, 0, 0.4, 1), opacity 0.6s ease-in 0.5s;
-  }
-
-  .dx-hero.dx-js.is-split .dx-hint {
-    opacity: 0;
-    transition-delay: 0s;
-  }
-
-  .dx-hero.dx-js .dx-room {
-    position: absolute;
-    inset: 0;
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    align-items: center;
-    gap: clamp(24px, 4vw, 64px);
-    padding-inline: clamp(24px, 5vw, 72px);
-  }
-
-  .dx-hero.dx-js .dx-record {
-    order: 2;
-  }
-
-  .dx-hero.dx-js .dx-final {
-    order: 1;
-  }
-
-  .dx-hero.dx-js.dx-reduce {
-    position: relative;
-  }
+  .dx-hero.dx-js.is-final .dx-final { pointer-events: auto; }
 }
 
-/* ---- phone: one large card, four beats ----------------------------------- */
+/* ---- phone: the field, then the headline --------------------------------------- */
 @media (max-width: 760px) {
-  .dx-hero.dx-js .dx-stage {
+  .dx-hero.dx-js .dx-stage { display: flex; flex-direction: column; }
+  .dx-hero.dx-js .dx-field { height: 100vh; height: 100svh; }
+  .dx-hero.dx-js .dx-scan {
+    position: absolute;
+    left: 20px;
+    right: 20px;
+    top: calc(100svh - var(--nav-height, 76px) - 92px);
+    z-index: 2;
     display: flex;
-    flex-direction: column;
-    gap: 16px;
-    padding-bottom: 32px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.6s var(--dx-ease) 0.8s, transform 0.7s var(--dx-ease) 0.8s;
   }
-
-  .dx-hero.dx-js .dx-paper { order: 1; padding-bottom: 0; }
-  .dx-hero.dx-js .dx-scan { order: 2; display: flex; }
-  .dx-hero.dx-js .dx-paths { order: 3; margin: 0 16px; }
-  .dx-hero.dx-js .dx-room { order: 4; padding-top: 8px; }
-
-  .dx-hero.dx-js.is-scanned .dx-scan {
-    display: none;
-  }
-
-  .dx-hero.dx-js .dx-paths:not(.is-on) {
-    display: none;
-  }
-
-  .dx-hero.dx-js .dx-room:not(.is-on) {
-    display: none;
-  }
-
-  .dx-stamp {
-    right: 3%;
-    top: 15%;
-    border-width: 3px;
-    font-size: clamp(30px, 10vw, 44px);
-  }
-
-  /* The findings take no room until the scan runs. */
-  .dx-hero.dx-js .dx-finds {
-    display: none;
-  }
-
-  .dx-hero.dx-js.is-scanned .dx-finds {
-    display: grid;
-  }
-
-  .dx-grid dd {
-    font-size: 13px;
-  }
-
-  .dx-record {
-    margin-bottom: 24px;
-  }
-
-  .dx-final h1 {
-    font-size: clamp(36px, 11vw, 60px);
-  }
-
-  .dx-actions .dx-btn {
-    width: 100%;
-  }
+  .dx-hero.dx-js.is-stamped .dx-scan { opacity: 1; transform: none; }
+  .dx-hero.dx-js.is-scanned .dx-scan { opacity: 0; pointer-events: none; transition-delay: 0s; }
+  .dx-final h1 { font-size: clamp(36px, 11vw, 60px); }
+  .dx-actions .dx-btn { width: 100%; }
+  .dx-hero.dx-js .dx-final { display: none; }
+  .dx-hero.dx-js.is-final .dx-final { display: block; }
 }
