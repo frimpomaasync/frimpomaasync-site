@@ -1,0 +1,1005 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex,nofollow,noarchive,noimageindex">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Build Library</title>
+<style>
+:root{
+  --ink:#101426; --copper:#C2501C; --paper:#FFFFFF; --wash:#F8F8F9;
+  --line:#E4E4EA; --mute:#6A6E7E; --soft:#9A9EAC;
+  --live:#1E7A4C; --built:#B07A12; --shelf:#6A6E7E; --dead:#B33A3A;
+  --serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --mono:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--wash);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.55;-webkit-text-size-adjust:100%}
+a{color:var(--copper);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ---------- header ---------- */
+.top{position:sticky;top:0;z-index:40;background:var(--paper);border-bottom:1px solid var(--line)}
+.top .in{max-width:1180px;margin:0 auto;padding:18px 20px 12px}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft)}
+h1{font-family:var(--serif);font-size:30px;line-height:1.15;margin:6px 0 2px;font-weight:600;letter-spacing:-.01em}
+.sub{color:var(--mute);font-size:14px;margin:0 0 12px}
+.searchrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+#q{flex:1 1 260px;min-width:0;font-size:16px;font-family:var(--sans);padding:11px 13px;border:1px solid var(--line);border-radius:10px;background:var(--wash);color:var(--ink);outline:none}
+#q:focus{border-color:var(--copper);background:var(--paper)}
+.count{font-family:var(--mono);font-size:11.5px;color:var(--soft);white-space:nowrap}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.chip{font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:6px 11px;border:1px solid var(--line);border-radius:999px;background:var(--paper);color:var(--mute);cursor:pointer;user-select:none;line-height:1.2}
+.chip:hover{border-color:var(--ink);color:var(--ink)}
+.chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+/* ---------- grid ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:20px}
+.groupname{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin:26px 0 10px;border-top:1px solid var(--line);padding-top:16px}
+.groupname:first-of-type{margin-top:4px;border-top:0;padding-top:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(288px,1fr));gap:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:15px 16px 13px;cursor:pointer;display:flex;flex-direction:column;gap:6px;transition:border-color .12s,transform .12s}
+.card:hover{border-color:var(--ink);transform:translateY(-1px)}
+.card:focus-visible{outline:2px solid var(--copper);outline-offset:2px}
+.crow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.kind{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft)}
+.pill{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;padding:3px 8px;border-radius:999px;white-space:nowrap;font-weight:600}
+.pill.live{background:#E8F4ED;color:var(--live)}
+.pill.built{background:#FBF2DF;color:var(--built)}
+.pill.shelved{background:#EFEFF2;color:var(--shelf)}
+.pill.retired{background:#F8EAEA;color:var(--dead)}
+.cname{font-family:var(--serif);font-size:19px;line-height:1.25;font-weight:600;letter-spacing:-.005em}
+.cone{color:var(--mute);font-size:13.5px;line-height:1.5;flex:1}
+.cfoot{display:flex;gap:10px;align-items:center;font-family:var(--mono);font-size:10.5px;color:var(--soft);border-top:1px solid var(--line);padding-top:9px;margin-top:2px}
+.cfoot .go{color:var(--copper);font-weight:600}
+.empty{color:var(--mute);padding:40px 0;text-align:center;font-size:15px}
+
+/* ---------- detail ---------- */
+.sheet{position:fixed;inset:0;z-index:80;background:var(--wash);overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}
+.sheet.open{display:block}
+.sbar{position:sticky;top:0;z-index:5;background:var(--paper);border-bottom:1px solid var(--line);padding:11px 20px;display:flex;align-items:center;gap:12px}
+.back{font-family:var(--mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:none;border:1px solid var(--line);border-radius:8px;padding:7px 12px;cursor:pointer}
+.back:hover{border-color:var(--ink)}
+.sbar .nm{font-family:var(--serif);font-size:17px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sin{max-width:1000px;margin:0 auto;padding:22px 20px 80px}
+.sin h2{font-family:var(--serif);font-size:31px;line-height:1.15;margin:8px 0 6px;font-weight:600;letter-spacing:-.01em}
+.sone{font-size:16px;color:var(--mute);margin:0 0 18px;max-width:64ch}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.btn{font-family:var(--sans);font-size:14px;font-weight:600;padding:10px 15px;border-radius:10px;border:1px solid var(--ink);background:var(--ink);color:#fff;cursor:pointer;text-decoration:none;display:inline-block;line-height:1.3}
+.btn:hover{text-decoration:none;opacity:.88}
+.btn.alt{background:var(--paper);color:var(--ink)}
+.btn.copper{background:var(--copper);border-color:var(--copper)}
+.btn.ghost{background:var(--paper);color:var(--mute);border-color:var(--line)}
+.btn.ghost:hover{color:var(--ink);border-color:var(--ink);opacity:1}
+
+.pv{background:var(--paper);border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:22px}
+.pvh{display:flex;align-items:center;gap:10px;padding:10px 13px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.pvh .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--soft);flex:1}
+.tog{display:flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.tog button{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 10px;border:0;background:var(--paper);color:var(--mute);cursor:pointer}
+.tog button.on{background:var(--ink);color:#fff}
+.pvbody{background:#EDEDF1;padding:14px;display:flex;justify-content:center}
+.pvbody iframe{border:0;background:#fff;width:100%;height:560px;border-radius:8px;box-shadow:0 1px 3px rgba(16,20,38,.14)}
+.pvbody.phone iframe{width:390px;max-width:100%;height:640px}
+.pvnote{padding:16px;color:var(--mute);font-size:14px;background:var(--paper)}
+
+.sec{margin-bottom:22px}
+.sec h3{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--soft);margin:0 0 9px;font-weight:600}
+.box{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+.box ol,.box ul{margin:0;padding-left:19px}
+.box li{margin-bottom:7px}
+.box li:last-child{margin-bottom:0}
+.box p{margin:0 0 8px}
+.box p:last-child{margin:0}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:7px 14px;font-size:14px}
+.kv dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--soft);padding-top:3px}
+.kv dd{margin:0;word-break:break-word}
+code,.path{font-family:var(--mono);font-size:12.5px;background:var(--wash);border:1px solid var(--line);border-radius:6px;padding:2px 6px;word-break:break-all}
+.fline{display:flex;gap:8px;align-items:center;margin-bottom:7px;flex-wrap:wrap}
+.fline:last-child{margin-bottom:0}
+.cp{font-family:var(--mono);font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;padding:4px 8px;border:1px solid var(--line);border-radius:6px;background:var(--paper);color:var(--mute);cursor:pointer;white-space:nowrap}
+.cp:hover{border-color:var(--ink);color:var(--ink)}
+.cp.done{border-color:var(--live);color:var(--live)}
+.warn{background:#FDF6EE;border-color:#F0DCC6}
+details.ret{margin-top:8px}
+details.ret summary{cursor:pointer;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);padding:10px 0}
+details.ret summary:hover{color:var(--ink)}
+.retlist{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:14px 17px;font-size:13.5px;color:var(--mute)}
+.retlist b{color:var(--ink);font-weight:600}
+.retlist div{margin-bottom:9px}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(30px);background:var(--ink);color:#fff;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;padding:11px 18px;border-radius:999px;opacity:0;transition:.2s;pointer-events:none;z-index:200}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.modebar{background:#FDF6EE;border-bottom:1px solid #F0DCC6;font-size:13px;color:#7A5A2E;padding:9px 20px;text-align:center}
+
+@media (max-width:640px){
+  .wrap{padding:14px}
+  .top .in{padding:14px 14px 10px}
+  h1{font-size:25px}
+  .grid{grid-template-columns:1fr;gap:10px}
+  .sin{padding:16px 14px 70px}
+  .sin h2{font-size:25px}
+  .pvbody{padding:8px}
+  .pvbody iframe{height:70vh}
+  .pvbody.phone iframe{height:70vh}
+  .kv{grid-template-columns:1fr;gap:3px 0}
+  .kv dd{margin-bottom:8px}
+  .btn{width:100%;text-align:center}
+}
+</style>
+</head>
+<body>
+
+<div id="modebar" class="modebar" hidden></div>
+
+<header class="top">
+  <div class="in">
+    <div class="eyebrow">frimpomaasync</div>
+    <h1>The Build Library</h1>
+    <p class="sub">Everything built, in one place. Click any card to see it working.</p>
+    <div class="searchrow">
+      <input id="q" type="search" placeholder="Search by name, by what it does, by a filename…" autocomplete="off" spellcheck="false">
+      <span class="count" id="count"></span>
+    </div>
+    <div class="chips" id="chips"></div>
+  </div>
+</header>
+
+<main class="wrap" id="main"></main>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true">
+  <div class="sbar">
+    <button class="back" id="back">← Back</button>
+    <span class="nm" id="sheetname"></span>
+  </div>
+  <div class="sin" id="sheetbody"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================================
+   THE CATALOGUE.  Edit this block to add or change a build.
+   Every path below was read off this Mac on 2026-08-18. Every live URL
+   was pinged and answered 200, except /soma which answers 301 on purpose
+   and /stats.php which answers 404 without its key, also on purpose.
+   ===================================================================== */
+
+var HOME = '/Users/you';
+var SITE = HOME + '/frimpomaasync-site';
+var DL   = HOME + '/Downloads';
+/* Site pages load their CSS from paths that start with a slash, so they only
+   render properly over http. This is the little server that does that, kept
+   running by the launchd job com.frimpomaasync.preview-server. */
+var SERVE = 'http://127.0.0.1:8787/';
+function S(p){ return SITE + '/' + p; }
+function D(p){ return DL + '/' + p; }
+
+/* The same four steps ship every site change. Written once, used everywhere. */
+var DEPLOY = [
+  'Edit the file in <code>~/frimpomaasync-site</code>.',
+  'In Terminal: <code>cd ~/frimpomaasync-site</code>',
+  'Name the files you changed, one by one: <code>git add page.html assets/thing.js</code>. <b>Never <code>git add -A</code> in this repo</b>, other sessions leave unfinished pages sitting there untracked.',
+  'Then <code>git commit -m "what changed"</code> and <code>git push</code>.',
+  'Wait about a minute. GitHub uploads it to Hostinger by FTPS, and retries three times if the host blips.',
+  'Hard-refresh to see it: <b>Cmd + Shift + R</b>. A normal refresh can show you the old cached page.'
+];
+
+var BUILDS = [
+
+/* ══════════════════ THE SITE ══════════════════ */
+{
+  id:'home', group:'Live on frimpomaasync.com', kind:'Site page', status:'live',
+  name:'The home page',
+  one:'The front door. A cinematic video loop behind "Stop being the system." in red.',
+  live:'https://frimpomaasync.com/', prev:S('index.html'),
+  files:[S('index.html'), S('assets/hero/vh.js'), S('assets/hero/'), S('fsnav.js')],
+  where:'frimpomaasync.com · the root of everything.',
+  use:['It is the page every ad, pin and link points at.','The hero video ping-pongs a maze loop. <code>vh.js</code> owns whether it plays.'],
+  update:DEPLOY,
+  watch:['Verify the video with Playwright, not with the Chrome extension. The extension always reports the tab as "hidden" and the video never starts for it.','The red is <code>#F33229</code>, sampled from the footage. It is not the copper.']
+},
+{
+  id:'synkasa', group:'Live on frimpomaasync.com', kind:'Site page', status:'live',
+  name:'SynKasa',
+  one:'The flagship AI front desk page. Start $555 · Grow $1,500 · Full $2,222, and Care from $99.',
+  live:'https://frimpomaasync.com/synkasa', prev:S('synkasa.html'),
+  files:[S('synkasa.html')],
+  where:'frimpomaasync.com/synkasa · it also holds the Soma section at <code>#soma</code>.',
+  use:['The page you send anyone asking what SynKasa is.','Founding price for Grow is $750 for the first three, and that one requires a named testimonial.'],
+  update:DEPLOY,
+  watch:['Confirm any price before quoting it anywhere else.','<code>/soma</code> redirects here to <code>#soma</code> on purpose. Soma is not its own page.']
+},
+{
+  id:'demo', group:'Live on frimpomaasync.com', kind:'Site page', status:'live',
+  name:'The SynKasa live demo',
+  one:'Your AI chat box, running as a real front desk, in three different skins the visitor picks between.',
+  live:'https://frimpomaasync.com/synkasa-demo/', prev:S('synkasa-demo/index.html'),
+  files:[S('synkasa-demo/index.html'), S('synkasa-demo/synkasa-demo-run.mp4')],
+  where:'frimpomaasync.com/synkasa-demo/ · one folder, one file, one video.',
+  use:['This is the "watch it work before you pay" proof.','Visitor picks a skin, then talks to the front desk and watches it book.','It fires the <code>demo_opened</code> funnel event, which shows up on your stats page.'],
+  update:DEPLOY,
+  watch:['The funnel beacon exists twice: inside <code>fsnav.js</code>, and inline in this page. Change one, check the other.','The three-skin chooser shipped 11 Aug in <code>3fc94cc</code> and <code>b89f9b7</code>. It is done. Do not rebuild it.']
+},
+{
+  id:'chatbox', group:'Live on frimpomaasync.com', kind:'Site machinery', status:'live',
+  name:'The chat box, and all the site furniture',
+  one:'One file ships the chat widget, the nav, the footer, the sticky bar, the section rail and every animation, on every page.',
+  live:'https://frimpomaasync.com/', prev:S('index.html'),
+  files:[S('fsnav.js'), S('fswidget.js')],
+  where:'Every page on the site loads <code>fsnav.js</code> once, just before <code>&lt;/body&gt;</code>. Currently v852.',
+  use:['You do not add the chat box to a page. You add <code>fsnav.js</code> and the chat box comes with it.','A page bends it with body attributes: <code>data-sk-sections</code>, <code>data-sk-bar</code>, <code>data-sk-biz</code>, <code>data-sk-nochrome</code>.'],
+  update:['Edit <code>fsnav.js</code>. Bump the version number in the comment at the top so you can tell what shipped.'].concat(DEPLOY.slice(1)),
+  watch:['<code>fswidget.js</code> is a dead file kept alive on purpose: it is an empty no-op so old pages that still link it do not 404 and do not get a second chat box. <b>Never put code in it.</b>','<b>It was dead on the home page until 18 Aug.</b> The nine-seconds replay section reused the variable name <code>msgs</code>, which <code>var</code> hoists to the whole file, so it overwrote the chat container with an array. Opening the chat then threw and the greeting never appeared. Fixed in <code>09e5c13</code>, now v855.','The chat is deliberately absent on Soft Appeals, the Blueprint pages and the demo. Those have their own way in.','Soft Appeals converts on a form, not the calendar, so the chat and bar behave differently there.']
+},
+{
+  id:'softappeals', group:'Live on frimpomaasync.com', kind:'Site section', status:'live',
+  name:'Soft Appeals',
+  one:'The denial recovery business. Sixteen pages, built on four completely different interface shells.',
+  live:'https://frimpomaasync.com/soft-appeals', prev:S('soft-appeals.html'),
+  files:[S('soft-appeals.html'), S('assets/soft-appeals.css'), S('assets/soft-appeals.js'), S('soft-appeals-pricing.html'), S('soft-appeals-process.html'), S('soft-appeals-start.html'), S('soft-appeals-faq.html'), S('soft-appeals-about.html'), S('soft-appeals-contact.html'), S('soft-appeals-book.html'), S('soft-appeals-data-security.html')],
+  where:'frimpomaasync.com/soft-appeals and fifteen sister pages, all <code>soft-appeals-*.html</code>. Own nav context, same domain.',
+  use:['This is the business. Floor care is retired from all copy.','The four shells, console, app, document and portal, live in <code>assets/soft-appeals.css</code> and <code>.js</code>. Shipped 17 Aug in <code>630715c</code>, all eight pages verified.'],
+  update:DEPLOY,
+  watch:['<b>Never name the AI tool.</b> It is "the chat box".','<b>Never claim a Soft Appeals result.</b> No numbers, no recovery rates.','A separate domain was researched and rejected. Do not reopen that before client three.']
+},
+{
+  id:'dhs', group:'Live on frimpomaasync.com', kind:'Assessment', status:'live',
+  name:'The Denial Health Score',
+  one:'A scored assessment that captures the lead, emails them their copy, and gives them a file to download.',
+  live:'https://frimpomaasync.com/soft-appeals-denial-health-score', prev:S('soft-appeals-denial-health-score.html'),
+  files:[S('soft-appeals-denial-health-score.html'), S('assets/denial-health-score.js'), S('audit-lead.php'), S('tests/denial_health_score.test.mjs')],
+  where:'frimpomaasync.com/soft-appeals-denial-health-score',
+  use:['Someone answers the questions, gets a score, and you get their details.','The emailed copy and the download were added 17 Aug.'],
+  update:DEPLOY,
+  watch:['A backup of the pre-change version sits in <code>~/Downloads/systems-audit-backup-2026-08-17/</code>.','There are real tests for this one. Run them before you ship a change.']
+},
+{
+  id:'audit', group:'Live on frimpomaasync.com', kind:'Assessment', status:'live',
+  name:'The Siesie Systems Audit',
+  one:'The second lead-capturing assessment. All of its words live in one config file, so you can rewrite it without touching code.',
+  live:'https://frimpomaasync.com/siesie-systems-audit', prev:S('siesie-systems-audit.html'),
+  files:[S('siesie-systems-audit.html'), S('assets/audit-config.js'), S('assets/audit-engine.js'), S('assets/audit-ui.js'), S('assets/systems-audit.css'), S('tests/systems_audit.test.mjs'), S('docs/systems-audit-README.md')],
+  where:'frimpomaasync.com/siesie-systems-audit',
+  use:['Every question, every result, every line of copy is in <code>assets/audit-config.js</code>. That is the only file you need to open to change what it says.','32 tests plus a real-Chrome driver back it.'],
+  update:['To change the words: edit <code>assets/audit-config.js</code> only.','To change the behaviour: <code>audit-engine.js</code>. To change the look: <code>audit-ui.js</code> and <code>systems-audit.css</code>.'].concat(DEPLOY.slice(1)),
+  watch:['Backup zip is in <code>~/Downloads/systems-audit-backup-2026-08-17/</code>.','Built 17 Aug. It is finished. Do not rebuild it.']
+},
+{
+  id:'blueprint', group:'Live on frimpomaasync.com', kind:'Tool', status:'live',
+  name:'The Blueprint Command Center',
+  one:'Three pages sharing one saved answer: an audit, a workbook, and the plan it builds for them.',
+  live:'https://frimpomaasync.com/blueprint', prev:S('blueprint.html'),
+  files:[S('blueprint.html'), S('blueprint-workbook.html'), S('my-blueprint.html'), S('vault/automated-small-business-blueprint.pdf')],
+  where:'frimpomaasync.com/blueprint · /blueprint-workbook · /my-blueprint',
+  use:['All three pages read and write the same <code>localStorage</code> key, so someone can leave and come back.','Twelve systems, one leak at a time. No account needed.'],
+  update:DEPLOY,
+  watch:['Shipped 17 Aug in <code>b0c6905</code>. Built and live. Do not rebuild it.','The PDF is vaulted behind a token at <code>/get/blueprint</code>, not linked openly.']
+},
+{
+  id:'booking', group:'Live on frimpomaasync.com', kind:'Tool', status:'live',
+  name:'Your own booking system',
+  one:'The calendar interface you built. A chooser, three split-screen bookers, and a confirmation page. 418 timezones.',
+  live:'https://frimpomaasync.com/book', prev:S('book.html'),
+  files:[S('book.html'), S('book-call.html'), S('book-operations-map.html'), S('soft-appeals-book.html'), S('booked.html'), S('assets/booking.css'), S('assets/booking.js')],
+  where:'frimpomaasync.com/book · then one of three bookers · then /booked.',
+  use:['<code>/book</code> is the chooser. It sends people to the right booker for what they want.','Month calendar, real timezone handling, split-screen layout.','The Google fallback link is <code>https://calendar.app.google/DkRJFRA3G6W6d8E48</code>.'],
+  update:['The look lives in <code>assets/booking.css</code>. The behaviour in <code>assets/booking.js</code>.'].concat(DEPLOY.slice(1)),
+  watch:['<b>Prefix every new CSS class you add here.</b> <code>modules.css</code> already owns <code>.who</code>, <code>.ico</code>, <code>.t</code>, <code>.n</code>, <code>.l</code> and <code>.mark</code>. Reuse one and you will break another page.','A backup of the pages from before the switch is in <code>~/Downloads/booking-page/backup-before-switch/</code>.']
+},
+{
+  id:'free', group:'Live on frimpomaasync.com', kind:'Lead machine', status:'live',
+  name:'The free shelf and its email gate',
+  one:'Five giveaways behind a name-and-email gate. The lead lands in your inbox and in a log file you own.',
+  live:'https://frimpomaasync.com/free', prev:S('free.html'),
+  files:[S('free.html'), S('free-get.html'), S('free-thanks.html'), S('lead.php'), S('fs-mail.php'), S('download.php'), S('fs-metrics/')],
+  where:'frimpomaasync.com/free · each item gated at <code>/get/blueprint</code>, <code>/get/followup</code>, <code>/get/intake</code>, <code>/get/som</code>, <code>/get/toolkit</code>.',
+  use:['Someone gives a name and an email, and gets the thing.','The email is sent by SMTP from your own <code>notify@frimpomaasync.com</code> through <code>fs-mail.php</code>. Formspree is only the fallback.','Every lead is also written to <code>fs-metrics/leads.log</code> on the server, so you own the list even if email breaks.'],
+  update:['<code>/get/anything</code> is a rewrite rule in <code>.htaccess</code> pointing at <code>free-get.html?item=…</code>. To add a sixth item, add it to <code>free.html</code> and to <code>free-get.html</code>.'].concat(DEPLOY.slice(1)),
+  watch:['<b>The SMTP credentials live on the server only.</b> They are not in the repo and must never be put there.','PHP <code>mail()</code> on Hostinger silently delivers nothing. That is why this uses SMTP.','Because <code>/get/blueprint</code> is a pretty URL, the page JavaScript must read <code>location.pathname</code>, not the query string. Always test the pretty URL live, not the raw one.']
+},
+{
+  id:'stats', group:'Live on frimpomaasync.com', kind:'Dashboard', status:'live',
+  name:'The funnel counter and your stats page',
+  one:'Your own cookieless counter. Five events, plus every lead who took something, on one private page.',
+  live:'https://frimpomaasync.com/stats.php?key=YOUR-KEY', prev:null,
+  files:[S('event.php'), S('stats.php'), S('fs-metrics/'), S('fsnav.js')],
+  where:'frimpomaasync.com/stats.php?key=YOUR-KEY · <b>the key is the whole lock</b>. Without it the page answers 404.',
+  use:['Five events only: picked a leak · opened the demo · started the fit form · sent the fit form · booked the call.','Then the free shelf table, then the actual list of leads with names and emails.','Do Not Track is respected. No cookies. First-party only.'],
+  update:['The events are listed in <code>stats.php</code>. The beacon that sends them is in <code>fsnav.js</code>.','To change the key you must change the SHA-256 hash inside <code>stats.php</code>, not the key itself. The plain key is never in the repo.'].concat(DEPLOY.slice(1)),
+  watch:['<b>Bookmark that URL.</b> The real key is redacted on this hosted copy: it lives in your chat history and in the Mac copy of this page.','<code>fs-metrics/</code> is denied to browsers, and the deploy never uploaded the log, which is exactly why the log survives every deploy.','The first two all-time counts are your own verify tests.']
+},
+{
+  id:'somapp', group:'Live on frimpomaasync.com', kind:'App', status:'live',
+  name:'Som, the capture app',
+  one:'A free installable app for capturing a thought. Works with no internet once it has loaded.',
+  live:'https://frimpomaasync.com/som-app/', prev:S('som-app/index.html'),
+  files:[S('som-app/index.html'), S('som-app/manifest.json'), S('som-app/sw.js'), S('som.html'), D('Som-Soma-Install/som-app.html')],
+  where:'frimpomaasync.com/som-app/ is the app itself. frimpomaasync.com/som is the page that explains it.',
+  use:['On a phone: open it, then Share → Add to Home Screen. It then behaves like a real app.','<code>sw.js</code> is the service worker. That is the piece that makes it work offline.'],
+  update:['Edit <code>som-app/index.html</code>. <b>Then bump the cache version inside <code>sw.js</code></b>, or phones will keep serving the old copy forever.'].concat(DEPLOY.slice(1)),
+  watch:['A service worker caches hard. If a change looks like it did not ship, the cache version in <code>sw.js</code> is almost always why.']
+},
+{
+  id:'portfolio', group:'Live on frimpomaasync.com', kind:'Site page', status:'live',
+  name:'The portfolio and its eight videos',
+  one:'The work page. Four demo videos, re-rendered 20 Aug so they close on her real name.',
+  live:'https://frimpomaasync.com/portfolio', prev:S('portfolio.html'),
+  files:[S('portfolio.html'), S('videos/'), HOME + '/portfolio-reel'],
+  where:'frimpomaasync.com/portfolio · videos in <code>videos/</code>.',
+  use:['The videos are rendered by Remotion from <code>~/portfolio-reel</code>, then encoded down for the web.'],
+  update:['Change the words: edit <code>portfolio.html</code>.','Change a video: re-render in <code>~/portfolio-reel</code>, re-encode to 720p, drop it in <code>videos/</code>, and bump the <code>?v=</code> on the tag.'].concat(DEPLOY.slice(1)),
+  watch:['<b>Re-rendered and live 20 Aug at <code>?v=3</code>.</b> All four used to end on the retired "NaNa Frimpomaa" card, and the spec chips named vendors outright. Both fixed at the source in <code>brand.ts</code> and <code>pieces.ts</code>, and every closing frame was checked by eye before it shipped.','<b>The guard now blocks both.</b> It never checked for the retired spelling or vendor names, which is exactly how they reached a finished mp4. Rules added 20 Aug.','Always run <code>npm run guard</code> before a render. Never bypass it.']
+},
+{
+  id:'blog', group:'Live on frimpomaasync.com', kind:'Site section', status:'live',
+  name:'The blog',
+  one:'Six answer-style posts that catch people searching a problem rather than your name.',
+  live:'https://frimpomaasync.com/blog/', prev:S('blog/index.html'),
+  files:[S('blog/index.html'), S('blog/post.css'), S('blog/reply-to-every-lead-in-five-minutes.html'), S('blog/what-automating-a-one-person-business-actually-costs.html'), S('blog/answering-service-vs-ai-receptionist-vs-text-back.html'), S('blog/stop-no-shows-without-being-the-bad-guy.html'), S('blog/do-i-need-a-crm-if-im-a-one-person-business.html'), S('blog/your-website-doesnt-have-to-be-squarespace.html')],
+  where:'frimpomaasync.com/blog/',
+  use:['Each post answers one question someone actually types into Google.'],
+  update:['Copy an existing post file, rewrite it, add it to <code>blog/index.html</code> and to <code>sitemap.xml</code>.'].concat(DEPLOY.slice(1)),
+  watch:['A new post is not findable until it is in <code>sitemap.xml</code>.','Run the humanizer on the copy before it ships.']
+},
+{
+  id:'systempages', group:'Live on frimpomaasync.com', kind:'Site section', status:'live',
+  name:'The nine system pages',
+  one:'One page per problem someone searches for: missed calls, quote follow-up, no-shows, intake, and so on.',
+  live:'https://frimpomaasync.com/missed-call-follow-up', prev:S('missed-call-follow-up.html'),
+  files:[S('missed-call-follow-up.html'), S('quote-follow-up.html'), S('appointment-reminders.html'), S('lead-follow-up-automation.html'), S('client-intake-system.html'), S('email-follow-up-system.html'), S('one-person-business-toolkit.html'), S('small-business-operations-automation.html'), S('solo-business-system.html')],
+  where:'Nine separate URLs, each named after the problem it solves.',
+  use:['These are the pages that catch search traffic. Each one funnels to the demo or the fit form.'],
+  update:DEPLOY,
+  watch:['They share the site chrome from <code>fsnav.js</code>, so a change there changes all nine at once.']
+},
+{
+  id:'forms', group:'Live on frimpomaasync.com', kind:'Lead machine', status:'live',
+  name:'The fit and intake forms',
+  one:'Four qualifying forms, one per offer, so you find out whether they fit before the call.',
+  live:'https://frimpomaasync.com/fit', prev:S('fit.html'),
+  files:[S('fit.html'), S('fit-thanks.html'), S('synkasa-fit.html'), S('siesie-application.html'), S('intake.html'), S('soft-appeals-start.html'), S('lead.php'), S('audit-lead.php')],
+  where:'/fit · /synkasa-fit · /siesie-application · /intake · plus /soft-appeals-start, which is the PHI-free one.',
+  use:['<code>/fit</code> is the general one. The others are offer-specific.','Soft Appeals converts here rather than on the calendar, on purpose. No health information touches a booking form.'],
+  update:DEPLOY,
+  watch:['Every input needs a real label and 16px text, or iPhone zooms the page when it is tapped.','Never add a field that would collect health information to anything but the Soft Appeals intake.']
+},
+{
+  id:'trustpages', group:'Live on frimpomaasync.com', kind:'Site section', status:'live',
+  name:'The trust pages',
+  one:'About, method, comparison, results, data, privacy, terms. The pages that answer "can I believe you".',
+  live:'https://frimpomaasync.com/method', prev:S('method.html'),
+  files:[S('about.html'), S('method.html'), S('comparison.html'), S('results.html'), S('data.html'), S('privacy.html'), S('terms.html'), S('ugc.html')],
+  where:'/about · /method · /comparison · /results · /data · /privacy · /terms · /ugc',
+  use:['<code>/privacy</code> is where the cookieless counter is announced, dated 10 Aug 2026. It has to stay announced.'],
+  update:DEPLOY,
+  watch:['The guarantee is "Live in 7 days, or you don\'t pay." <b>Never guarantee a number of bookings anywhere on these pages.</b>','Never name a vendor. Describe by role.']
+},
+{
+  id:'tests', group:'Live on frimpomaasync.com', kind:'Safety net', status:'live',
+  name:'The site test suite',
+  one:'Seventeen test files that catch a broken page before your visitors do.',
+  live:null, prev:null,
+  files:[S('tests/'), S('tests/a11y_contract.test.mjs'), S('tests/content_contract.test.mjs'), S('tests/site_qa.py'), S('tests/systems_audit_browser.py'), S('scripts/preview_server.py')],
+  where:'<code>~/frimpomaasync-site/tests/</code>',
+  use:['Node tests end in <code>.test.mjs</code>. Python checks end in <code>.py</code>.','Run them before pushing anything that touches the audits, the journey, or the trust room.'],
+  update:['Add a new test file next to the existing ones and follow the same shape.'],
+  watch:['<b>The preview server on port 4173 can lie to you.</b> It has shown a cached old page as if it were current. Verify a shipped fix on the real URL with a hard refresh, not on the preview server.']
+},
+{
+  id:'deploy', group:'Live on frimpomaasync.com', kind:'Pipeline', status:'live',
+  name:'The deploy pipeline',
+  one:'Push to GitHub, and about a minute later the live site has it. Retries three times if the host blips.',
+  live:'https://github.com/frimpomaasync/frimpomaasync-site', prev:null,
+  files:[S('.github/workflows/deploy.yml'), S('.htaccess')],
+  where:'GitHub Actions → FTPS → Hostinger <code>public_html</code>.',
+  use:['You never upload anything by hand. You push, and it goes.','It keeps a sync-state file on the server so it only sends what changed.'],
+  update:['Edit <code>.github/workflows/deploy.yml</code>. It needs the repo secrets <code>FTP_SERVER</code>, <code>FTP_USERNAME</code>, <code>FTP_PASSWORD</code>.'],
+  watch:['<b>The deploy DOES delete files you remove from the repo.</b> If you retire a page people may still have the link to, add a redirect in <code>.htaccess</code> instead of just deleting it.','<b>A failure email is not an outage.</b> Across 57 runs it succeeded 49 times; every failure was Hostinger timing out and every one passed on a re-run with no code change.','Small edits are easier made in the GitHub web editor than locally.']
+},
+
+/* ══════════════════ THE APPS ON YOUR PHONE ══════════════════ */
+{
+  id:'nanahq', group:'Apps on your phone', kind:'App', status:'live',
+  name:'NANA HQ',
+  one:'The family app. Adinkra guide, hack deck, and a state that syncs between your phone and this Mac.',
+  live:'https://claude.ai/code/artifact/8be01fea-94b8-4ed1-8bf5-63c3cdea15c1',
+  prev:D('nana-hq/NANA-HQ.html'),
+  files:[D('nana-hq/NANA-HQ.html'), D('nana-hq/build_artifact.py'), D('nana-hq/tests/'), D('nana-hq/shots/')],
+  where:'Published as a Claude artifact. It is also the first tile on Ɔpono Base Home.',
+  use:['Open the link on your phone. It works there.','Phone and Mac stay in step through <code>nana-hq-state.json</code> on Google Drive.'],
+  update:['Edit <code>~/Downloads/nana-hq/NANA-HQ.html</code>.','Run <code>python3 build_artifact.py</code> in that folder.','Republish the artifact to the <b>same URL</b>. Pass the existing link, or it becomes a second app.'],
+  watch:['69 tests back this one. Run them.','<b>One writer per file on the Drive bus.</b> NANA HQ is the sole writer of its state file, newest-wins, seed-guarded. Two apps sharing one filename clobbered each other once already.','Built, live and synced. Do not rebuild it.']
+},
+{
+  id:'opono', group:'Apps on your phone', kind:'App', status:'live',
+  name:'Ɔpono Base Home',
+  one:'The front door to all the other apps. One tile each.',
+  live:'https://claude.ai/code/artifact/d880e2b7-d2ac-430d-bc0c-095ddf723a3c',
+  prev:D('opono-base-home/opono-base-home.artifact.html'),
+  files:[D('opono-base-home/opono-base-home.artifact.html'), D('denial-recovery/ceo-os/OPONO-BASE-HOME.artifact.html')],
+  where:'Published as a Claude artifact. This is the one to bookmark on your home screen.',
+  use:['Start here on your phone, then tap through to whichever app you need.'],
+  update:['Edit the artifact HTML, then republish to the same URL.'],
+  watch:['There are two local copies of this file. The one in <code>opono-base-home/</code> is the one to trust.','The live artifact has drifted ahead of the local folder before. <b>Fetch the live version before editing.</b>']
+},
+{
+  id:'anopa', group:'Apps on your phone', kind:'App', status:'live',
+  name:'Anɔpa Content',
+  one:'Your content cockpit. Every Monday it decides the week, then writes it in eight platform shapes onto one page.',
+  live:'https://claude.ai/code/artifact/39689b6f-d5ef-48f1-b2e8-abb084106ccc',
+  prev:HOME + '/marketing-department/dashboard/this-week.html',
+  files:[HOME + '/marketing-department/dashboard/this-week.html', HOME + '/marketing-department/dashboard/assemble.js', HOME + '/marketing-department/dashboard/data-platforms.js', HOME + '/marketing-department/dashboard/data-pinterest-bank.js', HOME + '/marketing-department/dashboard/check-pins.js', HOME + '/marketing-department/README.md'],
+  where:'Published as a Claude artifact, and on Ɔpono Base Home. The same page as a local file is <code>dashboard/this-week.html</code>.',
+  use:['Post the card on the Today tab. That is the whole instruction.','Ticks, the Hook Vault and the lift log sync through Google Drive.','The Anɔpa cards are beginner step cards now: gather · film · words on screen · post it.'],
+  update:['Edit the data files in <code>~/marketing-department/dashboard/</code>, then run <code>node assemble.js</code> in that folder, then republish.'],
+  watch:['The Pinterest copy bank lives in <code>data-pinterest-bank.js</code> and nine rules are checked on every pin, by both the page and <code>check-pins.js</code>.','Every app gets its own Drive filename. Anɔpa and the Command Center once shared one and wiped each other. Fixed 11 Aug. Keep it that way.']
+},
+{
+  id:'sacc', group:'Apps on your phone', kind:'App', status:'live',
+  name:'Soft Appeals Command Center',
+  one:'All 39 Soft Appeals documents inside one app, built around the claim and its deadline clock.',
+  live:'https://claude.ai/code/artifact/30d880d2-2eb6-4d20-b176-dce4c7f9193b',
+  prev:D('denial-recovery/SOFT-APPEALS.html'),
+  files:[D('denial-recovery/SOFT-APPEALS.html'), D('denial-recovery/app/build.py'), D('denial-recovery/app/template.html'), D('denial-recovery/app/SOFT-APPEALS.artifact.html'), D('denial-recovery/SOFT-APPEALS-SITE-MAP.html')],
+  where:'Published as a Claude artifact. Renamed from GyeSika 12 Aug.',
+  use:['The deadline clock is the point. Everything else hangs off the claim.'],
+  update:['Rebuild it with <code>python3 app/build.py</code> from <code>~/Downloads/denial-recovery/</code>, then republish to the same URL.'],
+  watch:['<b>The rename is UI only.</b> The trade name in the legal documents is still GyeSika. Do not "fix" that.','It has Drive sync with a first-sync guard. The live artifact can be ahead of the local folder. Fetch before editing.']
+},
+{
+  id:'ceoos', group:'Apps on your phone', kind:'App', status:'live',
+  name:'CEO OS',
+  one:'The inside of the company. Today\'s three moves, pipeline, war room, sales gym, money room, seven seats, university, risk check, decision log.',
+  live:'https://claude.ai/code/artifact/5b11551d-a097-4e16-9b71-14868d6a247f',
+  prev:D('denial-recovery/ceo-os/CEO-OS.html'),
+  files:[D('denial-recovery/ceo-os/CEO-OS.html'), D('denial-recovery/ceo-os/CEO-OS.artifact.html'), D('denial-recovery/ceo-os/e2e.py')],
+  where:'Published as a Claude artifact.',
+  use:['Open it when you need to know what the three moves are today.'],
+  update:['Edit <code>CEO-OS.html</code>, then republish to the same URL.','<code>e2e.py</code> is its end-to-end check.'],
+  watch:['Built. Do not rebuild it.','Drive sync with a first-sync guard, same as the others.']
+},
+{
+  id:'ccc', group:'Apps on your phone', kind:'App', status:'live',
+  name:'Content Command Center',
+  one:'The earlier content app. Still published, still opens.',
+  live:'https://claude.ai/code/artifact/ae2c77dc-5878-4a0b-9bb7-7955358ef952',
+  prev:HOME + '/SynKasa Claude/content-command-center.html',
+  files:[HOME + '/SynKasa Claude/content-command-center.html', HOME + '/SynKasa Claude/content-command-center.artifact.html'],
+  where:'Published as a Claude artifact. Last updated 3 Aug.',
+  use:['Anɔpa Content took over most of this. Keep this one for what it still holds.'],
+  update:['Edit the local file, then republish to the same URL.'],
+  watch:['Two apps, one job. If you stop using it, retire it deliberately rather than letting it rot.']
+},
+{
+  id:'rescuerobot', group:'Apps on your phone', kind:'App', status:'live',
+  name:'Rescue Robot Reading Academy',
+  one:'A reading program for both kids in one file. 100 adaptive missions for the 6-year-old, 40 pre-K missions for the 4-year-old.',
+  live:'https://claude.ai/code/artifact/46dea516-62e6-4071-9230-88a25be21a4f',
+  prev:D('rescue-robot-reading/RESCUE-ROBOT.html'),
+  files:[D('rescue-robot-reading/RESCUE-ROBOT.html'), D('rescue-robot-reading/README.md'), D('rescue-robot-reading/CURRICULUM.md'), D('rescue-robot-reading/AUDIO-CHECKLIST.md'), D('rescue-robot-reading/tests/'), D('rescue-robot-reading/deploy/index.html')],
+  where:'Published as a Claude artifact. A hosting-ready copy sits in <code>deploy/</code>.',
+  use:['Pilot Plus is the 20-week program. Junior Pilot is the pre-K one.','No internet needed once loaded. No ads, no accounts, no tracking, no endless play.','The placement check skips whatever he already knows, and refuses fast-tapping.'],
+  update:['<code>CURRICULUM.md</code> is the editable scope and sequence. Change it there first.','189 checks must pass before it ships.'],
+  watch:['Rebuilt 13 Aug. It is finished. Do not rebuild it.','This is family, not business. It never goes on the site.']
+},
+
+/* ══════════════════ ENGINES ON THE MAC ══════════════════ */
+{
+  id:'contentos', group:'Engines on the Mac', kind:'Engine', status:'live',
+  name:'The Content OS',
+  one:'The five-verb content system with the Vault and the seed gate. Start at its own page.',
+  live:null, prev:HOME + '/frimpomaasync/0-START-HERE.html',
+  files:[HOME + '/frimpomaasync/0-START-HERE.html', HOME + '/frimpomaasync/PIN-STUDIO.html', HOME + '/frimpomaasync/1-POST-THIS/', HOME + '/frimpomaasync/2-MAKE-VIDEOS/', HOME + '/frimpomaasync/3-PIN-ENGINE/', HOME + '/frimpomaasync/4-CLIENTS-MONEY/', HOME + '/frimpomaasync/5-WEBSITE/', HOME + '/frimpomaasync/6-JOBS-RUNNING/', HOME + '/frimpomaasync/REFRESH.command'],
+  where:'<code>~/frimpomaasync/</code> · numbered folders, in the order you use them.',
+  use:['Open <code>0-START-HERE.html</code>. That is the whole entry point.','Say <b>/content</b> to Claude to build a week, seed an idea, read your stats, search the vault, or graduate a winner into a site page.','Double-click <code>REFRESH.command</code> to refresh it.'],
+  update:['The skill behind it is <code>~/.claude/skills/content/SKILL.md</code>.'],
+  watch:['Built and finished. Do not rebuild it.']
+},
+{
+  id:'anopaengine', group:'Engines on the Mac', kind:'Engine', status:'live',
+  name:'The Anɔpa engine',
+  one:'The machine behind the content app. Every Monday it works out what is working right now and turns it into one week.',
+  live:null, prev:null,
+  files:[HOME + '/marketing-department/run-monday.sh', HOME + '/marketing-department/README.md', HOME + '/marketing-department/BRIEF.md', HOME + '/marketing-department/PIPELINE.md', HOME + '/marketing-department/prompts/', HOME + '/marketing-department/departments/', HOME + '/marketing-department/state/', HOME + '/marketing-department/install-launchd.sh'],
+  where:'<code>~/marketing-department/</code>',
+  use:['You do not read this folder. You read the app it produces.','It runs itself on Monday. <code>run-monday.sh</code> is the whole entry point.'],
+  update:['Prompts live in <code>prompts/</code>. The pipeline is described in <code>PIPELINE.md</code>.','<code>install-launchd.sh</code> re-installs the schedule if it stops firing.'],
+  watch:['Your seeded AI-employees week is the live week for 17–23 Aug. Only 1 of 25 posts went out before two runs buried it. There is now an unposted-week gate in pass 2.','Check <code>launchd.log</code> and <code>run.log</code> in that folder when a Monday looks empty.']
+},
+{
+  id:'contentweek', group:'Engines on the Mac', kind:'Engine', status:'live',
+  name:'The Content Week engine',
+  one:'Turns a drafted week into the graded, in-brand hub page and its markdown twin.',
+  live:null, prev:D('content-week-engine/content-week.html'),
+  files:[D('content-week-engine/content-week.html'), D('content-week-engine/build_hub.py'), D('content-week-engine/README.md'), D('content-week-engine/brand-brief.md'), D('content-week-engine/posts.json'), D('content-week-engine/reels.json'), D('content-week-engine/substack.json')],
+  where:'<code>~/Downloads/content-week-engine/</code>',
+  use:['Say to Claude: <b>"make next week"</b>, optionally with a topic or a voice-memo transcript.','It drafts 21 captions, 5 Notes and a letter, 7 reels. Then it audits and grades every piece until it clears 8 out of 10.','Then <code>python3 build_hub.py</code> builds the page.'],
+  update:['Rename the output path inside <code>build_hub.py</code> for a new week.'],
+  watch:['The audit enforces no em dashes, no filler, no banned themes, char limits, and a sales ratio at or under about 10%.','Pinterest is exempt from that 90/10 rule.']
+},
+{
+  id:'payerintel', group:'Engines on the Mac', kind:'Research', status:'built',
+  name:'Payer Intelligence',
+  one:'Twelve sourced appeal rules, each one traceable back to where it came from.',
+  live:null, prev:D('denial-recovery/payer-intelligence/PAYER-INTELLIGENCE.html'),
+  files:[D('denial-recovery/payer-intelligence/PAYER-INTELLIGENCE.html'), D('denial-recovery/payer-intelligence/START-HERE.md'), D('denial-recovery/payer-intelligence/records.json'), D('denial-recovery/payer-intelligence/check-sources.mjs'), D('denial-recovery/payer-intelligence/validate.mjs'), D('denial-recovery/payer-intelligence/gate.test.mjs')],
+  where:'<code>~/Downloads/denial-recovery/payer-intelligence/</code> · <b>deliberately not on the website.</b>',
+  use:['Open <code>PAYER-INTELLIGENCE.html</code> to read the rules.','<code>check-sources.mjs</code> re-checks that every source still resolves.'],
+  update:['Rules live in <code>records.json</code>.'],
+  watch:['<b>Only a named human can mark a rule verified.</b> The gate test enforces it. Never mark one verified yourself.','It is off the site on purpose. Keep it off.']
+},
+{
+  id:'portfolioreel', group:'Engines on the Mac', kind:'Video', status:'live',
+  name:'The portfolio reel · Remotion',
+  one:'The React video project that renders every demo video on your site.',
+  live:null, prev:null,
+  files:[HOME + '/portfolio-reel', HOME + '/remotion-build-doc', HOME + '/frimpomaa-listicles', HOME + '/video-overlays'],
+  where:'<code>~/portfolio-reel/</code> · output lands in <code>out/</code>.',
+  use:['<b>Always <code>npm run guard</code> first.</b> Never bypass it.','Render with <code>--gl=angle --concurrency=1</code> on this Mac, or it tiles frames and produces a broken file.'],
+  update:['Brand text and cards live in <code>brand.ts</code>. Fix the retired name and the old pricing there.','Say <b>/remotion-render-safe</b> to Claude and it will run the safe render path for you.'],
+  watch:['<b>8 GB Intel Mac.</b> Concurrency 1, always.','ffmpeg is already here inside Remotion: <code>@remotion/compositor-darwin-x64</code> with <code>DYLD_LIBRARY_PATH</code>. Never download another one.','Raw source clips carry banned content. Check them before rendering.','Avatar clips are 10 seconds long but stop talking at 6 to 8 seconds.']
+},
+{
+  id:'tonightcard', group:'Engines on the Mac', kind:'Engine', status:'live',
+  name:'The Tonight card',
+  one:'Shows only the assets that are actually missing for tomorrow. Usually one.',
+  live:null, prev:HOME + '/tonight-card/TONIGHT.html',
+  files:[HOME + '/tonight-card/TONIGHT.html', HOME + '/tonight-card/data.json'],
+  where:'<code>~/tonight-card/TONIGHT.html</code>',
+  use:['Say <b>/tonight</b> to Claude and it opens the card, then can drive the generation for you.','It reads tomorrow\'s briefs. It is not a nightly quota any more.'],
+  update:['Rebuild it with <code>node business/cli.js tonight</code> from <code>~/pinterest-growth-engine</code>.'],
+  watch:['Rebuilt 9 Aug. Several <code>.bak-</code> files sit beside it. The live one is plain <code>TONIGHT.html</code>.']
+},
+{
+  id:'pinengine', group:'Engines on the Mac', kind:'Engine', status:'shelved',
+  name:'The Pinterest Business Engine',
+  one:'Plan, generate only what is missing, ten guards, publish, verify, measure, learn. Shut down 11 Aug, with its value exported.',
+  live:null, prev:D('pinterest-export-2026-08-11/START-HERE.html'),
+  files:[HOME + '/pinterest-growth-engine', HOME + '/pinterest-growth-engine/CONTRACT.md', HOME + '/pinterest-growth-engine/HANDOFF.md', D('pinterest-export-2026-08-11/START-HERE.html'), D('pinterest-ready-to-post/START-HERE.html')],
+  where:'<code>~/pinterest-growth-engine/</code>. The export is <code>~/Downloads/pinterest-export-2026-08-11/</code>.',
+  use:['<b>Shut down on your word.</b> Performance was six rows of zeros.','The value was exported first. The dated post list Aug 11 – Sep 21 is still at <code>~/Downloads/pinterest-ready-to-post/START-HERE.html</code>.'],
+  update:['If it ever comes back: <code>node business/cli.js grade</code> and <code>node business/cli.js batch</code>.'],
+  watch:['<b>API is approved but Trial access blocks posting</b>, error 29. It needs Standard access plus a video demo.','Pins are gold <code>#C9975B</code>/<code>#8F6832</code>, the site is copper. Reversed on your word 10 Aug.','No hands and no people in any generated visual. Ambient motion only.','A same-date re-run is not idempotent. A long list silently eats the CTA. Queued pins must be reset to ASSET_READY to re-render.']
+},
+
+/* ══════════════════ JOBS THAT RUN THEMSELVES ══════════════════ */
+{
+  id:'jobmonday', group:'Jobs that run themselves', kind:'Scheduled job', status:'live',
+  name:'The Monday content run',
+  one:'Fires every Monday and builds the whole content week without you asking.',
+  live:null, prev:null,
+  files:[HOME + '/Library/LaunchAgents/com.frimpomaasync.marketing-department.plist', HOME + '/marketing-department/run-monday.sh', HOME + '/marketing-department/launchd.log', HOME + '/marketing-department/run.log'],
+  where:'launchd job <code>com.frimpomaasync.marketing-department</code>',
+  use:['Nothing. It runs itself. You read the result in Anɔpa Content.'],
+  update:['Change the schedule in the plist, then <code>launchctl unload</code> and <code>launchctl load</code> it. Or just run <code>~/marketing-department/install-launchd.sh</code>.'],
+  watch:['<b>A job living in ~/Downloads will never run.</b> macOS blocks it. Every job script must live at the home root, like this one does.','If Monday looks empty, read <code>launchd.log</code> and <code>run.log</code> in that folder before assuming it is broken.']
+},
+{
+  id:'jobcomp', group:'Jobs that run themselves', kind:'Scheduled job', status:'live',
+  name:'The competitor tracker',
+  one:'Watches the accounts you told it to watch, every Sunday.',
+  live:null, prev:null,
+  files:[HOME + '/Library/LaunchAgents/com.frimpomaasync.competitor-tracker.plist', HOME + '/marketing-department/competitor-tracker/run-sunday.sh', HOME + '/marketing-department/competitor-tracker/accounts.json', HOME + '/marketing-department/competitor-tracker/README.md', HOME + '/marketing-department/competitor-tracker/track.js'],
+  where:'launchd job <code>com.frimpomaasync.competitor-tracker</code>',
+  use:['The accounts it watches are listed in <code>accounts.json</code>. That is the file to edit.'],
+  update:['Add or remove an account in <code>accounts.json</code>. Nothing else needs touching.'],
+  watch:['<code>launchd.log</code> and <code>run.log</code> sit in that same folder.']
+},
+{
+  id:'jobsom', group:'Jobs that run themselves', kind:'Scheduled job', status:'live',
+  name:'The Som responder',
+  one:'Picks up what you captured in Som and answers it.',
+  live:null, prev:null,
+  files:[HOME + '/Library/LaunchAgents/com.frimpomaasync.som-responder.plist', HOME + '/frimpomaasync-jobs/som-responder/run.sh', HOME + '/frimpomaasync-jobs/som-responder/som-responder.applescript', HOME + '/frimpomaasync-jobs/som-responder/responder.log', HOME + '/frimpomaasync-jobs/som-responder/processed.txt'],
+  where:'launchd job <code>com.frimpomaasync.som-responder</code>',
+  use:['Capture in Som. This picks it up.','<code>processed.txt</code> is its memory of what it has already handled.'],
+  update:['Edit <code>run.sh</code> or the AppleScript beside it.'],
+  watch:['Full Disk Access can vanish mid-session on this Mac and silently break anything that reads files. If it goes quiet, check that first.']
+},
+{
+  id:'jobbackup', group:'Jobs that run themselves', kind:'Scheduled job', status:'live',
+  name:'The weekly git backup',
+  one:'Backs up your repositories once a week so a bad day cannot cost you the work.',
+  live:null, prev:null,
+  files:[HOME + '/Library/LaunchAgents/com.frimpomaasync.gitbackup.plist', HOME + '/bin/weekly-git-backup.sh'],
+  where:'launchd job <code>com.frimpomaasync.gitbackup</code>',
+  use:['Nothing. It runs itself.'],
+  update:['Edit <code>~/bin/weekly-git-backup.sh</code>.'],
+  watch:['This is your safety net. Do not retire it.']
+},
+{
+  id:'jobclean', group:'Jobs that run themselves', kind:'Scheduled job', status:'live',
+  name:'The weekly disk cleanup',
+  one:'Clears the space this Mac keeps running out of.',
+  live:null, prev:null,
+  files:[HOME + '/Library/LaunchAgents/com.nana.diskcleanup.plist', HOME + '/bin/cleanup-disk.sh'],
+  where:'launchd job <code>com.nana.diskcleanup</code>',
+  use:['Nothing. It runs itself.'],
+  update:['Edit <code>~/bin/cleanup-disk.sh</code>.'],
+  watch:['8 GB Intel Mac. This job is the reason renders still fit.']
+},
+
+/* ══════════════════ BUILT, NOT SHIPPED ══════════════════ */
+{
+  id:'denialplan', group:'Built, waiting on you', kind:'Plan', status:'built',
+  name:'The denial recovery build plan',
+  one:'The layered plan the whole Soft Appeals business is being built against, one approved session at a time.',
+  live:null, prev:D('denial-recovery/START-HERE.html'),
+  files:[D('denial-recovery/PLAN.md'), D('denial-recovery/START-HERE.html'), D('denial-recovery/01-offer/'), D('denial-recovery/02-audit-kit/'), D('denial-recovery/03-hipaa/'), D('denial-recovery/04-contract/'), D('denial-recovery/05-appeal-engine/'), D('denial-recovery/06-outreach/'), D('denial-recovery/09-ai-leverage/'), D('denial-recovery/10-gpt-merge/'), D('denial-recovery/sessions/')],
+  where:'<code>~/Downloads/denial-recovery/</code>',
+  use:['<code>START-HERE.html</code> is the page. <code>PLAN.md</code> is the layered build.','You approve each session before the next one starts.'],
+  update:['Add to <code>PLAN.md</code>. Session notes go in <code>sessions/</code>.'],
+  watch:['<b>This is the chosen business.</b> Your word, 6 Aug. Sesa and the fire idea stay shelved.','Your MHA is the moat. That is the part nobody else has.']
+},
+{
+  id:'sesa', group:'Built, waiting on you', kind:'Business', status:'shelved',
+  name:'Sesa Floor Care',
+  one:'A whole operating company, built out and never launched. Not chosen.',
+  live:null, prev:D('sesa-floor-care/SESA.html'),
+  files:[D('sesa-floor-care/SESA.html'), D('sesa-floor-care/SESA.md'), D('sesa-floor-care/sesa-command-center.html'), D('sesa-floor-care/00-plan/THE-PLAN.html'), D('sesa-floor-care/04-marketing/sesa-landing.html'), D('sesa-floor-care/07-commands/')],
+  where:'<code>~/Downloads/sesa-floor-care/</code>',
+  use:['Everything is built: plan, legal, crews, sales, marketing, clients, money.','It has never been launched, and it is not the business.'],
+  update:['Nothing to update while it is shelved.'],
+  watch:['<b>Floor care is retired from all copy.</b> Soft Appeals is the business. Keep Sesa off the site and out of every pitch.']
+},
+{
+  id:'somakit', group:'Built, waiting on you', kind:'Kit', status:'built',
+  name:'The Som and Soma install kit',
+  one:'The standalone copies of both apps, packaged to hand to someone.',
+  live:'https://frimpomaasync.com/synkasa#soma', prev:D('Som-Soma-Install/soma-app.html'),
+  files:[D('Som-Soma-Install/som-app.html'), D('Som-Soma-Install/soma-app.html')],
+  where:'<code>~/Downloads/Som-Soma-Install/</code>',
+  use:['Som is the free capture app. Soma is the section at <code>/synkasa#soma</code>.'],
+  update:['The version people actually use is the one on the site at <code>/som-app/</code>. Update that one first.'],
+  watch:['Soma is not a page. <code>/soma</code> redirects to <code>/synkasa#soma</code> on purpose.']
+}
+,
+{
+  id:'library', group:'Engines on the Mac', kind:'Tool', status:'live',
+  name:'The Build Library',
+  one:'This page. Every build you have, what it does, where it lives, and how to change it.',
+  live:'https://claude.ai/code/artifact/2b8ece6b-142f-4015-8a5b-e3d2906fd8ca',
+  prev:null,
+  files:[DL + '/build-library/BUILD-LIBRARY.html', DL + '/build-library/build-library-phone.html', DL + '/build-library/make-phone-copy.py'],
+  where:'<code>~/Downloads/build-library/BUILD-LIBRARY.html</code> is the master. The phone copy is a private Claude artifact.',
+  use:['Open the Mac file to get live previews and clickable file links.','Open the artifact link on your phone to check the shelf from anywhere.','Press <b>/</b> to jump to the search box. Press <b>Esc</b> to close a card.'],
+  update:['Open <code>BUILD-LIBRARY.html</code> and find the block marked THE CATALOGUE near the top of the script.','Copy an existing entry, change the fields, save.','Run <code>python3 make-phone-copy.py</code> in that folder.','Republish the phone copy to the <b>same URL</b>, or you will end up with two libraries.'],
+  watch:['<b>Keep the phone copy private.</b> It holds your stats key and your folder paths. Artifacts start private, so this only matters if you press Share.','Site previews need <b>the preview server</b>, which is its own card under Jobs. It starts itself at login.','Every path in here was checked against this Mac on 18 Aug 2026. If you move a folder, the link in here goes stale.']
+},
+{
+  id:'previewserver', group:'Jobs that run themselves', kind:'Scheduled job', status:'live',
+  name:'The preview server',
+  one:'The reason this library can show your site pages properly. It serves your site folder to your own Mac and nothing else.',
+  live:'http://127.0.0.1:8787/synkasa.html', prev:null,
+  files:[HOME + '/bin/frimpomaa-preview-server.py', HOME + '/Library/LaunchAgents/com.frimpomaasync.preview-server.plist'],
+  where:'Runs on <code>http://127.0.0.1:8787</code>. Loopback only, so nothing outside this Mac can reach it.',
+  use:['You do not start it. launchd starts it when you log in and restarts it if it ever stops.','It serves <code>~/frimpomaasync-site</code>, with the pretty URLs working the same way they do on the live site.'],
+  update:['To stop it: <code>launchctl unload ~/Library/LaunchAgents/com.frimpomaasync.preview-server.plist</code>','To start it again: the same line with <code>load</code> instead of <code>unload</code>.'],
+  watch:['<b>Why it exists:</b> 49 of your 62 site pages load their CSS from a path starting with a slash. Opened as a plain file those find nothing and the page renders naked. Served over http they resolve and the page looks real.','Caching is switched off on purpose, so a preview always shows what is on disk right now rather than a stale copy.','If a preview frame is empty, this is almost always why. The card will tell you and give you the line to paste.']
+},
+
+/* ══════════════════ SYNKASA, THE WIDGET ERA ══════════════════ */
+{
+  id:'skwidget', group:'The SynKasa widget', kind:'Product', status:'live',
+  name:'The embeddable widget',
+  one:'One line on any client website and that business has a front desk that answers. Repaired and uploaded 20 Aug, verified answering from the live URL.',
+  live:'https://synkasa.com/widget.js', prev:D('synkasa-widget/demo.html'),
+  files:[D('synkasa-widget/widget.js'), D('synkasa-widget/demo.html'), D('synkasa-widget/README.md'), D('synkasa-widget.js'), D('synkasa-worker.js')],
+  where:'Serving from <code>synkasa.com/widget.js</code>. The source of truth is <code>~/Downloads/synkasa-widget/</code>, and the two are byte-identical as of 20 Aug.',
+  use:['The client pastes one line before <code>&lt;/body&gt;</code>:<br><code>&lt;script src="https://synkasa.com/widget.js" data-id="THEIR_ID" data-position="right"&gt;&lt;/script&gt;</code>','<code>data-id</code> decides whose business it is. <code>data-position</code> is right or left.','To watch it work: <code>cd ~/Downloads/synkasa-widget</code> then <code>python3 -m http.server 8901</code>, and open <code>http://127.0.0.1:8901/demo.html</code>.','It mounts in a shadow root, so it cannot collide with anything on the client site.'],
+  update:['Edit <code>widget.js</code> in that folder, then test it on <code>demo.html</code> before it goes anywhere.','<b>To put a change live:</b> upload <code>widget.js</code> to the root of the synkasa.com space in Hostinger, by hand. That site is not in the frimpomaasync repo, so pushing to GitHub does not touch it.'],
+  watch:['<b>Fixed 20 Aug.</b> The old copy sent the worker <code>{clientId, messages}</code>. The worker also wants <code>systemPrompt</code> and answers 400 without it, and the widget swallowed that error and replied "Please reach us at (555) 000-0000." to every question. It looked alive and answered nothing. If that line ever comes back, this is the first thing to check.','<b>Your undo is <code>widget.js.LIVE-BACKUP-2026-08-20.js</code></b> in the same folder. That is the broken version that was serving before, kept on purpose.','<b><code>widget (3).js</code> and <code>widget (4).js</code> in Downloads do not parse.</b> node rejects both. They already had this fix, which is why they were never uploaded. They also carry retired pricing and framing that cannot ship. Do not use them.','It has to be served over http to test. Opened straight off the disk it takes a different path and never reaches the worker.']
+},
+{
+  id:'skworker', group:'The SynKasa widget', kind:'API', status:'live',
+  name:'The SynKasa worker',
+  one:'The piece that holds the API key and does the talking. Every chat on your site and every widget goes through it. It has no webpage, on purpose.',
+  live:null, prev:null,
+  files:[D('synkasa-worker.js'), SITE + '/fsnav.js'],
+  where:'Cloudflare, at <code>synkasa-api.dawn-boat-ec20.workers.dev</code>. <b>Do not open that address in a browser.</b> A browser sends a GET to the root, and the only thing this answers is <code>POST /chat</code>, so you get <code>{"error":"Not found"}</code>. That is the API behaving correctly, not a fault.',
+  use:['<b>The key never leaves Cloudflare.</b> No page on any site carries it, which is the whole reason this exists.','Your site chat calls it with <code>{clientId:"demo", systemPrompt, messages}</code>. That is the contract the old widget missed.','<b>To prove it is alive</b>, paste this into Terminal. A sentence back means it is working:<br><code>curl -s -X POST https://synkasa-api.dawn-boat-ec20.workers.dev/chat -H "Content-Type: application/json" -d &#39;{"clientId":"demo","systemPrompt":"You are a front desk. Be brief.","messages":[{"role":"user","content":"are you open saturday"}]}&#39;</code>'],
+  update:['<b>The deployed worker is newer than the local file.</b> <code>~/Downloads/synkasa-worker.js</code> is the 23 Apr version and does not contain the current demo-mode rule. Fetch the deployed source from Cloudflare before editing anything.'],
+  watch:['<code>GET /client/demo</code> answers "Client not found", so any widget using <code>data-id="demo"</code> falls back to its built-in placeholder business. A real client id needs a real record behind it.','<b><code>/health</code> is in your local source but is not deployed</b>, it answers 404 like everything else. One more sign the deployed worker and the local file have drifted apart.','This is a running cost. Every message is an API call.']
+},
+{
+  id:'skcommand', group:'The SynKasa widget', kind:'Tool', status:'built',
+  name:'The SynKasa Command Center',
+  one:'The app you were thinking of. Add a buyer, and it writes their install line for you.',
+  live:null, prev:D('synkasa-command-center.html'),
+  files:[D('synkasa-command-center.html'), D('SynKasa_Dashboard_v3.html'), D('SynKasa Onboarding Flow.html'), D('synkasa_checker.html')],
+  where:'<code>~/Downloads/synkasa-command-center.html</code>',
+  use:['Add the client: business, owner, their key, type, setup tier, retainer tier, status.','The Embed tab then generates their exact line, ready to hand over.','It also offers a hosted link at <code>synkasa.com/chat/&lt;key&gt;</code>, for a buyer with no website.'],
+  update:['Everything is in that one file. Client records live in the browser, so they stay on whichever machine you added them on.'],
+  watch:['<b>The hosted link does not exist.</b> <code>synkasa.com/chat/&lt;key&gt;</code> answers 404. Only the paste-a-line route actually works today.','The generated line points at <code>synkasa.com/widget.js</code>, which has been the repaired copy since 20 Aug.']
+},
+{
+  id:'skoldsite', group:'The SynKasa widget', kind:'Old site', status:'live',
+  name:'The original synkasa.com',
+  one:'The standalone SynKasa site from before the merge. Still live, still reachable, and you probably think it is gone.',
+  live:'https://synkasa.com/index.html', prev:null,
+  files:[D('synkasa-scrubbed-2026-07-26/index.html'), D('synkasa-index-final.html'), D('synkasa-final.html')],
+  where:'<code>synkasa.com/index.html</code> on its own Hostinger space, separate from frimpomaasync.com.',
+  use:['<code>synkasa.com/</code> redirects to <code>frimpomaasync.com/synkasa</code>, which is why it feels retired.','<b>The redirect only catches the bare root.</b> <code>/index.html</code> still serves the whole original site, 108 KB of it.'],
+  update:['It is not in the frimpomaasync repo. Changes there happen in Hostinger, by hand.'],
+  watch:['Anyone with the old deep link still lands on the old site, with old positioning and old prices on it. Worth reading before deciding whether it stays.','It still loads Google Analytics <code>G-FE15RR62ZC</code>.']
+},
+{
+  id:'skolddemo', group:'The SynKasa widget', kind:'Old site', status:'live',
+  name:'The SynKasa demo site',
+  one:'The demo built purely to show the widget off. Pick a trade, then talk to that business. Still live and still answering.',
+  live:'https://synkasa.com/demo/', prev:null,
+  files:[D('synkasa-demo.html'), D('synkasa-demo-v5.html'), D('demo-index.html'), D('synkasa-scrubbed-2026-07-26/demo-index.html')],
+  where:'<code>synkasa.com/demo/</code>',
+  use:['Five trades to choose from: Beauty · Food · Health · Pro Services · Home & Events.','Verified 18 Aug: asked it about Saturday hours and a fill price, and it answered with a real price list.'],
+  update:['Same as the old site. Hostinger, by hand.'],
+  watch:['<b>It carries emojis and old pricing.</b> It predates the current brand rules, so read it before sending anyone there.','Its chat is built into the page, not the embeddable widget, so fixing the widget does not change this demo.']
+},
+{
+  id:'skbackend', group:'The SynKasa widget', kind:'Backend', status:'built',
+  name:'The SynKasa PHP backend',
+  one:'A whole client-and-leads backend for Hostinger, written and never deployed.',
+  live:null, prev:null,
+  files:[D('synkasa-backend/DEPLOY.md'), D('synkasa-backend/api.php'), D('synkasa-backend/admin.php'), D('synkasa-backend/config.php'), D('synkasa-backend/db.php'), D('synkasa-backend/setup.sql'), D('synkasa-backend/example-configs.php')],
+  where:'<code>~/Downloads/synkasa-backend/</code>',
+  use:['<code>DEPLOY.md</code> is a step-by-step guide that assumes no server knowledge: make the MySQL database, run the SQL, fill in the credentials, upload four files.','<code>admin.php</code> would be your private page for adding clients and reading leads.'],
+  update:['Fill in <code>config.php</code> before uploading anything. It holds the database password.'],
+  watch:['<b>It is not deployed.</b> <code>api.php</code>, <code>admin.php</code> and <code>setup.sql</code> all answer 404 on synkasa.com.','The Cloudflare worker does this job now. Deploying this too would mean two systems holding client records, so decide which one owns them first.']
+}
+];
+
+/* ---- Things that are dead. Listed so you know they are dead, not lost. ---- */
+var RETIRED = [
+  ['fswidget.js','Retired 28 Jul. Kept alive as an empty file so old pages do not 404 and do not get a second chat box. Never put code in it.'],
+  ['/soma as its own page','Redirects to /synkasa#soma. Deliberate.'],
+  ['The Pinterest posting engine','Shut down 11 Aug on your word. Six rows of zeros. Value exported to ~/Downloads/pinterest-export-2026-08-11/.'],
+  ['"NaNa Frimpomaa"','The old spelling. Retired 7 Aug. It is Nana Frimpongmaa everywhere now. The domain never changes.'],
+  ['All pre-July-2026 pricing','Any $999 or older number you find in an old file is dead. Four portfolio videos still show it.'],
+  ['The World Cup / numerology Oracle','Retired. Never rebuild.'],
+  ['The late-night / 11pm / midnight theme','Retired. Never use it.'],
+  ['"Built in public" / "documented in public"','Retired phrasing. The label is "Behind the build".'],
+  ['Barbershop content, and minority-owned / Black-owned / women-owned framing','Never used. Small-business framing only.'],
+  ['~90 duplicate files in ~/Downloads','synkasa-flyer-v4 (2).html, seventeen index (n).html, synkasa-blog_1 through _3, and the rest. Old drafts and browser re-downloads. Nothing live points at any of them. They are safe to delete and safe to ignore.'],
+  ['~/Downloads/archive/2026-03 and 2026-04','Shapphire Sync era mockups. Another brand. Dead.'],
+  ['~/Downloads/frimpomaasync-cockpit.RETIRED-2026-07-16.html','Named retired in the filename. Replaced by Anɔpa Content.'],
+  ['~/Downloads/nanaos-work/ and the NanaOS pages','Superseded. The hand-uploaded private NanaOS folder on the server survives only because the deploy never uploaded it.']
+];
+
+/* =====================================================================
+   THE PAGE. You should not need to touch anything below this line.
+   ===================================================================== */
+(function(){
+  'use strict';
+  var LOCAL = location.protocol === 'file:';
+  var GROUPS = ['Live on frimpomaasync.com','The SynKasa widget','Apps on your phone','Engines on the Mac','Jobs that run themselves','Built, waiting on you'];
+  var SHORT  = {'Live on frimpomaasync.com':'The site','The SynKasa widget':'The widget','Apps on your phone':'Phone apps','Engines on the Mac':'Engines','Jobs that run themselves':'Jobs','Built, waiting on you':'Waiting'};
+  var STATUSWORD = {live:'Live', built:'Built', shelved:'Shelved', retired:'Retired'};
+
+  var $ = function(s){ return document.querySelector(s); };
+  var main = $('#main'), q = $('#q'), chips = $('#chips'), sheet = $('#sheet'),
+      sheetBody = $('#sheetbody'), sheetName = $('#sheetname'), toastEl = $('#toast');
+  var filter = 'all';
+
+  if(!LOCAL){
+    var mb = $('#modebar');
+    mb.hidden = false;
+    mb.innerHTML = 'Hosted copy, safe to share. The stats key and the private folder names are redacted here. Previews and file links open files on your own Mac, so they work only in the Mac copy at <b>~/Downloads/build-library/BUILD-LIBRARY.html</b>';
+  }
+
+  function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+  function fileURL(p){ return 'file://' + encodeURI(p); }
+  /* A site page previews over the local server so its stylesheets resolve.
+     Everything else is a single self-contained file, so it previews straight off disk. */
+  function isSitePage(p){ return p.indexOf(SITE + '/') === 0; }
+  function prevURL(p){ return isSitePage(p) ? SERVE + encodeURI(p.slice((SITE + '/').length)) : fileURL(p); }
+  function base(p){ var t = p.replace(/\/$/,''); return t.slice(t.lastIndexOf('/')+1) || t; }
+  function folder(p){ var t = p.replace(/\/$/,''); return t.slice(0, t.lastIndexOf('/')); }
+
+  var toastT;
+  function toast(msg){
+    toastEl.textContent = msg; toastEl.classList.add('show');
+    clearTimeout(toastT); toastT = setTimeout(function(){ toastEl.classList.remove('show'); }, 1600);
+  }
+  function copy(text, btn){
+    var done = function(){
+      toast('Copied');
+      if(btn){ var o = btn.textContent; btn.textContent = 'Copied ✓'; btn.classList.add('done');
+        setTimeout(function(){ btn.textContent = o; btn.classList.remove('done'); }, 1400); }
+    };
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(done, function(){ fallback(text, done); });
+    } else { fallback(text, done); }
+  }
+  function fallback(text, done){
+    var ta = document.createElement('textarea');
+    ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); done(); }catch(e){ toast('Could not copy'); }
+    document.body.removeChild(ta);
+  }
+
+  /* ---------- chips ---------- */
+  function buildChips(){
+    var html = '<span class="chip' + (filter==='all'?' on':'') + '" data-f="all">Everything</span>';
+    GROUPS.forEach(function(g){
+      var n = BUILDS.filter(function(b){ return b.group === g; }).length;
+      html += '<span class="chip' + (filter===g?' on':'') + '" data-f="' + esc(g) + '">' + esc(SHORT[g]) + ' · ' + n + '</span>';
+    });
+    chips.innerHTML = html;
+    Array.prototype.forEach.call(chips.querySelectorAll('.chip'), function(c){
+      c.addEventListener('click', function(){ filter = c.getAttribute('data-f'); buildChips(); render(); });
+    });
+  }
+
+  /* ---------- grid ---------- */
+  function matches(b, term){
+    if(!term) return true;
+    var hay = (b.name + ' ' + b.one + ' ' + b.kind + ' ' + b.group + ' ' + (b.where||'') + ' ' +
+               (b.live||'') + ' ' + (b.files||[]).join(' ') + ' ' + (b.use||[]).join(' ') + ' ' +
+               (b.update||[]).join(' ') + ' ' + (b.watch||[]).join(' ')).toLowerCase();
+    return term.toLowerCase().split(/\s+/).every(function(w){ return hay.indexOf(w) > -1; });
+  }
+
+  function card(b){
+    return '<div class="card" tabindex="0" data-id="' + b.id + '">' +
+      '<div class="crow"><span class="kind">' + esc(b.kind) + '</span>' +
+      '<span class="pill ' + b.status + '">' + STATUSWORD[b.status] + '</span></div>' +
+      '<div class="cname">' + esc(b.name) + '</div>' +
+      '<div class="cone">' + esc(b.one) + '</div>' +
+      '<div class="cfoot"><span class="go">Open →</span><span>' + (b.files ? b.files.length + ' file' + (b.files.length===1?'':'s') : '') + '</span></div>' +
+      '</div>';
+  }
+
+  function render(){
+    var term = q.value.trim();
+    var list = BUILDS.filter(function(b){ return (filter==='all' || b.group===filter) && matches(b, term); });
+    $('#count').textContent = list.length + ' of ' + BUILDS.length;
+
+    if(!list.length){ main.innerHTML = '<p class="empty">Nothing matches “' + esc(term) + '”.</p>'; return; }
+
+    var html = '';
+    GROUPS.forEach(function(g){
+      var inG = list.filter(function(b){ return b.group === g; });
+      if(!inG.length) return;
+      html += '<h2 class="groupname">' + esc(g) + '</h2><div class="grid">' + inG.map(card).join('') + '</div>';
+    });
+
+    if(filter === 'all' && !term){
+      html += '<details class="ret"><summary>Retired · ' + RETIRED.length + ' things that are dead, listed so you know they are dead and not lost</summary>' +
+              '<div class="retlist">' + RETIRED.map(function(r){ return '<div><b>' + esc(r[0]) + '</b> · ' + esc(r[1]) + '</div>'; }).join('') + '</div></details>';
+    }
+    main.innerHTML = html;
+
+    Array.prototype.forEach.call(main.querySelectorAll('.card'), function(c){
+      var go = function(){ open(c.getAttribute('data-id')); };
+      c.addEventListener('click', go);
+      c.addEventListener('keydown', function(e){ if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); go(); } });
+    });
+  }
+
+  /* ---------- detail ---------- */
+  function listBox(items, cls){
+    if(!items || !items.length) return '';
+    return '<div class="box' + (cls?' '+cls:'') + '"><ul>' + items.map(function(i){ return '<li>' + i + '</li>'; }).join('') + '</ul></div>';
+  }
+  function stepBox(items){
+    if(!items || !items.length) return '';
+    return '<div class="box"><ol>' + items.map(function(i){ return '<li>' + i + '</li>'; }).join('') + '</ol></div>';
+  }
+
+  function open(id){
+    var b = BUILDS.filter(function(x){ return x.id === id; })[0];
+    if(!b) return;
+    var h = '';
+
+    h += '<div class="crow" style="justify-content:flex-start;gap:9px"><span class="kind">' + esc(b.kind) +
+         '</span><span class="pill ' + b.status + '">' + STATUSWORD[b.status] + '</span></div>';
+    h += '<h2>' + esc(b.name) + '</h2><p class="sone">' + esc(b.one) + '</p>';
+
+    /* buttons */
+    h += '<div class="btns">';
+    if(b.live) h += '<a class="btn copper" href="' + esc(b.live) + '" target="_blank" rel="noopener">Open live →</a>';
+    if(b.prev && LOCAL) h += '<a class="btn alt" href="' + fileURL(b.prev) + '" target="_blank">Open the file on this Mac →</a>';
+    if(b.files && b.files.length){
+      h += '<button class="btn ghost" data-copy="' + esc(folder(b.files[0])) + '">Copy the folder</button>';
+      if(b.prev) h += '<button class="btn ghost" data-copy="' + esc('open -a &quot;Google Chrome&quot; &quot;' + b.prev + '&quot;').replace(/&quot;/g,'"') + '">Copy the open command</button>';
+    }
+    h += '</div>';
+
+    /* preview */
+    if(b.prev){
+      if(LOCAL){
+        h += '<div class="pv"><div class="pvh"><span class="lbl">Live preview · the copy on this Mac</span>' +
+             '<div class="tog"><button data-w="desk" class="on">Desktop</button><button data-w="phone">Phone</button></div>' +
+             '<button class="cp" id="pvreload">Reload</button></div>' +
+             '<div class="pvbody" id="pvbody"><iframe id="pvframe" src="' + prevURL(b.prev) + '" title="preview"></iframe></div></div>';
+      } else {
+        h += '<div class="pv"><div class="pvh"><span class="lbl">Preview</span></div>' +
+             '<div class="pvnote">Live previews run only in the Mac copy of this page. Use <b>Open live →</b> above, or open <code>~/Downloads/build-library/BUILD-LIBRARY.html</code> on the Mac.</div></div>';
+      }
+    } else if(b.live){
+      h += '<div class="pv"><div class="pvh"><span class="lbl">Preview</span></div>' +
+           '<div class="pvnote">This one has no page to frame. Use <b>Open live →</b> above.</div></div>';
+    }
+
+    /* sections */
+    if(b.where) h += '<div class="sec"><h3>Where it lives</h3><div class="box"><p>' + b.where + '</p></div></div>';
+    if(b.use)    h += '<div class="sec"><h3>How to use it</h3>' + listBox(b.use) + '</div>';
+    if(b.update) h += '<div class="sec"><h3>How to change it</h3>' + stepBox(b.update) + '</div>';
+    if(b.watch)  h += '<div class="sec"><h3>Watch out</h3>' + listBox(b.watch, 'warn') + '</div>';
+
+    if(b.files && b.files.length){
+      h += '<div class="sec"><h3>Files · ' + b.files.length + '</h3><div class="box">';
+      b.files.forEach(function(f){
+        h += '<div class="fline">' +
+             (LOCAL ? '<a class="path" href="' + fileURL(f) + '" target="_blank">' + esc(base(f)) + '</a>' : '<span class="path">' + esc(base(f)) + '</span>') +
+             '<span style="color:var(--soft);font-size:12px;flex:1;min-width:0;word-break:break-all">' + esc(f) + '</span>' +
+             '<button class="cp" data-copy="' + esc(f) + '">Copy</button></div>';
+      });
+      h += '</div></div>';
+    }
+
+    sheetBody.innerHTML = h;
+    sheetName.textContent = b.name;
+    sheet.classList.add('open');
+    sheet.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+
+    Array.prototype.forEach.call(sheetBody.querySelectorAll('[data-copy]'), function(btn){
+      btn.addEventListener('click', function(){ copy(btn.getAttribute('data-copy'), btn); });
+    });
+    var togs = sheetBody.querySelectorAll('.tog button');
+    Array.prototype.forEach.call(togs, function(t){
+      t.addEventListener('click', function(){
+        Array.prototype.forEach.call(togs, function(x){ x.classList.remove('on'); });
+        t.classList.add('on');
+        $('#pvbody').className = 'pvbody' + (t.getAttribute('data-w') === 'phone' ? ' phone' : '');
+      });
+    });
+    var rl = sheetBody.querySelector('#pvreload');
+    if(rl) rl.addEventListener('click', function(){ var f = $('#pvframe'); f.src = f.src; });
+
+    /* If the preview server is not answering, say so plainly and give her the
+       one line that starts it, rather than showing an empty white frame. */
+    if(b.prev && LOCAL && isSitePage(b.prev)){
+      var probe = new Image(), settled = false;
+      var down = function(){
+        if(settled) return; settled = true;
+        var body = $('#pvbody'); if(!body) return;
+        body.outerHTML = '<div class="pvnote"><b>The preview server is not running.</b>' +
+          '<br>That is the only reason this frame is empty. The page itself is fine.' +
+          '<br><br>Paste this into Terminal once and it comes back, and stays back:' +
+          '<div class="fline" style="margin-top:8px"><span class="path">launchctl load ~/Library/LaunchAgents/com.frimpomaasync.preview-server.plist</span>' +
+          '<button class="cp" id="cpsrv">Copy</button></div></div>';
+        var c = $('#cpsrv');
+        if(c) c.addEventListener('click', function(){
+          copy('launchctl load ~/Library/LaunchAgents/com.frimpomaasync.preview-server.plist', c); });
+      };
+      probe.onload = function(){ settled = true; };
+      probe.onerror = down;
+      probe.src = SERVE + 'favicon.svg?probe=' + (new Date()).getTime();
+      setTimeout(function(){ if(!settled) down(); }, 3000);
+    }
+  }
+
+  function close(){
+    sheet.classList.remove('open');
+    sheetBody.innerHTML = '';
+    document.body.style.overflow = '';
+  }
+
+  $('#back').addEventListener('click', close);
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && sheet.classList.contains('open')) close();
+    if(e.key === '/' && document.activeElement !== q && !sheet.classList.contains('open')){ e.preventDefault(); q.focus(); }
+  });
+  q.addEventListener('input', render);
+
+  buildChips();
+  render();
+})();
+</script>
+</body>
+</html>

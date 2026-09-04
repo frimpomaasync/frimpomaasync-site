@@ -6,6 +6,12 @@ RewriteEngine On
 RewriteCond %{REQUEST_URI} ^/os-fad13324c3/ [NC]
 RewriteRule ^ - [L]
 
+# Private library folder: leave every URL exactly as-is, same as NanaOS above.
+# The pages are plain index.html files inside dated folders, and the generic
+# .html and .php fallbacks further down must never touch them.
+RewriteCond %{REQUEST_URI} ^/library/ [NC]
+RewriteRule ^ - [L]
+
 # Staging lives at public_html/staging, so frimpomaasync.com/staging reaches
 # the same folder as staging.frimpomaasync.com. Send the path form to the
 # subdomain, high up, before any generic rule or Apache's own directory-slash

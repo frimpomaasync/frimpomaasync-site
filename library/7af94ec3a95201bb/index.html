@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,nofollow,noarchive,noimageindex">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Library</title>
+<style>
+:root{
+  --ink:#101426; --copper:#C2501C; --paper:#FFFFFF; --wash:#F8F8F9;
+  --line:#E4E4EA; --mute:#6A6E7E;
+  --serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --mono:ui-monospace,SFMono-Regular,'SF Mono',Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--wash); color:var(--ink);
+  font-family:var(--serif); font-size:17px; line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px; margin:0 auto; padding:0 clamp(20px,5vw,40px)}
+header{padding:clamp(48px,10vw,96px) 0 clamp(28px,5vw,44px)}
+.eyebrow{
+  font-family:var(--mono); font-size:12px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--copper); margin:0 0 18px;
+}
+h1{font-size:clamp(38px,8vw,64px); line-height:1.02; letter-spacing:-.02em; margin:0 0 20px}
+.stand{font-size:clamp(17px,2.2vw,20px); color:var(--mute); max-width:46ch; margin:0}
+ul{list-style:none; margin:0; padding:0; display:grid; gap:14px}
+li a{
+  display:block; background:var(--paper); border:1px solid var(--line);
+  border-radius:4px; padding:clamp(20px,4vw,30px); text-decoration:none; color:inherit;
+  transition:border-color .15s ease, transform .15s ease;
+}
+li a:hover{border-color:var(--copper); transform:translateY(-1px)}
+.kind{
+  font-family:var(--mono); font-size:11px; letter-spacing:.16em;
+  text-transform:uppercase; color:var(--mute); margin:0 0 8px;
+}
+h2{font-size:clamp(22px,3.4vw,28px); line-height:1.15; letter-spacing:-.01em; margin:0 0 8px}
+.blurb{margin:0; color:var(--mute); font-size:16px; max-width:42ch}
+.caveat{
+  margin:10px 0 0; padding-top:10px; border-top:1px solid var(--line);
+  font-size:14.5px; color:var(--mute); max-width:44ch;
+}
+footer{
+  margin-top:clamp(44px,8vw,80px); padding:20px 0 clamp(48px,9vw,88px);
+  border-top:1px solid var(--line); font-family:var(--mono); font-size:12px;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--mute);
+  display:flex; flex-wrap:wrap; gap:8px 20px; justify-content:space-between;
+}
+@media (prefers-color-scheme: dark){
+  :root{--ink:#E6E9F1; --paper:#141928; --wash:#0B0E17; --line:#262D42; --mute:#8B93A8; --copper:#F33229}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Link only · not in search</p>
+    <h1>The Library</h1>
+    <p class="stand">Three shelves at one address. Nothing on the site links here, and search engines are told to skip it, so this link is the only way in.</p>
+  </header>
+
+  <ul>
+    <li><a href="saved/">
+      <p class="kind">Instagram</p>
+      <h2>The Saved Library</h2>
+      <p class="blurb">1,481 posts you saved or liked, filed onto 12 shelves. Search by creator, or by what you would use the post for.</p>
+    </a></li>
+
+    <li><a href="builds/">
+      <p class="kind">Work</p>
+      <h2>The Build Library</h2>
+      <p class="blurb">All 49 builds in one place, with what each one does and where it stands.</p>
+      <p class="caveat">The preview buttons open files stored on your own Mac. Sent to anyone else, this page reads as the catalogue and the previews go nowhere.</p>
+    </a></li>
+
+    <li><a href="refs/">
+      <p class="kind">Design</p>
+      <h2>Painted, Drawn, Photocopied</h2>
+      <p class="blurb">41 design references grouped by how each one was made. Every hex was sampled off the actual pixels, so the numbers go straight into a build.</p>
+    </a></li>
+  </ul>
+
+  <footer>
+    <span>Nana Frimpongmaa</span>
+    <span>frimpomaasync.com</span>
+  </footer>
+</div>
+</body>
+</html>

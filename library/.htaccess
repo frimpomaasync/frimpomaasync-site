@@ -1,0 +1,8 @@
+# Everything under /library/ is link-only. The folder names carry a random
+# slug, nothing on the site links here, and these headers keep the pages out
+# of search results even if a link is ever pasted somewhere public.
+Options -Indexes
+
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive, noimageindex"
+</IfModule>
