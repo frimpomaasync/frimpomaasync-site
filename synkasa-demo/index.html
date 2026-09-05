@@ -370,7 +370,7 @@
   @media (prefers-reduced-motion:reduce){
     *,*::before,*::after{animation-duration:.01ms !important;transition-duration:.01ms !important}
   }
-/* ===== conversion layer (added 2026-07-22) — the demo had ZERO links before this ===== */
+/* ===== conversion layer (added 2026-07-22), the demo had ZERO links before this ===== */
   .side-cta{display:inline-flex;align-items:center;gap:9px;background:var(--copper);color:#fff;
     border-radius:999px;padding:11px 16px;font-size:12px;font-weight:600;text-decoration:none;
     margin-top:12px;transition:background .18s ease}
@@ -394,7 +394,7 @@
   .cele-later:hover{color:var(--ink)}
   .cele-guar{margin-top:14px;font-size:11px;letter-spacing:.06em;color:var(--muted);line-height:1.6}
 
-  /* closing band — the reliable exit on BOTH desktop and mobile.
+  /* closing band, the reliable exit on BOTH desktop and mobile.
      display:block is REQUIRED: `section{display:none}` (line ~82) drives the
      view switcher and would otherwise hide this permanently. */
   .cc-close{display:block;background:var(--ink);color:#F8F8F9;border-radius:26px;
@@ -1043,7 +1043,7 @@
   var SKIN_ALIAS = {home:'home', service:'home', appointments:'appointments',
                     appointment:'appointments', projects:'projects', project:'projects'};
   applySkin(SKIN_ALIAS[(qs.get('skin')||'').trim().toLowerCase()] || 'home');
-  /* ?build=events adds the "your build" scope panel — prospect-specific links only.
+  /* ?build=events adds the "your build" scope panel, prospect-specific links only.
      Injected here (not in the base HTML) so the plain demo stays internally
      coherent for visitors and crawlers. */
   var buildPanels = {

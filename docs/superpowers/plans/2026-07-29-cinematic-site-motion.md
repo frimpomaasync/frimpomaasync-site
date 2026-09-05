@@ -718,7 +718,7 @@ const humanFacing = [
 
 test("human-facing files contain no banned public copy", () => {
   const banned = [
-    /—|–/,
+    /, |–/,
     /built in public/i,
     /\b(?:Codex|Anthropic|OpenAI)\b/i,
     /minority-owned|Black-owned|women-owned|barbershop/i,

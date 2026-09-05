@@ -17,7 +17,7 @@ self.addEventListener('install', function(e){
   self.skipWaiting();
   e.waitUntil(
     caches.open(CACHE).then(function(c){
-      // addAll rejects the whole batch if one file 404s — add individually instead.
+      // addAll rejects the whole batch if one file 404s, add individually instead.
       return Promise.all(SHELL.map(function(u){
         return c.add(u).catch(function(){});
       }));
