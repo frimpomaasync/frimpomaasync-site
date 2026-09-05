@@ -184,7 +184,10 @@ return [
             $money = $app->reconciliationService();
             $ownerId = (string) $app->users()->findByEmail('owner@example.org')['id'];
 
-            $original = $verify($app, $engagement, '7,000.00');
+            // Pinned to a date before the adjustment below. The ledger sorts by
+            // verified_at, and an unpinned original lands at the real clock,
+            // which sorted after 2026-09-05 12:00 once that day arrived.
+            $original = $verify($app, $engagement, '7,000.00', ['verified_on' => '2026-08-20']);
 
             Expect::throws(RuntimeException::class, static fn () => $money->adjust($engagement, $original, ['kind' => RecoveryRecord::KIND_ADJUSTMENT, 'amount' => '1,000.00', 'note' => ''], $ownerId), 'an adjustment needs a reason');
             Expect::throws(RuntimeException::class, static fn () => $money->adjust($engagement, $original, ['kind' => RecoveryRecord::KIND_ADJUSTMENT, 'amount' => '7,000.01', 'note' => 'Recouped on the next remittance.'], $ownerId), 'more than stands is refused');
