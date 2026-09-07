@@ -413,7 +413,7 @@ $hidden = count($cards) - count($shown);
       }
       $plannerHash = rtrim(strtr(base64_encode((string) json_encode($plannerRows, JSON_UNESCAPED_UNICODE)), '+/', '-_'), '=');
     ?>
-    <p style="margin-top:10px"><a class="sa-btn is-quiet is-sm" target="_blank" rel="noopener" href="https://claude.ai/code/artifact/6a675031-e1df-4f16-9d64-c71be752fc7a#sa=<?= $e($plannerHash) ?>">Send deadlines to the planner</a></p>
+    <p style="margin-top:10px"><a class="sa-btn is-quiet is-sm" target="_blank" rel="noopener" href="https://frimpomaasync.com/day/#sa=<?= $e($plannerHash) ?>">Send deadlines to the planner</a></p>
   <?php endif; ?>
 </section>
 

@@ -751,7 +751,7 @@
     if(!open.length){ toast('Nothing open to send.'); return; }
     var txt=open.map(function(it){ return '- '+it.text; }).join('\n');
     var b64=btoa(unescape(encodeURIComponent(txt))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-    window.open('https://claude.ai/code/artifact/6a675031-e1df-4f16-9d64-c71be752fc7a#som='+b64, '_blank');
+    window.open('https://frimpomaasync.com/day/#som='+b64, '_blank');
     toast('Sent <b>'+open.length+'</b> to the planner. Press Preview lanes there.');
   });
   el('restoreFile').addEventListener('change', function(e){
