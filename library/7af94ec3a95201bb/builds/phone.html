@@ -87,6 +87,7 @@ h1{font-family:var(--serif);font-size:30px;line-height:1.15;margin:6px 0 2px;fon
 .box li:last-child{margin-bottom:0}
 .box p{margin:0 0 8px}
 .box p:last-child{margin:0}
+.box.story{font-family:var(--serif,'Iowan Old Style',Georgia,serif);font-size:16px;line-height:1.55}
 .kv{display:grid;grid-template-columns:130px 1fr;gap:7px 14px;font-size:14px}
 .kv dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--soft);padding-top:3px}
 .kv dd{margin:0;word-break:break-word}
@@ -401,6 +402,7 @@ var BUILDS = [
   files:[HOME + '/whipper-flow/iphone/Shipper Flow unsigned.shortcut', HOME + '/whipper-flow/iphone/out/Shipper Flow.shortcut'],
   where:'The Shortcuts app on your iPhone, the tile named <b>Shipper Flow</b>. It got there by iCloud from this Mac.',
   use:['Tap Shipper Flow, talk, tap Done. Long-press in any app and Paste.','Make it one tap: Settings → Accessibility → Touch → Back Tap → Double Tap → Shipper Flow.','Same cleaning rules and the same spellings as the Mac app.'],
+  share:['<b>Give it to anyone.</b> On the phone, open Shortcuts, long-press Shipper Flow, tap Share, send the iCloud link. They tap Add. They will need their own Gemini key pasted into the URL step once.','<b>Sell it.</b> Same link, but first swap the key for a "paste your key" question at the top of the Shortcut, so each buyer uses their own. Then it sells as a link, on your site or Gumroad, next to the Mac app.','<b>For content:</b> this is the second beat of the Whipper Flow story. "Then I said, can I have it on my phone? Now it is on my phone too." Show the Back Tap.'],
   update:['The source is a small Python script that writes the shortcut as a plist. Sign it with <code>shortcuts sign --mode anyone</code>, open the signed file, click Add Shortcut. It syncs to the phone by itself.','Delete the old copy on the phone after adding a new one, or you will have two.'],
   watch:['A true keyboard app on iPhone needs Xcode and a $99 a year Apple developer account. The Shortcut is the free way and it works.','The Replace Text step in Shortcuts returned empty when built this way, so it was left out. Spoken quotes are not escaped.']
 },
@@ -498,6 +500,8 @@ var BUILDS = [
   files:[HOME + '/whipper-flow/WhipperFlow.app', HOME + '/whipper-flow/WhipperFlow.m', HOME + '/whipper-flow/config.json', HOME + '/whipper-flow/START-HERE.html', HOME + '/whipper-flow/history.txt', HOME + '/whipper-flow/build.sh', HOME + '/Library/LaunchAgents/com.frimpomaasync.whipperflow.plist'],
   where:'The <b>◦</b> in your menu bar, top right. Starts by itself at login.',
   use:['Hold <b>Right Option</b>, talk, let go. Pop = listening, Tink = writing, Glass = pasted.','Double-tap Right Option for hands-free. Press it once to finish.','Say "new paragraph", "scratch that", or "booking link" and it does the obvious thing.','It knows your spellings: Nana Frimpongmaa, SynKasa, Siesie, Som, Soma, Soft Appeals, frimpomaasync.com. Add more in the menu under Edit settings.','Every dictation is saved. Menu → Open history.','Cloud mode answers in 1 to 3 seconds. Local mode works offline on whisper.cpp, slower. One click to switch.'],
+  story:["I got tired of typing.","So I built my own dictation tool this afternoon. Hold one key, talk, let go. The words land wherever my cursor is, clean. No ums. It spells my name right.","No subscription. It runs on the small Mac I already own.","How I built it: I told the chat box what I wanted. It looked at what was already on my Mac. It tested four ways to clean up my words on my actual voice and kept the one that came back in 2 seconds. When the first compiler broke, it switched to another one. I flipped two switches in Settings. That was my whole job.","Then I said, can I have it on my phone? Now it's on my phone too.","How you use this in your business: every reply you type with two thumbs, you talk instead. The quote, the follow-up, the note after a call. Talk it and paste it.","Where are you still typing what you could just say?"],
+  share:['<b>Give it to a friend.</b> Zip the <code>~/whipper-flow</code> folder. They unzip it, double-click <code>WhipperFlow.app</code>, allow the microphone, turn on Accessibility, and put their own Gemini key into <code>config.json</code>. Two minutes. The guide inside the folder walks them through it.','<b>Share the story instead of the file.</b> The "Behind the build" text above is written to post as is. Instagram, LinkedIn or Substack. Swap the last line for the booking link when you want the door open.','<b>Sell it as a download.</b> Four things have to happen first: a settings screen where the buyer pastes their own key (no editing files), an Apple developer signature at $99 a year so it opens with no warning, a name and icon that are yours, and a one-page install guide. Then it is a zip on your site behind the /get gate you already have, or on Gumroad. Price it like a small tool, not a service.','<b>What you can share today with nothing extra:</b> the folder to a friend, the story to your audience, and the phone Shortcut by iCloud link.'],
   update:['Menu → Edit settings opens <code>config.json</code>. Vocabulary, snippets, per-app style, hotkey. Then Menu → Reload settings.','Code change: edit <code>WhipperFlow.m</code>, run <code>~/whipper-flow/build.sh</code>, then quit and reopen the app.'],
   watch:['<b>Right side</b> Option key only. The left one does nothing.','If the key stops working, System Settings → Privacy &amp; Security → Accessibility → Whipper Flow must be on.','Written in Objective-C on purpose. The Swift compiler on this Mac is broken by an Apple bug, and this sidesteps it.','Cloud mode uses your Gemini key. A 30-second dictation costs a fraction of a cent.']
 },
@@ -852,7 +856,7 @@ var RETIRED = [
     if(!term) return true;
     var hay = (b.name + ' ' + b.one + ' ' + b.kind + ' ' + b.group + ' ' + (b.where||'') + ' ' +
                (b.live||'') + ' ' + (b.files||[]).join(' ') + ' ' + (b.use||[]).join(' ') + ' ' +
-               (b.update||[]).join(' ') + ' ' + (b.watch||[]).join(' ')).toLowerCase();
+               (b.update||[]).join(' ') + ' ' + (b.watch||[]).join(' ') + ' ' + (b.story||[]).join(' ') + ' ' + (b.share||[]).join(' ')).toLowerCase();
     return term.toLowerCase().split(/\s+/).every(function(w){ return hay.indexOf(w) > -1; });
   }
 
@@ -941,6 +945,8 @@ var RETIRED = [
     /* sections */
     if(b.where) h += '<div class="sec"><h3>Where it lives</h3><div class="box"><p>' + b.where + '</p></div></div>';
     if(b.use)    h += '<div class="sec"><h3>How to use it</h3>' + listBox(b.use) + '</div>';
+    if(b.story)  h += '<div class="sec"><h3>Behind the build, say it like this</h3><div class="box story">' + b.story.map(function(p){ return '<p>' + p + '</p>'; }).join('') + '</div></div>';
+    if(b.share)  h += '<div class="sec"><h3>Share it or sell it</h3>' + listBox(b.share) + '</div>';
     if(b.update) h += '<div class="sec"><h3>How to change it</h3>' + stepBox(b.update) + '</div>';
     if(b.watch)  h += '<div class="sec"><h3>Watch out</h3>' + listBox(b.watch, 'warn') + '</div>';
 
