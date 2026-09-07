@@ -324,21 +324,21 @@ Planner ── sleep + coffee ────▶  Forecast: what moves your peak</d
     <ol>
       <li>Open the <b>Shortcuts</b> app. Tap <b>+</b> top right.</li>
       <li>Tap <b>Add Action</b>. Search <b>Open URLs</b>. Tap it.</li>
-      <li>Tap the blue <b>URL</b> word. Paste <code>https://frimpomaasync.com/planner/#home</code>.</li>
+      <li>Tap the blue <b>URL</b> word. Paste <code>https://frimpomaasync.com/day/#home</code>.</li>
       <li>Tap the name at the top. Rename it <b>Kids home</b>.</li>
       <li>Tap the share icon at the bottom. Tap <b>Add to Home Screen</b>. Tap <b>Add</b>.</li>
-      <li>Repeat once more with <code>https://frimpomaasync.com/planner/#say=energy 2 wiped</code>. Name it <b>Wiped</b>.</li>
+      <li>Repeat once more with <code>https://frimpomaasync.com/day/#say=energy 2 wiped</code>. Name it <b>Wiped</b>.</li>
     </ol>
     <div class="tip">Any sentence works after <code>#say=</code>. "energy 4 lost 20 minutes". "tank is full". "kids are home".</div>
 
     <h3>put it on the home screen</h3>
     <p>Two addresses, one planner.</p>
     <ul>
-      <li><b>Home screen copy</b> · <code>frimpomaasync.com/planner/</code> · opens like an app, works offline, tasks live on the phone.</li>
+      <li><b>Home screen copy</b> · <code>frimpomaasync.com/day/</code> · opens like an app, works offline, tasks live on the phone.</li>
       <li><b>Claude copy</b> · <code>claude.ai/code/artifact/6a675031-e1df-4f16-9d64-c71be752fc7a</code> · same planner, plus the calendar read and a cloud copy of your tasks.</li>
     </ul>
     <ol>
-      <li>Open <code>https://frimpomaasync.com/planner/</code> in <b>Safari</b>. Not Chrome, not the Claude app.</li>
+      <li>Open <code>https://frimpomaasync.com/day/</code> in <b>Safari</b>. Not Chrome, not the Claude app.</li>
       <li>Tap the share icon, the square with the arrow.</li>
       <li>Scroll. Tap <b>Add to Home Screen</b>. Tap <b>Add</b>.</li>
       <li>It opens like an app. Full screen, no browser bar.</li>
@@ -1010,6 +1010,7 @@ Planner ── sleep + coffee ────▶  Forecast: what moves your peak</d
   function find(id) { for (var i = 0; i < state.tasks.length; i++) if (state.tasks[i].id === id) return state.tasks[i]; return null; }
 
   loadLocal(); render(); connect(); renderCalendar(); loadCalendar(false); importFromHash();
+  window.addEventListener("hashchange", importFromHash);
 })();
 </script>
 
