@@ -316,6 +316,7 @@
     <div class="acts">
       <button class="act" id="backupBtn">Save a copy <span class="arr">&rarr;</span></button>
       <button class="act" id="restoreBtn">Restore from a copy</button>
+      <button class="act" id="plannerBtn">Send open items to the planner <span class="arr">&rarr;</span></button>
     </div>
     <p class="acts-note">Som saves to this device only. A copy is your safety net if you clear
       your browser, change phones, or lose the device. Restoring adds anything missing &middot;
@@ -745,6 +746,14 @@
 
   el('backupBtn').addEventListener('click', backup);
   el('restoreBtn').addEventListener('click', function(){ el('restoreFile').click(); });
+  el('plannerBtn').addEventListener('click', function(){
+    var open=live().filter(function(it){ return !it.done; });
+    if(!open.length){ toast('Nothing open to send.'); return; }
+    var txt=open.map(function(it){ return '- '+it.text; }).join('\n');
+    var b64=btoa(unescape(encodeURIComponent(txt))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    window.open('https://claude.ai/code/artifact/6a675031-e1df-4f16-9d64-c71be752fc7a#som='+b64, '_blank');
+    toast('Sent <b>'+open.length+'</b> to the planner. Press Preview lanes there.');
+  });
   el('restoreFile').addEventListener('change', function(e){
     var f=e.target.files && e.target.files[0];
     if(f) restore(f);

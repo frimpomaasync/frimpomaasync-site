@@ -393,6 +393,27 @@ $hidden = count($cards) - count($shown);
         </tbody>
       </table>
     </div></div>
+    <?php
+      // Hand the open deadlines to her planner as hard dates. Business names
+      // and dates only, no claim detail, no PHI. The link is her own private page.
+      $plannerRows = [];
+      foreach ($batchDeadlines as $row) {
+          $plannerRows[] = [
+              'id'    => (string) $row['public_ref'],
+              'label' => (string) ($row['display_name'] ?? $row['legal_name']) . ' · batch ' . (string) $row['label'],
+              'due'   => substr((string) $row['earliest_deadline_at'], 0, 10),
+          ];
+      }
+      foreach ($deadlines as $row) {
+          $plannerRows[] = [
+              'id'    => (string) ($row['public_ref'] ?? $row['id']),
+              'label' => (string) ($row['display_name'] ?? $row['legal_name']) . ' · decision',
+              'due'   => substr((string) $row['client_decision_due_at'], 0, 10),
+          ];
+      }
+      $plannerHash = rtrim(strtr(base64_encode((string) json_encode($plannerRows, JSON_UNESCAPED_UNICODE)), '+/', '-_'), '=');
+    ?>
+    <p style="margin-top:10px"><a class="sa-btn is-quiet is-sm" target="_blank" rel="noopener" href="https://claude.ai/code/artifact/6a675031-e1df-4f16-9d64-c71be752fc7a#sa=<?= $e($plannerHash) ?>">Send deadlines to the planner</a></p>
   <?php endif; ?>
 </section>
 
