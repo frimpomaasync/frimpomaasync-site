@@ -394,6 +394,17 @@ var BUILDS = [
 
 /* ══════════════════ THE APPS ON YOUR PHONE ══════════════════ */
 {
+  id:'shipperflow', group:'Apps on your phone', kind:'App', status:'live',
+  name:'Shipper Flow',
+  one:'Whipper Flow for your iPhone. Tap, talk, tap Done, clean text is on your clipboard.',
+  live:null, prev:null,
+  files:[HOME + '/whipper-flow/iphone/Shipper Flow unsigned.shortcut', HOME + '/whipper-flow/iphone/out/Shipper Flow.shortcut'],
+  where:'The Shortcuts app on your iPhone, the tile named <b>Shipper Flow</b>. It got there by iCloud from this Mac.',
+  use:['Tap Shipper Flow, talk, tap Done. Long-press in any app and Paste.','Make it one tap: Settings → Accessibility → Touch → Back Tap → Double Tap → Shipper Flow.','Same cleaning rules and the same spellings as the Mac app.'],
+  update:['The source is a small Python script that writes the shortcut as a plist. Sign it with <code>shortcuts sign --mode anyone</code>, open the signed file, click Add Shortcut. It syncs to the phone by itself.','Delete the old copy on the phone after adding a new one, or you will have two.'],
+  watch:['A true keyboard app on iPhone needs Xcode and a $99 a year Apple developer account. The Shortcut is the free way and it works.','The Replace Text step in Shortcuts returned empty when built this way, so it was left out. Spoken quotes are not escaped.']
+},
+{
   id:'nanahq', group:'Apps on your phone', kind:'App', status:'live',
   name:'NANA HQ',
   one:'The family app. Adinkra guide, hack deck, and a state that syncs between your phone and this Mac.',
@@ -479,6 +490,17 @@ var BUILDS = [
 },
 
 /* ══════════════════ ENGINES ON THE MAC ══════════════════ */
+{
+  id:'whipperflow', group:'Engines on the Mac', kind:'Tool', status:'live',
+  name:'Whipper Flow',
+  one:'Your own Wispr Flow, no subscription. Hold Right Option, talk, let go. Clean text lands wherever your cursor is, in any app.',
+  live:null, prev:HOME + '/whipper-flow/START-HERE.html',
+  files:[HOME + '/whipper-flow/WhipperFlow.app', HOME + '/whipper-flow/WhipperFlow.m', HOME + '/whipper-flow/config.json', HOME + '/whipper-flow/START-HERE.html', HOME + '/whipper-flow/history.txt', HOME + '/whipper-flow/build.sh', HOME + '/Library/LaunchAgents/com.frimpomaasync.whipperflow.plist'],
+  where:'The <b>◦</b> in your menu bar, top right. Starts by itself at login.',
+  use:['Hold <b>Right Option</b>, talk, let go. Pop = listening, Tink = writing, Glass = pasted.','Double-tap Right Option for hands-free. Press it once to finish.','Say "new paragraph", "scratch that", or "booking link" and it does the obvious thing.','It knows your spellings: Nana Frimpongmaa, SynKasa, Siesie, Som, Soma, Soft Appeals, frimpomaasync.com. Add more in the menu under Edit settings.','Every dictation is saved. Menu → Open history.','Cloud mode answers in 1 to 3 seconds. Local mode works offline on whisper.cpp, slower. One click to switch.'],
+  update:['Menu → Edit settings opens <code>config.json</code>. Vocabulary, snippets, per-app style, hotkey. Then Menu → Reload settings.','Code change: edit <code>WhipperFlow.m</code>, run <code>~/whipper-flow/build.sh</code>, then quit and reopen the app.'],
+  watch:['<b>Right side</b> Option key only. The left one does nothing.','If the key stops working, System Settings → Privacy &amp; Security → Accessibility → Whipper Flow must be on.','Written in Objective-C on purpose. The Swift compiler on this Mac is broken by an Apple bug, and this sidesteps it.','Cloud mode uses your Gemini key. A 30-second dictation costs a fraction of a cent.']
+},
 {
   id:'contentos', group:'Engines on the Mac', kind:'Engine', status:'live',
   name:'The Content OS',
