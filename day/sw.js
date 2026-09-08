@@ -1,7 +1,7 @@
 /* Planner service worker.
    IMPORTANT: bump CACHE on EVERY change to any cached file, or the update
    never reaches a phone that already installed the app. */
-var CACHE = 'planner-v3';
+var CACHE = 'planner-v4';
 
 var SHELL = [
   './',
