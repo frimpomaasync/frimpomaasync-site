@@ -1,3 +1,5 @@
+<meta name="robots" content="noindex,nofollow,noarchive,noimageindex">
+
 <title>The Build Library</title>
 <style>
 :root{
@@ -130,8 +132,6 @@ details.ret summary:hover{color:var(--ink)}
 <div id="modebar" class="modebar" hidden></div>
 
 <header class="top">
-<meta name="robots" content="noindex,nofollow,noarchive,noimageindex">
-
   <div class="in">
     <div class="eyebrow">frimpomaasync</div>
     <h1>The Build Library</h1>
@@ -530,7 +530,7 @@ var BUILDS = [
   id:'repurpose', group:'Engines on the Mac', kind:'Engine', status:'live',
   name:'Repurpose',
   one:'Your own Repurpose.io, no subscription. One video in. It writes down every word, finds the good sixty seconds, and makes that clip in every shape you tick, captioned, with the posts written per platform.',
-  live:null, prev:HOME + '/repurpose/START-HERE.html',
+  live:null, prev:'http://127.0.0.1:8791/',
   files:[HOME + '/repurpose/START-HERE.html', HOME + '/repurpose/server.js', HOME + '/repurpose/lib/', HOME + '/repurpose/ui/', HOME + '/repurpose/bin/start.sh', HOME + '/repurpose/data/db.json', HOME + '/repurpose/inbox/', HOME + '/repurpose/out/', HOME + '/Library/LaunchAgents/com.nana.repurpose.plist'],
   where:'Always running at <code>http://127.0.0.1:8791</code>, kept alive by the launchd job <code>com.nana.repurpose</code>. Bookmark that address.',
   use:['<b>Three moves.</b> Add a video, render it, post it. Everything else is the machine.','Add: drop a file on Today, paste a YouTube, TikTok or podcast link, or put files in <code>~/repurpose/inbox</code>. Anything landing in that folder is picked up within a minute.','Render: open the video, press <b>Find clips</b>, tick the shapes, tick the platforms, press <b>Render</b>.','<b>Tick more than one shape and the clip is made in every one of them in a single press.</b> Press <b>The post pack</b> to tick upright, square and pin at once. Each platform is handed the shape it wants: upright for Instagram, TikTok, Shorts, Facebook, Threads and Snapchat, square for LinkedIn and X, 2:3 for Pinterest, wide for Substack.','Post: on Today press <b>Open and post</b>. The caption is on your clipboard, the file is selected in Finder, the upload page is open in Chrome. Pick, paste, post. Then press <b>It is up</b> so the same reel never goes out twice.','Captions are scored against your own banned words before you read them, plus each platform\'s length and hashtag limits. Anything caught sits next to the caption. <b>Check the voice</b> re-runs it after you edit.','On-screen headlines are checked the same way, with one retry, because a headline is burned into the picture and cannot be edited later.','<b>Make a pin</b> on any render freezes one frame, puts a headline on it, and keeps it as a still you can post.','An audio file becomes a card with the sound drawn as moving copper bars, so a podcast is not a dead still.','Set it once and leave it: add your channel under Sources, build a workflow pointing at it, turn Automatic on. New uploads become clips and posts by themselves. You only press post.','Settings shows a <b>Machine check</b>: ten things this app leans on, green or red, with what to do about each. A red bar on Today names anything broken before you waste a render finding out.','Settings also shows what is on the disk, and can let go of source videos you have already rendered from. The words, the renders and the posts stay.'],
@@ -817,7 +817,7 @@ var RETIRED = [
   ['~90 duplicate files in ~/Downloads','synkasa-flyer-v4 (2).html, seventeen index (n).html, synkasa-blog_1 through _3, and the rest. Old drafts and browser re-downloads. Nothing live points at any of them. They are safe to delete and safe to ignore.'],
   ['~/Downloads/archive/2026-03 and 2026-04','Shapphire Sync era mockups. Another brand. Dead.'],
   ['~/Downloads/frimpomaasync-cockpit.RETIRED-2026-07-16.html','Named retired in the filename. Replaced by Anɔpa Content.'],
-  ['~/Downloads/nanaos-work/ and the NanaOS pages','Superseded. The hand-uploaded private NanaOS folder on the server survives only because the deploy never uploaded it.']
+  ['~/Downloads/nanaos-work/ and the NanaOS pages','Superseded. The hand-uploaded os-fad13324c3/ folder on the server survives only because the deploy never uploaded it.']
 ];
 
 /* =====================================================================
@@ -846,7 +846,8 @@ var RETIRED = [
   /* A site page previews over the local server so its stylesheets resolve.
      Everything else is a single self-contained file, so it previews straight off disk. */
   function isSitePage(p){ return p.indexOf(SITE + '/') === 0; }
-  function prevURL(p){ return isSitePage(p) ? SERVE + encodeURI(p.slice((SITE + '/').length)) : fileURL(p); }
+  /* A build that is itself a running web app previews at its own address. */
+  function prevURL(p){ if(/^https?:\/\//.test(p)) return p; return isSitePage(p) ? SERVE + encodeURI(p.slice((SITE + '/').length)) : fileURL(p); }
   function base(p){ var t = p.replace(/\/$/,''); return t.slice(t.lastIndexOf('/')+1) || t; }
   function folder(p){ var t = p.replace(/\/$/,''); return t.slice(0, t.lastIndexOf('/')); }
 
