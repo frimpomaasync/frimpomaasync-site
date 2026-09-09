@@ -20,6 +20,14 @@ header('X-Content-Type-Options: nosniff');
 // The server runs on UTC; her day runs on the East Coast. 'due today' must mean her today.
 date_default_timezone_set('America/New_York');
 
+// No key: only "does any list exist here, and how fresh" so the setup can be confirmed from outside.
+if (!empty($_GET['ping'])) {
+  header('Content-Type: application/json');
+  $files = glob(__DIR__ . '/data/state-*.json') ?: [];
+  $newest = 0; foreach ($files as $f) { $newest = max($newest, filemtime($f)); }
+  exit(json_encode(['lists' => count($files), 'newest_min_ago' => $newest ? intdiv(time() - $newest, 60) : null]));
+}
+
 $key = isset($_GET['k']) ? (string)$_GET['k'] : '';
 if (!preg_match('/^[a-f0-9]{32}$/', $key)) { http_response_code(400); header('Content-Type: application/json'); exit('{"error":"key"}'); }
 
