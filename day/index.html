@@ -366,6 +366,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
       <li>Other way: under More, the <b>Every device</b> card. Tap <b>Copy the pairing link</b>.</li>
       <li>Open it once on the other device. Tasks already on that device are kept and merged in.</li>
     </ol>
+    <p><b>Home screen copy and Som.</b> A Som send opens Safari, never the home screen app; the phone does that, not us. So in the home screen copy, under More, the Every device card has <b>Pair Safari on this phone</b>. Tap it once. Safari opens already paired. From then on: Som, Send, and the tasks are in the home screen copy within a minute. Two devices saving on top of each other never lose a task: the newer save wins, and anything the older one created is carried over.</p>
     <div class="tip">The link holds your key. Keep it to yourself. Nothing else identifies you: no login, no email.</div>
 
     <h3>calendar on the phone</h3>
@@ -402,7 +403,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
       <tr><td>Show the rest, open by default</td><td>More, closed by default. The first screen is the planner.</td></tr>
       <tr><td>Say it box, check-ins only</td><td>One box on top. A task or a check-in, it works out which.</td></tr>
       <tr><td>Som: Send, Preview lanes, Add all</td><td>Som: Send. They land in the lanes on their own.</td></tr>
-      <tr><td>Every device: Turn it on, copy, open</td><td>On by itself. Safari carries the key to the phone.</td></tr>
+      <tr><td>Every device: Turn it on, copy, open</td><td>On by itself. Safari carries the key to the phone. Home screen copy has Pair Safari, one tap, so Som sends land in it.</td></tr>
       <tr><td>Energy 3 opened deep work</td><td>Half tank locks it. The lane matches the tank.</td></tr>
     </table></div>
 
@@ -774,7 +775,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
       var pd = parseDue(raw.replace(/\b(\d{1,3})\s*(min|mins|minutes|m|h|hr|hrs|hour|hours)\b/i, " "), now);
       var name = pd.rest.replace(/\s+/g, " ").replace(/^\s*[-*•]\s*/, "").trim();
       if (!name) return;
-      var t = { id:"q" + (base + i).toString(36), name:name.slice(0, 90), lane:lane, min:min, done:false, due:pd.due, first:"", repeat:"", doneAt:0 };
+      var t = { id:"q" + (base + i).toString(36), name:name.slice(0, 90), lane:lane, min:min, done:false, due:pd.due, first:"", repeat:"", doneAt:0, created:base + i };
       made.push(t);
     });
     if (!made.length) return;
@@ -807,16 +808,24 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
   var sync = { key:"", status:"off", timer:null };
   try { sync.key = localStorage.getItem(KEYLS) || ""; } catch (e) {}
   var inClaude = !!(window.claude && window.claude.use);
+  var standalone = !!(navigator.standalone || (window.matchMedia && matchMedia("(display-mode: standalone)").matches));
   function genKey() { var a = new Uint8Array(16); if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(a); else for (var i = 0; i < 16; i++) a[i] = Math.floor(Math.random() * 256); return Array.prototype.map.call(a, function (b) { return ("0" + b.toString(16)).slice(-2); }).join(""); }
   function syncUrl() { return SYNC_URL + "?k=" + encodeURIComponent(sync.key); }
   function setKey(k) { sync.key = k || ""; try { if (k) localStorage.setItem(KEYLS, k); else localStorage.removeItem(KEYLS); } catch (e) {} }
+  // two devices saved on top of each other: keep the newer state, carry over any task the older one created
+  function carryTasks(newer, older) {
+    var have = {}; (newer.tasks || []).forEach(function (t) { have[t.id] = 1; });
+    var add = (older.tasks || []).filter(function (t) { return t.created && !have[t.id]; });
+    if (add.length) newer.tasks = newer.tasks.concat(add);
+    return add.length;
+  }
   function pull() {
     if (!sync.key || inClaude) return Promise.resolve();
     return fetch(syncUrl(), { cache:"no-store" }).then(function (r) { if (r.status === 404) return null; if (!r.ok) throw new Error("http"); return r.json(); }).then(function (d) {
       sync.status = "on";
       if (d && d.tasks) {
-        if ((d.updated || 0) > (state.updated || 0)) { applyingRemote = true; state = d; fillDefaults(); saveLocal(); render(); applyingRemote = false; }
-        else if ((d.updated || 0) < (state.updated || 0)) push();
+        if ((d.updated || 0) > (state.updated || 0)) { var mine = state; applyingRemote = true; state = d; fillDefaults(); var c = carryTasks(state, mine); saveLocal(); render(); applyingRemote = false; if (c) persist(); }
+        else if ((d.updated || 0) < (state.updated || 0)) { if (carryTasks(state, d)) { saveLocal(); render(); } push(); }
         if (mergeTasks) { var have = {}; state.tasks.forEach(function (t) { have[t.name.toLowerCase()] = 1; }); var add = mergeTasks.filter(function (t) { return !have[t.name.toLowerCase()]; }); mergeTasks = null; if (add.length) { state.tasks = state.tasks.concat(add); render(); persist(); } }
       } else { mergeTasks = null; push(); }
       setSync("one list on every device"); renderDevices();
@@ -827,7 +836,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     clearTimeout(sync.timer);
     sync.timer = setTimeout(function () {
       fetch(syncUrl(), { method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(clean(state)) }).then(function (r) {
-        if (r.status === 409) return r.json().then(function (d) { if (d && d.state && d.state.tasks) { applyingRemote = true; state = d.state; fillDefaults(); saveLocal(); render(); applyingRemote = false; } });
+        if (r.status === 409) return r.json().then(function (d) { if (d && d.state && d.state.tasks) { var mine = state; applyingRemote = true; state = d.state; fillDefaults(); var c = carryTasks(state, mine); saveLocal(); render(); applyingRemote = false; if (c) persist(); } });
         if (!r.ok) throw new Error("http");
         sync.status = "on"; setSync("saved everywhere");
       }).catch(function () { sync.status = "err"; setSync("saved on this device · cloud not reached"); renderDevices(); });
@@ -840,6 +849,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     if (!sync.key) { el.innerHTML = head + '<h2>one list on every device<small>Turn it on here. Then open the pairing link on the Mac or the other phone. Same tasks, same check-ins, everywhere. The 4:44 brief reads the same file.</small></h2><div class="row"><button class="btn" type="button" id="syncOn">Turn it on</button></div>'; return; }
     var link = location.origin + location.pathname + "#key=" + sync.key;
     el.innerHTML = head + '<h2>' + (sync.status === "err" ? "cloud not reached." : "one list on every device. on.") + '<small>' + (sync.status === "err" ? "Saved on this device. It catches up when the site answers." : "Already on. The key sits in this page\'s address, so a tab you open from Safari\'s tab list on the phone is paired on its own. Or open this link once on the other device.") + '</small></h2>' +
+      (standalone ? '<div class="tile" style="margin-top:12px"><b>Som sends to Safari, not to this home screen copy.</b><div class="note" style="opacity:.85">Tap once. Safari opens, pairs itself, and from then on a Som send lands here within a minute.</div><div class="row" style="margin-top:10px"><button class="btn" type="button" id="pairSafari">Pair Safari on this phone</button></div></div>' : '') +
       '<div class="pair"><code>' + esc(link) + '</code></div><div class="row"><button class="btn light" type="button" id="copyPair">Copy the pairing link</button><button class="btn light" type="button" id="syncOff">Stop on this device</button><span class="sync" id="pairMsg"></span></div>';
   }
   function keyHash() { try { history.replaceState(null, "", location.pathname + location.search + (sync.key && !inClaude ? "#key=" + sync.key : "")); } catch (e) {} }
@@ -998,7 +1008,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     }
     if (!somRows.length) return;
     var base = Date.now();
-    state.tasks = state.tasks.filter(function (t) { return !t.example; }).concat(somRows.map(function (r, i) { return { id:"s" + (base + i).toString(36), name:r.name, lane:r.lane, min:r.min, done:false, due:"", som:true }; }));
+    state.tasks = state.tasks.filter(function (t) { return !t.example; }).concat(somRows.map(function (r, i) { return { id:"s" + (base + i).toString(36), name:r.name, lane:r.lane, min:r.min, done:false, due:"", som:true, created:base + i }; }));
     $("#somin").value = ""; $("#somPv").innerHTML = '<div class="empty">Added ' + somRows.length + '. They are in the lanes.</div>'; $("#somImport").hidden = true; somRows = [];
     render(); persist();
   }
@@ -1012,7 +1022,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
         var rows = JSON.parse(decodeURIComponent(escape(atob(sa[1].replace(/-/g, "+").replace(/_/g, "/")))));
         var have = {}; state.tasks.forEach(function (t) { if (t.sa) have[t.sa] = 1; });
         var added = 0;
-        (rows || []).forEach(function (r) { if (!r.id || have[r.id]) return; state.tasks.push({ id:"sa-" + r.id, sa:r.id, name:"Appeal decision: " + (r.label || r.id), lane:"alpha", min:Number(r.min) || 90, done:false, due:(r.due || "").slice(0, 10), first:"Open the engagement on the Desk. Read the last note." }); added++; });
+        (rows || []).forEach(function (r) { if (!r.id || have[r.id]) return; state.tasks.push({ id:"sa-" + r.id, sa:r.id, name:"Appeal decision: " + (r.label || r.id), lane:"alpha", min:Number(r.min) || 90, done:false, due:(r.due || "").slice(0, 10), first:"Open the engagement on the Desk. Read the last note.", created:Date.now() }); added++; });
         state.tasks = state.tasks.filter(function (t) { return !t.example; });
         keyHash();
         render(); persist(); openLane = "alpha"; render();
@@ -1023,7 +1033,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     var m = location.hash.match(/#som=([A-Za-z0-9+\/=_-]+)/); if (!m) return;
     try {
       var txt = decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))); $("#somin").value = txt; previewSom(); keyHash();
-      if (!restoreData && somRows.length) { var cnt = somRows.length; importSom(); heard("added " + cnt + " from Som. they are in the lanes"); window.scrollTo({ top:0, behavior:"smooth" }); }
+      if (!restoreData && somRows.length) { var cnt = somRows.length; importSom(); heard("added " + cnt + " from Som. they are in the lanes" + (sync.key && !standalone ? " · on the home screen copy too within a minute" : "")); window.scrollTo({ top:0, behavior:"smooth" }); }
       else if (!restoreData && !somRows.length) { heard("nothing new from Som. it is all here already"); $("#somin").value = ""; $("#somPv").innerHTML = ""; }
       else { state.foldOpen = true; render(); $("#somin").scrollIntoView({ behavior:"smooth", block:"start" }); }
     } catch (e) {}
@@ -1345,6 +1355,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     else if (b.id === "syncOff") { setKey(""); sync.status = "off"; setSync("saved on this device"); renderDevices(); renderCalendar(); }
     else if (b.id === "copyPair") { var pm = $("#pairMsg"), lk = location.origin + location.pathname + "#key=" + sync.key; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lk).then(function () { if (pm) pm.textContent = "copied. open it on the other device"; }, function () { if (pm) pm.textContent = "could not copy. select the link and copy it"; }); }
     else if (b.id === "copyAll") copyAll();
+    else if (b.id === "pairSafari") { window.open(location.origin + location.pathname + "#key=" + sync.key, "_blank"); var pm2 = $("#pairMsg"); if (pm2) pm2.textContent = "Safari opened and paired. come back here"; }
     else if (b.id === "calSave") saveCalUrl();
     else if (b.id === "calChange") { cal.status = "setup"; renderCalendar(); }
     else if (b.dataset.strip) { state.foldOpen = true; openLane = null; render(); persist(); $("#lanes").scrollIntoView({ behavior:"smooth", block:"start" }); }
@@ -1363,7 +1374,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
       ev.preventDefault();
       var name = $("#tname").value.trim(); if (!name) return;
       var lane = $("#tlane").value;
-      state.tasks = state.tasks.filter(function (t) { return !t.example; }).concat([{ id:"t" + Date.now().toString(36), name:name, lane:lane, min:Math.max(5, Number($("#tmin").value) || 30), done:false, due:$("#tdue").value || "", first:$("#tfirst").value.trim(), repeat:$("#trep").value || "", doneAt:0 }]);
+      state.tasks = state.tasks.filter(function (t) { return !t.example; }).concat([{ id:"t" + Date.now().toString(36), name:name, lane:lane, min:Math.max(5, Number($("#tmin").value) || 30), done:false, due:$("#tdue").value || "", first:$("#tfirst").value.trim(), repeat:$("#trep").value || "", doneAt:0, created:Date.now() }]);
       $("#tfirst").value = ""; openLane = lane; render(); persist();
     });
   }
