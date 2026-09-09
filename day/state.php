@@ -32,7 +32,6 @@ $briefFile = $dir . '/brief-' . $id . '.txt';
 function day_brief(array $s): string {
   $now = time();
   $open = array_values(array_filter($s['tasks'] ?? [], fn($t) => empty($t['done'])));
-  $lanes = ['alpha' => 'full tank', 'beta' => 'half tank', 'phoenix' => 'empty tank'];
   $lines = ['Planner, ' . date('D M j', $now)];
   $due = [];
   foreach ($open as $t) {
@@ -45,7 +44,11 @@ function day_brief(array $s): string {
   if ($due) {
     $lines[] = 'Hard dates:';
     foreach ($due as [$days, $t]) {
-      $when = $days < 0 ? 'overdue by ' . (-$days) . ' day' . ($days === -1 ? '' : 's') : $days === 0 ? 'due today' : $days === 1 ? 'due tomorrow' : 'due in ' . $days . ' days';
+      // PHP 8 refuses an unparenthesized nested ternary, so each branch is wrapped.
+      if ($days < 0) { $when = 'overdue by ' . (-$days) . ' day' . ($days === -1 ? '' : 's'); }
+      elseif ($days === 0) { $when = 'due today'; }
+      elseif ($days === 1) { $when = 'due tomorrow'; }
+      else { $when = 'due in ' . $days . ' days'; }
       $lines[] = '  ' . $t['name'] . ' (' . $when . ')';
     }
   }
