@@ -1,0 +1,4 @@
+# Planner state, the brief text and the calendar cache live here. state.php and
+# cal.php read and write them server-side. Nothing in this folder is served to
+# a browser, and this file keeps the folder alive through the deploy.
+Require all denied

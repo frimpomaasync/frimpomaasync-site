@@ -7,7 +7,7 @@
 <meta name="description" content="Rate the tank, say what broke, and the day reroutes itself.">
 <meta name="robots" content="noindex">
 <link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#F0EADE">
+<meta name="theme-color" content="#DCEBF8">
 <link rel="icon" type="image/svg+xml" href="icon.svg">
 <link rel="apple-touch-icon" href="icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,32 +17,42 @@
 </head>
 <body>
 <style>
-  :root { --ground:#F0EADE; --cream:#F0EADE; --rule:#C3BBA7; --hl:#DBB455; --engrave:#2A6197; --card:rgba(255,255,255,.58); --glass:rgba(255,255,255,.58); --edge:rgba(255,255,255,.85); --shadow:0 10px 32px rgba(16,20,38,.10); --ink:#101426; --lime:#E31B23; --grey:#4A6FA5; --mist:#F8F8F9; --black:#101426; --line:#E4E5EA; --clay:#E31B23;
+  :root { --ground:#DCEBF8; --cream:#EEF6FC; --rule:#B7CBDD; --hl:#DBB455; --engrave:#2A6197; --card:rgba(255,255,255,.56); --glass:rgba(255,255,255,.56); --edge:rgba(255,255,255,.9); --shadow:0 14px 40px rgba(48,96,150,.16), inset 0 1px 0 rgba(255,255,255,.95); --ink:#101426; --lime:#E31B23; --grey:#4A6FA5; --mist:#F8F8F9; --black:#101426; --line:#E4E5EA; --clay:#E31B23;
           --serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif; --sans:-apple-system,BlinkMacSystemFont,'Helvetica Neue',Helvetica,Arial,sans-serif; --mono:ui-monospace,Menlo,Monaco,Consolas,monospace;
           --sheet:#DBDAE0; --cool:#C8EDFF; --warm:#F7DCFF; --pale:#FFFFFF; --r:28px; }
   * { box-sizing:border-box; }
-  body { margin:0; background:var(--ground); background-image:linear-gradient(180deg,#F3EEE3 0%,#F0EADE 40%,#EAE3D4 100%); background-attachment:fixed; min-height:100vh; color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.4; -webkit-font-smoothing:antialiased; }
+  /* liquid glass ground: baby blue ombre with soft cloud blooms, one fixed layer so scrolling costs nothing */
+  body::before { content:""; position:fixed; inset:-12%; z-index:-1; pointer-events:none;
+    background:
+      radial-gradient(58% 42% at 12% 8%, rgba(255,255,255,.95), rgba(255,255,255,0) 68%),
+      radial-gradient(48% 38% at 88% 22%, rgba(255,255,255,.85), rgba(255,255,255,0) 70%),
+      radial-gradient(60% 44% at 28% 62%, rgba(255,255,255,.8), rgba(255,255,255,0) 70%),
+      radial-gradient(50% 40% at 78% 86%, rgba(166,206,242,.95), rgba(166,206,242,0) 70%),
+      radial-gradient(40% 32% at 50% 40%, rgba(196,224,248,.9), rgba(196,224,248,0) 70%),
+      linear-gradient(180deg,#F3F9FE 0%,#DCEBF8 46%,#BFD9F1 100%);
+    transform:translateZ(0); }
+  body { margin:0; background:var(--ground); min-height:100vh; color:var(--ink); font-family:var(--sans); font-size:16px; line-height:1.4; -webkit-font-smoothing:antialiased; }
   .num { font-variant-numeric:tabular-nums; }
   .wrap { max-width:760px; margin:0 auto; padding:18px 14px 90px; }
   h1 { font-family:var(--serif); font-size:46px; font-weight:700; letter-spacing:-.02em; line-height:1; margin:0; text-wrap:balance; text-transform:lowercase; }
   h1 .dot { color:var(--lime); }
-  .date { font-family:var(--mono); font-size:13px; letter-spacing:.24em; text-transform:uppercase; color:#6B6F7E; margin-top:6px; }
+  .date { font-family:var(--mono); font-size:13px; letter-spacing:.24em; text-transform:uppercase; color:#586172; margin-top:6px; }
   /* one thing screen: SAI numerals + Margin catalogue card */
   .one { padding:6px 4px 0; }
   .one .top { display:grid; grid-template-columns:auto 1fr auto; gap:14px; align-items:end; }
   .one .day { font-family:var(--serif); font-size:120px; font-weight:700; line-height:.86; letter-spacing:-.04em; color:var(--ink); }
   .one .day sup { font-family:var(--mono); font-size:13px; letter-spacing:.2em; text-transform:uppercase; vertical-align:top; position:relative; top:14px; left:6px; color:var(--engrave); font-weight:400; }
-  .one .month { font-family:var(--mono); font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:#6B6F7E; padding-bottom:8px; }
+  .one .month { font-family:var(--mono); font-size:12px; letter-spacing:.24em; text-transform:uppercase; color:#586172; padding-bottom:8px; }
   .one .tank { text-align:right; cursor:pointer; -webkit-tap-highlight-color:transparent; border:0; background:none; padding:0; font:inherit; color:var(--ink); }
   .one .tank .n { font-family:var(--serif); font-size:120px; font-weight:700; line-height:.86; letter-spacing:-.04em; }
   .one .tank .n.none { color:var(--rule); }
-  .one .tank .l { font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#6B6F7E; display:block; margin-top:6px; }
+  .one .tank .l { font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#586172; display:block; margin-top:6px; }
   .cat { margin-top:22px; border-top:1px solid var(--rule); }
   .cat .r { display:grid; grid-template-columns:96px 1fr; gap:10px; padding:11px 0; border-bottom:1px solid var(--rule); align-items:baseline; }
-  .cat .r .k { font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#6B6F7E; }
+  .cat .r .k { font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#586172; }
   .cat .r .v { font-family:var(--serif); font-size:21px; line-height:1.25; }
   .cat .r .v.small { font-family:var(--sans); font-size:15px; }
-  .cat .r .v.dim { color:#6B6F7E; font-family:var(--sans); font-size:15px; font-style:italic; }
+  .cat .r .v.dim { color:#586172; font-family:var(--sans); font-size:15px; font-style:italic; }
   .hl { background:linear-gradient(104deg, rgba(219,180,85,0) 0.9%, rgba(219,180,85,.85) 2.4%, rgba(219,180,85,.6) 5.8%, rgba(219,180,85,.25) 93%, rgba(219,180,85,.8) 96%, rgba(219,180,85,0) 98%), linear-gradient(183deg, rgba(219,180,85,0) 0%, rgba(219,180,85,.35) 7.9%, rgba(219,180,85,0) 15%); padding:.05em .25em; margin:0 -.1em; -webkit-box-decoration-break:clone; box-decoration-break:clone; border-radius:2px; }
   .one .act { display:flex; gap:10px; align-items:center; margin-top:16px; flex-wrap:wrap; }
   .one .clock { font-family:var(--serif); font-size:34px; font-weight:700; letter-spacing:-.02em; min-width:96px; }
@@ -66,10 +76,10 @@
   .g li b, .g p b { font-weight:700; }
   .g table { width:100%; border-collapse:collapse; font-size:14px; margin:6px 0 10px; }
   .g th, .g td { text-align:left; padding:8px 8px 8px 0; border-bottom:1px solid var(--rule); vertical-align:top; }
-  .g th { font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:400; color:#6B6F7E; }
+  .g th { font-family:var(--mono); font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:400; color:#586172; }
   .g td:first-child { font-weight:700; }
   .g .tip { padding:10px 14px; border-left:3px solid var(--hl); background:rgba(219,180,85,.12); border-radius:0 10px 10px 0; margin:8px 0; font-size:15px; }
-  .g .map { font-family:var(--mono); font-size:11.5px; line-height:1.7; padding:12px 14px; background:rgba(255,255,255,.55); border-radius:14px; overflow-x:auto; white-space:pre; max-width:100%; }
+  .g .map { font-family:var(--mono); font-size:11.5px; line-height:1.7; padding:12px 14px; background:rgba(255,255,255,.62); border-radius:14px; overflow-x:auto; white-space:pre; max-width:100%; }
   .g code { word-break:break-all; }
   .g td:first-child { white-space:normal; }
   #guide { overflow:hidden; }
@@ -78,7 +88,7 @@
   .fold button { border:1px solid var(--rule); border-radius:999px; background:transparent; font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; padding:10px 18px; color:var(--ink); cursor:pointer; }
   #rest[hidden] { display:none; }
   .tmw { margin-top:18px; padding-top:14px; border-top:1px solid var(--rule); }
-  .tmw .k { font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#6B6F7E; }
+  .tmw .k { font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#586172; }
   .tmw .picks { display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
   .tmw .picks button { border:1px solid var(--rule); background:rgba(255,255,255,.5); border-radius:999px; padding:8px 12px; font:inherit; font-size:14px; color:var(--ink); cursor:pointer; }
   .tmw .picks button.on { background:var(--ink); color:var(--cream); border-color:var(--ink); }
@@ -96,10 +106,10 @@
   .lede { color:var(--ink); opacity:.72; margin:8px 0 0; max-width:48ch; font-size:15px; }
   .grid { display:grid; grid-template-columns:1fr; gap:12px; margin-top:16px; }
   @media (min-width:640px) { .grid { grid-template-columns:1fr 1fr; } .span2 { grid-column:1 / -1; } }
-  .card { background:var(--glass); -webkit-backdrop-filter:blur(22px) saturate(1.2); backdrop-filter:blur(22px) saturate(1.2); border:1px solid var(--edge); box-shadow:var(--shadow); border-radius:var(--r); padding:22px; position:relative; }
-  .card.lime { background:rgba(255,255,255,.68); }
-  .card.black { background:rgba(16,20,38,.86); border-color:rgba(255,255,255,.18); color:#FFFFFF; }
-  .card.mist { background:rgba(255,255,255,.5); }
+  .card { background:var(--glass); -webkit-backdrop-filter:blur(18px) saturate(1.35); backdrop-filter:blur(18px) saturate(1.35); border:1px solid var(--edge); box-shadow:var(--shadow); border-radius:var(--r); padding:22px; position:relative; }
+  .card.lime { background:rgba(255,255,255,.7); }
+  .card.black { background:rgba(16,20,38,.84); border-color:rgba(255,255,255,.22); color:#FFFFFF; -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); }
+  .card.mist { background:rgba(255,255,255,.52); }
   .card.greyc { background:var(--grey); color:#FFFFFF; }
   .card h2 { font-family:var(--serif); font-size:28px; font-weight:700; letter-spacing:-.01em; line-height:1.05; margin:0; text-wrap:balance; text-transform:lowercase; }
   .card h2 small { display:block; font-family:var(--sans); font-size:15px; font-weight:400; opacity:.72; margin-top:6px; letter-spacing:0; line-height:1.4; text-transform:none; }
@@ -154,7 +164,7 @@
   .lanegrid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:12px; margin-top:16px; }
   .lanegrid > * { min-width:0; }
   .addcard input, .addcard select { min-width:0; }
-  .lanecard { position:relative; display:flex; flex-direction:column; justify-content:flex-start; align-items:stretch; background:rgba(255,255,255,.34); min-height:230px; -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,.7); box-shadow:var(--shadow); border-radius:22px; padding:16px 16px 18px; min-height:250px; overflow:hidden; cursor:pointer; -webkit-tap-highlight-color:transparent; text-align:left; font:inherit; color:var(--ink); width:100%; }
+  .lanecard { position:relative; display:flex; flex-direction:column; justify-content:flex-start; align-items:stretch; background:rgba(255,255,255,.46); min-height:230px; -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border:1px solid rgba(255,255,255,.7); box-shadow:var(--shadow); border-radius:22px; padding:16px 16px 18px; min-height:250px; overflow:hidden; cursor:pointer; -webkit-tap-highlight-color:transparent; text-align:left; font:inherit; color:var(--ink); width:100%; }
   .lanecard:focus-visible { outline:3px solid var(--ink); outline-offset:2px; }
   .lanecard.open { border-color:rgba(227,27,35,.6); }
   .lanecard .head { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; position:relative; z-index:3; }
@@ -168,12 +178,12 @@
   .sheet.front { border-radius:10px; padding-bottom:40px; box-shadow:0 6px 18px rgba(16,20,38,.14); }
   .sheet.front .t { -webkit-line-clamp:5; }
   .sheet.due { border-left:3px solid var(--lime); }
-  .sheet.empty { font-family:var(--sans); font-size:13px; color:#6B6F7E; border-radius:10px; padding-bottom:40px; }
+  .sheet.empty { font-family:var(--sans); font-size:13px; color:#586172; border-radius:10px; padding-bottom:40px; }
   .sheet .m { opacity:.6; margin-top:4px; }
-  .pocket { position:absolute; left:0; right:0; bottom:0; height:44px; background:linear-gradient(rgba(214,217,226,.92), rgba(200,204,214,.95)); border-top:1px solid rgba(255,255,255,.9); border-radius:0 0 22px 22px; z-index:4; box-shadow:inset 0 3px 8px rgba(16,20,38,.08); }
-  .pocket::after { content:""; position:absolute; left:14px; top:-9px; width:46px; height:9px; background:rgba(200,204,214,.95); border-radius:6px 6px 0 0; }
+  .pocket { position:absolute; left:0; right:0; bottom:0; height:44px; background:linear-gradient(rgba(208,226,242,.92), rgba(186,210,232,.96)); border-top:1px solid rgba(255,255,255,.9); border-radius:0 0 22px 22px; z-index:4; box-shadow:inset 0 3px 8px rgba(16,20,38,.08); }
+  .pocket::after { content:""; position:absolute; left:14px; top:-9px; width:46px; height:9px; background:rgba(186,210,232,.96); border-radius:6px 6px 0 0; }
   .lanecard .more { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; opacity:.6; text-align:center; padding:6px 0 2px; }
-  .addcard { grid-column:1 / -1; background:rgba(255,255,255,.34); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,.7); box-shadow:var(--shadow); border-radius:22px; padding:16px; }
+  .addcard { grid-column:1 / -1; background:rgba(255,255,255,.46); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); border:1px solid rgba(255,255,255,.7); box-shadow:var(--shadow); border-radius:22px; padding:16px; }
   .addcard h3 { margin:0 0 8px; font-family:var(--serif); font-size:19px; font-weight:700; text-transform:lowercase; }
   .addcard form.add { margin-top:0; }
   .addcard .two { grid-template-columns:1fr 1fr; }
@@ -213,7 +223,7 @@
   .stat .big small { font-size:22px; font-weight:400; opacity:.7; margin-left:4px; }
   .stat .lbl { font-size:14px; opacity:.85; }
   .tiles { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
-  .tile { border-radius:22px; padding:16px 18px; background:rgba(255,255,255,.55); border:1px solid var(--edge); box-shadow:0 4px 14px rgba(16,20,38,.06); }
+  .tile { border-radius:22px; padding:16px 18px; background:rgba(255,255,255,.66); border:1px solid var(--edge); box-shadow:0 4px 14px rgba(16,20,38,.06); }
   .tile.g { background:rgba(74,111,165,.82); border-color:rgba(255,255,255,.3); color:#FFFFFF; } .tile.k { background:rgba(16,20,38,.84); border-color:rgba(255,255,255,.2); color:#FFFFFF; } .tile.l { background:rgba(227,27,35,.84); border-color:rgba(255,255,255,.3); color:#FFFFFF; }
   .tile .big { font-family:var(--serif); font-size:36px; font-weight:700; letter-spacing:-.01em; line-height:1; }
   .tile .big small { font-size:15px; font-weight:400; opacity:.7; margin-left:3px; }
@@ -229,6 +239,23 @@
   .log span { font-family:var(--mono); font-size:11.5px; padding:5px 8px; border-radius:999px; background:rgba(255,255,255,.7); border:1px solid var(--edge); color:#3A3D44; }
   .log span b { color:var(--ink); }
   @media (prefers-reduced-motion:no-preference) { .pill, .btn, .mem .act button { transition:background .15s, transform .1s; } .pill:active, .btn:active { transform:scale(.97); } }
+  /* 7 day strip under the big day: red count where a hard date lands */
+  .strip { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:16px; }
+  .strip .c { border:1px solid rgba(255,255,255,.8); background:rgba(255,255,255,.5); border-radius:12px; padding:7px 2px 6px; text-align:center; font:inherit; color:var(--ink); cursor:pointer; -webkit-tap-highlight-color:transparent; position:relative; }
+  .strip .c b { display:block; font-family:var(--mono); font-size:9px; letter-spacing:.14em; text-transform:uppercase; font-weight:400; color:#586172; }
+  .strip .c i { display:block; font-family:var(--serif); font-style:normal; font-size:17px; font-weight:700; line-height:1.15; }
+  .strip .c em { display:block; font-family:var(--mono); font-style:normal; font-size:10px; min-height:13px; color:var(--lime); font-weight:700; }
+  .strip .c.today { background:var(--ink); color:#FFFFFF; border-color:var(--ink); } .strip .c.today b { color:rgba(255,255,255,.7); } .strip .c.today em { color:#FFB4B7; }
+  .strip .c.due i::after { content:""; display:inline-block; width:6px; height:6px; border-radius:50%; background:var(--lime); margin-left:3px; vertical-align:middle; }
+  /* come back card */
+  .back { margin-top:16px; padding:16px 18px; border-radius:18px; background:rgba(255,255,255,.62); border:1px solid var(--edge); }
+  .back h3 { margin:0 0 4px; font-family:var(--serif); font-size:24px; font-weight:700; text-transform:lowercase; }
+  .back p { margin:0; font-size:15px; opacity:.8; }
+  /* pairing link */
+  .pair code { display:block; font-family:var(--mono); font-size:12px; word-break:break-all; padding:10px 12px; border-radius:12px; background:rgba(255,255,255,.7); margin-top:12px; }
+  .outin { margin-top:10px; font-size:16px; }
+  .rep { font-family:var(--mono); font-size:10px; letter-spacing:.12em; text-transform:uppercase; opacity:.7; }
+  select.small { width:auto; font-size:13px; padding:6px 10px; border-radius:10px; margin-top:6px; }
 </style>
 
 <div class="wrap">
@@ -298,13 +325,45 @@
     <h3>how everything connects</h3>
     <div class="map">Som  ──── Send open items ────▶  Planner (empty tank by default)
 Desk ──── Send deadlines ─────▶  Planner (red hard dates, full tank)
-Google Calendar ── reads today ─▶  Planner (big hit warning, kid day, free gap)
+Google Calendar ── private address ─▶  Planner, phone too (big hit warning, kid day, free gap)
 Whipper Flow / keyboard mic ──▶  "Say it" box
 iPhone Shortcut #home ────────▶  Planner already on home day
 Planner ── Copy the receipt ──▶  Sunday memo ──▶ next week's content
 Planner ── 14 check-ins ──────▶  Pattern: your real deep window
-Planner ── sleep + coffee ────▶  Pattern: what moves your peak</div>
-    <p>Calendar reading works only when this page is open inside Claude. The home screen copy reads everything else.</p>
+Planner ── sleep + coffee ────▶  Pattern: what moves your peak
+Planner ── every save ────────▶  Your site, one list on every device, brief.txt for the 4:44 brief</div>
+    <p>Turn on "one list on every device" once and the phone copy does everything the Claude copy does, calendar included.</p>
+
+    <h3>one list on every device</h3>
+    <ol>
+      <li>Scroll to the <b>Every device</b> card. Tap <b>Turn it on</b>. This phone now saves to your own site.</li>
+      <li>Tap <b>Copy the pairing link</b>. Send it to yourself. Open it on the Mac, the other phone, wherever.</li>
+      <li>That device pulls the same list. From then on every tap lands everywhere within a minute.</li>
+    </ol>
+    <div class="tip">The link holds your key. Keep it to yourself. Nothing else identifies you: no login, no email.</div>
+
+    <h3>calendar on the phone</h3>
+    <ol>
+      <li>On a computer open Google Calendar. Tap the gear, then <b>Settings</b>.</li>
+      <li>On the left tap your calendar. Scroll to <b>Secret address in iCal format</b>. Copy it.</li>
+      <li>Back in the planner, the calendar card asks for it once. Paste. <b>Save it</b>.</li>
+    </ol>
+    <div class="tip">That address opens your whole calendar to anyone who has it. Paste it here and nowhere else. Repeating events count: school alarms, standing calls, holidays.</div>
+
+    <h3>repeating tasks</h3>
+    <p>Add a task and set <b>Repeats</b>: every day, weekdays, or every week. Tick it Done and it comes back on its own the next time. "Reply to emails" never needs adding twice.</p>
+
+    <h3>what came out of it</h3>
+    <p>After Done, the five minute card asks one optional line: what came out of it. Sunday the receipt lists them. That list is next week's content seeds.</p>
+
+    <h3>copy everything, paste it back</h3>
+    <p>Under the lanes, <b>Copy everything</b> copies your whole planner as text. Paste it into the <b>From Som</b> box on any device and tap <b>Restore everything</b>. Safari can wipe a site's storage; this is the way back.</p>
+
+    <h3>the seven day strip</h3>
+    <p>Under the big day number, seven small days. A red number is how many hard dates land that day. Tap one and the lanes open.</p>
+
+    <h3>been away</h3>
+    <p>Three days or more with no check-in and the top screen says so, once, and hides the receipt. Tank first, one task. No streak, no guilt.</p>
 
     <h3>tips</h3>
     <ul>
@@ -334,8 +393,8 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
     <h3>put it on the home screen</h3>
     <p>Two addresses, one planner.</p>
     <ul>
-      <li><b>Home screen copy</b> · <code>frimpomaasync.com/day/</code> · opens like an app, works offline, tasks live on the phone.</li>
-      <li><b>Claude copy</b> · <code>claude.ai/code/artifact/6a675031-e1df-4f16-9d64-c71be752fc7a</code> · same planner, plus the calendar read and a cloud copy of your tasks.</li>
+      <li><b>Home screen copy</b> · <code>frimpomaasync.com/day/</code> · opens like an app, works offline, and with Every device on it holds the calendar and the shared list.</li>
+      <li><b>Claude copy</b> · <code>claude.ai/code/artifact/6a675031-e1df-4f16-9d64-c71be752fc7a</code> · same planner inside Claude, with its own cloud copy.</li>
     </ul>
     <ol>
       <li>Open <code>https://frimpomaasync.com/day/</code> in <b>Safari</b>. Not Chrome, not the Claude app.</li>
@@ -350,9 +409,10 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
       <tr><td>The screen is dark, "you vanished"</td><td>Eat. Drink. Tap anything. It comes back.</td></tr>
       <tr><td>"Rate the tank first"</td><td>Tap the big ? on the right.</td></tr>
       <tr><td>"Nothing open in the lanes"</td><td>Add a task, or paste from Som, or rest. All three are right answers.</td></tr>
-      <tr><td>Calendar did not answer</td><td>You are on the home screen copy. Calendar only reads inside Claude. Everything else works.</td></tr>
+      <tr><td>Calendar did not answer</td><td>Tap Try again. Still nothing: tap Change the link and paste the private address again.</td></tr>
+      <tr><td>"cloud not reached"</td><td>No signal, or the site is slow. Everything is saved on this device and catches up on its own.</td></tr>
       <tr><td>Mic did not open</td><td>Use the keyboard mic in the box, or Whipper Flow. Then Enter.</td></tr>
-      <tr><td>My tasks vanished</td><td>They live on this device. On the Claude copy they also live in the cloud. Paste your Som copy back in.</td></tr>
+      <tr><td>My tasks vanished</td><td>Open the pairing link again and they come back from your site. Or paste a Copy everything backup into From Som.</td></tr>
     </table></div>
   </section>
 
@@ -383,16 +443,19 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
 
     <section class="card mist span2" id="receipt"></section>
 
+    <section class="card span2" id="devices"></section>
+
     <section class="card span2">
       <div class="kicker">Task lanes</div>
       <h2>sort by the tank it needs<small>Tap a lane to open it. Add a due date and it jumps the gate when under 3 days.</small></h2>
       <div class="lanegrid" id="lanes"></div>
       <div class="laneopen" id="laneopen"></div>
+      <div class="row"><button class="btn light" type="button" id="copyAll">Copy everything</button><span class="sync" id="copyAllMsg"></span></div>
     </section>
 
     <section class="card span2">
       <div class="kicker">From Som</div>
-      <h2>drop your captures in<small>In Som tap Copy, or Save a copy. Paste it here. Each line becomes a task, sorted into a lane by its first words. Empty tank by default, so chaos time always has something to eat.</small></h2>
+      <h2>drop your captures in<small>In Som tap Copy, or Save a copy. Paste it here. Each line becomes a task, sorted into a lane by its first words. Empty tank by default, so chaos time always has something to eat. A Copy everything backup pasted here restores the whole planner.</small></h2>
       <textarea id="somin" placeholder="- call the payer back about the denial&#10;- read the new prior auth policy&#10;- write the pricing page"></textarea>
       <div class="row"><button class="btn light" type="button" id="somPreview">Preview lanes</button><button class="btn" type="button" id="somImport" hidden>Add all</button></div>
       <div class="preview" id="somPv"></div>
@@ -418,6 +481,10 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
         <li><b>Sleep and coffee.</b> Both ride along with every check-in. After ten, the forecast says what they do to your peak.</li>
         <li><b>Lock screen.</b> Open the link with #home or #say=energy 3 lost an hour and the day is rerouted before you unlock. An iPhone Shortcut does it in one tap.</li>
         <li><b>Say it.</b> Type or dictate "energy 3, lost an hour" and it sets the tank, the hit, and logs the check-in.</li>
+        <li><b>Every device.</b> One key, one list, saved to your own site on every tap. The 4:44 brief reads the same file.</li>
+        <li><b>Repeats.</b> A repeating task comes back the morning after you tick it.</li>
+        <li><b>What came out of it.</b> One optional line after Done. The receipt keeps them.</li>
+        <li><b>Been away.</b> Three days without a check-in and the receipt hides until the first tap of the day.</li>
       </ul>
     </section>
   </div>
@@ -448,7 +515,8 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
     { id:"ex7", name:"Organise files", lane:"phoenix", min:20, done:false, example:true, due:"" },
     { id:"ex8", name:"Audio learning on a walk", lane:"phoenix", min:30, done:false, example:true, due:"" }
   ];
-  var state = { energy:0, disruption:"none", tasks:EXAMPLES.slice(), log:[], receipts:[], tomorrow:null, foldOpen:true, sleep:"", coffee:"", lastAction:0, blockEnd:0 };
+  var state = { energy:0, disruption:"none", tasks:EXAMPLES.slice(), log:[], receipts:[], tomorrow:null, foldOpen:true, sleep:"", coffee:"", lastAction:0, blockEnd:0, timerTask:"", updated:0 };
+  var SYNC_URL = "state.php", CAL_URL = "cal.php", KEYLS = "day-key";
   var FIRST = { alpha:"Open the file. Write one bad sentence.", beta:"Find the name. Open the thread.", phoenix:"Open it. Read the first page only." };
   var docRef = null, applyingRemote = false, openLane = null, lastRemoved = null;
   var $ = function (s) { return document.querySelector(s); };
@@ -457,17 +525,23 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
   // ---------- persistence ----------
   function loadLocal() {
     try { var s = JSON.parse(localStorage.getItem(LS)); if (s && s.tasks) state = s; else { var o = JSON.parse(localStorage.getItem("antifragile-planner-v1")); if (o && o.tasks) state = o; } } catch (e) {}
+    fillDefaults();
+  }
+  function fillDefaults() {
     state.log = state.log || []; state.receipts = state.receipts || [];
     if (state.foldOpen === undefined) state.foldOpen = true;
     if (state.sleep === undefined) state.sleep = ""; if (state.coffee === undefined) state.coffee = "";
     if (!state.lastAction) state.lastAction = 0; if (!state.blockEnd) state.blockEnd = 0;
-    state.tasks.forEach(function (t) { if (t.due === undefined) t.due = ""; if (t.first === undefined) t.first = ""; });
+    if (!state.timerTask) state.timerTask = ""; if (!state.updated) state.updated = 0;
+    state.tasks.forEach(function (t) { if (t.due === undefined) t.due = ""; if (t.first === undefined) t.first = ""; if (t.repeat === undefined) t.repeat = ""; if (t.doneAt === undefined) t.doneAt = 0; });
   }
   function clean(s) { var c = JSON.parse(JSON.stringify(s)); (c.tasks || []).forEach(function (t) { delete t._days; }); return c; }
   function saveLocal() { try { localStorage.setItem(LS, JSON.stringify(clean(state))); } catch (e) {} }
   function persist() {
+    if (!applyingRemote) state.updated = Date.now();
     saveLocal();
     if (docRef && !applyingRemote) docRef.set(clean(state)).then(function () { setSync("saved to cloud"); }, function () { setSync("saved on this device"); });
+    push();
   }
   function setSync(t) { $("#sync").textContent = t; }
   function connect() {
@@ -478,7 +552,7 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
       docRef.onSnapshot(function (snap) {
         if (!snap.exists) { docRef.set(JSON.parse(JSON.stringify(state))); return; }
         var d = snap.data();
-        if (d && d.tasks) { applyingRemote = true; state = JSON.parse(JSON.stringify(d)); state.log = state.log || []; state.receipts = state.receipts || []; saveLocal(); render(); applyingRemote = false; }
+        if (d && d.tasks && (d.updated || 0) >= (state.updated || 0)) { applyingRemote = true; state = JSON.parse(JSON.stringify(d)); fillDefaults(); saveLocal(); render(); applyingRemote = false; }
         setSync("synced across devices");
       }, function () { setSync("saved on this device"); });
     }, function () { setSync("saved on this device"); });
@@ -632,11 +706,85 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
     b.classList.add("live"); rec.start();
   }
 
+  // ---------- one list on every device: her own site holds the state ----------
+  var sync = { key:"", status:"off", timer:null };
+  try { sync.key = localStorage.getItem(KEYLS) || ""; } catch (e) {}
+  var inClaude = !!(window.claude && window.claude.use);
+  function genKey() { var a = new Uint8Array(16); if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(a); else for (var i = 0; i < 16; i++) a[i] = Math.floor(Math.random() * 256); return Array.prototype.map.call(a, function (b) { return ("0" + b.toString(16)).slice(-2); }).join(""); }
+  function syncUrl() { return SYNC_URL + "?k=" + encodeURIComponent(sync.key); }
+  function setKey(k) { sync.key = k || ""; try { if (k) localStorage.setItem(KEYLS, k); else localStorage.removeItem(KEYLS); } catch (e) {} }
+  function pull() {
+    if (!sync.key || inClaude) return Promise.resolve();
+    return fetch(syncUrl(), { cache:"no-store" }).then(function (r) { if (r.status === 404) return null; if (!r.ok) throw new Error("http"); return r.json(); }).then(function (d) {
+      sync.status = "on";
+      if (d && d.tasks) {
+        if ((d.updated || 0) > (state.updated || 0)) { applyingRemote = true; state = d; fillDefaults(); saveLocal(); render(); applyingRemote = false; }
+        else if ((d.updated || 0) < (state.updated || 0)) push();
+      } else push();
+      setSync("one list on every device"); renderDevices();
+    }).catch(function () { sync.status = "err"; setSync("saved on this device · cloud not reached"); renderDevices(); });
+  }
+  function push() {
+    if (!sync.key || inClaude || applyingRemote) return;
+    clearTimeout(sync.timer);
+    sync.timer = setTimeout(function () {
+      fetch(syncUrl(), { method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify(clean(state)) }).then(function (r) {
+        if (r.status === 409) return r.json().then(function (d) { if (d && d.state && d.state.tasks) { applyingRemote = true; state = d.state; fillDefaults(); saveLocal(); render(); applyingRemote = false; } });
+        if (!r.ok) throw new Error("http");
+        sync.status = "on"; setSync("saved everywhere");
+      }).catch(function () { sync.status = "err"; setSync("saved on this device · cloud not reached"); renderDevices(); });
+    }, 600);
+  }
+  function renderDevices() {
+    var el = $("#devices"); if (!el) return;
+    if (inClaude) { el.hidden = true; return; }
+    var head = '<div class="kicker">Every device</div>';
+    if (!sync.key) { el.innerHTML = head + '<h2>one list on every device<small>Turn it on here. Then open the pairing link on the Mac or the other phone. Same tasks, same check-ins, everywhere. The 4:44 brief reads the same file.</small></h2><div class="row"><button class="btn" type="button" id="syncOn">Turn it on</button></div>'; return; }
+    var link = location.origin + location.pathname + "#key=" + sync.key;
+    el.innerHTML = head + '<h2>' + (sync.status === "err" ? "cloud not reached." : "one list on every device.") + '<small>' + (sync.status === "err" ? "Saved on this device. It catches up when the site answers." : "Open this link once on any other device. It pairs and pulls the list.") + '</small></h2>' +
+      '<div class="pair"><code>' + esc(link) + '</code></div><div class="row"><button class="btn light" type="button" id="copyPair">Copy the pairing link</button><button class="btn light" type="button" id="syncOff">Stop on this device</button><span class="sync" id="pairMsg"></span></div>';
+  }
+  function importKey() {
+    var m = (location.hash || "").match(/#key=([a-f0-9]{32})\b/);
+    if (!m) return;
+    setKey(m[1]); history.replaceState(null, "", location.pathname + location.search);
+    var hd = $("#heard"); if (hd) hd.textContent = "paired. pulling your list";
+  }
+  setInterval(function () { if (document.visibilityState === "visible" && sync.key) pull(); }, 60000);
+
+  // ---------- repeats ----------
+  function nextRepeat(t) {
+    if (!t.repeat || !t.doneAt) return null;
+    var d = new Date(t.doneAt); d.setHours(0, 0, 0, 0);
+    if (t.repeat === "daily") d.setDate(d.getDate() + 1);
+    else if (t.repeat === "weekly") d.setDate(d.getDate() + 7);
+    else if (t.repeat === "weekdays") { do { d.setDate(d.getDate() + 1); } while (d.getDay() === 0 || d.getDay() === 6); }
+    else return null;
+    return d;
+  }
+  function rollRepeats(now) {
+    var changed = false;
+    state.tasks.forEach(function (t) { if (t.done && t.repeat) { var n = nextRepeat(t); if (n && now >= n) { t.done = false; t.doneAt = 0; changed = true; } } });
+    if (changed) saveLocal();
+  }
+  var REP = { "":"", daily:"every day", weekdays:"weekdays", weekly:"every week" };
+  function repSelect(id, val, cls) { return '<select class="' + cls + '" data-rep="' + id + '"><option value=""' + (!val ? " selected" : "") + '>Repeat: no</option><option value="daily"' + (val === "daily" ? " selected" : "") + '>Every day</option><option value="weekdays"' + (val === "weekdays" ? " selected" : "") + '>Weekdays</option><option value="weekly"' + (val === "weekly" ? " selected" : "") + '>Every week</option></select>'; }
+
+  // ---------- copy everything, paste it back ----------
+  var restoreData = null;
+  function backupText() { return JSON.stringify({ planner:"backup", at:Date.now(), tasks:state.tasks, log:state.log, receipts:state.receipts, tomorrow:state.tomorrow, sleep:state.sleep, coffee:state.coffee }); }
+  function copyAll() {
+    var m = $("#copyAllMsg"), txt = backupText();
+    var done = function () { if (m) m.textContent = "copied. paste it into From Som on any device to restore"; };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(done, function () { if (m) m.textContent = "could not copy here"; });
+    else if (m) m.textContent = "could not copy here";
+  }
+
   // ---------- feature 3: calendar read ----------
   var cal = { status:"idle", events:[], err:"" };
   var KID = /\b(school|pickup|pick up|drop ?off|wee|eca|jaden|jojo|kids?|pediatric|doctor|dentist|daycare|bus|backpack)\b/i;
   function loadCalendar(force) {
-    if (!window.claude || !window.claude.use) { cal.status = "off"; renderCalendar(); return; }
+    if (!inClaude) { loadCalendarPhone(force); return; }
     cal.status = "loading"; renderCalendar();
     window.claude.use("mcp").then(function (mcp) {
       if (!mcp) { cal.status = "off"; renderCalendar(); return; }
@@ -647,24 +795,48 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
       return mcp.callTool("Google Calendar", "list_events", input, { cache:force ? { refresh:true, staleTime:0 } : { staleTime:600000 } }).then(function (res) {
         var data = res.payload || res.structuredContent;
         if (!data && res.content && res.content[0] && res.content[0].text) { try { data = JSON.parse(res.content[0].text); } catch (e) { data = null; } }
-        var evs = (data && data.events) || [];
-        cal.events = evs.filter(function (e) { return e.start && e.start.dateTime && e.status !== "cancelled"; }).map(function (e) {
-          var st = new Date(e.start.dateTime), en = new Date(e.end.dateTime);
-          return { title:e.summary || "(no title)", st:st, en:en, min:Math.round((en - st) / 60000), kid:KID.test((e.summary || "") + " " + (e.description || "").slice(0, 200)) };
-        }).sort(function (a, b) { return a.st - b.st; });
-        cal.status = "ok"; cal.fetched = Date.now(); renderCalendar();
+        applyEvents((data && data.events) || []);
       }, function (e) { cal.status = "error"; cal.err = (e && e.code) || "error"; renderCalendar(); });
     }).catch(function () { cal.status = "off"; renderCalendar(); });
+  }
+  function applyEvents(evs) {
+    cal.events = evs.filter(function (e) { return e.start && (e.start.dateTime || e.start.date) && e.status !== "cancelled"; }).map(function (e) {
+      var allDay = !e.start.dateTime, st, en;
+      if (allDay) { var p = e.start.date.split("-"); st = new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2])); en = new Date(st.getTime() + DAY); }
+      else { st = new Date(e.start.dateTime); en = new Date(e.end && e.end.dateTime ? e.end.dateTime : st.getTime() + 3600000); }
+      return { title:e.summary || "(no title)", st:st, en:en, allDay:allDay, min:allDay ? 0 : Math.round((en - st) / 60000), kid:KID.test((e.summary || "") + " " + (e.description || "").slice(0, 200)) };
+    }).sort(function (a, b) { return a.st - b.st; });
+    cal.status = "ok"; cal.fetched = Date.now(); renderCalendar();
+  }
+  function loadCalendarPhone(force) {
+    if (!sync.key) { cal.status = "nokey"; renderCalendar(); return; }
+    cal.status = "loading"; renderCalendar();
+    var tz = (Intl.DateTimeFormat().resolvedOptions().timeZone) || "America/New_York";
+    fetch(CAL_URL + "?k=" + encodeURIComponent(sync.key) + "&tz=" + encodeURIComponent(tz) + (force ? "&refresh=1" : ""), { cache:"no-store" }).then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.needs === "url") { cal.status = "setup"; renderCalendar(); return; }
+      if (!d || !d.events) { cal.status = "error"; cal.err = (d && d.error) || "error"; renderCalendar(); return; }
+      applyEvents(d.events);
+    }).catch(function () { cal.status = "error"; cal.err = "offline"; renderCalendar(); });
+  }
+  function saveCalUrl() {
+    var inp = $("#calUrlIn"), m = $("#calMsg"), url = inp ? inp.value.trim() : "";
+    if (!/^(https:|webcal:)\/\//i.test(url)) { if (m) m.textContent = "that does not look like the private address. it starts with https://"; return; }
+    if (m) m.textContent = "saving";
+    fetch(CAL_URL + "?k=" + encodeURIComponent(sync.key), { method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ url:url }) }).then(function (r) { return r.json(); }).then(function (d) {
+      if (d && d.ok) loadCalendarPhone(true); else if (m) m.textContent = "the site did not take it. try again";
+    }).catch(function () { if (m) m.textContent = "no signal. try again in a minute"; });
   }
   function fmtT(d) { var h = d.getHours(), m = d.getMinutes(); return (h % 12 || 12) + (m ? ":" + pad(m) : "") + (h < 12 ? " AM" : " PM"); }
   function renderCalendar() {
     var el = $("#calendar"), head = '<div class="kicker">Today\'s calendar</div>';
     if (cal.status === "off") { el.innerHTML = head + '<h2>calendar not connected here.<small>Open this page inside Claude with your Google Calendar connected and today\'s events load on their own.</small></h2>'; return; }
+    if (cal.status === "nokey") { el.innerHTML = head + '<h2>calendar waits on one thing.<small>Turn on Every device below. The calendar link is kept under the same key.</small></h2>'; return; }
+    if (cal.status === "setup") { el.innerHTML = head + '<h2>paste your calendar\'s private address.<small>On a computer: Google Calendar, the gear, Settings, your calendar on the left, scroll to "Secret address in iCal format", copy. Paste it here once. That address opens your whole calendar, so it goes here and nowhere else.</small></h2><div class="say"><input type="url" id="calUrlIn" placeholder="https://calendar.google.com/calendar/ical/..." autocomplete="off" inputmode="url"></div><div class="row"><button class="btn" type="button" id="calSave">Save it</button><span class="sync" id="calMsg"></span></div>'; return; }
     if (cal.status === "loading") { el.innerHTML = head + '<h2>reading today.<small>One moment.</small></h2>'; return; }
-    if (cal.status === "error") { el.innerHTML = head + '<h2>calendar did not answer.<small>' + esc(cal.err === "needs_reauth" ? "Google Calendar needs a fresh sign-in in Claude." : cal.err === "server_not_connected" ? "Connect Google Calendar in Claude, then refresh." : "Try again in a minute.") + '</small></h2><div class="row"><button class="btn light" type="button" id="calRetry">Try again</button></div>'; return; }
-    var now = new Date(), ahead = cal.events.filter(function (e) { return e.en > now; });
-    var big = ahead.filter(function (e) { return e.min >= 60; }), kids = ahead.filter(function (e) { return e.kid; });
-    var booked = cal.events.reduce(function (a, e) { return a + e.min; }, 0);
+    if (cal.status === "error") { el.innerHTML = head + '<h2>calendar did not answer.<small>' + esc(cal.err === "needs_reauth" ? "Google Calendar needs a fresh sign-in in Claude." : cal.err === "server_not_connected" ? "Connect Google Calendar in Claude, then refresh." : cal.err === "offline" ? "No signal. Try again when you have one." : cal.err === "fetch" ? "The private address did not answer. Check it, or paste it again." : "Try again in a minute.") + '</small></h2><div class="row"><button class="btn light" type="button" id="calRetry">Try again</button>' + (inClaude ? '' : '<button class="btn light" type="button" id="calChange">Change the link</button>') + '</div>'; return; }
+    var now = new Date(), timed = cal.events.filter(function (e) { return !e.allDay; }), ahead = timed.filter(function (e) { return e.en > now; });
+    var big = ahead.filter(function (e) { return e.min >= 60; }), kids = cal.events.filter(function (e) { return e.kid && (e.allDay || e.en > now); });
+    var booked = timed.reduce(function (a, e) { return a + e.min; }, 0);
     // biggest free gap from now (or 7 AM) to 9 PM
     var dayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 7, 0), dayEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 21, 0);
     var cursor = now > dayStart ? now : dayStart, gap = null;
@@ -674,15 +846,15 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
     var title, sub;
     if (!cal.events.length) { title = "nothing on the calendar."; sub = "Whole day is yours. The forecast decides where the deep block goes."; }
     else if (big.length) { title = "big hit ahead at " + fmtT(big[0].st) + "."; sub = big[0].title + " takes " + big[0].min + " minutes. Plan the deep block before it or after it, not across it."; }
-    else if (kids.length) { title = "kid event ahead at " + fmtT(kids[0].st) + "."; sub = kids[0].title + ". Short blocks around it. Tap the chip below if the whole day is a home day."; }
+    else if (kids.length) { title = kids[0].allDay ? "kid day on the calendar." : "kid event ahead at " + fmtT(kids[0].st) + "."; sub = kids[0].title + ". Short blocks around it. Tap the chip below if the whole day is a home day."; }
     else { title = booked >= 240 ? "mostly booked, " + Math.round(booked / 60) + " hours." : ahead.length + " ahead, " + booked + " minutes booked."; sub = "Nothing over an hour. Half tank work fits between events."; }
     var v = head + '<h2>' + esc(title) + '<small>' + esc(sub) + '</small></h2>';
     if (gap && gap.min >= 20) v += '<div class="tile" style="margin-top:12px"><div class="big num" style="font-family:var(--serif);font-size:30px;font-weight:700">' + gap.min + '<small style="font-size:15px;font-weight:400;opacity:.7"> min free</small></div><div class="lbl">Biggest gap · ' + fmtT(gap.st) + ' to ' + fmtT(gap.en) + (fit ? ' · fits "' + esc(fit.name) + '" (' + fit.min + ' min)' : openAlpha.length ? ' · no deep task fits, chip the longest' : '') + '</div></div>';
-    if (cal.events.length) v += '<div class="events">' + cal.events.map(function (e) { return '<div class="ev' + (e.min >= 60 ? " big" : "") + (e.kid ? " kid" : "") + '"><span class="when">' + fmtT(e.st) + '</span><span>' + esc(e.title) + '</span><span class="len num">' + e.min + 'm</span></div>'; }).join("") + '</div>';
+    if (cal.events.length) v += '<div class="events">' + cal.events.map(function (e) { return '<div class="ev' + (e.min >= 60 ? " big" : "") + (e.kid ? " kid" : "") + '"><span class="when">' + (e.allDay ? "all day" : fmtT(e.st)) + '</span><span>' + esc(e.title) + '</span><span class="len num">' + (e.allDay ? "" : e.min + "m") + '</span></div>'; }).join("") + '</div>';
     v += '<div class="flag">';
     if (big.length && state.disruption !== "macro") v += '<button class="btn light" type="button" data-d="macro">Flag the big hit early</button>';
     if (kids.length && state.disruption !== "home") v += '<button class="btn light" type="button" data-d="home">Make it a home day</button>';
-    v += '<button class="btn light" type="button" id="calRetry">Refresh</button><span class="sync">' + (cal.fetched ? "read " + ago(cal.fetched) : "") + '</span></div>';
+    v += '<button class="btn light" type="button" id="calRetry">Refresh</button>' + (inClaude ? '' : '<button class="btn light" type="button" id="calChange">Change the link</button>') + '<span class="sync">' + (cal.fetched ? "read " + ago(cal.fetched) : "") + '</span></div>';
     el.innerHTML = v;
   }
 
@@ -693,7 +865,8 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
   function laneFor(t) { return ALPHA_RE.test(t) ? "alpha" : BETA_RE.test(t) ? "beta" : PHOENIX_RE.test(t) ? "phoenix" : "phoenix"; }
   function minsFor(lane, t) { var m = t.match(/\b(\d{1,3})\s*(min|mins|minutes|m)\b/i); if (m) return Math.max(5, Number(m[1])); var h = t.match(/\b(\d)\s*(h|hr|hrs|hour|hours)\b/i); if (h) return Number(h[1]) * 60; return lane === "alpha" ? 60 : lane === "beta" ? 15 : 25; }
   function parseSom(raw) {
-    raw = String(raw || "").trim(); if (!raw) return [];
+    raw = String(raw || "").trim(); restoreData = null; if (!raw) return [];
+    try { var bk = JSON.parse(raw); if (bk && bk.planner === "backup" && bk.tasks) { restoreData = bk; return []; } } catch (e) {}
     var items = [];
     try { var j = JSON.parse(raw); if (j && j.items) items = j.items.filter(function (i) { return i.text && !i.done && !i.archived; }).map(function (i) { return { text:i.text, som:i.id || "" }; }); } catch (e) {}
     if (!items.length) items = raw.split("\n").map(function (l) { return l.replace(/^\s*[-*•]\s*/, "").trim(); }).filter(function (l) { return l && !/^(ideas?|to-?dos?|reminders?|everything|caught)\b.*:?$/i.test(l) && l.length > 2; }).map(function (l) { return { text:l }; });
@@ -703,11 +876,21 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
   var somRows = [];
   function previewSom() {
     somRows = parseSom($("#somin").value); var pv = $("#somPv");
+    if (restoreData) {
+      var bd = new Date(restoreData.at || Date.now());
+      pv.innerHTML = '<div class="pv"><span>Backup from ' + pad(bd.getMonth() + 1) + "/" + pad(bd.getDate()) + " " + pad(bd.getHours()) + ":" + pad(bd.getMinutes()) + ' · ' + (restoreData.tasks || []).length + ' tasks · ' + (restoreData.log || []).length + ' check-ins · ' + (restoreData.receipts || []).length + ' done</span><span class="sync">replaces what is here</span></div>';
+      $("#somImport").hidden = false; $("#somImport").textContent = "Restore everything"; return;
+    }
     if (!somRows.length) { pv.innerHTML = '<div class="empty">Nothing new in there. Lines already in your lanes are skipped.</div>'; $("#somImport").hidden = true; return; }
     pv.innerHTML = somRows.map(function (r, i) { return '<div class="pv"><span>' + esc(r.name) + ' <span class="sync">' + r.min + ' min</span></span><select data-pv="' + i + '"><option value="alpha"' + (r.lane === "alpha" ? " selected" : "") + '>Full tank</option><option value="beta"' + (r.lane === "beta" ? " selected" : "") + '>Half tank</option><option value="phoenix"' + (r.lane === "phoenix" ? " selected" : "") + '>Empty tank</option></select></div>'; }).join("");
     $("#somImport").hidden = false; $("#somImport").textContent = "Add all " + somRows.length;
   }
   function importSom() {
+    if (restoreData) {
+      state.tasks = restoreData.tasks || []; state.log = restoreData.log || []; state.receipts = restoreData.receipts || []; state.tomorrow = restoreData.tomorrow || null; state.sleep = restoreData.sleep || ""; state.coffee = restoreData.coffee || "";
+      fillDefaults(); restoreData = null; $("#somin").value = ""; $("#somPv").innerHTML = '<div class="empty">Restored. Everything is back.</div>'; $("#somImport").hidden = true;
+      render(); persist(); return;
+    }
     if (!somRows.length) return;
     var base = Date.now();
     state.tasks = state.tasks.filter(function (t) { return !t.example; }).concat(somRows.map(function (r, i) { return { id:"s" + (base + i).toString(36), name:r.name, lane:r.lane, min:r.min, done:false, due:"", som:true }; }));
@@ -813,7 +996,7 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
     var total = mins.alpha + mins.beta + mins.phoenix;
     var avgE = log.length ? (log.reduce(function (a, l) { return a + l.e; }, 0) / log.length) : 0;
     var crashes = log.filter(function (l) { return l.d === "crash" || l.e <= 2; }).length;
-    var nChaos = Object.keys(chaosDays).length;
+    var nChaos = Object.keys(chaosDays).length, outs = rec.filter(function (x) { return x.out; });
     var line = total ? (nChaos ? "Chaos hit " + nChaos + (nChaos === 1 ? " day" : " days") + " and still produced " + chaosMin + " minutes. " : "No chaos days. ") + "That is the proof." : "Tick tasks as done and the minutes land here.";
     el.innerHTML = head + '<h2>' + esc(total ? Math.round(total / 6) / 10 + " hours done this week." : "Week in progress.") + '<small>' + esc(line) + '</small></h2>' +
       '<div class="tiles">' +
@@ -823,13 +1006,14 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
         '<div class="tile g"><div class="big num">' + avgE.toFixed(1) + '<small>/ 5</small></div><div class="lbl">Average energy · ' + log.length + ' check-ins · ' + crashes + ' wiped out' + '</div></div>' +
       '</div>' +
       '<div class="row"><button class="btn light" type="button" id="copyReceipt">Copy the receipt</button><span class="sync" id="rcpMsg"></span></div>' +
+      (outs.length ? '<div class="kicker" style="margin-top:14px">What came out of it</div><div class="tasks">' + outs.slice(-8).map(function (x) { return '<div class="mem ' + x.lane + '"><div><div class="raw">' + esc(x.out) + '</div><div class="lbl">' + esc(x.name) + '<small>' + dayKey(x.t).slice(5) + '</small></div></div></div>'; }).join("") + '</div>' : '') +
       (chaosItems.length ? '<div class="kicker" style="margin-top:14px">What chaos produced</div><div class="tasks">' + chaosItems.slice(-6).map(function (r) {
         return '<div class="mem ' + r.lane + '"><div><div class="raw">' + esc(r.name) + '</div><div class="lbl">' + LANES[r.lane].label + '<small>' + r.min + ' min · ' + dayKey(r.t).slice(5) + '</small></div></div></div>';
       }).join("") + '</div>' : '');
   }
 
   // ---------- feature 1 + 2 + 7: the one thing screen ----------
-  var lastOneId = null;
+  var lastOneId = null, lastDoneId = null;
   function pickOne(r, now) {
     var open = state.tasks.filter(function (t) { return !t.done; });
     if (r.urgent.length) return r.urgent[0];
@@ -845,9 +1029,21 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
     var one = pickOne(r, now), E = state.energy;
     var top = '<div class="top"><div><div class="month">' + M[now.getMonth()] + ' ' + now.getFullYear() + '</div><div class="day num">' + pad(now.getDate()) + '<sup>' + D[now.getDay()] + '</sup></div></div><div></div>' +
       '<button class="tank" type="button" id="tankBtn" aria-label="Energy"><span class="n num' + (E ? "" : " none") + '">' + (E || "?") + '</span><span class="l">' + (E ? "energy of 5 · " + (WORDS[E - 1]) : "tap · rate the tank") + '</span></button></div>';
+    var strip = "";
+    for (var i = 0; i < 7; i++) {
+      var sd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i), nDue = 0;
+      state.tasks.forEach(function (t) { if (t.done || !t.due) return; var dl = daysLeft(t.due, now); if ((i === 0 && dl <= 0) || dl === i) nDue++; });
+      strip += '<button type="button" class="c' + (i === 0 ? " today" : "") + (nDue ? " due" : "") + '" data-strip="' + dayKey(sd) + '" aria-label="' + nDue + ' hard dates"><b>' + D[sd.getDay()] + '</b><i class="num">' + pad(sd.getDate()) + '</i><em>' + (nDue || "") + '</em></button>';
+    }
+    strip = '<div class="strip">' + strip + '</div>';
+    var lastAct = 0; state.log.forEach(function (l) { if (l.t > lastAct) lastAct = l.t; }); state.receipts.forEach(function (x) { if (x.t > lastAct) lastAct = x.t; });
+    var away = lastAct ? Math.floor((now.getTime() - lastAct) / DAY) : 0, todayKey = dayKey(now);
+    var loggedToday = state.log.some(function (l) { return dayKey(l.t) === todayKey; });
+    var back = (away >= 3 && !loggedToday) ? '<div class="back"><h3>been ' + away + ' days.</h3><p>Tank first. One task. Nothing else counts today.</p></div>' : "";
+    var rc = $("#receipt"); if (rc) rc.hidden = !!back;
     var body;
     if (guardTripped()) body = '<div class="guard"><h3>you vanished.</h3><p>The block ended ' + ago(state.blockEnd) + ' and nothing has been tapped since. Eat something. Drink water. Then tap anything here and the screen comes back.</p></div>';
-    else if (buffer.on) body = '<div class="buffer"><span class="clock num" id="bufclock">' + pad(Math.floor(buffer.left / 60)) + ':' + pad(buffer.left % 60) + '</span><div><b>Five minutes of nothing.</b><div class="note" style="margin-top:4px">Stand. Water. Look out a window. The next task can wait.</div><div class="row" style="margin-top:8px"><button class="btn light" type="button" id="skipBuf">Skip the five</button></div></div></div>';
+    else if (buffer.on) body = '<div class="buffer"><span class="clock num" id="bufclock">' + pad(Math.floor(buffer.left / 60)) + ':' + pad(buffer.left % 60) + '</span><div><b>Five minutes of nothing.</b><div class="note" style="margin-top:4px">Stand. Water. Look out a window. The next task can wait.</div><input class="outin" id="outin" type="text" placeholder="what came out of it? optional, Enter saves" maxlength="140" autocomplete="off" enterkeyhint="done"><div class="row" style="margin-top:8px"><button class="btn light" type="button" id="skipBuf">Skip the five</button><span class="sync" id="outMsg"></span></div></div></div>';
     else if (!E) body = '<div class="empty">Rate the tank first. One number, then one task.</div>';
     else if (r.recover && !one) body = '<div class="empty">Energy ' + E + '. <span class="hl">Recover.</span> Walk, water, no screens. Tomorrow\'s deep block depends on it.</div>';
     else if (!one) body = '<div class="empty">Nothing open in the lanes this mode allows. <span class="hl">Rest</span>, or add a task below.</div>';
@@ -866,7 +1062,7 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
         '<button class="btn light" type="button" id="skipOne">Not this</button><button class="btn light" type="button" id="bodyBtn">Body double 25</button></div>';
     }
     var today = dayKey(now), todayMin = 0; state.receipts.forEach(function (x) { if (dayKey(x.t) === today) todayMin += x.min; });
-    var prog = '<div class="prog"><div class="bar"><i style="width:' + Math.min(100, todayMin / 240 * 100) + '%"></i></div><span class="cnt num" id="cnt">' + todayMin + '</span> <span class="k" style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#6B6F7E">min done today</span></div>';
+    var prog = '<div class="prog"><div class="bar"><i style="width:' + Math.min(100, todayMin / 240 * 100) + '%"></i></div><span class="cnt num" id="cnt">' + todayMin + '</span> <span class="k" style="font-family:var(--mono);font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#586172">min done today</span></div>';
     // feature 7
     var tmw = "";
     var tomorrowKey = dayKey(now.getTime() + DAY), evening = now.getHours() >= 18;
@@ -875,7 +1071,7 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
     if ((evening || picked) && alphaOpen.length) {
       tmw = '<div class="tmw"><div class="k">' + (picked ? "tomorrow, decided" : "tomorrow, decide it tonight") + '</div><div class="picks">' + alphaOpen.slice(0, 5).map(function (t) { return '<button type="button" data-tmw="' + t.id + '" class="' + (picked === t.id ? "on" : "") + '">' + esc(t.name) + '</button>'; }).join("") + '</div></div>';
     }
-    el.innerHTML = top + body + prog + tmw;
+    el.innerHTML = top + strip + back + body + prog + tmw;
     $("#foldBtn").textContent = state.foldOpen ? "Fold the rest away" : "Show the rest";
     $("#rest").hidden = !state.foldOpen && !!E;
   }
@@ -910,6 +1106,7 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
     var lines = ["Planner receipt, week to " + dayKey(now), "Done: " + Math.round(total / 6) / 10 + " h (full tank " + mins.alpha + " min, half tank " + mins.beta + " min, empty tank " + mins.phoenix + " min)", "Check-ins: " + log.length + ", average energy " + avgE + ", wiped out " + crashes];
     var f = forecast(state.log); if (f.best && f.ready) lines.push("Deep window: " + f.best.from + ":00 to " + f.best.to + ":00");
     var tl = triggerLine(); if (tl) lines.push(tl);
+    var outs = rec.filter(function (x) { return x.out; }); if (outs.length) { lines.push("Came out of it:"); outs.forEach(function (x) { lines.push("  " + x.name + ": " + x.out); }); }
     var open = state.tasks.filter(function (t) { return !t.done; }).length; lines.push("Open tasks: " + open);
     return lines.join("\n");
   }
@@ -925,6 +1122,7 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
   // ---------- render ----------
   function render() {
     var now = new Date();
+    rollRepeats(now);
     var eh = ""; for (var i = 1; i <= 5; i++) eh += '<button type="button" class="pill ' + (state.energy === i ? "on" : "") + '" data-e="' + i + '"><b>' + i + '</b><span>' + WORDS[i - 1] + '</span></button>';
     $("#energy").innerHTML = eh;
     $("#trig").innerHTML = '<span class="k">Slept</span>' + [["lt6","under 6 h"],["6to7","6 to 7 h"],["7plus","7 h or more"]].map(function (x) { return '<button type="button" class="pill' + (state.sleep === x[0] ? " on" : "") + '" data-s="' + x[0] + '">' + x[1] + '</button>'; }).join("") +
@@ -960,21 +1158,21 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
       if (!open.length) sheets = '<div class="sheet empty">Empty lane. Add a task below.</div>';
       return '<button type="button" class="lanecard' + (openLane === k ? " open" : "") + '" data-lane="' + k + '"><div class="head"><div><h3>' + LANES[k].label + '</h3><div class="sub">' + (last ? "done " + ago(last) : LANES[k].def.split(" · ")[0]) + '</div></div><div class="badge num">' + open.length + '</div></div><div class="fan">' + sheets + '</div><div class="pocket"></div></button>';
     }).join("") +
-    '<div class="addcard"><h3>add a task</h3><form class="add" id="add"><input type="text" id="tname" placeholder="Task, in your words" required maxlength="90"><input type="text" id="tfirst" placeholder="First 2 minutes, e.g. open the template" maxlength="90"><div class="two"><select id="tlane"><option value="alpha">Full tank</option><option value="beta" selected>Half tank</option><option value="phoenix">Empty tank</option></select><input type="number" id="tmin" placeholder="Minutes" min="5" max="480" step="5" value="30"></div><div class="two"><input type="date" id="tdue" aria-label="Due date, optional"><button class="btn" type="submit">Add task</button></div></form></div>';
+    '<div class="addcard"><h3>add a task</h3><form class="add" id="add"><input type="text" id="tname" placeholder="Task, in your words" required maxlength="90"><input type="text" id="tfirst" placeholder="First 2 minutes, e.g. open the template" maxlength="90"><div class="two"><select id="tlane"><option value="alpha">Full tank</option><option value="beta" selected>Half tank</option><option value="phoenix">Empty tank</option></select><input type="number" id="tmin" placeholder="Minutes" min="5" max="480" step="5" value="30"></div><div class="two"><input type="date" id="tdue" aria-label="Due date, optional"><select id="trep" aria-label="Repeats"><option value="">Repeat: no</option><option value="daily">Every day</option><option value="weekdays">Weekdays</option><option value="weekly">Every week</option></select></div><button class="btn" type="submit">Add task</button></form></div>';
     var lo = $("#laneopen");
     if (openLane) {
       var its = state.tasks.filter(function (t) { return t.lane === openLane; });
       lo.innerHTML = '<div class="kicker">' + LANES[openLane].label + ' · ' + esc(LANES[openLane].def) + '</div><div class="tasks">' + (its.length ? its.map(function (t) { return memRow({ task:t, note:"" }, true); }).join("") : '<div class="empty">Empty lane.</div>') + '</div><div class="row"><button class="btn light" type="button" id="clearDone">Clear done in this lane</button><button class="btn light" type="button" id="closeLane">Close</button></div>' + (lastRemoved && lastRemoved.lane === openLane ? '<div class="row"><span class="sync">removed "' + esc(lastRemoved.task.name) + '"</span><button class="btn light" type="button" id="undoX">Undo</button></div>' : '');
     } else lo.innerHTML = "";
     bindAdd();
-    renderForecast(); renderReceipt();
+    renderForecast(); renderReceipt(); renderDevices();
   }
   function memRow(x, inLane) {
     var t = x.task, n = daysLeft(t.due, new Date());
     var cls = "mem " + t.lane + (x.due ? " due" : "") + (t.done ? " lock" : "");
     var meta = t.min + " min" + (x.note ? " · " + x.note : "") + (inLane && n !== null ? " · " + dueWord(n) : "");
-    return '<div class="' + cls + '"><div><div class="raw">' + esc(t.name) + '</div><div class="lbl">' + LANES[t.lane].label + '<small>' + esc(meta) + '</small>' + (t.example ? '<span class="chip">example</span>' : '') + (x.due ? '<span class="chip lime">hard date</span>' : '') + '</div></div>' +
-      '<div class="act"><button type="button" class="ok" data-done="' + t.id + '" aria-label="' + (t.done ? "Undo" : "Done") + '">' + (t.done ? "↺" : "✓") + '</button>' + (inLane ? '<button type="button" data-x="' + t.id + '" aria-label="Remove">×</button>' : '') + '</div>' + (inLane ? '<input class="first" type="text" data-first="' + t.id + '" value="' + esc(t.first || "") + '" placeholder="First 2 minutes: ' + esc(FIRST[t.lane]) + '" maxlength="90" style="grid-column:1 / -1">' : '') + '</div>';
+    return '<div class="' + cls + '"><div><div class="raw">' + esc(t.name) + '</div><div class="lbl">' + LANES[t.lane].label + '<small>' + esc(meta) + '</small>' + (t.example ? '<span class="chip">example</span>' : '') + (x.due ? '<span class="chip lime">hard date</span>' : '') + (t.repeat ? '<span class="chip">' + REP[t.repeat] + '</span>' : '') + '</div></div>' +
+      '<div class="act"><button type="button" class="ok" data-done="' + t.id + '" aria-label="' + (t.done ? "Undo" : "Done") + '">' + (t.done ? "↺" : "✓") + '</button>' + (inLane ? '<button type="button" data-x="' + t.id + '" aria-label="Remove">×</button>' : '') + '</div>' + (inLane ? '<input class="first" type="text" data-first="' + t.id + '" value="' + esc(t.first || "") + '" placeholder="First 2 minutes: ' + esc(FIRST[t.lane]) + '" maxlength="90" style="grid-column:1 / -1">' + repSelect(t.id, t.repeat, "small") : '') + '</div>';
   }
 
   // ---------- events ----------
@@ -985,7 +1183,7 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
     else if (b.dataset.d) { state.disruption = b.dataset.d; logCheckin(); render(); persist(); }
     else if (b.dataset.done) {
       var t = find(b.dataset.done); if (!t) return;
-      t.done = !t.done;
+      t.done = !t.done; t.doneAt = t.done ? Date.now() : 0; if (t.done) lastDoneId = t.id;
       if (t.done) state.receipts = state.receipts.concat([{ id:t.id, t:Date.now(), lane:t.lane, min:t.min, name:t.name }]).slice(-400);
       else { for (var i = state.receipts.length - 1; i >= 0; i--) if (state.receipts[i].id === t.id) { state.receipts.splice(i, 1); break; } }
       if (t.done) { stopTimer(true); if (ev.target.closest("#one")) startBuffer(); }
@@ -1018,27 +1216,45 @@ Planner ── sleep + coffee ────▶  Pattern: what moves your peak</di
     else if (b.id === "somPreview") previewSom();
     else if (b.id === "somImport") importSom();
     else if (b.id === "goReceipt") $("#receipt").scrollIntoView({ behavior:"smooth", block:"start" });
+    else if (b.id === "syncOn") { setKey(genKey()); sync.status = "on"; state.updated = Date.now(); saveLocal(); push(); renderDevices(); loadCalendar(false); }
+    else if (b.id === "syncOff") { setKey(""); sync.status = "off"; setSync("saved on this device"); renderDevices(); renderCalendar(); }
+    else if (b.id === "copyPair") { var pm = $("#pairMsg"), lk = location.origin + location.pathname + "#key=" + sync.key; if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lk).then(function () { if (pm) pm.textContent = "copied. open it on the other device"; }, function () { if (pm) pm.textContent = "could not copy. select the link and copy it"; }); }
+    else if (b.id === "copyAll") copyAll();
+    else if (b.id === "calSave") saveCalUrl();
+    else if (b.id === "calChange") { cal.status = "setup"; renderCalendar(); }
+    else if (b.dataset.strip) { state.foldOpen = true; openLane = null; render(); persist(); $("#lanes").scrollIntoView({ behavior:"smooth", block:"start" }); }
   });
+  function saveOut() {
+    var inp = $("#outin"); if (!inp) return; var v = inp.value.trim(); if (!v) return;
+    for (var i = state.receipts.length - 1; i >= 0; i--) { if (!lastDoneId || state.receipts[i].id === lastDoneId) { state.receipts[i].out = v; break; } }
+    var m = $("#outMsg"); if (m) m.textContent = "kept. it is on the receipt";
+    saveLocal(); persist(); renderReceipt();
+  }
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Enter" && ev.target && ev.target.id === "outin") { ev.preventDefault(); saveOut(); ev.target.blur(); } });
+  document.addEventListener("focusout", function (ev) { if (ev.target && ev.target.id === "outin") saveOut(); });
   function bindAdd() {
     var f = $("#add"); if (!f) return;
     f.addEventListener("submit", function (ev) {
       ev.preventDefault();
       var name = $("#tname").value.trim(); if (!name) return;
       var lane = $("#tlane").value;
-      state.tasks = state.tasks.filter(function (t) { return !t.example; }).concat([{ id:"t" + Date.now().toString(36), name:name, lane:lane, min:Math.max(5, Number($("#tmin").value) || 30), done:false, due:$("#tdue").value || "", first:$("#tfirst").value.trim() }]);
+      state.tasks = state.tasks.filter(function (t) { return !t.example; }).concat([{ id:"t" + Date.now().toString(36), name:name, lane:lane, min:Math.max(5, Number($("#tmin").value) || 30), done:false, due:$("#tdue").value || "", first:$("#tfirst").value.trim(), repeat:$("#trep").value || "", doneAt:0 }]);
       $("#tfirst").value = ""; openLane = lane; render(); persist();
     });
   }
   $("#sayin").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { ev.preventDefault(); applySay(this.value); } });
   document.addEventListener("change", function (ev) {
     var sel = ev.target.closest("select[data-pv]"); if (sel) { somRows[Number(sel.dataset.pv)].lane = sel.value; return; }
+    var rp = ev.target.closest("select[data-rep]"); if (rp) { var rt = find(rp.dataset.rep); if (rt) { rt.repeat = rp.value; render(); persist(); } return; }
     var f = ev.target.closest("input[data-first]"); if (f) { var t = find(f.dataset.first); if (t) { t.first = f.value.trim(); render(); persist(); } }
   });
   function find(id) { for (var i = 0; i < state.tasks.length; i++) if (state.tasks[i].id === id) return state.tasks[i]; return null; }
 
-  loadLocal(); resumeTimer(); render(); connect(); renderCalendar(); loadCalendar(false); importFromHash();
-  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") { if (timer.on) tick(); if (guardTripped()) render(); } });
-  window.addEventListener("hashchange", importFromHash);
+  loadLocal(); resumeTimer(); importKey(); render(); connect(); renderCalendar();
+  pull().then(function () { loadCalendar(false); });
+  importFromHash();
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") { if (timer.on) tick(); if (guardTripped()) render(); if (sync.key) pull(); } });
+  window.addEventListener("hashchange", function () { importKey(); if (sync.key) pull(); importFromHash(); });
 })();
 </script>
 
