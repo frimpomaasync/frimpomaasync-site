@@ -17,6 +17,8 @@
 
 header('Cache-Control: no-store');
 header('X-Content-Type-Options: nosniff');
+// The server runs on UTC; her day runs on the East Coast. 'due today' must mean her today.
+date_default_timezone_set('America/New_York');
 
 $key = isset($_GET['k']) ? (string)$_GET['k'] : '';
 if (!preg_match('/^[a-f0-9]{32}$/', $key)) { http_response_code(400); header('Content-Type: application/json'); exit('{"error":"key"}'); }
