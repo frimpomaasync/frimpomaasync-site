@@ -47,6 +47,18 @@
   .one .tank .n { font-family:var(--serif); font-size:120px; font-weight:700; line-height:.86; letter-spacing:-.04em; }
   .one .tank .n.none { color:var(--rule); }
   .one .tank .l { font-family:var(--mono); font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:#586172; display:block; margin-top:6px; }
+  .one .tank .w { font-family:var(--serif); font-size:52px; font-weight:700; line-height:1; letter-spacing:-.03em; text-transform:lowercase; display:block; }
+  .one .tank .w.none { color:var(--rule); }
+  /* quick screen: three tanks, one box */
+  .tanks { display:grid; grid-template-columns:1fr 1fr 1fr auto; gap:8px; margin-top:16px; }
+  .tanks .pill { padding:12px 4px 10px; }
+  .tanks .pill b { font-size:20px; text-transform:lowercase; font-family:var(--serif); }
+  .tanks .pill.kid { padding:12px 12px 10px; }
+  .tanks .pill.kid b { font-size:14px; font-family:var(--sans); font-weight:600; text-transform:none; }
+  .ask { margin-top:12px; }
+  .ask input { font-size:17px; padding:15px 16px; }
+  .one .heard { margin-top:6px; }
+  @media (max-width:420px) { .tanks { grid-template-columns:1fr 1fr 1fr; } .tanks .pill.kid { grid-column:1 / -1; padding:9px 12px 8px; } .tanks .pill.kid span { display:none; } .one .tank .w { font-size:40px; } }
   .cat { margin-top:22px; border-top:1px solid var(--rule); }
   .cat .r { display:grid; grid-template-columns:96px 1fr; gap:10px; padding:11px 0; border-bottom:1px solid var(--rule); align-items:baseline; }
   .cat .r .k { font-family:var(--mono); font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#586172; }
@@ -260,7 +272,7 @@
 
 <div class="wrap">
   <section class="one" id="one"></section>
-  <div class="fold"><button type="button" id="foldBtn">Show the rest</button><button type="button" id="guideBtn">Guide</button></div>
+  <div class="fold"><button type="button" id="foldBtn">More</button><button type="button" id="guideBtn">Guide</button></div>
 
   <section class="card g" id="guide" hidden>
     <div class="kicker">The guide</div>
@@ -268,17 +280,29 @@
 
     <h3>start here, three taps</h3>
     <ol>
-      <li><b>Tap your energy.</b> The big number on the right. 1 is empty, 5 is full. Be honest.</li>
-      <li><b>Tap what broke.</b> Plan intact, lost under 30, lost over 60, wiped out, or home day.</li>
-      <li><b>Tap Start.</b> The clock runs. Do the one task in yellow. Tap Done.</li>
+      <li><b>Tap a tank.</b> Full, half or empty. Kids home if they are.</li>
+      <li><b>Type what you want to do.</b> "clean the kitchen". Enter. It is now the one thing on screen.</li>
+      <li><b>Tap Start.</b> The clock runs. Do it. Tap Done.</li>
     </ol>
-    <div class="tip">That is the whole daily loop. Everything else is optional.</div>
+    <div class="tip">That is the whole loop. Nothing else is needed. Everything else lives under More.</div>
+
+    <h3>the one box</h3>
+    <div class="tw"><table>
+      <tr><th>You type</th><th>It does</th></tr>
+      <tr><td>clean the kitchen</td><td>Adds it, 25 min, empty tank, and puts it on top now.</td></tr>
+      <tr><td>call the payer 15 min</td><td>Adds it, 15 min, half tank, on top now.</td></tr>
+      <tr><td>write the pricing page by friday</td><td>Adds it, full tank, hard date Friday, on top now.</td></tr>
+      <tr><td>laundry, dishes, call mom</td><td>Three tasks. The first one is on top.</td></tr>
+      <tr><td>energy 3, lost an hour</td><td>A check-in. Sets the tank and the hit.</td></tr>
+      <tr><td>kids home / wiped out</td><td>A check-in. Home day, or recover.</td></tr>
+    </table></div>
+    <div class="tip">No word in the list? It goes in the tank you tapped. Tap Done or Not this and the planner goes back to picking for you.</div>
 
     <h3>the four numbers</h3>
     <div class="tw"><table>
       <tr><th>Number</th><th>Means</th><th>What it changes</th></tr>
       <tr><td>Day</td><td>Today</td><td>Nothing. It is there so you always know where you are.</td></tr>
-      <tr><td>Energy</td><td>How full the tank is, 1 to 5</td><td>Under 3 locks deep work. 2 or under is wiped out. 4 or 5 opens the deep block.</td></tr>
+      <tr><td>Tank</td><td>Full, half or empty</td><td>Half locks deep work. Empty is recover plus light stuff. Full opens the deep block.</td></tr>
       <tr><td>Clock</td><td>Minutes left in this block</td><td>Blocks cap at 50. Home day caps at 20. When it ends you get 5 minutes of nothing.</td></tr>
       <tr><td>Min done today</td><td>Minutes you ticked off</td><td>It jumps and glows every Done. That is the reward. Watch it.</td></tr>
     </table></div>
@@ -295,9 +319,9 @@
     <h3>what happens when</h3>
     <div class="tw"><table>
       <tr><th>You say</th><th>It does</th></tr>
-      <tr><td>Energy 4 or 5, plan intact</td><td>Deep block first. Admin after.</td></tr>
-      <tr><td>Energy 3</td><td>Full tank work locked. Half and empty tank only.</td></tr>
-      <tr><td>Energy 1 or 2, or wiped out</td><td>Recovery card. Walk, water, no screens. Empty tank work optional.</td></tr>
+      <tr><td>Full tank, plan intact</td><td>Deep block first. Admin after.</td></tr>
+      <tr><td>Half tank</td><td>Full tank work locked. Half and empty tank only.</td></tr>
+      <tr><td>Empty tank, or wiped out</td><td>Recovery card. Walk, water, no screens. Empty tank work optional.</td></tr>
       <tr><td>Lost under 30 min</td><td>Two or three quick half tank items, then back to the block.</td></tr>
       <tr><td>Lost over 60 min</td><td>Fixed plan scrubbed. Empty tank work fills the dead block. No catching up.</td></tr>
       <tr><td>Home day</td><td>Twenty minute blocks only. Long tasks become 20 minute chips. Timer runs each one.</td></tr>
@@ -311,7 +335,8 @@
       <tr><td>Done ✓</td><td>Ticks it. Minutes jump. Five minute buffer. Next task loads.</td></tr>
       <tr><td>Not this</td><td>Skips it for today. It comes back tomorrow.</td></tr>
       <tr><td>Body double 25</td><td>Opens a fresh video room in a new tab and runs 25 minutes. Invite a friend or sit with a body doubling stream.</td></tr>
-      <tr><td>Show the rest</td><td>Unfolds everything below. It remembers.</td></tr>
+      <tr><td>More / Less</td><td>Unfolds everything below the one screen. It remembers.</td></tr>
+      <tr><td>The one box + mic</td><td>Type a task or a check-in. Enter. It works out which.</td></tr>
       <tr><td>Peak / Week</td><td>Jump to your energy pattern or the week receipt.</td></tr>
       <tr><td>Reroute my day</td><td>Recomputes the day. Every energy tap already logs itself.</td></tr>
       <tr><td>Say it + mic</td><td>Type or dictate "energy 3, lost an hour". Enter. Done.</td></tr>
@@ -336,10 +361,10 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     <p>Turn on "one list on every device" once and the phone copy does everything the Claude copy does, calendar included.</p>
 
     <h3>one list on every device</h3>
+    <p>On by itself. The first open makes a key and saves every tap to your own site. The key sits in the page address, so Safari carries it: open the planner tab from the phone's Safari tab list, or from Handoff, and the phone is paired with no taps.</p>
     <ol>
-      <li>Scroll to the <b>Every device</b> card. Tap <b>Turn it on</b>. This phone now saves to your own site.</li>
-      <li>Tap <b>Copy the pairing link</b>. Send it to yourself. Open it on the Mac, the other phone, wherever.</li>
-      <li>That device pulls the same list. From then on every tap lands everywhere within a minute.</li>
+      <li>Other way: under More, the <b>Every device</b> card. Tap <b>Copy the pairing link</b>.</li>
+      <li>Open it once on the other device. Tasks already on that device are kept and merged in.</li>
     </ol>
     <div class="tip">The link holds your key. Keep it to yourself. Nothing else identifies you: no login, no email.</div>
 
@@ -369,6 +394,17 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     <h3>the 4:44 brief reads this</h3>
     <p>Every save writes a short plain-text summary beside your list on the site. The morning brief picks it up on its own: your hard dates, the task you decided last night, last week's energy, what came out of it. Nothing to set up past <b>Turn it on</b>.</p>
     <p>Check the morning it fired: <code>frimpomaasync.com/os-fad13324c3/api.php?brief=last</code> shows the last ping and the last send, no key needed.</p>
+
+    <h3>changed on 9 september</h3>
+    <div class="tw"><table>
+      <tr><th>Was</th><th>Now</th></tr>
+      <tr><td>Tap ?, scroll, pick 1 to 5, scroll past three cards, fill five fields, Add task</td><td>Tap a tank. Type it. Enter. Three taps, all on the first screen.</td></tr>
+      <tr><td>Show the rest, open by default</td><td>More, closed by default. The first screen is the planner.</td></tr>
+      <tr><td>Say it box, check-ins only</td><td>One box on top. A task or a check-in, it works out which.</td></tr>
+      <tr><td>Som: Send, Preview lanes, Add all</td><td>Som: Send. They land in the lanes on their own.</td></tr>
+      <tr><td>Every device: Turn it on, copy, open</td><td>On by itself. Safari carries the key to the phone.</td></tr>
+      <tr><td>Energy 3 opened deep work</td><td>Half tank locks it. The lane matches the tank.</td></tr>
+    </table></div>
 
     <h3>changed on 8 september</h3>
     <div class="tw"><table>
@@ -423,7 +459,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     <div class="tw"><table>
       <tr><th>You see</th><th>Do</th></tr>
       <tr><td>The screen is dark, "you vanished"</td><td>Eat. Drink. Tap anything. It comes back.</td></tr>
-      <tr><td>"Rate the tank first"</td><td>Tap the big ? on the right.</td></tr>
+      <tr><td>"Tap a tank"</td><td>Tap full, half or empty at the top.</td></tr>
       <tr><td>"Nothing open in the lanes"</td><td>Add a task, or paste from Som, or rest. All three are right answers.</td></tr>
       <tr><td>Calendar did not answer</td><td>Tap Try again. Still nothing: tap Change the link and paste the private address again.</td></tr>
       <tr><td>"cloud not reached"</td><td>No signal, or the site is slow. Everything is saved on this device and catches up on its own.</td></tr>
@@ -545,7 +581,9 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
   }
   function fillDefaults() {
     state.log = state.log || []; state.receipts = state.receipts || [];
-    if (state.foldOpen === undefined) state.foldOpen = true;
+    if (state.foldOpen === undefined) state.foldOpen = false;
+    if (!state.quick) { state.quick = 1; state.foldOpen = false; }
+    if (state.now === undefined) state.now = null;
     if (state.sleep === undefined) state.sleep = ""; if (state.coffee === undefined) state.coffee = "";
     if (!state.lastAction) state.lastAction = 0; if (!state.blockEnd) state.blockEnd = 0;
     if (!state.timerTask) state.timerTask = ""; if (!state.updated) state.updated = 0;
@@ -593,7 +631,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     var r = { mode:"", title:"", why:"", list:[], locked:[], recover:false, urgent:[] };
     var crash = D === "crash" || (E > 0 && E <= 2 && D !== "home");
     var home = D === "home";
-    var alphaLocked = E < 3 || D === "macro" || crash || (home && E < 4);
+    var alphaLocked = E <= 3 || D === "macro" || crash || (home && E < 4);
 
     // deadline override, feature 2
     open.forEach(function (t) { var n = daysLeft(t.due, now); if (n !== null && n <= 3) t._days = n; else delete t._days; });
@@ -700,26 +738,69 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     if (out.d) out.words.push({ none:"plan intact", micro:"small hit", macro:"over an hour lost", crash:"wiped out", home:"home day" }[out.d]);
     return out;
   }
+  var lastHeard = "";
+  function heard(t) { lastHeard = t || ""; var a = $("#heard"), b = $("#heard2"); if (a) a.textContent = lastHeard; if (b) b.textContent = lastHeard; }
   function applySay(text) {
-    var r = parseSay(text), h = $("#heard");
-    if (!r.e && !r.d) { h.textContent = "heard nothing I can use. try: energy 3, lost an hour"; return; }
+    var r = parseSay(text);
+    if (!r.e && !r.d) { heard("heard nothing I can use. try: energy 3, lost an hour"); return; }
     if (r.e) state.energy = r.e;
     if (r.d) state.disruption = r.d;
     if (state.energy) logCheckin();
-    h.textContent = "heard: " + r.words.join(" · ") + (state.energy ? " · logged" : " · rate energy to log");
-    render(); persist(); $("#heard").textContent = h.textContent;
-    $("#verdict").scrollIntoView({ behavior:"smooth", block:"start" });
+    render(); persist(); heard("heard: " + r.words.join(" · ") + (state.energy ? " · logged" : " · tap a tank to log"));
+  }
+  // ---------- the one box: a check-in or a task, it works out which ----------
+  function isCheckin(t) {
+    t = " " + String(t || "").toLowerCase() + " ";
+    if (/\b(energy|tank)\b/.test(t)) return true;
+    if (/^\s*(one|two|three|four|five|[1-5]|empty|low|okay|ok|good|full)\s*$/.test(t)) return true;
+    return !!parseSay(t).d;
+  }
+  var DAYN = { sunday:0, sun:0, monday:1, mon:1, tuesday:2, tue:2, tues:2, wednesday:3, wed:3, thursday:4, thu:4, thur:4, thurs:4, friday:5, fri:5, saturday:6, sat:6 };
+  function parseDue(t, now) {
+    var m = t.match(/\b(?:by|due|on|before)?\s*(today|tonight|tomorrow|sunday|sun|monday|mon|tuesday|tue|tues|wednesday|wed|thursday|thu|thur|thurs|friday|fri|saturday|sat)\b/i);
+    if (!m) return { due:"", rest:t };
+    var w = m[1].toLowerCase(), d = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    if (w === "tomorrow") d.setDate(d.getDate() + 1);
+    else if (w !== "today" && w !== "tonight") { var n = (DAYN[w] - d.getDay() + 7) % 7; d.setDate(d.getDate() + (n || 7)); }
+    return { due:dayKey(d), rest:t.replace(m[0], " ") };
+  }
+  function addTyped(text) {
+    var now = new Date(), parts = String(text || "").split(/[\n,;]+/).map(function (x) { return x.trim(); }).filter(Boolean);
+    if (!parts.length) return;
+    var made = [], base = Date.now();
+    parts.forEach(function (raw, i) {
+      var lane = laneGuess(raw) || tankLane() || "phoenix";
+      var min = minsFor(lane, raw);
+      var pd = parseDue(raw.replace(/\b(\d{1,3})\s*(min|mins|minutes|m|h|hr|hrs|hour|hours)\b/i, " "), now);
+      var name = pd.rest.replace(/\s+/g, " ").replace(/^\s*[-*•]\s*/, "").trim();
+      if (!name) return;
+      var t = { id:"q" + (base + i).toString(36), name:name.slice(0, 90), lane:lane, min:min, done:false, due:pd.due, first:"", repeat:"", doneAt:0 };
+      made.push(t);
+    });
+    if (!made.length) return;
+    state.tasks = state.tasks.filter(function (t) { return !t.example; }).concat(made);
+    state.now = { id:made[0].id, date:dayKey(now) };
+    skipped[made[0].id] = 0; delete skipped[made[0].id];
+    render(); persist();
+    var t0 = made[0];
+    heard((made.length > 1 ? "added " + made.length + ". first up: " : "now: ") + t0.name + " · " + t0.min + " min · " + LANES[t0.lane].label.toLowerCase() + (t0.due ? " · " + dueWord(daysLeft(t0.due, now)) : "") + (state.energy ? "" : " · tap a tank and Start"));
+  }
+  function handleAsk(text) {
+    text = String(text || "").trim(); if (!text) return;
+    if (isCheckin(text)) applySay(text); else addTyped(text);
+    var a = $("#askin"); if (a) a.value = "";
   }
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition, rec = null;
-  function toggleMic() {
-    var b = $("#mic");
-    if (!SR) { $("#heard").textContent = "no mic here. dictate into the box with your keyboard mic, then press go"; return; }
+  function toggleMic(btnId, inputId, fn) {
+    btnId = btnId || "mic"; inputId = inputId || "sayin"; fn = fn || applySay;
+    var b = $("#" + btnId);
+    if (!SR) { heard("no mic here. tap the keyboard mic in the box instead, then Enter"); return; }
     if (rec) { rec.stop(); return; }
     rec = new SR(); rec.lang = "en-US"; rec.interimResults = false;
-    rec.onresult = function (ev) { var t = ev.results[0][0].transcript; $("#sayin").value = t; applySay(t); };
-    rec.onend = function () { rec = null; var m = $("#mic"); if (m) m.classList.remove("live"); };
-    rec.onerror = function () { $("#heard").textContent = "mic did not open. type it instead"; };
-    b.classList.add("live"); rec.start();
+    rec.onresult = function (ev) { var t = ev.results[0][0].transcript; var inp = $("#" + inputId); if (inp) inp.value = t; fn(t); };
+    rec.onend = function () { rec = null; var m = $("#" + btnId); if (m) m.classList.remove("live"); };
+    rec.onerror = function () { heard("mic did not open. type it instead"); };
+    if (b) b.classList.add("live"); rec.start();
   }
 
   // ---------- one list on every device: her own site holds the state ----------
@@ -736,7 +817,8 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
       if (d && d.tasks) {
         if ((d.updated || 0) > (state.updated || 0)) { applyingRemote = true; state = d; fillDefaults(); saveLocal(); render(); applyingRemote = false; }
         else if ((d.updated || 0) < (state.updated || 0)) push();
-      } else push();
+        if (mergeTasks) { var have = {}; state.tasks.forEach(function (t) { have[t.name.toLowerCase()] = 1; }); var add = mergeTasks.filter(function (t) { return !have[t.name.toLowerCase()]; }); mergeTasks = null; if (add.length) { state.tasks = state.tasks.concat(add); render(); persist(); } }
+      } else { mergeTasks = null; push(); }
       setSync("one list on every device"); renderDevices();
     }).catch(function () { sync.status = "err"; setSync("saved on this device · cloud not reached"); renderDevices(); });
   }
@@ -757,14 +839,18 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     var head = '<div class="kicker">Every device</div>';
     if (!sync.key) { el.innerHTML = head + '<h2>one list on every device<small>Turn it on here. Then open the pairing link on the Mac or the other phone. Same tasks, same check-ins, everywhere. The 4:44 brief reads the same file.</small></h2><div class="row"><button class="btn" type="button" id="syncOn">Turn it on</button></div>'; return; }
     var link = location.origin + location.pathname + "#key=" + sync.key;
-    el.innerHTML = head + '<h2>' + (sync.status === "err" ? "cloud not reached." : "one list on every device.") + '<small>' + (sync.status === "err" ? "Saved on this device. It catches up when the site answers." : "Open this link once on any other device. It pairs and pulls the list.") + '</small></h2>' +
+    el.innerHTML = head + '<h2>' + (sync.status === "err" ? "cloud not reached." : "one list on every device. on.") + '<small>' + (sync.status === "err" ? "Saved on this device. It catches up when the site answers." : "Already on. The key sits in this page\'s address, so a tab you open from Safari\'s tab list on the phone is paired on its own. Or open this link once on the other device.") + '</small></h2>' +
       '<div class="pair"><code>' + esc(link) + '</code></div><div class="row"><button class="btn light" type="button" id="copyPair">Copy the pairing link</button><button class="btn light" type="button" id="syncOff">Stop on this device</button><span class="sync" id="pairMsg"></span></div>';
   }
+  function keyHash() { try { history.replaceState(null, "", location.pathname + location.search + (sync.key && !inClaude ? "#key=" + sync.key : "")); } catch (e) {} }
+  var mergeTasks = null;
   function importKey() {
     var m = (location.hash || "").match(/#key=([a-f0-9]{32})\b/);
     if (!m) return;
-    setKey(m[1]); history.replaceState(null, "", location.pathname + location.search);
-    var hd = $("#heard"); if (hd) hd.textContent = "paired. pulling your list";
+    if (sync.key && sync.key !== m[1]) mergeTasks = state.tasks.filter(function (t) { return !t.done && !t.example; });
+    if (sync.key === m[1]) { keyHash(); return; }
+    setKey(m[1]); keyHash();
+    heard("paired. pulling your list");
   }
   setInterval(function () { if (document.visibilityState === "visible" && sync.key) pull(); }, 60000);
 
@@ -876,9 +962,12 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
 
   // ---------- feature 4: som feed ----------
   var ALPHA_RE = /\b(write|draft|strategy|plan|pitch|proposal|price|pricing|design|build|record|film|script|outline|analy[sz]e|appeal letter|letter|offer|launch)\b/i;
-  var BETA_RE = /\b(call|email|text|message|dm|send|reply|respond|book|schedule|reschedule|pay|invoice|order|buy|pick up|pickup|submit|sign|print|upload|post|share|check|confirm|cancel|renew|update|fix|clean|wash|pack)\b/i;
-  var PHOENIX_RE = /\b(read|listen|watch|research|look into|organi[sz]e|sort|file|tidy|review|study|learn|notes?|idea|think about|explore|browse|save)\b/i;
-  function laneFor(t) { return ALPHA_RE.test(t) ? "alpha" : BETA_RE.test(t) ? "beta" : PHOENIX_RE.test(t) ? "phoenix" : "phoenix"; }
+  var BETA_RE = /\b(call|email|text|message|dm|send|reply|respond|book|schedule|reschedule|pay|invoice|order|buy|pick up|pickup|submit|sign|print|upload|post|share|check|confirm|cancel|renew|update|fix)\b/i;
+  var PHOENIX_RE = /\b(read|listen|watch|research|look into|organi[sz]e|sort|file|tidy|clean|wash|laundry|dishes|pack|fold|review|study|learn|notes?|idea|think about|explore|browse|save)\b/i;
+  function laneGuess(t) { return ALPHA_RE.test(t) ? "alpha" : BETA_RE.test(t) ? "beta" : PHOENIX_RE.test(t) ? "phoenix" : null; }
+  function laneFor(t) { return laneGuess(t) || "phoenix"; }
+  // the tank you tapped is the lane you mean, unless the words say otherwise
+  function tankLane() { return state.energy >= 4 ? "alpha" : state.energy === 3 ? "beta" : state.energy ? "phoenix" : null; }
   function minsFor(lane, t) { var m = t.match(/\b(\d{1,3})\s*(min|mins|minutes|m)\b/i); if (m) return Math.max(5, Number(m[1])); var h = t.match(/\b(\d)\s*(h|hr|hrs|hour|hours)\b/i); if (h) return Number(h[1]) * 60; return lane === "alpha" ? 60 : lane === "beta" ? 15 : 25; }
   function parseSom(raw) {
     raw = String(raw || "").trim(); restoreData = null; if (!raw) return [];
@@ -915,8 +1004,8 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
   }
   function importFromHash() {
     var h = decodeURIComponent(location.hash || "");
-    if (/^#home\b/.test(h)) { state.disruption = "home"; if (!state.energy) state.energy = 3; logCheckin(); history.replaceState(null, "", location.pathname + location.search); render(); persist(); return; }
-    var sy = h.match(/^#say=(.+)$/); if (sy) { history.replaceState(null, "", location.pathname + location.search); applySay(sy[1]); return; }
+    if (/^#home\b/.test(h)) { state.disruption = "home"; if (!state.energy) state.energy = 3; logCheckin(); keyHash(); render(); persist(); return; }
+    var sy = h.match(/^#say=(.+)$/); if (sy) { keyHash(); applySay(sy[1]); return; }
     var sa = location.hash.match(/#sa=([A-Za-z0-9+\/=_-]+)/);
     if (sa) {
       try {
@@ -925,14 +1014,19 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
         var added = 0;
         (rows || []).forEach(function (r) { if (!r.id || have[r.id]) return; state.tasks.push({ id:"sa-" + r.id, sa:r.id, name:"Appeal decision: " + (r.label || r.id), lane:"alpha", min:Number(r.min) || 90, done:false, due:(r.due || "").slice(0, 10), first:"Open the engagement on the Desk. Read the last note." }); added++; });
         state.tasks = state.tasks.filter(function (t) { return !t.example; });
-        history.replaceState(null, "", location.pathname + location.search);
+        keyHash();
         render(); persist(); openLane = "alpha"; render();
-        var hd = $("#heard"); if (hd) hd.textContent = "soft appeals: " + added + " deadline" + (added === 1 ? "" : "s") + " added as hard dates";
+        heard("soft appeals: " + added + " deadline" + (added === 1 ? "" : "s") + " added as hard dates");
       } catch (e) {}
       return;
     }
     var m = location.hash.match(/#som=([A-Za-z0-9+\/=_-]+)/); if (!m) return;
-    try { var txt = decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))); $("#somin").value = txt; previewSom(); history.replaceState(null, "", location.pathname + location.search); $("#somin").scrollIntoView({ behavior:"smooth", block:"start" }); } catch (e) {}
+    try {
+      var txt = decodeURIComponent(escape(atob(m[1].replace(/-/g, "+").replace(/_/g, "/")))); $("#somin").value = txt; previewSom(); keyHash();
+      if (!restoreData && somRows.length) { var cnt = somRows.length; importSom(); heard("added " + cnt + " from Som. they are in the lanes"); window.scrollTo({ top:0, behavior:"smooth" }); }
+      else if (!restoreData && !somRows.length) { heard("nothing new from Som. it is all here already"); $("#somin").value = ""; $("#somPv").innerHTML = ""; }
+      else { state.foldOpen = true; render(); $("#somin").scrollIntoView({ behavior:"smooth", block:"start" }); }
+    } catch (e) {}
   }
 
   // ---------- feature 1: energy forecast ----------
@@ -1032,6 +1126,11 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
   var lastOneId = null, lastDoneId = null;
   function pickOne(r, now) {
     var open = state.tasks.filter(function (t) { return !t.done; });
+    if (state.now && state.now.date === dayKey(now)) {
+      var nt = open.filter(function (x) { return x.id === state.now.id && !skipped[x.id]; })[0];
+      if (nt) return { task:nt, note:"you asked for it" + (r.urgent.length ? " · " + r.urgent.length + " hard date" + (r.urgent.length === 1 ? "" : "s") + " waiting under More" : "") };
+      state.now = null;
+    }
     if (r.urgent.length) return r.urgent[0];
     var tk = dayKey(now);
     if (state.tomorrow && state.tomorrow.date === tk && state.energy >= 3 && state.disruption !== "crash") {
@@ -1043,8 +1142,16 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
   function renderOne(r, now) {
     var el = $("#one"), D = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], M = ["January","February","March","April","May","June","July","August","September","October","November","December"];
     var one = pickOne(r, now), E = state.energy;
+    var tw = E >= 4 ? "full" : E === 3 ? "half" : E ? "empty" : "?";
     var top = '<div class="top"><div><div class="month">' + M[now.getMonth()] + ' ' + now.getFullYear() + '</div><div class="day num">' + pad(now.getDate()) + '<sup>' + D[now.getDay()] + '</sup></div></div><div></div>' +
-      '<button class="tank" type="button" id="tankBtn" aria-label="Energy"><span class="n num' + (E ? "" : " none") + '">' + (E || "?") + '</span><span class="l">' + (E ? "energy of 5 · " + (WORDS[E - 1]) : "tap · rate the tank") + '</span></button></div>';
+      '<div class="tank" aria-label="Energy"><span class="w' + (E ? "" : " none") + '">' + tw + '</span><span class="l">' + (E ? "tank" + (state.disruption === "home" ? " · kids home" : "") : "tap a tank") + '</span></div></div>' +
+      '<div class="tanks">' +
+      '<button type="button" class="pill' + (E >= 4 ? " on" : "") + '" data-e="4"><b>full</b><span>deep work</span></button>' +
+      '<button type="button" class="pill' + (E === 3 ? " on" : "") + '" data-e="3"><b>half</b><span>admin</span></button>' +
+      '<button type="button" class="pill' + (E > 0 && E <= 2 ? " on" : "") + '" data-e="2"><b>empty</b><span>light stuff</span></button>' +
+      '<button type="button" class="pill kid' + (state.disruption === "home" ? " on" : "") + '" data-kids="1"><b>kids home</b><span>20 min bits</span></button></div>' +
+      '<div class="say ask"><input type="text" id="askin" placeholder="What do you want to do?" autocomplete="off" enterkeyhint="go" maxlength="200"><button type="button" id="mic2" aria-label="Speak">mic</button></div>' +
+      '<div class="heard" id="heard2">' + esc(lastHeard) + '</div>';
     var strip = "";
     for (var i = 0; i < 7; i++) {
       var sd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i), nDue = 0;
@@ -1060,7 +1167,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     var body;
     if (guardTripped()) body = '<div class="guard"><h3>you vanished.</h3><p>The block ended ' + ago(state.blockEnd) + ' and nothing has been tapped since. Eat something. Drink water. Then tap anything here and the screen comes back.</p></div>';
     else if (buffer.on) body = '<div class="buffer"><span class="clock num" id="bufclock">' + pad(Math.floor(buffer.left / 60)) + ':' + pad(buffer.left % 60) + '</span><div><b>Five minutes of nothing.</b><div class="note" style="margin-top:4px">Stand. Water. Look out a window. The next task can wait.</div><input class="outin" id="outin" type="text" placeholder="what came out of it? optional, Enter saves" maxlength="140" autocomplete="off" enterkeyhint="done"><div class="row" style="margin-top:8px"><button class="btn light" type="button" id="skipBuf">Skip the five</button><span class="sync" id="outMsg"></span></div></div></div>';
-    else if (!E) body = '<div class="empty">Rate the tank first. One number, then one task.</div>';
+    else if (!E && !one) body = '<div class="empty">Tap a tank. Then type one thing you want to do.</div>';
     else if (r.recover && !one) body = '<div class="empty">Energy ' + E + '. <span class="hl">Recover.</span> Walk, water, no screens. Tomorrow\'s deep block depends on it.</div>';
     else if (!one) body = '<div class="empty">Nothing open in the lanes this mode allows. <span class="hl">Rest</span>, or add a task below.</div>';
     else {
@@ -1087,9 +1194,9 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     if ((evening || picked) && alphaOpen.length) {
       tmw = '<div class="tmw"><div class="k">' + (picked ? "tomorrow, decided" : "tomorrow, decide it tonight") + '</div><div class="picks">' + alphaOpen.slice(0, 5).map(function (t) { return '<button type="button" data-tmw="' + t.id + '" class="' + (picked === t.id ? "on" : "") + '">' + esc(t.name) + '</button>'; }).join("") + '</div></div>';
     }
-    el.innerHTML = top + strip + back + body + prog + tmw;
-    $("#foldBtn").textContent = state.foldOpen ? "Fold the rest away" : "Show the rest";
-    $("#rest").hidden = !state.foldOpen && !!E;
+    el.innerHTML = top + back + body + strip + prog + tmw;
+    $("#foldBtn").textContent = state.foldOpen ? "Less" : "More";
+    $("#rest").hidden = !state.foldOpen;
   }
   var skipped = {};
   // ---------- 4: transition buffer ----------
@@ -1195,14 +1302,16 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
   document.addEventListener("click", function (ev) {
     var b = ev.target.closest("button"); if (!b) return;
     var wasGuard = guardTripped(); touch(); if (wasGuard) { saveLocal(); render(); return; }
-    if (b.dataset.e) { state.energy = Number(b.dataset.e); logCheckin(); render(); persist(); }
+    if (b.dataset.e) { state.energy = Number(b.dataset.e); logCheckin(); render(); persist(); if (b.closest(".tanks")) { var ai = $("#askin"); if (ai && !pickOne(reroute(state, new Date()), new Date())) ai.focus(); } }
+    else if (b.dataset.kids) { state.disruption = state.disruption === "home" ? "none" : "home"; if (!state.energy && state.disruption === "home") state.energy = 3; logCheckin(); render(); persist(); }
+    else if (b.id === "mic2") toggleMic("mic2", "askin", handleAsk);
     else if (b.dataset.d) { state.disruption = b.dataset.d; logCheckin(); render(); persist(); }
     else if (b.dataset.done) {
       var t = find(b.dataset.done); if (!t) return;
       t.done = !t.done; t.doneAt = t.done ? Date.now() : 0; if (t.done) lastDoneId = t.id;
       if (t.done) state.receipts = state.receipts.concat([{ id:t.id, t:Date.now(), lane:t.lane, min:t.min, name:t.name }]).slice(-400);
       else { for (var i = state.receipts.length - 1; i >= 0; i--) if (state.receipts[i].id === t.id) { state.receipts.splice(i, 1); break; } }
-      if (t.done) { stopTimer(true); if (ev.target.closest("#one")) startBuffer(); }
+      if (t.done) { stopTimer(true); if (ev.target.closest("#one")) startBuffer(); if (state.now && state.now.id === t.id) state.now = null; lastHeard = ""; }
       render(); persist(); if (t.done) celebrate();
     }
     else if (b.dataset.x) { var gone = find(b.dataset.x); if (gone) { lastRemoved = { task:gone, lane:gone.lane }; state.tasks = state.tasks.filter(function (t) { return t.id !== b.dataset.x; }); render(); persist(); } }
@@ -1220,7 +1329,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     else if (b.id === "tankBtn") { state.foldOpen = true; render(); persist(); $("#nowcard").scrollIntoView({ behavior:"smooth", block:"start" }); }
     else if (b.id === "foldBtn") { state.foldOpen = !state.foldOpen; render(); persist(); }
     else if (b.id === "guideBtn") { var g = $("#guide"); g.hidden = !g.hidden; b.classList.toggle("on", !g.hidden); if (!g.hidden) g.scrollIntoView({ behavior:"smooth", block:"start" }); }
-    else if (b.id === "skipOne") { if (lastOneId) skipped[lastOneId] = 1; stopTimer(true); render(); persist(); }
+    else if (b.id === "skipOne") { if (lastOneId) skipped[lastOneId] = 1; if (state.now && state.now.id === lastOneId) state.now = null; lastHeard = ""; stopTimer(true); render(); persist(); }
     else if (b.id === "skipBuf") { endBuffer(); render(); }
     else if (b.id === "bodyBtn") bodyDouble();
     else if (b.dataset.s !== undefined) { state.sleep = state.sleep === b.dataset.s ? "" : b.dataset.s; if (state.energy) logCheckin(); render(); persist(); }
@@ -1259,6 +1368,7 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
     });
   }
   $("#sayin").addEventListener("keydown", function (ev) { if (ev.key === "Enter") { ev.preventDefault(); applySay(this.value); } });
+  document.addEventListener("keydown", function (ev) { if (ev.key === "Enter" && ev.target && ev.target.id === "askin") { ev.preventDefault(); handleAsk(ev.target.value); } });
   document.addEventListener("change", function (ev) {
     var sel = ev.target.closest("select[data-pv]"); if (sel) { somRows[Number(sel.dataset.pv)].lane = sel.value; return; }
     var rp = ev.target.closest("select[data-rep]"); if (rp) { var rt = find(rp.dataset.rep); if (rt) { rt.repeat = rp.value; render(); persist(); } return; }
@@ -1266,7 +1376,9 @@ Planner ── every save ────────▶  brief.txt ──▶ the 4
   });
   function find(id) { for (var i = 0; i < state.tasks.length; i++) if (state.tasks[i].id === id) return state.tasks[i]; return null; }
 
-  loadLocal(); resumeTimer(); importKey(); render(); connect(); renderCalendar();
+  loadLocal(); resumeTimer(); importKey();
+  if (!inClaude && !sync.key) { setKey(genKey()); sync.status = "on"; state.updated = state.updated || Date.now(); saveLocal(); }
+  keyHash(); render(); connect(); renderCalendar();
   pull().then(function () { loadCalendar(false); });
   importFromHash();
   document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") { if (timer.on) tick(); if (guardTripped()) render(); if (sync.key) pull(); } });
