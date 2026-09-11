@@ -141,6 +141,11 @@ final class Config
         // The hour of her day the morning digest goes out. Section 17.3.
         'SA_DIGEST_HOUR' => '6',
 
+        // The off-site backup email. Off unless this is true in the private
+        // config: she switched the daily email off on 2026-09-11. The daily
+        // backup itself still runs and stays on the server either way.
+        'SA_BACKUP_OFFSITE_EMAIL' => false,
+
         // The forwarded-email intake. An address a practice manager can
         // forward a denial letter or a voice note to, read on the job
         // schedule by intake.mailbox, each message becoming an inquiry row.
@@ -391,6 +396,12 @@ final class Config
     {
         $value = (int) $this->string('SA_DIGEST_HOUR');
         return $value >= 0 && $value <= 23 ? $value : 6;
+    }
+
+    /** Whether backup.offsite may email the newest backup file. Off unless set true. */
+    public function backupOffsiteEmailEnabled(): bool
+    {
+        return $this->bool('SA_BACKUP_OFFSITE_EMAIL');
     }
 
     /**

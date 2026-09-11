@@ -178,7 +178,7 @@ final class JobService
             ],
             'backup.offsite' => [
                 'label' => 'Off-site backup copy',
-                'what'  => 'The newest backup file, emailed to you once per day. The copy that survives the server.',
+                'what'  => 'Off unless SA_BACKUP_OFFSITE_EMAIL is true. When on, the newest backup file is emailed to you once per day.',
             ],
             'housekeeping' => [
                 'label' => 'Housekeeping',
@@ -492,9 +492,15 @@ final class JobService
      * emailed to the owner once per day, keyed on the date, so the inbox
      * becomes the copy that survives. The backup holds business rows only;
      * nothing patient-level exists in this database by design.
+     *
+     * Off unless SA_BACKUP_OFFSITE_EMAIL is true: she turned the daily email
+     * off on 2026-09-11. The server copies from backup.daily are untouched.
      */
     private function backupOffsite(): array
     {
+        if (!$this->config->backupOffsiteEmailEnabled()) {
+            return ['summary' => 'email switched off; the backups stay on the server', 'items' => 0];
+        }
         $latest = $this->backups->latest();
         if ($latest === null) {
             return ['summary' => 'no backup to send yet', 'items' => 0];

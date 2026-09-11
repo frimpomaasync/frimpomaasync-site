@@ -164,7 +164,7 @@ that deletes either.
 | `reminders.client` | one reminder per cadence period per item waiting on a practice | idempotency key = item + period |
 | `backup.daily` | writes a backup, prunes old ones | a new file each day is the point |
 | `backup.verify` | verifies the newest | reads only |
-| `backup.offsite` | emails the newest backup file to the owner, the copy that survives the server | idempotency key = the date |
+| `backup.offsite` | off unless `SA_BACKUP_OFFSITE_EMAIL` is true (switched off 2026-09-11); when on, emails the newest backup file to the owner | idempotency key = the date |
 | `housekeeping` | drops rate-limit rows, run rows and resolved items past 90 days | deletes are idempotent |
 | `digest.morning` | emails the counts once a day after the digest hour | idempotency key = the date |
 
