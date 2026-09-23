@@ -188,7 +188,7 @@ There is no named client result yet, and the page says so. It offers four things
 
 Page: https://frimpomaasync.com/about
 
-frimpomaasync is one person, Nana Frimpongmaa. Background: hospital front desk and patient check-in, human resources, building hospital forms, performance improvement for a healthcare system, and SQL, data management and Epic go-lives. Weekday response inside four hours, a written update every Friday, two builds at a time, no subscription to frimpomaasync.
+frimpomaasync is one person, Nana Frimpongmaa. Background: IT and cybersecurity, front desk and check-in, human resources, building the forms an organisation runs on, performance improvement, SQL and data management, and system go-lives, across Fortune 500 companies, nonprofits, schools and the NIH. Weekday response inside four hours, a written update every Friday, two builds at a time, no subscription to frimpomaasync.
 
 The page also lists what is not taken on: guaranteed bookings, websites, ads, ongoing content, answering customers on the owner's behalf, selling a larger build than needed, and automating a process nobody has written down.
 
