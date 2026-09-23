@@ -125,7 +125,7 @@ foreach ($leads as $email => $l) {
   foreach (DRIP_STEPS as $step) {
     if ($days < $step['day'] || in_array($step['key'], $s['sent'], true)) { continue; }
     $mail = drip_email($step['key'], $l['first'], $email);
-    if ($mail && fs_smtp_send($cfg, $email, $mail['subject'], $mail['body'], DRIP_REPLY_TO, '', DRIP_FROM_NAME)) {
+    if ($mail && fs_smtp_send($cfg, $email, $mail['subject'], $mail['body'], DRIP_REPLY_TO, $mail['html'], DRIP_FROM_NAME)) {
       $s['sent'][] = $step['key'];
       $sentCount++;
       echo 'sent ' . $step['key'] . ' to ' . $email . "\n";

@@ -99,7 +99,7 @@ if ($item === 'blueprint' && $cfg) {
   $dl = 'https://frimpomaasync.com/download.php?item=blueprint&exp=' . $exp . '&t=' . $t;
   $mail = drip_email('welcome', $parts[0], $email, ['download' => $dl]);
   if ($mail) {
-    fs_smtp_send($cfg, $email, $mail['subject'], $mail['body'], DRIP_REPLY_TO, '', DRIP_FROM_NAME);
+    fs_smtp_send($cfg, $email, $mail['subject'], $mail['body'], DRIP_REPLY_TO, $mail['html'], DRIP_FROM_NAME);
   }
 }
 header('Location: /free-thanks?item=' . rawurlencode($item) . '&n=' . rawurlencode($parts[0]) . '&exp=' . $exp . '&t=' . $t, true, 303);
