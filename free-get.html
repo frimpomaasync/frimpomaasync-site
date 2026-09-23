@@ -18,7 +18,6 @@
     .fg-inside li{display:flex;gap:12px;margin-top:12px;font-size:15px;line-height:1.55;color:rgba(16,20,38,.78)}
     .fg-inside .fg-n{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:.1em;color:#C2501C;padding-top:3px;flex:none}
     .fg-inside-title{font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:rgba(16,20,38,.55);margin:0 0 4px}
-    .fg-built{margin-top:18px;font-size:13.5px;color:rgba(16,20,38,.55)}
   </style>
 </head>
 <body data-sk-sections="Gate,Form" data-sk-bar="Free to take. Live in 7 days when you're ready." data-sk-biz="service business">
@@ -53,7 +52,6 @@
           <p class="fg-err" id="fg-err" hidden>That send did not go through. Check the email address and press the button once more.</p>
           <button class="button" type="submit" id="fg-btn">Take it →</button>
           <p class="small-note">No account gets made and nothing is charged. Your name and email tell me a real person took this, which is how I decide what stays free.</p>
-          <p class="fg-built" id="fg-built" hidden>Built by Nana Frimpongmaa. About 10 years of hospital front desk systems, sized for a one-person business.</p>
         </form>
       </div>
     </section>
@@ -67,7 +65,6 @@
         sub: 'What to automate first, what should wait, and how the pieces connect. A printable PDF. Leave your name and email and the download is on the next page.',
         btn: 'Send me to the download →',
         doc: 'Take the Blueprint, free',
-        built: true,
         inside: [
           'The System vs. You audit: 12 boxes. A box gets checked only when a system does the task instead of you.',
           'The 4 modules in order: calls and booking first, then follow-up, then money, then content.',
@@ -122,7 +119,6 @@
       });
       document.getElementById('fg-inside-wrap').hidden = false;
     }
-    if (it.built) { document.getElementById('fg-built').hidden = false; }
     if (q.get('err')) { document.getElementById('fg-err').hidden = false; }
     // Same first-party counter as the rest of the site. Anonymous, DNT respected.
     try {
