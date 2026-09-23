@@ -90,6 +90,18 @@ if (!$sent) {
 $exp = time() + 86400;
 $t = hash_hmac('sha256', $item . '|' . $exp, fs_gate_secret());
 $parts = preg_split('/\s+/', $name);
+
+// The Blueprint also lands in the inbox, right away, with the same one-day
+// download link. The three-day and later emails come from cron/blueprint-drip.php.
+// A failed send changes nothing for the visitor; the download page still opens.
+if ($item === 'blueprint' && $cfg) {
+  require __DIR__ . '/cron/drip-emails.php';
+  $dl = 'https://frimpomaasync.com/download.php?item=blueprint&exp=' . $exp . '&t=' . $t;
+  $mail = drip_email('welcome', $parts[0], $email, ['download' => $dl]);
+  if ($mail) {
+    fs_smtp_send($cfg, $email, $mail['subject'], $mail['body'], DRIP_REPLY_TO, '', DRIP_FROM_NAME);
+  }
+}
 header('Location: /free-thanks?item=' . rawurlencode($item) . '&n=' . rawurlencode($parts[0]) . '&exp=' . $exp . '&t=' . $t, true, 303);
 exit;
 
