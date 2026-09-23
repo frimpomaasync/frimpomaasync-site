@@ -14,6 +14,10 @@
     .fg-trap{position:absolute !important;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden}
     .fg-err{color:#C2501C;font-size:14px;margin:0 0 14px}
     .fg-form-wrap{max-width:640px}
+    .fg-inside{margin:0 0 22px;padding:0;list-style:none}
+    .fg-inside li{display:flex;gap:12px;margin-top:12px;font-size:15px;line-height:1.55;color:rgba(16,20,38,.78)}
+    .fg-inside .fg-n{font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;font-size:11px;letter-spacing:.1em;color:#C2501C;padding-top:3px;flex:none}
+    .fg-inside-title{font-size:13px;letter-spacing:.08em;text-transform:uppercase;font-family:ui-monospace,'SF Mono',Menlo,Consolas,monospace;color:rgba(16,20,38,.55);margin:0 0 4px}
   </style>
 </head>
 <body data-sk-sections="Gate,Form" data-sk-bar="Free to take. Live in 7 days when you're ready." data-sk-biz="service business">
@@ -28,6 +32,10 @@
 
     <section class="section soft" data-screen-label="Form">
       <div class="wrap fg-form-wrap">
+        <div id="fg-inside-wrap" hidden>
+          <p class="fg-inside-title">Inside</p>
+          <ul class="fg-inside" id="fg-inside"></ul>
+        </div>
         <form class="form-shell" name="free-gate" action="/lead.php" method="post">
           <input type="hidden" name="item" value="" id="fg-item">
           <label class="fg-trap" aria-hidden="true">Leave this field empty
@@ -54,9 +62,15 @@
     var ITEMS = {
       blueprint: {
         title: 'Take the <em>Blueprint.</em>',
-        sub: 'A printable PDF: what to automate first, what should wait, and how the pieces connect. Leave your name and email and the download is on the next page.',
+        sub: 'What to automate first, what should wait, and how the pieces connect. A printable PDF. Leave your name and email and the download is on the next page.',
         btn: 'Send me to the download →',
-        doc: 'Take the Blueprint, free'
+        doc: 'Take the Blueprint, free',
+        inside: [
+          'The System vs. You audit: 12 boxes. A box gets checked only when a system does the task instead of you.',
+          'The 4 modules in order: calls and booking first, then follow-up, then money, then content.',
+          'The scripts, ready to copy: the after-hours greeting, the missed-call text-back, the 24-hour follow-up email.',
+          'The 7-day momentum plan: pick one box and fix it this week.'
+        ]
       },
       som: {
         title: 'Take <em>Som.</em>',
@@ -95,6 +109,16 @@
     document.getElementById('fg-btn').textContent = it.btn;
     document.getElementById('fg-item').value = item;
     document.title = it.doc + ' | frimpomaasync.com';
+    if (it.inside) {
+      var ul = document.getElementById('fg-inside');
+      it.inside.forEach(function (s, i) {
+        var li = document.createElement('li');
+        var n = document.createElement('span'); n.className = 'fg-n'; n.textContent = '0' + (i + 1);
+        var p = document.createElement('span'); p.textContent = s;
+        li.appendChild(n); li.appendChild(p); ul.appendChild(li);
+      });
+      document.getElementById('fg-inside-wrap').hidden = false;
+    }
     if (q.get('err')) { document.getElementById('fg-err').hidden = false; }
     // Same first-party counter as the rest of the site. Anonymous, DNT respected.
     try {
