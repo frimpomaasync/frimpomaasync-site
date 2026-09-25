@@ -8,7 +8,7 @@
   if (window.__fsnav810) return;
   window.__fsnav810 = true;
 
-  var BOOK = "/book";
+  var BOOK = "/fit"; /* the call retired 2026-09-25: the fit form leads to a written proposal */
   /* Soft Appeals converts on a PHI-free intake form, not on the calendar. A
      healthcare buyer evaluating a vendor should not have to book time with a
      stranger to find out whether the service fits, and a call is the wrong
@@ -407,7 +407,7 @@
       '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/free">Free tools</a><a href="/som">Som</a><a href="/blog/">Blog</a></div>' +
       (isSoft
         ? '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/soft-appeals-contact">Contact and due diligence</a><a href="/soft-appeals-start">Start a denial review</a><a href="/about">About</a><a href="/data">Your data</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>'
-        : '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/about">About</a><a href="/data">Your data</a><a href="/ugc">For software brands</a><a href="' + BOOK + '">Book a call</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>') +
+        : '<div style="display:flex;flex-direction:column;gap:10px;font-size:14px"><a href="/about">About</a><a href="/data">Your data</a><a href="/ugc">For software brands</a><a href="' + BOOK + '">Get the plan in writing</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a>') +
       '<div style="margin-top:14px;font-family:' + MONO + ';font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:rgba(242,244,249,.34)">Watch it work before you pay</div></div>' +
       "</div>";
     body.appendChild(foot);

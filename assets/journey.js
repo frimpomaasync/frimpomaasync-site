@@ -1,4 +1,3 @@
-const BOOKING_URL = "/book";
 const FALLBACK_EMAIL = "hello@frimpomaasync.com";
 
 const clamp = (value, min, max) =>
@@ -95,29 +94,71 @@ export function getSiesieRecommendation(count) {
   };
 }
 
+/* The call is gone (her decision, 2026-09-25). After the fit form come five
+   quick questions, then a written proposal within 24 hours. The five-question
+   screen and the confirmation both read the source so the wording matches the
+   path the visitor took. */
 const fitConfirmations = {
   synkasa: {
     source: "synkasa",
-    heading: "Your inquiry path is ready for review.",
+    heading: "Your inquiry path is in. Five quick questions next.",
     body:
-      "Nana Frimpongmaa will review how inquiries arrive, where they wait, and what you want handled before the 15-minute call.",
+      "Answer these and I write your SynKasa proposal within 24 hours. No call needed.",
+    q5: "What happens when you miss a call?",
+    q5hint: "Be honest. This is the leak the whole build is sized around.",
+    then:
+      "The proposal holds what I would build, what stays human, the $555 price, and a payment link. You pay, I build. Live in 7 days, or you don't pay.",
   },
   siesie: {
     source: "siesie",
-    heading: "Your back office is ready for review.",
+    heading: "Your back office is in. Five quick questions next.",
     body:
-      "Nana Frimpongmaa will review the roles that still depend on you and the process causing the most interruptions before the 15-minute call.",
+      "Answer these and I write your Operations Map proposal within 24 hours. No call needed.",
+    q5: "Which handoff gets stuck on you most?",
+    q5hint: "Be honest. This is the piece the map starts from.",
+    then:
+      "The proposal holds what I saw, what the Operations Map covers, the $2,500 price, and a payment link. The map is credited in full against the build. A price for the full build comes only after the map.",
   },
   fit: {
     source: "fit",
-    heading: "Your answers are ready for review.",
+    heading: "Your form is in. Five quick questions next.",
     body:
-      "Nana Frimpongmaa will review the form before the 15-minute call, so the conversation can start with the real bottleneck.",
+      "Answer these and I write your proposal within 24 hours. No call needed.",
+    q5: "What happens when you miss a call?",
+    q5hint: "Be honest. This is the leak the whole build is sized around.",
+    then:
+      "The proposal holds what I would build, what it costs, and a payment link. You pay, I build. Live in 7 days, or you don't pay.",
   },
 };
 
 export function getFitConfirmation(source) {
   return fitConfirmations[source] || fitConfirmations.fit;
+}
+
+const proposalConfirmations = {
+  synkasa: {
+    then:
+      "What I would build, what stays human, the $555 price, and a payment link. You pay, I build. Live in 7 days, or you don't pay.",
+  },
+  siesie: {
+    then:
+      "What I saw, what the Operations Map covers, the $2,500 price, and a payment link. The map is credited in full against the build.",
+  },
+  fit: {
+    then:
+      "What I would build, what stays human, the price, and a payment link. You pay, I build. Live in 7 days, or you don't pay.",
+  },
+};
+
+export function getProposalConfirmation(input) {
+  const source = proposalConfirmations[input.source] ? input.source : "fit";
+  const name = (input.name || "").trim();
+  const business = (input.business || "").trim();
+  const heading = name ? `Thank you, ${name}. Your proposal is on its way.` : "Thank you. Your proposal is on its way.";
+  const body = business
+    ? `I write the plan for ${business} myself and send it within 24 hours. No call needed.`
+    : "I write the plan myself and send it within 24 hours. No call needed.";
+  return { heading, body, then: proposalConfirmations[source].then };
 }
 
 function pathDetails(path) {
@@ -315,6 +356,24 @@ function bindCopyButtons() {
   });
 }
 
+/* The next page personalises from the query string: source (which path),
+   n (first name), b (business). data-success-fields names the form fields
+   to carry over. Nothing else about the answers leaves the form. */
+function successUrl(form) {
+  const url = new URL(form.dataset.success, window.location.origin);
+  const source = form.querySelector("[data-source-field]");
+  if (source && source.value) url.searchParams.set("source", source.value);
+  const fields = (form.dataset.successFields || "").split(",").map((f) => f.trim()).filter(Boolean);
+  const keys = { name: "n", business_name: "b" };
+  fields.forEach((field) => {
+    const input = form.elements[field];
+    if (!input || !keys[field]) return;
+    const value = String(input.value || "").trim();
+    if (value) url.searchParams.set(keys[field], field === "name" ? value.split(/\s+/)[0] : value);
+  });
+  return url.pathname + url.search;
+}
+
 function bindQualificationForms() {
   document.querySelectorAll("[data-qual-form]").forEach((form) => {
     form.addEventListener("submit", async (event) => {
@@ -341,12 +400,12 @@ function bindQualificationForms() {
         });
         window.clearTimeout(timer);
         if (!response.ok) throw new Error("delivery failed");
-        window.location.href = form.dataset.success;
+        window.location.href = successUrl(form);
       } catch {
         window.clearTimeout(timer);
         status.innerHTML =
           `Your answers did not send. Email <a href="mailto:${FALLBACK_EMAIL}">${FALLBACK_EMAIL}</a> ` +
-          `or <a href="${BOOKING_URL}">book the 15-minute call</a>.`;
+          `with what you typed and the proposal comes back the same way.`;
         button.disabled = false;
       }
     });
@@ -373,6 +432,30 @@ function bindFitConfirmation() {
   const content = getFitConfirmation(source);
   root.querySelector("[data-confirm-heading]").textContent = content.heading;
   root.querySelector("[data-confirm-body]").textContent = content.body;
+  const then = root.querySelector("[data-confirm-then]");
+  if (then) then.textContent = content.then;
+  const q5 = root.querySelector("[data-q5-label]");
+  const hint = root.querySelector("[data-q5-hint]");
+  if (q5 && hint) {
+    q5.firstChild.textContent = content.q5 + " ";
+    hint.textContent = content.q5hint;
+  }
+  const sourceField = root.querySelector("[data-source-field]");
+  if (sourceField) sourceField.value = content.source;
+}
+
+function bindProposalConfirmation() {
+  const root = document.querySelector("[data-proposal-confirmation]");
+  if (!root) return;
+  const params = new URLSearchParams(window.location.search);
+  const content = getProposalConfirmation({
+    source: params.get("source"),
+    name: (params.get("n") || "").slice(0, 40),
+    business: (params.get("b") || "").slice(0, 80),
+  });
+  root.querySelector("[data-proposal-heading]").textContent = content.heading;
+  root.querySelector("[data-proposal-body]").textContent = content.body;
+  root.querySelector("[data-proposal-then]").textContent = content.then;
 }
 
 function startJourney() {
@@ -383,6 +466,7 @@ function startJourney() {
   bindQualificationForms();
   bindTierFields();
   bindFitConfirmation();
+  bindProposalConfirmation();
 }
 
 if (typeof document !== "undefined") {

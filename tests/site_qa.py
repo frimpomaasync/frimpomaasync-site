@@ -954,6 +954,8 @@ RESPONSIVE_ROUTES = [
     "/synkasa-fit",
     "/siesie-application",
     "/fit-thanks?source=siesie",
+    "/fit-thanks?source=synkasa",
+    "/proposal-thanks?source=synkasa&n=Ama&b=Ama%20Cleans",
     "/privacy",
     "/terms",
     "/blog/",

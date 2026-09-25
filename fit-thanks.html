@@ -4,44 +4,104 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, follow">
-  <title>Your form is in | frimpomaasync.com</title>
-  <meta name="description" content="Your fit form has been received. Review what happens before the 15-minute call.">
+  <title>Five quick questions | frimpomaasync.com</title>
+  <meta name="description" content="Your fit form is in. Answer five quick questions and Nana Frimpongmaa writes your proposal within 24 hours. No call needed.">
   <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="stylesheet" href="/assets/journey.css?v=32">
   <meta name="theme-color" content="#FFFFFF">
+  <style>
+    .fq-list { display: grid; gap: 22px; }
+    .fq { display: grid; gap: 8px; }
+    .fq-num { font-family: var(--mono); font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: var(--copper); }
+    .fq-label { font-family: var(--serif); font-size: 21px; line-height: 1.25; color: var(--ink); letter-spacing: -0.01em; }
+    .fq-label small { display: block; margin-top: 4px; font-family: inherit; font-size: 15px; color: var(--ink-faint); letter-spacing: 0; }
+    .fq-req { font-family: var(--mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); margin-left: 8px; vertical-align: middle; }
+    .fq input, .fq textarea { width: 100%; min-height: 48px; padding: 12px 14px; border: 1px solid rgba(16, 20, 38, 0.16); border-radius: 8px; background: var(--paper); color: var(--ink); font: inherit; font-size: 16px; }
+    .fq textarea { min-height: 110px; resize: vertical; }
+    .fq-chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .fq-chip { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 14px; border: 1px solid rgba(16, 20, 38, 0.16); border-radius: 999px; background: var(--paper); color: var(--ink); font-size: 15px; cursor: pointer; }
+    .fq-chip input { width: 18px; height: 18px; min-height: 0; margin: 0; padding: 0; accent-color: var(--copper); }
+    .fq-chip:has(input:checked) { border-color: var(--copper); background: rgba(194, 80, 28, 0.09); }
+    .fq-chip:focus-within { outline: 2px solid var(--copper); outline-offset: 2px; }
+    .fq-chips legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    fieldset.fq { border: 0; padding: 0; margin: 0; min-width: 0; }
+  </style>
 </head>
-<body data-sk-sections="Received,Next" data-sk-bar="Your form is in." data-sk-biz="service business">
+<body data-sk-sections="Received,Five questions,Then" data-sk-bar="Your proposal comes in writing, within 24 hours." data-sk-biz="service business">
   <main data-fit-confirmation>
     <section class="hero compact-hero" data-screen-label="Received">
       <div class="wrap">
-        <div class="eyebrow">Form received</div>
-        <h1 data-confirm-heading>Your answers are <em>ready for review.</em></h1>
-        <p class="hero-copy" data-confirm-body>Nana Frimpongmaa will review the form before the 15-minute call, so the conversation can start with the real bottleneck.</p>
-        <div class="actions">
-          <a class="button" href="/book-call">Book the 15-minute call →</a>
-          <a class="button secondary" href="/portfolio">Review the working proof →</a>
-        </div>
+        <div class="eyebrow">Form received · five quick questions</div>
+        <h1 data-confirm-heading>Your form is in. <em>Five quick questions next.</em></h1>
+        <p class="hero-copy" data-confirm-body>Answer these and I write your proposal within 24 hours. No call needed.</p>
       </div>
     </section>
 
-    <section class="section soft" data-screen-label="Next">
+    <section class="section soft" data-screen-label="Five questions">
+      <div class="wrap">
+        <h2 class="sr-only">Five quick questions</h2>
+        <form class="form-shell" name="five-answers" data-qual-form data-success="/proposal-thanks" data-success-fields="name,business_name" action="https://formspree.io/f/mnjkqydb" method="post">
+          <input type="hidden" name="_subject" value="Five answers: write the proposal">
+          <input type="hidden" name="source" value="fit" data-source-field>
+          <div class="fq-list">
+            <div class="fq">
+              <span class="fq-num">01</span>
+              <label class="fq-label" for="fq-name">Your name <span class="fq-req">required</span></label>
+              <input id="fq-name" type="text" name="name" autocomplete="name" required>
+            </div>
+            <div class="fq">
+              <span class="fq-num">02</span>
+              <label class="fq-label" for="fq-business">Business name <span class="fq-req">required</span></label>
+              <input id="fq-business" type="text" name="business_name" autocomplete="organization" required>
+            </div>
+            <div class="fq">
+              <span class="fq-num">03</span>
+              <label class="fq-label" for="fq-services">What services do you sell? <small>A few words is fine. This tells me what the system needs to book and quote.</small></label>
+              <input id="fq-services" type="text" name="services" placeholder="Cleaning, events, plumbing, hair, consulting...">
+            </div>
+            <fieldset class="fq">
+              <span class="fq-num">04</span>
+              <legend class="fq-label">How do bookings come in right now? <small>Pick all that apply.</small></legend>
+              <div class="fq-chips">
+                <label class="fq-chip"><input type="checkbox" name="booking_channels" value="Call">Call</label>
+                <label class="fq-chip"><input type="checkbox" name="booking_channels" value="Text">Text</label>
+                <label class="fq-chip"><input type="checkbox" name="booking_channels" value="DM">DM</label>
+                <label class="fq-chip"><input type="checkbox" name="booking_channels" value="Website">Website</label>
+                <label class="fq-chip"><input type="checkbox" name="booking_channels" value="Walk-in">Walk-in</label>
+              </div>
+            </fieldset>
+            <div class="fq">
+              <span class="fq-num">05</span>
+              <label class="fq-label" for="fq-pain" data-q5-label>What happens when you miss a call? <small data-q5-hint>Be honest. This is the leak the whole build is sized around.</small></label>
+              <textarea id="fq-pain" name="biggest_pain" placeholder="She calls, nobody picks up, and then..."></textarea>
+            </div>
+          </div>
+          <button class="button" type="submit" style="margin-top:26px">Send my answers →</button>
+          <p class="form-status" data-form-status aria-live="polite"></p>
+          <p class="small-note">Takes about a minute. I read every one of these myself. The proposal comes back in writing within 24 hours.</p>
+          <noscript>Email your five answers to <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a> and the proposal comes back the same way.</noscript>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Then">
       <div class="wrap">
         <div class="section-head">
-          <h2 class="section-title"><span>The form comes first</span> so the call can stay useful.</h2>
-          <p class="section-intro">Bring any missing numbers, the current process, and the result you want. The call ends with a recommendation or a clear reason to start smaller.</p>
+          <h2 class="section-title"><span>The whole close</span> happens in writing.</h2>
+          <p class="section-intro" data-confirm-then>The proposal holds what I would build, what it costs, and a payment link. You pay, I build. Live in 7 days, or you don't pay.</p>
         </div>
         <div class="workflow" aria-label="What happens next">
-          <div class="workflow-step"><span class="pill">01</span><strong>Form review</strong></div>
-          <div class="workflow-step"><span class="pill">02</span><strong>15-minute call</strong></div>
-          <div class="workflow-step"><span class="pill">03</span><strong>Recommendation</strong></div>
-          <div class="workflow-step"><span class="pill">04</span><strong>Proposal</strong></div>
-          <div class="workflow-step"><span class="pill">05</span><strong>Payment</strong></div>
+          <div class="workflow-step"><span class="pill">01</span><strong>Five answers</strong></div>
+          <div class="workflow-step"><span class="pill">02</span><strong>Written proposal, 24 hours</strong></div>
+          <div class="workflow-step"><span class="pill">03</span><strong>You pay</strong></div>
+          <div class="workflow-step"><span class="pill">04</span><strong>Onboarding</strong></div>
+          <div class="workflow-step"><span class="pill">05</span><strong>Live in 7 days</strong></div>
         </div>
       </div>
     </section>
   </main>
 
-  <script type="module" src="/assets/journey.js?v=8"></script>
-  <script src="/fsnav.js?v=856" defer></script>
+  <script type="module" src="/assets/journey.js?v=9"></script>
+  <script src="/fsnav.js?v=857" defer></script>
 </body>
 </html>

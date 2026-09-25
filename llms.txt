@@ -26,9 +26,9 @@ One page per problem, each ending at the right fit path:
 2. Take one same-day fix.
 3. Watch the relevant working build.
 4. Use the SynKasa fit form or Siesie application.
-5. Book the confirmed 15-minute call.
-6. Receive a recommendation.
-7. Review the proposal and agreement.
+5. Answer five quick questions.
+6. Receive a written proposal within 24 hours. No call.
+7. Review the agreement.
 8. Pay before onboarding begins.
 9. Complete onboarding, build, testing, and approval.
 10. Launch, train, and hand over.
@@ -152,7 +152,7 @@ Free starting points:
 - Want to see where the work leaks: the Blueprint Command Center, a free browser tool that scores how much of the business still runs through the owner and walks through installing 12 systems.
 - Ideas disappear: Som, the free capture app that works offline.
 - Need proof: the working SynKasa demo.
-- Need a human diagnosis: the 15-minute call.
+- Want it in writing: the fit form, five quick questions, then a written proposal within 24 hours.
 
 Som: https://frimpomaasync.com/som
 
@@ -166,7 +166,7 @@ Live demo: https://frimpomaasync.com/synkasa-demo/
 
 Page: https://frimpomaasync.com/method
 
-Every engagement runs the same twelve steps: useful diagnosis, fit form, 15-minute call, recommendation, proposal and agreement, payment, onboarding, build and test, approval, launch and training, follow-up, and proof, referral, or care.
+Every engagement runs the same twelve steps: useful diagnosis, fit form, five quick questions, written proposal within 24 hours, agreement, payment, onboarding, build and test, approval, launch and training, follow-up, and proof, referral, or care.
 
 Inside the build there are seven phases, each producing a document the client keeps: map, build, test, approve, launch, train, and hand over. The seven documents are the Operations Map, the build shown as it stands up, the Test Record, written approvals, the Launch Log, the Operating Manual, and the Ownership Pack.
 
@@ -204,7 +204,7 @@ Policy: https://frimpomaasync.com/privacy
 
 Qualification forms collect only the business context a visitor chooses to submit. Public forms do not ask for passwords, payment details, customer records, private files, or account access.
 
-Form submissions may include business type, inquiry or job volume, current process, desired result, timing, and investment readiness. They are used to review fit and prepare for the call.
+Form submissions may include business type, inquiry or job volume, current process, desired result, timing, and investment readiness. They are used to review fit and write the proposal.
 
 Client systems are built in client-owned accounts. The signed agreement names every provider that handles client or customer data.
 
