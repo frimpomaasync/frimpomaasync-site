@@ -166,7 +166,7 @@ const proposalConfirmations = {
 
 export function getProposalConfirmation(input) {
   const source = proposalConfirmations[input.source] ? input.source : "fit";
-  const name = (input.name || "").trim();
+  const name = (input.name || "").trim().split(/\s+/)[0];
   const business = (input.business || "").trim();
   const heading = name ? `Thank you, ${name}. Your proposal is on its way.` : "Thank you. Your proposal is on its way.";
   const body = business
@@ -383,7 +383,7 @@ function successUrl(form) {
     const input = form.elements[field];
     if (!input || !keys[field]) return;
     const value = String(input.value || "").trim();
-    if (value) url.searchParams.set(keys[field], field === "name" ? value.split(/\s+/)[0] : value);
+    if (value) url.searchParams.set(keys[field], value);
   });
   return url.pathname + url.search;
 }
@@ -395,7 +395,7 @@ function successUrl(form) {
 const PREFILL_KEY = "fs-fit-prefill";
 
 function rememberForNextScreen(form) {
-  if (!form.dataset.successFields) {
+  if (form.getAttribute("name") !== "five-answers") {
     try {
       const data = {};
       ["name", "business_name", "email"].forEach((key) => {
@@ -409,12 +409,22 @@ function rememberForNextScreen(form) {
   }
 }
 
+/* Two sources, the link first: ?n= (name) and ?b= (business) travel on the
+   URL from the fit form, so the fields fill even when storage is off or the
+   link was shared. sessionStorage adds the email and covers an older link. */
 function prefillFromFitForm(root) {
-  let data = {};
+  const params = new URLSearchParams(window.location.search);
+  const data = {
+    name: (params.get("n") || params.get("name") || "").trim().slice(0, 120),
+    business_name: (params.get("b") || params.get("business") || "").trim().slice(0, 120),
+  };
   try {
-    data = JSON.parse(window.sessionStorage.getItem(PREFILL_KEY) || "{}");
+    const stored = JSON.parse(window.sessionStorage.getItem(PREFILL_KEY) || "{}");
+    ["name", "business_name", "email"].forEach((key) => {
+      if (!data[key] && stored[key]) data[key] = stored[key];
+    });
   } catch {
-    return;
+    /* storage off: the link values above still fill the two fields */
   }
   ["name", "business_name", "email"].forEach((key) => {
     const input = root.querySelector(`[name="${key}"]`);
