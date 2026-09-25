@@ -3,9 +3,10 @@
 The close happens in writing. Fit form, five quick questions, then this, within 24 hours. No call.
 Fill every [bracket] from the two forms. Send from hello@frimpomaasync.com or as a DM from @frimpomaasync.
 
-Two things still need a real value before the first send:
+Before the first send:
 
-- `[PAYMENT LINK]`: the checkout link for $555 and the one for $2,500. Nothing is wired yet.
+- SynKasa Start $555: wired, https://www.paypal.com/ncp/payment/MN7D6D73LXULC (checked 2026-09-25: "SynKasa Desk Start", $555.00 USD, one-time).
+- Operations Map $2,500: still `[PAYMENT LINK]`. No link exists yet.
 - Terms: the proposal points at https://frimpomaasync.com/terms. Confirm that page covers payment before build.
 
 The guarantee wording when payment comes first: "Live in 7 days, or you don't pay. If day 7 passes and it isn't live, every dollar comes back." Confirm or change this one line before the first send.
@@ -38,7 +39,7 @@ Price: $555, once. No monthly fee. It runs in accounts you own.
 
 Live in 7 days, or you don't pay. If day 7 passes and it isn't live, every dollar comes back.
 
-Pay here and I start the same day: [PAYMENT LINK]
+Pay here and I start the same day: https://www.paypal.com/ncp/payment/MN7D6D73LXULC
 Terms are at frimpomaasync.com/terms.
 
 If something in this reads wrong, reply and tell me. Let me know.
@@ -56,7 +57,7 @@ What I'd build: a text back the second a call goes unanswered, one question to s
 
 $555, once. Yours to keep. Live in 7 days or you don't pay.
 
-Pay here and I start today: [PAYMENT LINK]
+Pay here and I start today: https://www.paypal.com/ncp/payment/MN7D6D73LXULC
 
 Anything off? Tell me. Let me know.
 
