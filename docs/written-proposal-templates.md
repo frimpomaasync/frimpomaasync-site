@@ -82,7 +82,7 @@ The Operations Map, two weeks:
 3. The build that removes them, in the order it should happen.
 4. Six finished documents in your hands on day 14.
 
-Price: $2,500. Credited in full against the Siesie build if you continue. A price for the full build comes only after the map, against work I've watched for two weeks.
+Price: $2,500. Credited in full against the Siesie build if you continue. If the map says a build is wrong for you, I refund it in full. A price for the full build comes only after the map, against work I've watched for two weeks.
 
 Pay here and the two weeks start: https://www.paypal.com/ncp/payment/4DPRVNPAZQV2U
 Terms are at frimpomaasync.com/terms.
@@ -100,7 +100,7 @@ hello [First name], read your application. Here's the first step for [Business],
 
 The Operations Map, two weeks: every handoff drawn, every task that waits on you named and costed, the build in the order it should happen. Six documents on day 14.
 
-$2,500, credited in full against the build.
+$2,500, credited in full against the build. If the map says a build is wrong for you, I refund it in full.
 
 Pay here and the two weeks start: https://www.paypal.com/ncp/payment/4DPRVNPAZQV2U
 
