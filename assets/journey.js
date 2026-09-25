@@ -129,9 +129,23 @@ const fitConfirmations = {
     then:
       "The proposal holds what I would build, what it costs, and a payment link. You pay, I build. Live in 7 days, or you don't pay.",
   },
+  /* Someone who lands here without a form (a shared link, a search result)
+     never sent anything, so the page must not say "form received". */
+  direct: {
+    source: "fit",
+    eyebrow: "Five quick questions",
+    heading: "Five quick questions, then a written proposal.",
+    body:
+      "Answer these and I write your proposal within 24 hours. No call needed.",
+    q5: "What happens when you miss a call?",
+    q5hint: "Be honest. This is the leak the whole build is sized around.",
+    then:
+      "The proposal holds what I would build, what it costs, and a payment link. You pay, I build. Live in 7 days, or you don't pay.",
+  },
 };
 
 export function getFitConfirmation(source) {
+  if (source === null || source === undefined) return fitConfirmations.direct;
   return fitConfirmations[source] || fitConfirmations.fit;
 }
 
@@ -374,6 +388,40 @@ function successUrl(form) {
   return url.pathname + url.search;
 }
 
+/* The fit form already asked for name, business and email. The five-question
+   screen starts with the first two filled in (still editable) and carries the
+   email along hidden, so nobody types the same thing twice. sessionStorage
+   only: it dies with the tab and never reaches the URL. */
+const PREFILL_KEY = "fs-fit-prefill";
+
+function rememberForNextScreen(form) {
+  if (!form.dataset.successFields) {
+    try {
+      const data = {};
+      ["name", "business_name", "email"].forEach((key) => {
+        const input = form.elements[key];
+        if (input && input.value) data[key] = String(input.value).trim().slice(0, 120);
+      });
+      if (Object.keys(data).length) window.sessionStorage.setItem(PREFILL_KEY, JSON.stringify(data));
+    } catch {
+      /* private mode or storage off: the visitor types the two fields again */
+    }
+  }
+}
+
+function prefillFromFitForm(root) {
+  let data = {};
+  try {
+    data = JSON.parse(window.sessionStorage.getItem(PREFILL_KEY) || "{}");
+  } catch {
+    return;
+  }
+  ["name", "business_name", "email"].forEach((key) => {
+    const input = root.querySelector(`[name="${key}"]`);
+    if (input && !input.value && data[key]) input.value = data[key];
+  });
+}
+
 function bindQualificationForms() {
   document.querySelectorAll("[data-qual-form]").forEach((form) => {
     form.addEventListener("submit", async (event) => {
@@ -400,6 +448,7 @@ function bindQualificationForms() {
         });
         window.clearTimeout(timer);
         if (!response.ok) throw new Error("delivery failed");
+        rememberForNextScreen(form);
         window.location.href = successUrl(form);
       } catch {
         window.clearTimeout(timer);
@@ -442,6 +491,9 @@ function bindFitConfirmation() {
   }
   const sourceField = root.querySelector("[data-source-field]");
   if (sourceField) sourceField.value = content.source;
+  const eyebrow = root.querySelector("[data-confirm-eyebrow]");
+  if (eyebrow && content.eyebrow) eyebrow.textContent = content.eyebrow;
+  prefillFromFitForm(root);
 }
 
 function bindProposalConfirmation() {

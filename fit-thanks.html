@@ -31,7 +31,7 @@
   <main data-fit-confirmation>
     <section class="hero compact-hero" data-screen-label="Received">
       <div class="wrap">
-        <div class="eyebrow">Form received · five quick questions</div>
+        <div class="eyebrow" data-confirm-eyebrow>Form received · five quick questions</div>
         <h1 data-confirm-heading>Your form is in. <em>Five quick questions next.</em></h1>
         <p class="hero-copy" data-confirm-body>Answer these and I write your proposal within 24 hours. No call needed.</p>
       </div>
@@ -43,6 +43,7 @@
         <form class="form-shell" name="five-answers" data-qual-form data-success="/proposal-thanks" data-success-fields="name,business_name" action="https://formspree.io/f/mnjkqydb" method="post">
           <input type="hidden" name="_subject" value="Five answers: write the proposal">
           <input type="hidden" name="source" value="fit" data-source-field>
+          <input type="hidden" name="email" value="">
           <div class="fq-list">
             <div class="fq">
               <span class="fq-num">01</span>
@@ -101,7 +102,7 @@
     </section>
   </main>
 
-  <script type="module" src="/assets/journey.js?v=9"></script>
+  <script type="module" src="/assets/journey.js?v=10"></script>
   <script src="/fsnav.js?v=857" defer></script>
 </body>
 </html>

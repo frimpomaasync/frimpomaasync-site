@@ -64,4 +64,5 @@ test("returns source-specific confirmation copy", () => {
   assert.match(getFitConfirmation("synkasa").heading, /inquiry path/i);
   assert.match(getFitConfirmation("siesie").heading, /back office/i);
   assert.equal(getFitConfirmation("unknown").source, "fit");
+  assert.match(getFitConfirmation(null).heading, /^Five quick questions/);
 });
