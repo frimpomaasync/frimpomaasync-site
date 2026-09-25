@@ -5,15 +5,15 @@ Fill every [bracket] from the two forms. Send from hello@frimpomaasync.com or as
 
 Before the first send:
 
-- SynKasa Start $555: wired, https://www.paypal.com/ncp/payment/MN7D6D73LXULC (checked 2026-09-25: "SynKasa Desk Start", $555.00 USD, one-time).
-- Operations Map $2,500: still `[PAYMENT LINK]`. No link exists yet.
+- SynKasa Desk Start $555: wired, https://www.paypal.com/ncp/payment/MN7D6D73LXULC (checked 2026-09-25: "SynKasa Desk Start", $555.00 USD, one-time).
+- Operations Map $2,500: wired, https://www.paypal.com/ncp/payment/4DPRVNPAZQV2U (checked 2026-09-25: "Siesie Operations Map", $2,500.00 USD; the page itself promises a full refund if the map says a build is wrong).
 - Terms: the proposal points at https://frimpomaasync.com/terms. Confirm that page covers payment before build.
 
 The guarantee wording when payment comes first: "Live in 7 days, or you don't pay. If day 7 passes and it isn't live, every dollar comes back." Confirm or change this one line before the first send.
 
 ---
 
-## SynKasa Start, $555
+## SynKasa Desk Start, $555
 
 ### Email version
 
@@ -84,7 +84,7 @@ The Operations Map, two weeks:
 
 Price: $2,500. Credited in full against the Siesie build if you continue. A price for the full build comes only after the map, against work I've watched for two weeks.
 
-Pay here and the two weeks start: [PAYMENT LINK]
+Pay here and the two weeks start: https://www.paypal.com/ncp/payment/4DPRVNPAZQV2U
 Terms are at frimpomaasync.com/terms.
 
 If something in this reads wrong, reply and tell me. Let me know.
@@ -102,7 +102,7 @@ The Operations Map, two weeks: every handoff drawn, every task that waits on you
 
 $2,500, credited in full against the build.
 
-Pay here and the two weeks start: [PAYMENT LINK]
+Pay here and the two weeks start: https://www.paypal.com/ncp/payment/4DPRVNPAZQV2U
 
 Anything off? Tell me. Let me know.
 

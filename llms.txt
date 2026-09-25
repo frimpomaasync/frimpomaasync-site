@@ -47,7 +47,7 @@ SynKasa is the flagship front desk, formerly sold as the Client Catcher. It answ
 
 Current tiers:
 
-- Start: $555 once. Calls, texts, and direct messages are answered, qualified, and booked. Optional care is $99 a month.
+- Desk Start: $555 once. Calls, texts, and direct messages are answered, qualified, and booked. Optional care is $99 a month.
 - Grow: $1,500 once. Adds follow-up, reminders, review requests, quote chasing, and one dashboard. Optional care is $222 a month. Most owners start here.
 - Full: $2,222 once. Adds proposals, deposit collection, and every customer channel the business uses. Optional care is $444 a month.
 - Founding Grow: $750 for the first three owners, with a named testimonial required after the front desk has been running.

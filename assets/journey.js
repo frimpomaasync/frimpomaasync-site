@@ -471,7 +471,7 @@ function bindQualificationForms() {
   });
 }
 
-const TIER_LABELS = { start: "Start", grow: "Grow", full: "Full" };
+const TIER_LABELS = { start: "Desk Start", grow: "Grow", full: "Full" };
 
 function bindTierFields() {
   const fields = document.querySelectorAll("[data-tier-field]");
