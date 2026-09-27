@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The five-column sheet | Soft Appeals</title>
+  <meta name="description" content="The Soft Appeals free review runs on one sheet: payer, procedure code, denial reason code, billed amount, age of denial. Twenty rows, no patient information. Download it as Excel or CSV.">
+  <link rel="canonical" href="https://frimpomaasync.com/soft-appeals-sheet">
+  <meta property="og:title" content="The five-column sheet | Soft Appeals">
+  <meta property="og:description" content="Twenty denials, five columns, no names. The whole free review fits on one sheet.">
+  <meta property="og:url" content="https://frimpomaasync.com/soft-appeals-sheet">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/assets/journey.css?v=32">
+  <link rel="stylesheet" href="/assets/modules.css?v=7">
+  <meta name="theme-color" content="#101426">
+  <style>
+    .warn {
+      margin: 24px 0 0; padding: 20px 22px;
+      border: 1px solid rgba(194, 80, 28, .3); border-left: 3px solid var(--copper, #C2501C);
+      border-radius: 0 16px 16px 0; background: rgba(194, 80, 28, .045);
+    }
+    .warn .k { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: #B4460F; }
+    .warn p { margin: 10px 0 0; font-size: 15px; line-height: 1.6; color: var(--ink); }
+    .sheet-preview { width: 100%; border-collapse: collapse; margin-top: 22px; font-size: 14px; }
+    .sheet-preview th, .sheet-preview td { border: 1px solid rgba(16,20,38,.14); padding: 9px 10px; text-align: left; vertical-align: top; }
+    .sheet-preview th { font-family: var(--mono, ui-monospace, Menlo, monospace); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; background: rgba(16,20,38,.04); }
+    .sheet-preview td { color: var(--ink-soft, rgba(16,20,38,.68)); }
+    .sheet-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  </style>
+</head>
+<body data-sk-sections="The sheet,Columns,Stays out,What comes back,Send it" data-sk-bar="Maryland practices only · the free review runs on five columns and no patient information" data-sk-biz="healthcare organization">
+  <main>
+
+    <section class="hero compact-hero" data-screen-label="The sheet">
+      <div class="wrap">
+        <div class="eyebrow">Soft Appeals · the free review sheet</div>
+        <h1>Twenty denials. Five columns. <em>No names.</em></h1>
+        <p class="hero-copy">This is the whole free review. One row per denied claim, twenty rows, and you email it back. Nothing on it identifies a patient, so nothing needs signing first.</p>
+        <div class="actions">
+          <a class="button" href="/soft-appeals-denial-sheet.xlsx" download>Download the sheet, Excel <span class="button-arrow" aria-hidden="true">&#8595;</span></a>
+          <a class="button secondary" href="/soft-appeals-denial-sheet.csv" download>Download as CSV <span class="button-arrow" aria-hidden="true">&#8595;</span></a>
+        </div>
+        <div class="hero-trust">
+          <span>Maryland practices only</span>
+          <span>No patient information</span>
+          <span>No agreement needed for the review</span>
+          <span>The report is yours either way</span>
+        </div>
+        <div class="sheet-scroll">
+          <table class="sheet-preview" aria-label="The five columns">
+            <thead><tr><th>Payer</th><th>Procedure code</th><th>Denial reason code</th><th>Billed amount</th><th>Age of denial</th></tr></thead>
+            <tbody>
+              <tr><td>CareFirst</td><td>97110</td><td>CO-197, no authorization</td><td>$168</td><td>30 to 90 days</td></tr>
+              <tr><td>Aetna</td><td>90837</td><td>CO-29, timely filing</td><td>$210</td><td>90 to 180 days</td></tr>
+              <tr><td>Maryland Medicaid</td><td>97140</td><td>CO-4, modifier</td><td>$92</td><td>Under 30 days</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="small-note">Three example rows, fictional. Or make your own sheet with these five headings. The format does not matter. The columns do.</p>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="Columns">
+      <div class="wrap">
+        <div class="section-head">
+          <div class="eyebrow">What goes in each column</div>
+          <h2 class="section-title"><span>Every column</span> is on the remittance.</h2>
+          <p class="section-intro">Nothing here needs a chart open. Your remittance advice, or your billing system's denial report, has all five.</p>
+        </div>
+        <div class="rsns" data-reveal data-stagger data-stagger-step="50">
+          <div class="rsn"><div class="n">01</div><h3>Payer</h3>
+            <p>Who denied it. The plan name as it appears on the remittance: CareFirst, Aetna, Maryland Medicaid.</p></div>
+          <div class="rsn"><div class="n">02</div><h3>Procedure code</h3>
+            <p>The CPT or HCPCS code that was billed. 97110, 90837, 97140.</p></div>
+          <div class="rsn"><div class="n">03</div><h3>Denial reason code</h3>
+            <p>The CARC and RARC from the remittance, or the payer's reason in a few words. CO-197, CO-29, no authorization, timely filing.</p></div>
+          <div class="rsn"><div class="n">04</div><h3>Billed amount</h3>
+            <p>What you billed for the line, in dollars.</p></div>
+          <div class="rsn"><div class="n">05</div><h3>Age of denial</h3>
+            <p>Under 30 days, 30 to 90, 90 to 180, or over 180. A bucket, not a date.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section soft" data-screen-label="Stays out">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">What stays out</div>
+          <h2 class="section-title">A date of service is patient information.</h2>
+          <p class="section-intro" style="margin-top:20px">The age bucket does the same job without it. That is the reason the review can run on email, with no agreement signed and nothing to lock down. If a column asks for something below, leave it out.</p>
+        </div>
+        <div>
+          <div class="eyebrow">Not on the sheet</div>
+          <ul class="nolist" data-reveal>
+            <li>Patient names</li>
+            <li>Dates of birth</li>
+            <li>Dates of service</li>
+            <li>Member or subscriber numbers</li>
+            <li>Claim numbers</li>
+            <li>Account numbers</li>
+            <li>Anything from a chart</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-screen-label="What comes back">
+      <div class="wrap split">
+        <div>
+          <div class="eyebrow">What comes back</div>
+          <h2 class="section-title">One page. Sorted by deadline, not by dollars.</h2>
+        </div>
+        <div>
+          <ul class="nolist" style="grid-template-columns:1fr" data-reveal>
+            <li>What is still winnable now</li>
+            <li>What is winnable after a records pull</li>
+            <li>What is already gone past its deadline, and why</li>
+            <li>A dollar total for the first two</li>
+          </ul>
+          <p class="small-note" style="margin-top:14px">The report is yours whether or not you continue. If you do continue into recovery work, the business associate agreement and the secure intake channel come then, before any patient information moves.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="site-close" data-screen-label="Send it">
+      <div class="wrap">
+        <div class="eyebrow">Maryland practices only</div>
+        <h2>Fill the twenty rows. Email it back.</h2>
+        <p>Send the sheet to <a href="mailto:hello@frimpomaasync.com">hello@frimpomaasync.com</a> with your practice name in the subject. If you have not filled the two-minute fit form yet, do that first, so the reply can be about your denials and not denials in general.</p>
+        <div class="actions">
+          <a class="button secondary" href="/soft-appeals-start#form">Fill the fit form &#8594;</a>
+          <a class="button secondary" href="/soft-appeals-sample-assessment">See what comes back &#8594;</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script type="module" src="/assets/journey.js?v=12"></script>
+  <script src="/fsnav.js?v=857" defer></script>
+</body>
+</html>

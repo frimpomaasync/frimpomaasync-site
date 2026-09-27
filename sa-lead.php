@@ -279,8 +279,10 @@ function sa_confirmation($source, $form, $name, $answers, $full) {
 
   $phi = "Keep patient information out of email, including a reply to this one. "
        . "No records, no denial letters, no explanation of benefits, no screenshots. "
-       . "The secure way to send claim information is its own step, after the "
-       . "paperwork that has to come first.\n\n";
+       . "The review runs on a five-column sheet that holds none of that: payer, "
+       . "procedure code, denial reason code, billed amount, and how old the denial "
+       . "is. It comes with the reply, and it is at "
+       . "frimpomaasync.com/soft-appeals-sheet\n\n";
 
   $sig = "Nana Frimpongmaa\nfrimpomaasync.com/soft-appeals\n";
 
