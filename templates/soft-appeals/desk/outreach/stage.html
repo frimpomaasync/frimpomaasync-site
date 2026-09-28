@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Soft Appeals video stage</title>
+<style>
+:root{--ink:#101426;--ink-soft:rgba(16,20,38,.66);--ink-faint:rgba(16,20,38,.4);--copper:#C2501C;--paper:#fff;--paper-soft:#F8F8F9;--line:rgba(16,20,38,.12);
+--serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,serif;--mono:'SF Mono',Menlo,'Courier New',monospace;--sans:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9E9EC;color:var(--ink);font-family:var(--sans)}
+.top{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding:14px 18px;background:var(--ink);color:#fff}
+.top b{font:600 11px/1 var(--mono);letter-spacing:.14em;color:#F4B29A;text-transform:uppercase;margin-right:6px}
+.top select,.top input{font:14px var(--sans);padding:8px 10px;border:0;border-radius:6px;min-width:0}
+.top select{max-width:360px}
+.top button{font:600 13px var(--sans);padding:8px 12px;border-radius:6px;border:1px solid rgba(255,255,255,.3);background:transparent;color:#fff;cursor:pointer}
+.top button.on{background:var(--copper);border-color:var(--copper)}
+.fields{display:flex;gap:8px;flex-wrap:wrap;padding:10px 18px;background:#fff;border-bottom:1px solid var(--line)}
+.fields label{font:600 10px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-faint);display:flex;flex-direction:column;gap:5px}
+.fields input{font:15px var(--sans);padding:7px 9px;border:1px solid var(--line);border-radius:6px;width:220px}
+.fields input.wide{width:340px}
+.wrap{max-width:1280px;margin:0 auto;padding:18px}
+.stage{position:relative;width:100%;aspect-ratio:16/9;background:var(--paper);overflow:hidden;box-shadow:0 10px 40px rgba(16,20,38,.12)}
+.scene{position:absolute;inset:0;padding:6% 7%;display:none;flex-direction:column;justify-content:center}
+.scene.on{display:flex}
+.eyebrow{font:600 clamp(10px,1.1vw,15px)/1 var(--mono);letter-spacing:.18em;text-transform:uppercase;color:var(--copper);margin-bottom:2.2%}
+h1{font:400 clamp(28px,4.6vw,66px)/1.08 var(--serif);letter-spacing:-.01em}
+h1 em{color:var(--copper);font-style:italic}
+.chips{display:flex;flex-wrap:wrap;gap:1.2vw;margin-top:4%}
+.chip{font:600 clamp(14px,1.8vw,26px)/1 var(--sans);padding:1.1vw 1.6vw;border:2px solid var(--ink);border-radius:999px}
+.sub{font:clamp(14px,1.6vw,23px)/1.5 var(--sans);color:var(--ink-soft);margin-top:3%;max-width:70%}
+.nums{display:grid;grid-template-columns:repeat(3,1fr);gap:3vw;margin-top:4%}
+.num b{display:block;font:400 clamp(34px,6.2vw,92px)/1 var(--serif);color:var(--ink)}
+.num b.cu{color:var(--copper)}
+.num span{display:block;font:clamp(12px,1.35vw,19px)/1.4 var(--sans);color:var(--ink-soft);margin-top:.8vw}
+.src{position:absolute;left:7%;right:7%;bottom:5%;font:clamp(9px,.95vw,13px)/1.4 var(--mono);color:var(--ink-faint)}
+.cols{display:flex;gap:.9vw;margin-top:4%}
+.col{flex:1;border:2px solid var(--ink);border-radius:10px;padding:1.4vw 1vw;font:600 clamp(12px,1.5vw,21px)/1.25 var(--sans);text-align:center}
+.arrow{font:400 clamp(26px,4vw,56px)/1 var(--serif);color:var(--copper);margin:2.4% 0}
+.page{display:flex;gap:1vw}
+.page div{flex:1;background:var(--paper-soft);border-left:4px solid var(--copper);padding:1.2vw;font:clamp(12px,1.45vw,20px)/1.35 var(--sans)}
+.dark{background:var(--ink);color:#fff}
+.dark h1{color:#fff}.dark .sub{color:rgba(255,255,255,.72)}
+.url{font:600 clamp(16px,2.4vw,34px)/1 var(--mono);color:#F4B29A;margin-top:4%}
+.sign{position:absolute;right:7%;bottom:5%;font:clamp(10px,1.1vw,15px)/1.3 var(--mono);color:var(--ink-faint);text-align:right}
+.dark .sign{color:rgba(255,255,255,.5)}
+.thumb .for{font:600 clamp(12px,1.4vw,20px)/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--copper)}
+.thumb h1{font-size:clamp(34px,5.8vw,84px)}
+.play{position:absolute;right:8%;top:50%;transform:translateY(-50%);width:12vw;height:12vw;max-width:160px;max-height:160px;border-radius:50%;background:var(--copper);display:flex;align-items:center;justify-content:center}
+.play:after{content:"";border-left:3.2vw solid #fff;border-top:2vw solid transparent;border-bottom:2vw solid transparent;margin-left:.8vw}
+.prompter{margin-top:16px;background:var(--ink);color:#fff;border-radius:8px;padding:18px 22px}
+.prompter .k{font:600 11px/1 var(--mono);letter-spacing:.14em;color:#F4B29A;text-transform:uppercase;display:flex;justify-content:space-between}
+.prompter p{font:22px/1.5 var(--serif);margin-top:10px}
+.prompter .do{font:14px/1.5 var(--sans);color:rgba(255,255,255,.62);margin-top:10px}
+.bar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.bar button{font:600 13px var(--sans);padding:10px 14px;border-radius:6px;border:1px solid var(--line);background:#fff;cursor:pointer}
+.bar button.go{background:var(--copper);color:#fff;border-color:var(--copper)}
+.email{margin-top:16px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px 20px}
+.email pre{white-space:pre-wrap;font:15px/1.55 var(--sans);margin-top:10px}
+.email .k{font:600 11px/1 var(--mono);letter-spacing:.14em;color:var(--copper);text-transform:uppercase}
+.note{font:13px/1.6 var(--sans);color:var(--ink-soft);margin-top:14px}
+.note b{color:var(--ink)}
+body.rec .top,body.rec .fields,body.rec .prompter,body.rec .bar,body.rec .email,body.rec .note{display:none}
+body.rec .wrap{max-width:none;padding:0}
+body.rec .stage{box-shadow:none;height:100vh;width:auto;aspect-ratio:16/9;margin:0 auto}
+</style>
+</head>
+<body>
+<div class="top">
+  <a href="/sa-desk.php?view=outreach&amp;tab=video" style="color:#F4B29A;font:600 12px var(--mono);text-decoration:none;margin-right:6px">&#8592; Desk</a><b>Video stage</b>
+  <select id="pick" aria-label="Practice"></select>
+  <button data-go="0">1 Site</button><button data-go="1">2 Numbers</button><button data-go="2">3 Sheet</button><button data-go="3">4 Ask</button><button data-go="4">Thumbnail</button>
+  <button id="recbtn" title="Hides everything but the stage. Press Esc to come back.">Record view</button>
+</div>
+<div class="fields">
+  <label>Practice<input id="f-name"></label>
+  <label>Contact first name<input id="f-first" placeholder="optional"></label>
+  <label>Type<select id="f-type" style="font:15px var(--sans);padding:7px 9px;border:1px solid var(--line);border-radius:6px"><option value="rehab">PT, OT, rehab</option><option value="bh">Behavioral health</option></select></label>
+  <label>Payers, comma separated<input id="f-pay" class="wide"></label>
+  <label>Website<input id="f-site" class="wide"></label>
+</div>
+<div class="wrap">
+  <div class="stage" id="stage">
+    <section class="scene" data-s="0">
+      <div class="eyebrow" id="s0-eye"></div>
+      <h1 id="s0-h"></h1>
+      <div class="chips" id="s0-chips"></div>
+      <p class="sub">That is a lot of rules for one billing desk.</p>
+      <div class="sign">Nana Frimpongmaa<br>Soft Appeals · Maryland</div>
+    </section>
+    <section class="scene" data-s="1">
+      <div class="eyebrow">Maryland Insurance Administration · 2024 report</div>
+      <h1 id="s1-h"></h1>
+      <div class="nums" id="s1-nums"></div>
+      <div class="src" id="s1-src"></div>
+    </section>
+    <section class="scene" data-s="2">
+      <div class="eyebrow">What I do</div>
+      <h1>Five columns. Twenty denials. <em>No patient names.</em></h1>
+      <div class="cols"><div class="col">Payer</div><div class="col">Procedure code</div><div class="col">Denial reason</div><div class="col">Billed amount</div><div class="col">How old</div></div>
+      <div class="arrow">&#8595;</div>
+      <div class="page"><div><b>Still winnable</b><br>appeal it now</div><div><b>Winnable</b><br>after a records pull</div><div><b>Already gone</b><br>and why</div></div>
+    </section>
+    <section class="scene dark" data-s="3">
+      <div class="eyebrow">Free · the page is yours either way</div>
+      <h1>Reply with the sheet.<br><em>I send back one page.</em></h1>
+      <div class="url">frimpomaasync.com/soft-appeals-sheet</div>
+      <p class="sub">Twenty-five percent of what actually comes back, only if you want me to go get it. Nothing if nothing does.</p>
+      <div class="sign">Nana Frimpongmaa<br>Maryland practices only</div>
+    </section>
+    <section class="scene thumb" data-s="4">
+      <div class="for" id="s4-for"></div>
+      <h1 style="max-width:70%" id="s4-h"></h1>
+      <p class="sub" style="max-width:62%">75 seconds, starting on your own insurance page.</p>
+      <div class="play" aria-hidden="true"></div>
+    </section>
+  </div>
+
+  <div class="prompter">
+    <div class="k"><span id="p-k"></span><span id="p-t">0:00</span></div>
+    <p id="p-line"></p>
+    <div class="do" id="p-do"></div>
+  </div>
+  <div class="bar">
+    <button id="prev">&#8592; Back</button><button id="next" class="go">Next &#8594;</button>
+    <button id="opensite">Open their website in a new tab</button>
+    <button id="timer">Start the clock</button>
+  </div>
+
+  <div class="email">
+    <div class="k">Email 2 · same thread · paste the video link where it says</div>
+    <pre id="mail"></pre>
+    <div class="bar"><button id="copymail">Copy email 2</button></div>
+  </div>
+
+  <p class="note"><b>How to record one, about ten minutes.</b> Pick the practice. Open their website in a new tab and start your screen recorder on that tab with your camera bubble on. Read line one while their insurance page is on screen. Switch to this tab, press <b>Record view</b>, and use the right arrow key for each scene while you read the prompter lines, which you already know by the second video. Stop at the ask. Take a screenshot of the Thumbnail scene for the email preview. Right arrow and left arrow move scenes, Esc leaves Record view. Numbers are from the Maryland Insurance Administration's 2024 report, published December 2025. The overturn rate is across all categories. The therapy category also includes inpatient rehab.</p>
+</div>
+
+<script src="/sa-desk.php?view=outreach&amp;tab=stage-js"></script>
+</body>
+</html>

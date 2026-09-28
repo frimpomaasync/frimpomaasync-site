@@ -1216,9 +1216,40 @@ if ($open !== '' && ($_SERVER['REQUEST_METHOD'] ?? '') === 'GET') {
 $app->audit()->record('desk.view', 'success', 'page', null);
 
 $view = (string) ($_GET['view'] ?? 'home');
-$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'assessments', 'recovery', 'money', 'closeout', 'import', 'audit', 'settings', 'jobs', 'launch'];
+$allowedViews = ['home', 'inquiries', 'terms', 'documents', 'assessments', 'recovery', 'money', 'closeout', 'import', 'audit', 'settings', 'jobs', 'launch', 'outreach'];
 if (!in_array($view, $allowedViews, true)) {
     $view = 'home';
+}
+
+// Outreach, 2026-09-27. The video stage is its own page and its own script,
+// served from here so both sit behind the same login as the Desk. The CSP
+// allows no inline script, so the prospect list reaches the stage as the
+// first line of a same-origin script rather than inside the page.
+if ($view === 'outreach') {
+    $outreachDir = __DIR__ . '/templates/soft-appeals/desk/outreach';
+    $outreachTab = (string) ($_GET['tab'] ?? '');
+    if ($outreachTab === 'stage') {
+        header('Content-Type: text/html; charset=utf-8');
+        readfile($outreachDir . '/stage.html');
+        exit;
+    }
+    if ($outreachTab === 'stage-js') {
+        header('Content-Type: application/javascript; charset=utf-8');
+        $stageRows = json_decode((string) @file_get_contents($outreachDir . '/prospects.json'), true);
+        $stageData = [];
+        foreach (is_array($stageRows) ? $stageRows : [] as $row) {
+            $stageData[] = [
+                'name'   => (string) ($row['name'] ?? ''),
+                'city'   => (string) ($row['city'] ?? ''),
+                'type'   => (string) ($row['type'] ?? 'rehab'),
+                'payers' => array_values(array_map('strval', (array) ($row['payers'] ?? []))),
+                'site'   => (string) ($row['site'] ?? ''),
+            ];
+        }
+        echo 'const DATA=' . json_encode($stageData, JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_AMP) . ";\n";
+        readfile($outreachDir . '/stage.js');
+        exit;
+    }
 }
 
 $canAudit = $authorization->can(Permission::AUDIT_VIEW);

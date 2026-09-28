@@ -37,6 +37,7 @@ $needsYou = count($awaitingReview) + count($termsReady) + ($documentsNeedingHer 
  *  where the page behind it is not written yet. Section 12.3. */
 $navBuilt = [
     ['home',        'Home',        null],
+    ['outreach',    'Outreach',    null],
     ['inquiries',   'Inquiries',   count($openIntakes) ?: null],
     ['terms',       'Terms',       count($termsReady) ?: null],
     ['documents',   'Agreements',  ($documentsNeedingHer ?? 0) ?: null],

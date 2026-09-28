@@ -1,0 +1,1819 @@
+[
+ {
+  "name": "Anchored Hope Therapy",
+  "meta": "170 Jennifer Road, Suite 202, Annapolis · owners Chelsea Haverly LCSW-C and Christine Coyle LCSW-C",
+  "hook": "39 therapists and one payer, CareFirst only. Twenty denials from one payer show one repeating pattern fast. Ten minutes from you.",
+  "phone": "443-291-8090",
+  "site": "https://anchoredhopetherapy.com/appointment-request/",
+  "type": "bh",
+  "payers": [
+   "CareFirst"
+  ],
+  "city": "Annapolis",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Smith & Prothero Physical & Occupational Therapy",
+  "meta": "1131 Baltimore Pike, Bel Air, and Havre de Grace · owners William Smith PT and Rick Prothero PT, since 2000",
+  "hook": "Eleven clinicians, lymphedema and hand therapy, Medicaid and Priority Partners, two sites on one back office. Their insurance list is still titled 2021. Nobody is minding it.",
+  "phone": "410-838-6070",
+  "site": "https://smithandprothero.com/staff",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Bel Air",
+  "list": "List 2 · hand-verified",
+  "flags": [
+   "INSURANCE LIST DATED 2021, CONFIRM ON THE CALL"
+  ]
+ },
+ {
+  "name": "Leadbetter Hand and Physical Therapy",
+  "meta": "8420 Gas House Pike, Frederick, and Urbana · owners Michele Leadbetter OT/CHT and Jason Leadbetter PT",
+  "hook": "Two sites, six therapists, 21 payers. Hand therapy splints and OT visit caps are the highest-denial line in outpatient rehab. Site says Celebrating 10 Years, open with that.",
+  "phone": "240-651-0149",
+  "site": "https://leadbetterrehab.com",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Frederick",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Congruent Counseling Services",
+  "meta": "10630 Little Patuxent Parkway, Suite 209, Columbia · CEO Mark Donovan, Clinical Director Katie Collier",
+  "hook": "71 clinicians, nine sites, an intensive outpatient program and Medicaid through one back office. Biggest ticket on this list, slowest door. Ask for the clinical director, not the CEO.",
+  "phone": "410-740-8066",
+  "site": "https://congruentcounseling.com/accepted-insurances/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicaid"
+  ],
+  "city": "Columbia",
+  "list": "List 2 · hand-verified",
+  "flags": [
+   "PAYERS SHOWN AS LOGOS ONLY, SAY YOUR SITE SHOWS"
+  ]
+ },
+ {
+  "name": "Pivot Point Counseling",
+  "meta": "4C North Avenue, Suite 423, Bel Air, and Towson · Allie Forrester, administrative manager",
+  "hook": "36 therapists and two prescribers. UnitedHealthcare and Medicare are in network for only some clinicians, so a scheduling mismatch becomes an out-of-network denial. Ask for Allie.",
+  "phone": "410-449-4955",
+  "site": "https://pivotpointcounseling.com/ratesandinsurance",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Evolve Counseling Group",
+  "meta": "8894 Stanford Blvd, Columbia · founder and practice manager Georgiana Avram LCPC-S",
+  "hook": "17 clinicians, 12 of them graduate-licensed and billing under supervision. Supervisee billing is one of the most common outpatient denial triggers. The owner runs the office herself.",
+  "phone": "646-535-8260",
+  "site": "https://evolvecounselinggroup.com/faq",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Columbia",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "MPB Group",
+  "meta": "6440 Dobbin Rd, Suite D, Columbia, second site opening in Laurel · Mary Blackwood, executive operations director",
+  "hook": "13 clinicians, Medicaid, psychiatry and therapy, court-ordered intake, interns. Intern sessions are a denial magnet. Ask for Mary Blackwood.",
+  "phone": "410-730-2385",
+  "site": "",
+  "type": "rehab",
+  "payers": [
+   "Medicaid"
+  ],
+  "city": "",
+  "list": "List 2 · hand-verified",
+  "flags": [
+   "FOUNDER NAME ONLY IN A LINK, SAY YOUR SITE SHOWS"
+  ]
+ },
+ {
+  "name": "Maryland Behavioral Health",
+  "meta": "4000 Mitchellville Rd, Suite A414, Bowie, plus Silver Spring, Forestville and Lexington Park",
+  "hook": "13 clinicians, four sites under one office. Spravato and PRP both need prior authorization, and Medicaid PRP runs through the public system. Ask who handles authorizations.",
+  "phone": "301-249-8100",
+  "site": "https://marylandbhealth.com/team/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Forestville and Lexington Park",
+  "list": "List 2 · hand-verified",
+  "flags": [
+   "PAYERS ONLY IN THE INTAKE FORM, SAY YOUR SITE SHOWS"
+  ]
+ },
+ {
+  "name": "Solace Mental Health and Wellness",
+  "meta": "811 Governor Ritchie Highway, Suite 15, Severna Park",
+  "hook": "Four prescribers, two therapists, and more than 15 payers including out-of-state Blues and Carelon. A six-person office billing that mix has a wrong-payer pile. Fifteen minutes from you.",
+  "phone": "410-995-9993",
+  "site": "https://solacementalhealthandwellness.com/contact-us",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Severna Park",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "MindBodyPinnacle Health",
+  "meta": "9811 Mallard Dr, Suite 210, Laurel · founder Dr Tai Ajani DNP, practice manager Angela Mukandi",
+  "hook": "Five prescribers, psychiatry only, opening a new state. Cross-state credentialing gaps are a classic denial source. Ask for Angela Mukandi.",
+  "phone": "443-713-8643",
+  "site": "https://mindbodypinnaclehealth.com",
+  "type": "rehab",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum",
+   "Medicare"
+  ],
+  "city": "Laurel",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Gold Medal Physical Therapy",
+  "meta": "407 E Churchville Road, Suite 102, Bel Air, and Perry Hall · locally owned since 2003",
+  "hook": "Nine clinicians, two sites. Vestibular rehab, a Parkinson's program and dry needling, a code that is often not covered, plus workers comp and auto.",
+  "phone": "410-638-5525",
+  "site": "https://goldmedalpt.com/insurance/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Bel Air",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "ALIGN Physical Therapy",
+  "meta": "1197 E Pulaski Highway, Suite FG, Elkton, and Perryville · founded 2020",
+  "hook": "Two sites, three Medicaid plans, workers comp and auto as a specialty, aquatic therapy. A back office that is six years old.",
+  "phone": "410-618-2006",
+  "site": "https://alignptsr.com/insurance",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Elkton",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "LeeAnn Nelson Physical Therapy",
+  "meta": "410 Maloney Road, Elkton · owner LeeAnn Nelson",
+  "hook": "One site, six staff. Pelvic floor, vestibular, falls, TMJ, stroke rehab, all medical-necessity denial families. Calls itself the only locally owned PT practice in Cecil County. Ask for LeeAnn by name.",
+  "phone": "410-392-9400",
+  "site": "https://leeannnelsonpt.com/accepted-payments/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Medicare",
+   "Tricare"
+  ],
+  "city": "Elkton",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Evidence Physical Therapy",
+  "meta": "14501 Baltimore Ave, Laurel, plus Glenn Dale and Clinton · privately owned",
+  "hook": "Four clinicians carrying three sites and 29 payers, including three Medicaid plans, the VA, auto and workers comp. Thinnest staffing per site on this list.",
+  "phone": "301-799-9466",
+  "site": "https://evidencept.com/patient-information/insurance-info/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Laurel",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "RSI, Rehabilitation Services",
+  "meta": "14235 Park Center Drive, Laurel · owner Diana Weinrich, founded 1983",
+  "hook": "PT, OT and speech under one front office, pediatrics and geriatrics, Medicaid, Priority Partners and Amerigroup all on the list. Ask for Diana.",
+  "phone": "301-498-8100",
+  "site": "https://rsitherapy.net",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Laurel",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Chesapeake Bay Aquatic & Physical Therapy",
+  "meta": "100 White Marsh Park Drive, Bowie, plus Laurel, Lutherville and Reisterstown · therapist owned since 2001",
+  "hook": "Four sites on one billing office. Aquatic therapy, Department of Labor cases that need authorization, workers comp. Ask which site handles billing.",
+  "phone": "301-262-5852",
+  "site": "https://cbayaquapt.com",
+  "type": "rehab",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "Medicare",
+   "Medicaid",
+   "Priority Partners"
+  ],
+  "city": "Lutherville and Reisterstown",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Ultimate Therapy",
+  "meta": "40900 Merchants Lane, Suite 202, Leonardtown · owner Samantha Strickland PT, since 2008",
+  "hook": "Six clinicians, direct access with no doctor's order, lymphedema, concussion, vertigo, plus auto and workers comp. Ask first which commercial plans they bill.",
+  "phone": "301-997-1155",
+  "site": "https://ultimate-therapy.com/faqs",
+  "type": "rehab",
+  "payers": [
+   "Medicare",
+   "Tricare"
+  ],
+  "city": "Leonardtown",
+  "list": "List 2 · hand-verified",
+  "flags": [
+   "ONLY MEDICARE AND TRICARE NAMED ON THE SITE"
+  ]
+ },
+ {
+  "name": "Blue Ridge Physical and Hand Therapy",
+  "meta": "227 N. Cleveland Ave, Hagerstown · 41 years, formerly O'Neill PT",
+  "hook": "Four clinicians and one billing person. One of two certified hand therapists in Washington County. Their site says unpaid insurance balances go to the patient, so every denial becomes a patient bill today. That is the exact pain you remove.",
+  "phone": "301-733-3844",
+  "site": "https://hagerstownpt.com/insuranceandforms",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Hagerstown",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Physical Therapy & Hand Rehabilitation",
+  "meta": "11120 New Hampshire Ave, Suite 200, Silver Spring, and Riverdale Park",
+  "hook": "13 therapists, two sites, 26 payers on one billing desk. Hand therapy, dry needling, vestibular, auto and workers comp.",
+  "phone": "301-592-8200",
+  "site": "https://ptandhandtherapy.com/insurance-info/",
+  "type": "rehab",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Silver Spring",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "ProActive Hand & Physical Therapy",
+  "meta": "9420 Key West Avenue, Suite 140, Rockville, plus Bethesda and Greenbelt",
+  "hook": "Three sites, five therapists, two certified hand therapists. Direct access, splint fabrication, and their own line that workers comp needs authorization. Three sites feeding one billing desk.",
+  "phone": "301-545-1677",
+  "site": "https://proactivehpt.com/patient-center/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Rockville",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Frederick Physical Therapy",
+  "meta": "198 Thomas Johnson Drive, Suite 4, Frederick · family owned since 2001",
+  "hook": "One PT and three PTAs, plus an office manager who is also the billing specialist. PTA-heavy staffing means Medicare modifier cuts and supervision denials. Ask for the office manager.",
+  "phone": "301-631-5300",
+  "site": "https://fptinc.net",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Frederick",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Evolution Physical Therapy",
+  "meta": "23207 Stringtown Road, Clarksburg · co-owners Kenneth Lou PT and Rebecca Lou PT",
+  "hook": "Two owner-clinicians, no billing staff, heavy Medicaid plan mix, dry needling, car accident and workplace injury rehab. Every denial lands on the owners.",
+  "phone": "301-861-2388",
+  "site": "https://evoptrehab.com",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Clarksburg",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Optimal Physical Therapy & Rehabilitation",
+  "meta": "1738 Elton Rd, Suite 230, Silver Spring",
+  "hook": "Four PTs. Women's health and pelvic floor, pediatrics, auto and workers comp, Kaiser referrals. Pelvic codes are classic medical-necessity denials.",
+  "phone": "301-434-1980",
+  "site": "https://optimalptr.com/insurance/",
+  "type": "rehab",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Silver Spring",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "District Physical Therapy, Bethesda",
+  "meta": "6931 Arlington Rd, Suite C, Bethesda · founder David Kenney PT, clinician owned",
+  "hook": "Full-hour one-on-one Medicare visits, vestibular, dry needling. Long-visit billing draws Medicare and CareFirst denials. Based in DC, so the Maryland-only line is weaker here. Call last.",
+  "phone": "301-246-2244",
+  "site": "https://districtphysicaltherapy.com/locations/bethesda",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "UnitedHealthcare",
+   "Medicare",
+   "Tricare"
+  ],
+  "city": "Bethesda",
+  "list": "List 2 · hand-verified",
+  "flags": [
+   "DC BASED, WEAKER FIT"
+  ]
+ },
+ {
+  "name": "Doyle & Taylor Physical Therapy",
+  "meta": "275 West St Ste 300, Annapolis, MD 21401 · 13 Google reviews · payers on site: Aetna; BCBS; Blue Cross; EHP; GEHA; Humana; Johns Hopkins; Medicare; Tricare; UHC; Workers' Comp",
+  "hook": "Annapolis, PT and OT under one roof, six clinicians named on the site, 11 payers on the insurance page including Johns Hopkins EHP, GEHA and Humana. Ask for whoever handles billing.",
+  "phone": "(410) 295-0001",
+  "site": "http://www.doyleandtaylorpt.com/?y_source=1_MjA1MzQ5MjE2My03MTUtbG9jYXRpb24ud2Vic2l0ZQ%3D%3D",
+  "type": "rehab",
+  "payers": [
+   "Aetna",
+   "UnitedHealthcare",
+   "Medicare",
+   "Johns Hopkins",
+   "EHP"
+  ],
+  "city": "Annapolis",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Sports Pro Physical Therapy and Aquatic Center",
+  "meta": "626 Admiral Dr Ste d, Annapolis, MD 21401 · 5 Google reviews · payers on site: Aetna; BlueCross; CareFirst; Medicare; PIP; Tricare; United Healthcare; Workman",
+  "hook": "Four sites (Annapolis, Bowie, Upper Marlboro, Fort Washington), aquatic therapy, 8 payers on the site including Tricare and PIP auto claims. Ask which site handles billing.",
+  "phone": "(410) 508-9900",
+  "site": "https://www.sportspropt.com/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "UnitedHealthcare",
+   "Medicare",
+   "Tricare"
+  ],
+  "city": "Annapolis",
+  "list": "List 2 · hand-verified",
+  "flags": []
+ },
+ {
+  "name": "Opal Physical Therapy",
+  "meta": "703 Giddings Ave Ste M1, Annapolis, MD 21401 · 40 Google reviews · payers on site: Aetna; BCBS; Cigna; Medicare; UHC; Wellpoint",
+  "hook": "Severna Park and West Annapolis, a leadership page, 6 payers on the billing page including Wellpoint Medicaid and UHC. Google shows one number, the site shows another.",
+  "phone": "(443) 837-7560",
+  "site": "https://www.opalphysicaltherapy.com/",
+  "type": "rehab",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Annapolis",
+  "list": "List 2 · hand-verified",
+  "flags": [
+   "CONFIRM THE NUMBER ON THE CALL"
+  ]
+ },
+ {
+  "name": "Bayside Physical Therapy and Sports Rehabilitation",
+  "meta": "7671 Quarterfield Rd Ste 101, Glen Burnie, MD 21061 · 53 Google reviews · payers on site: Medical Assistance; Medicare",
+  "hook": "Four locations (Glen Burnie, Millersville, Stevensville, Prince Frederick), certified hand therapy, aquatic, 42 credential mentions on the staff pages. Site lists Medicare and Medical Assistance. Google and site numbers differ.",
+  "phone": "(410) 760-2162",
+  "site": "https://baysidept.com/",
+  "type": "rehab",
+  "payers": [
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Glen Burnie",
+  "list": "List 2 · hand-verified",
+  "flags": [
+   "CONFIRM THE NUMBER ON THE CALL"
+  ]
+ },
+ {
+  "name": "My Kids Therapy",
+  "meta": "1655 Crofton Blvd #103, Crofton, MD 21114 · 9 Google reviews · payers on site: Aetna; BCBS; CareFirst; Cigna; EHP; GEHA; United Healthcare",
+  "hook": "Pediatric OT, PT and speech, Crofton and Greenbelt, 7 payers on the site including EHP and GEHA. Pediatric therapy carries visit caps and authorization denials.",
+  "phone": "(410) 451-5700",
+  "site": "http://www.mykidstherapymd.com/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "EHP"
+  ],
+  "city": "Crofton",
+  "list": "List 2 · hand-verified",
+  "flags": [
+   "PEDIATRIC"
+  ]
+ },
+ {
+  "name": "Flourish Counseling and Wellness Center",
+  "meta": "13334 Clarksville Pike Bldg C, Suite B, Highland, MD 20777 · Behavioral health · 18 Google reviews",
+  "hook": "Payers on site: Aetna; BlueCross; CareFirst; Carelon; Cigna; Evernorth; Johns Hopkins; Medicaid; Medicare; Optum; UnitedHealthcare.",
+  "phone": "(240) 830-7191",
+  "site": "https://flourishcounselingmd.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Highland",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "GOOGLE AND SITE NUMBERS DIFFER, CONFIRM"
+  ]
+ },
+ {
+  "name": "Village Counseling",
+  "meta": "8181 Main St 2nd Floor, Ellicott City, MD 21043 · Behavioral health · 52 Google reviews",
+  "hook": "Payers on site: Blue Cross; BlueCross; CareFirst; Cigna; Johns Hopkins; Kaiser; Medicaid; United Healthcare.",
+  "phone": "(410) 505-0062",
+  "site": "http://www.villageoec.com/?utm_source=google&amp;utm_medium=gbp&amp;utm_campaign=gbp-Listing",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicaid",
+   "Johns Hopkins"
+  ],
+  "city": "Ellicott City",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "GOOGLE AND SITE NUMBERS DIFFER, CONFIRM"
+  ]
+ },
+ {
+  "name": "PsychCare Psychological Services, LLC",
+  "meta": "6325 Woodside Ct Ste 350, Columbia, MD 21046 · Behavioral health · 11 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; CareFirst; Cigna; EHP; Evernorth; Johns Hopkins; Medicare.",
+  "phone": "(410) 910-9660",
+  "site": "http://www.psychcaremd.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Medicare",
+   "Johns Hopkins"
+  ],
+  "city": "Columbia",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "FEW CLINICIANS NAMED, CHECK SIZE"
+  ]
+ },
+ {
+  "name": "Crystal Waters Counseling Centers LLC",
+  "meta": "9861 Broken Land Pkwy, Columbia, MD 21046 · Behavioral health · 12 Google reviews",
+  "hook": "Payers on site: BlueCross; CareFirst; Cigna.",
+  "phone": "(443) 251-4280",
+  "site": "https://crystalwaterscounseling.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Cigna"
+  ],
+  "city": "Columbia",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "GOOGLE AND SITE NUMBERS DIFFER, CONFIRM"
+  ]
+ },
+ {
+  "name": "Focused Physical Therapy of Silver Spring",
+  "meta": "10750 Columbia Pike Ste 310, Silver Spring, MD 20901 · PT, OT or rehab · 220 Google reviews",
+  "hook": "Payers on site: Aetna; Amerigroup; Blue Cross; CareFirst; Cigna; GEHA; Johns Hopkins; MVA; Maryland Physicians Care; Medicaid; Medicare; Priority Partners; Tricare; United Healthcare; workers comp.",
+  "phone": "(301) 658-6353",
+  "site": "http://focusedpt.net/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Silver Spring",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Revive Physical Therapy",
+  "meta": "10300 Baltimore National Pike B, Ellicott City, MD 21042 · PT, OT or rehab · 132 Google reviews",
+  "hook": "Payers on site: Aetna; Amerigroup; Blue Cross; CareFirst; Cigna; Johns Hopkins; Medicaid; Medicare; PIP; Tricare; United Healthcare; auto accident; workers comp.",
+  "phone": "(410) 988-5171",
+  "site": "https://revive-pt.com/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Ellicott City",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "2 SITES"
+  ]
+ },
+ {
+  "name": "Touchstone Physical Therapy and Wellness",
+  "meta": "10200 Old Columbia Rd Ste c, Columbia, MD 21046 · PT, OT or rehab · 119 Google reviews",
+  "hook": "Payers on site: Aetna; Blue Cross; CareFirst; Cigna; Johns Hopkins; Medicare; Tricare; United Healthcare; workers comp.",
+  "phone": "(410) 290-4480",
+  "site": "http://touchstonecolumbia.com/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Columbia",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Synergy Physical Therapy",
+  "meta": "7625 Maple Lawn Blvd, Fulton, MD 20759 · PT, OT or rehab · 163 Google reviews",
+  "hook": "Payers on site: Medicaid; Medicare; auto accident.",
+  "phone": "(301) 497-3070",
+  "site": "http://synergytherapyllc.com/",
+  "type": "rehab",
+  "payers": [
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Fulton",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Balance Point Wellness, LLC",
+  "meta": "11350 McCormick Rd Ste 800, Hunt Valley, MD 21031 · Behavioral health · 16 Google reviews",
+  "hook": "Payers on site: Aetna; Amerigroup; Blue Cross; CareFirst; Cigna; EHP; Evernorth; Humana; Johns Hopkins; Kaiser; Medicaid; Medicare; Optum; Priority Partners; Tricare; USFHP; UnitedHealthcare.",
+  "phone": "(410) 800-2169",
+  "site": "https://bpointwellness.com/?utm_source=GMBlisting&amp;utm_medium=organic",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Hunt Valley",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Positive Changes Counseling Center",
+  "meta": "8415 Bellona Ln #203, Towson, MD 21204 · Behavioral health · 12 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; Blue Cross; BlueCross; CareFirst; Cigna; EHP; Evernorth; Medicaid; Medical Assistance; Medicare; Tricare; UHC; United Healthcare.",
+  "phone": "(410) 777-8151",
+  "site": "https://debbiedisney.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Towson",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Cedar Ridge Counseling Centers, LLC",
+  "meta": "10995 Owings Mills Blvd #214, Owings Mills, MD 21117 · Behavioral health · 13 Google reviews",
+  "hook": "Payers on site: Blue Cross; CareFirst; Cigna; EHP; Humana; Johns Hopkins; Medicaid; Medical Assistance; Medicare; Optum; Tricare; United Healthcare.",
+  "phone": "(410) 552-0773",
+  "site": "https://www.cedarridgecounseling.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum",
+   "Medicare"
+  ],
+  "city": "Owings Mills",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Resilient Psychiatry, LLC",
+  "meta": "1206 York Rd #201, Lutherville, MD 21093 · Behavioral health · 45 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; Blue Cross; BlueCross; CareFirst; Cigna; Johns Hopkins; Medicaid; Medicare; UHC; United Healthcare; UnitedHealthcare.",
+  "phone": "(410) 343-9869",
+  "site": "https://www.resilientpsychiatry.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Lutherville",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "FEW CLINICIANS NAMED, CHECK SIZE"
+  ]
+ },
+ {
+  "name": "GY COUNSELING, LLC",
+  "meta": "1110 Benfield Blvd, Millersville, MD 21108 · Behavioral health · 25 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; CareFirst; Cigna; EHP; Evernorth; Johns Hopkins; Medicaid; Medicare; UHC; USFHP; United Healthcare.",
+  "phone": "(301) 529-1095",
+  "site": "https://www.gycounseling.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Millersville",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "FEW CLINICIANS NAMED, CHECK SIZE"
+  ]
+ },
+ {
+  "name": "Primrose Counseling and Wellness LLC",
+  "meta": "744 Dulaney Valley Rd #3, Towson, MD 21204 · Behavioral health · 13 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; Blue Cross; BlueCross; CareFirst; Cigna; EHP; Evernorth; Johns Hopkins; Optum; United Healthcare.",
+  "phone": "(410) 929-1869",
+  "site": "http://www.primrosecounseling.net/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Towson",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "GOOGLE AND SITE NUMBERS DIFFER, CONFIRM"
+  ]
+ },
+ {
+  "name": "Renewal Counseling Center",
+  "meta": "9414 Belair Rd #201, Nottingham, MD 21236 · Behavioral health · 19 Google reviews",
+  "hook": "Payers on site: Aetna; BlueCross; CareFirst; Cigna; Evernorth; Medicaid; Medical Assistance; Medicare; Optum; United Healthcare.",
+  "phone": "(410) 529-2151",
+  "site": "http://www.renewalcounseling.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Nottingham",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Aspire Wellness Center",
+  "meta": "5022 Campbell Blvd Suite L-M, Nottingham, MD 21236 · Behavioral health · 93 Google reviews",
+  "hook": "Payers on site: Aetna; BlueCross; CareFirst; Cigna; EHP; Johns Hopkins; Medical Assistance; Medicare; PIP.",
+  "phone": "(443) 442-1568",
+  "site": "https://www.aspire-wellness.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Nottingham",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Core Counseling Services",
+  "meta": "9475 Deereco Rd Ste 410, Timonium, MD 21093 · Behavioral health · 15 Google reviews",
+  "hook": "Payers on site: Aetna; BlueCross; CareFirst; Cigna; EHP; Johns Hopkins; Medicare; Optum; United Healthcare.",
+  "phone": "(410) 560-6135",
+  "site": "http://www.corecounselingservices.net/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Timonium",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Healing Mind Wellness",
+  "meta": "124 Slade Ave #103, Pikesville, MD 21208 · Behavioral health · 48 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; CareFirst; Cigna; Johns Hopkins; Maryland Physicians Care; Medicaid; Medicare; Tricare.",
+  "phone": "(410) 452-4325",
+  "site": "http://healingmindwellness.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Pikesville",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "HPS Counseling",
+  "meta": "632 Frederick Rd #200, Catonsville, MD 21228 · Behavioral health · 36 Google reviews",
+  "hook": "Payers on site: Aetna; BlueCross; CareFirst; Cigna; Evernorth; Johns Hopkins; Medicaid; Medicare; United Healthcare.",
+  "phone": "(443) 892-0553",
+  "site": "http://www.hpscounseling.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Catonsville",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "GOOGLE AND SITE NUMBERS DIFFER, CONFIRM",
+   "FEW CLINICIANS NAMED, CHECK SIZE"
+  ]
+ },
+ {
+  "name": "The Resource Group Counseling and Education Center",
+  "meta": "8501 Lasalle Rd Ste 115, Towson, MD 21286 · Behavioral health · 139 Google reviews",
+  "hook": "Payers on site: Aetna; Blue Cross; CareFirst; Cigna; EHP; Johns Hopkins; MVA; Medicaid.",
+  "phone": "(410) 337-7772",
+  "site": "https://resourcegrp.org/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Medicaid",
+   "Johns Hopkins"
+  ],
+  "city": "Towson",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Veritas Psychiatry & Wellness, LLC",
+  "meta": "202 Main St Ste 4, Reisterstown, MD 21136 · Behavioral health · 13 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; CareFirst; Cigna; Evernorth; Medicaid; Optum.",
+  "phone": "(410) 449-0182",
+  "site": "https://psychveritas.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Optum",
+   "Medicaid"
+  ],
+  "city": "Reisterstown",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Clarity Centers",
+  "meta": "9 Schilling Rd #106, LUTHVLE TIMON, MD 21093 · Behavioral health · 20 Google reviews",
+  "hook": "Payers on site: Blue Cross; BlueCross; CareFirst; Cigna; Johns Hopkins; United Healthcare.",
+  "phone": "(410) 498-7567",
+  "site": "https://claritycenters.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Cigna",
+   "UnitedHealthcare",
+   "Johns Hopkins"
+  ],
+  "city": "LUTHVLE TIMON",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Flourishing Minds Wellness Center",
+  "meta": "8890 McDonogh Rd Ste 103, Owings Mills, MD 21117 · Behavioral health · 17 Google reviews",
+  "hook": "Payers on site: Aetna; Blue Cross; Carelon; Cigna; Kaiser; Medicaid.",
+  "phone": "(667) 298-3048",
+  "site": "http://www.flourishingmindswellness.com/",
+  "type": "bh",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "Medicaid",
+   "Kaiser",
+   "Carelon"
+  ],
+  "city": "Owings Mills",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Safe Space Counseling Services",
+  "meta": "9 Schilling Rd Ste LL1, Hunt Valley, MD 21031 · Behavioral health · 19 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; CareFirst; Cigna; UHC.",
+  "phone": "(443) 873-0071",
+  "site": "https://www.safespacecounselingservices.net/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare"
+  ],
+  "city": "Hunt Valley",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "First Choice Counseling Center",
+  "meta": "9199 Reisterstown Rd suite 105 b, Owings Mills, MD 21117 · Behavioral health · 15 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; Cigna; Evernorth; Medicaid.",
+  "phone": "(410) 989-9922",
+  "site": "http://www.firstcccenter.com/",
+  "type": "bh",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "Medicaid",
+   "Blue Cross"
+  ],
+  "city": "Owings Mills",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "JEWELS Pediatric Therapy Clinic",
+  "meta": "31 Walker Ave Ste B, Pikesville, MD 21208 · Behavioral health · 35 Google reviews",
+  "hook": "Payers on site: Aetna; Amerigroup; Blue Cross; Medical Assistance.",
+  "phone": "(410) 415-3515",
+  "site": "https://www.jewelstherapy.org/",
+  "type": "bh",
+  "payers": [
+   "Aetna",
+   "Medicaid",
+   "Amerigroup",
+   "Blue Cross"
+  ],
+  "city": "Pikesville",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Mindful Haven",
+  "meta": "9524 Belair Rd, Nottingham, MD 21236 · Behavioral health · 12 Google reviews",
+  "hook": "Payers on site: Cigna; Medicaid; Medicare; Tricare.",
+  "phone": "(410) 630-8292",
+  "site": "http://mindfulhavennp.com/",
+  "type": "bh",
+  "payers": [
+   "Cigna",
+   "Medicare",
+   "Medicaid",
+   "Tricare"
+  ],
+  "city": "Nottingham",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Apex Counseling Center, LLC",
+  "meta": "3200 Eastern Ave, Baltimore, MD 21224 · Behavioral health · 21 Google reviews",
+  "hook": "Payers on site: Johns Hopkins; Medicaid; Medicare.",
+  "phone": "(410) 522-1181",
+  "site": "http://www.apexcounselingcenter.com/",
+  "type": "bh",
+  "payers": [
+   "Medicare",
+   "Medicaid",
+   "Johns Hopkins"
+  ],
+  "city": "Baltimore",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Physical Therapy First",
+  "meta": "126 Shawan Rd #300, Cockeysville, MD 21030 · PT, OT or rehab · 65 Google reviews",
+  "hook": "Payers on site: Aetna; Blue Cross; Cigna; EHP; Humana; Johns Hopkins; Kaiser; Maryland Physicians Care; Medicaid; Medicare; Priority Partners; Tricare; United Healthcare; auto accident.",
+  "phone": "(443) 318-4242",
+  "site": "http://physicaltherapyfirst.com/",
+  "type": "rehab",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Cockeysville",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "3 SITES"
+  ]
+ },
+ {
+  "name": "Advanced Physical Therapy",
+  "meta": "4000 Old Court Rd Ste 100, Pikesville, MD 21208 · PT, OT or rehab · 83 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; Blue Cross; CareFirst; PIP; Tricare; UHC; Workers' Comp; workers comp.",
+  "phone": "(410) 415-0005",
+  "site": "http://www.advancedptbaltimore.com/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "UnitedHealthcare",
+   "Tricare"
+  ],
+  "city": "Pikesville",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Spine and Sports Rehabilitation Center",
+  "meta": "7402 York Rd #104, Towson, MD 21204 · PT, OT or rehab · 47 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; Blue Cross; Cigna; EHP; Humana; Medicare; Tricare.",
+  "phone": "(410) 560-3931",
+  "site": "http://www.spineandsportsrehab.com/",
+  "type": "rehab",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "Medicare",
+   "EHP",
+   "Tricare"
+  ],
+  "city": "Towson",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "GOOGLE AND SITE NUMBERS DIFFER, CONFIRM"
+  ]
+ },
+ {
+  "name": "Source Physiotherapy",
+  "meta": "10155 York Rd Suites 205-206, Cockeysville, MD 21030 · PT, OT or rehab · 51 Google reviews",
+  "hook": "Payers on site: Aetna; BlueCross; CareFirst; Cigna; Medicaid; Medicare.",
+  "phone": "(410) 667-6673",
+  "site": "http://sourcephysio.com/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Cockeysville",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Resilient Physiotherapy and Sports Performance",
+  "meta": "8303 Pulaski Hwy Suite A, Baltimore, MD 21237 · PT, OT or rehab · 40 Google reviews",
+  "hook": "Payers on site: Aetna; Blue Cross; CareFirst; Cigna; Medicare.",
+  "phone": "(443) 505-3984",
+  "site": "http://www.resilientphysiotherapy.com/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Medicare"
+  ],
+  "city": "Baltimore",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Orchard Mental Health Group",
+  "meta": "9707 Key W Ave #100, Rockville, MD 20850 · Behavioral health · 184 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; Blue Cross; CareFirst; Cigna; Humana; Johns Hopkins; Medicaid; Medicare; Optum; Tricare; UHC; UnitedHealthcare.",
+  "phone": "(240) 750-6467",
+  "site": "https://orchardmentalhealth.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Rockville",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Mosaic Minds LLC",
+  "meta": "12410 Milestone Center Dr Ste 600, Germantown, MD 20876 · Behavioral health · 59 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; CareFirst; Cigna; Kaiser; Medicaid; Medicare; Optum; Tricare; United Healthcare.",
+  "phone": "(301) 500-5841",
+  "site": "http://mosaicminds.life/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Germantown",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "FEW CLINICIANS NAMED, CHECK SIZE"
+  ]
+ },
+ {
+  "name": "Authentically U Counseling - HOLISTIC WELLNESS ENRICHMENT CENTER",
+  "meta": "6209 Executive Blvd, Rockville, MD 20852 · Behavioral health · 16 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; CareFirst; Cigna; Evernorth; Johns Hopkins; Medicare.",
+  "phone": "(240) 426-8344",
+  "site": "http://www.authenticallyu.org/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Medicare",
+   "Johns Hopkins"
+  ],
+  "city": "Rockville",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Excel Psychiatric Consultation",
+  "meta": "13243 Executive Park Terrace, Germantown, MD 20874 · Behavioral health · 47 Google reviews",
+  "hook": "Payers on site: Aetna; Blue Cross; BlueCross; CareFirst; Cigna; Medicare; United Healthcare.",
+  "phone": "(301) 820-1715",
+  "site": "http://www.excelpsychiatricconsultation.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Germantown",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Serenity Psychiatric and Mental Health Services LLC",
+  "meta": "12410 Milestone Center Dr Ste 600, Germantown, MD 20876 · Behavioral health · 54 Google reviews",
+  "hook": "Payers on site: Aetna; Blue Cross; CareFirst; Cigna; United Healthcare; UnitedHealthcare.",
+  "phone": "(301) 812-4540",
+  "site": "https://www.serenitypsychiatricmhs.com/?utm_source=google&amp;utm_medium=wix_google_business_profile&amp;utm_campaign=13643568369449308537",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare"
+  ],
+  "city": "Germantown",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "GOOGLE AND SITE NUMBERS DIFFER, CONFIRM"
+  ]
+ },
+ {
+  "name": "Second Chance Counseling Services LLC",
+  "meta": "19727 Executive Park Cir, Germantown, MD 20874 · Behavioral health · 18 Google reviews",
+  "hook": "Payers on site: Aetna; CareFirst; Cigna; Kaiser; Medicaid; Medicare.",
+  "phone": "(301) 972-1373",
+  "site": "http://www.sccsvcs.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Germantown",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "FEW CLINICIANS NAMED, CHECK SIZE"
+  ]
+ },
+ {
+  "name": "Takoma Therapy LLC",
+  "meta": "6930 Carroll Ave Ste 610, Silver Spring, MD 20912 · Behavioral health · 23 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; Blue Cross; CareFirst; Cigna.",
+  "phone": "(301) 563-9156",
+  "site": "http://www.takomatherapy.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna"
+  ],
+  "city": "Silver Spring",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Enrichment Wellness, LLC",
+  "meta": "1 Research Ct Ste 120, Rockville, MD 20850 · Behavioral health · 49 Google reviews",
+  "hook": "Payers on site: Aetna; BlueCross; CareFirst; United Healthcare.",
+  "phone": "(301) 944-9065",
+  "site": "http://enrichmentwellness.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "UnitedHealthcare"
+  ],
+  "city": "Rockville",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Inspire Behavioral Health, Inc",
+  "meta": "232 Main St, Gaithersburg, MD 20878 · Behavioral health · 15 Google reviews",
+  "hook": "Payers on site: CareFirst; Cigna; Medicaid; Medicare.",
+  "phone": "(240) 912-4894",
+  "site": "https://ibhllc.org/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Cigna",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Gaithersburg",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Living & Growing",
+  "meta": "8777 1st Ave, Silver Spring, MD 20910 · Behavioral health · 13 Google reviews",
+  "hook": "Payers on site: Cigna; Medicaid; Optum.",
+  "phone": "(301) 920-0316",
+  "site": "https://www.livingandgrowing.org/",
+  "type": "bh",
+  "payers": [
+   "Cigna",
+   "Optum",
+   "Medicaid"
+  ],
+  "city": "Silver Spring",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Sports and Orthopaedic Therapy Services, LLC",
+  "meta": "10605 Concord St #105, Kensington, MD 20895 · PT, OT or rehab · 47 Google reviews",
+  "hook": "Payers on site: Aetna; Cigna; EHP; GEHA; Humana; Kaiser; Medicare; PIP; Tricare; United Healthcare; Workers' Comp.",
+  "phone": "(301) 946-7717",
+  "site": "http://www.sports-pt.com/",
+  "type": "rehab",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare",
+   "EHP"
+  ],
+  "city": "Kensington",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Accessible Physical Therapy Services",
+  "meta": "2513 University Blvd W, Silver Spring, MD 20902 · PT, OT or rehab · 52 Google reviews",
+  "hook": "Payers on site: Aetna; BlueCross; CareFirst; Medicare; PIP; UHC; United Healthcare; UnitedHealthcare; workers comp.",
+  "phone": "(301) 593-7300",
+  "site": "http://www.accessiblept.com/accessible-physical-therapy-silver-spring-md.aspx",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Silver Spring",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Apex Performance Therapy",
+  "meta": "4980 Wyaconda Rd Ste A-B, Rockville, MD 20852 · PT, OT or rehab · 112 Google reviews",
+  "hook": "Payers on site: Aetna; Blue Cross; Cigna; Humana; MVA; Medicaid; Medicare; United Healthcare.",
+  "phone": "(301) 744-8810",
+  "site": "https://apexperformancetherapy.com/",
+  "type": "rehab",
+  "payers": [
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Rockville",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "GOOGLE AND SITE NUMBERS DIFFER, CONFIRM"
+  ]
+ },
+ {
+  "name": "Rebound Physical Therapy",
+  "meta": "1801 Research Blvd #103, Rockville, MD 20850 · PT, OT or rehab · 58 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; BlueCross; CareFirst; Medicare; Workman.",
+  "phone": "(301) 978-7730",
+  "site": "http://reboundrockville.com/our-office/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Medicare"
+  ],
+  "city": "Rockville",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Montgomery Orthopaedics Physical Therapy",
+  "meta": "8401 Connecticut Ave Ste 910, Chevy Chase, MD 20815 · PT, OT or rehab · 63 Google reviews",
+  "hook": "Payers on site: Medicaid; Medicare; Workers' Comp; Workman.",
+  "phone": "(301) 946-4100",
+  "site": "http://www.montgomeryorthopaedics.com/",
+  "type": "rehab",
+  "payers": [
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Chevy Chase",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Express Yourself Pediatric Therapy MD",
+  "meta": "3930 Knowles Ave #306, Kensington, MD 20895 · PT, OT or rehab · 67 Google reviews",
+  "hook": "Payers on site: BCBS; BlueCross; Cigna.",
+  "phone": "(224) 801-8715",
+  "site": "https://www.expressyourselftherapy.com/?utm_source=gmb_auth",
+  "type": "rehab",
+  "payers": [
+   "Cigna",
+   "Blue Cross"
+  ],
+  "city": "Kensington",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Metropolitan Occupational Therapy",
+  "meta": "8701 Georgia Ave Ste LL1, Silver Spring, MD 20910 · PT, OT or rehab · 110 Google reviews",
+  "hook": "Payers on site: Aetna; CareFirst; Cigna.",
+  "phone": "(301) 587-5333",
+  "site": "http://www.metropolitanoccupationaltherapy.com/",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna"
+  ],
+  "city": "Silver Spring",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Ally Behavior Centers",
+  "meta": "4600 Powder Mill Rd Ste 250, Beltsville, MD 20705 · Behavioral health · 15 Google reviews",
+  "hook": "Payers on site: Aetna; BCBS; Blue Cross; BlueCross; CareFirst; Cigna; EHP; Humana; Johns Hopkins; Kaiser; Medicaid; Tricare; USFHP; UnitedHealthcare.",
+  "phone": "(301) 477-7194",
+  "site": "https://allybehavior.com/locations/prince-georges-county-aba-therapy/?utm_source=google&amp;utm_medium=organic&amp;utm_campaign=gbp&amp;utm_term=beltsville",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicaid"
+  ],
+  "city": "Beltsville",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "KNK Mental Health Services LLC",
+  "meta": "8101 Sandy Spring Rd, Laurel, MD 20707 · Behavioral health · 30 Google reviews",
+  "hook": "Payers on site: Aetna; Blue Cross; BlueCross; CareFirst; Cigna; Evernorth; GEHA; Humana; Medicaid; Medicare; Optum; Tricare; UHC.",
+  "phone": "(240) 673-7183",
+  "site": "http://www.knkmentalhealth.com/",
+  "type": "bh",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Optum"
+  ],
+  "city": "Laurel",
+  "list": "List 3 · pipeline",
+  "flags": [
+   "FEW CLINICIANS NAMED, CHECK SIZE"
+  ]
+ },
+ {
+  "name": "Clearpoint Mental Health Services, LLC: Mekedes Mekonnen, Nurse Practitioner, PMHNP-BC",
+  "meta": "8101 Sandy Spring Rd Ste 300, Laurel, MD 20707 · Behavioral health · 30 Google reviews",
+  "hook": "Payers on site: Evernorth; Humana; Kaiser; Medicaid; Priority Partners; Tricare.",
+  "phone": "(240) 849-7080",
+  "site": "http://www.clearpointmh.com/",
+  "type": "bh",
+  "payers": [
+   "Medicaid",
+   "Priority Partners",
+   "Tricare",
+   "Humana",
+   "Kaiser"
+  ],
+  "city": "Laurel",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "SMR Counseling Services, LLC",
+  "meta": "11785 Beltsville Dr #120, Calverton, MD 20705 · Behavioral health · 59 Google reviews",
+  "hook": "Payers on site: Johns Hopkins; Medicaid; Medicare; Tricare.",
+  "phone": "(240) 389-1487",
+  "site": "http://www.smrcounselingservices.com/",
+  "type": "bh",
+  "payers": [
+   "Medicare",
+   "Medicaid",
+   "Johns Hopkins",
+   "Tricare"
+  ],
+  "city": "Calverton",
+  "list": "List 3 · pipeline",
+  "flags": []
+ },
+ {
+  "name": "Performance Physical Therapy and Sports Rehabilitation",
+  "meta": "9194 Red Branch Rd, Suite J, Columbia · owners Tom Perone DPT and Kerry Hite DPT",
+  "hook": "Five therapists, two owner therapists, calls itself a private practice. Exactly the size that has denials and nobody to work them.",
+  "phone": "410-997-2585",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Columbia",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "BEAT Physical Therapy",
+  "meta": "5840 Banneker Rd, Suite 110, Columbia",
+  "hook": "Publishes its payer list: CareFirst, Aetna, Cigna, UnitedHealthcare, Medicare Part B, Maryland Medicaid, workers compensation. Every one of those denies.",
+  "phone": "410-884-0003",
+  "site": "",
+  "type": "rehab",
+  "payers": [
+   "CareFirst",
+   "Aetna",
+   "Cigna",
+   "UnitedHealthcare",
+   "Medicare"
+  ],
+  "city": "Columbia",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Baltimore Physical Aquatic and Sports Therapy",
+  "meta": "8757 Mylander Ln, Towson",
+  "hook": "Independently owned, 25 years, in network with most plans, and sees patients without a referral, which means more authorisation denials than average.",
+  "phone": "410-213-5800",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Towson",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Breakaway Physical Therapy",
+  "meta": "2138 Priest Bridge Ct, Suite 7, Crofton · founder Shaina Clemons DPT",
+  "hook": "Founder owned, several therapists, pelvic health as well as ortho. Pelvic health carries authorisation and visit limit denials.",
+  "phone": "410-721-6333",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Crofton",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Annapolis Family Physical Therapy · Riva Road",
+  "meta": "2564 Riva Road, Annapolis · family owned, 20 years, three locations",
+  "hook": "Three sites and one small back office is the classic denial pile. Call Riva Road first, it is the flagship.",
+  "phone": "410-266-6626",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Annapolis",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Annapolis Family Physical Therapy · Severna Park",
+  "meta": "156 Ritchie Highway, Suite 100, Severna Park",
+  "hook": "Same practice, different site. Only call this one if Riva Road sends you here.",
+  "phone": "410-544-2422",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Severna Park",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Atlas Physical Therapy",
+  "meta": "1406 Crain Hwy S, Suite 110, Glen Burnie",
+  "hook": "Independent, long hours, high volume. Volume is denials.",
+  "phone": "410-762-2124",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Glen Burnie",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Arpella Physical Therapy",
+  "meta": "1454 Baltimore Annapolis Blvd, Arnold",
+  "hook": "Single site, independent, ten minutes from Severna Park.",
+  "phone": "410-650-2802",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Arnold",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Severna Park Physical Therapy",
+  "meta": "844 Ritchie Highway, Suite 208, Severna Park · owner Renee Volpe VanWie MS, PT, OCS",
+  "hook": "Owner operated since 1988. Ask for her by name.",
+  "phone": "410-544-0773",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Severna Park",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Kinesio Physical Therapy and Sports Rehabilitation",
+  "meta": "844 Ritchie Hwy, Suite 208, Severna Park · owner Faith Hagerty PT",
+  "hook": "Owner operated. Listed at the same suite as Severna Park PT, so one of the two has moved. Ask on the call rather than guessing.",
+  "phone": "443-795-4191",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Severna Park",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "DeMaio Family Chiropractic and Physical Therapy",
+  "meta": "2391 Brandermill Blvd, Suite 200, Gambrills · also Bowie",
+  "hook": "Chiropractic plus PT under one roof. Chiropractic denials are frequent and very formulaic, which suits batching.",
+  "phone": "410-721-2222",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Gambrills",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Hands On Therapy · Annapolis",
+  "meta": "105 Annapolis Street, Suite B, Annapolis · hand and occupational therapy",
+  "hook": "Hand therapy runs on authorisations and visit limits, which is the denial family with the clearest arguments.",
+  "phone": "410-415-5260",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Annapolis",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Forever Fit Physical Therapy and Wellness",
+  "meta": "877 Baltimore Annapolis Blvd, Suite 111, Severna Park · director Dr Brittany Metzger",
+  "hook": "Eleven Maryland locations, in network with Medicare, Maryland Medicaid and commercial plans. Bigger, so they may already have billing staff. Worth one call.",
+  "phone": "301-200-9337",
+  "site": "",
+  "type": "rehab",
+  "payers": [
+   "Medicare",
+   "Medicaid"
+  ],
+  "city": "Severna Park",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Pioneer PT",
+  "meta": "Severna Park · owner Dr James Dulkerian PT",
+  "hook": "Small and owner run. Their site talks about HSA and FSA funds, which often means out of network. Ask first: do you bill insurance directly? If no, thank them and move on.",
+  "phone": "410-929-3532",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Howard County Physical Therapy",
+  "meta": "6011 University Blvd, Suite 120, Ellicott City · part of a three site independent network",
+  "hook": "Three sites under two names with one back office. That structure is where claims fall through gaps.",
+  "phone": "410-203-0391",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Ellicott City",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Optimize Therapy",
+  "meta": "9841 Broken Land Pkwy, Suite 100, Columbia · PT, OT and hand therapy",
+  "hook": "Three service lines means three denial patterns, and they say most insurance is accepted.",
+  "phone": "301-356-5500",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Columbia",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "JVS Rehabilitation",
+  "meta": "Columbia · physical and speech therapy since 1994",
+  "hook": "Long established and independent. Their website security certificate has expired, which is a small sign that nobody is minding the back office. Look the number up on the call.",
+  "phone": "",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Therapy In Motion LLC",
+  "meta": "Mobile PT and OT, Howard and Frederick counties",
+  "hook": "Home visit practices carry heavy authorisation and documentation denials. Contact form only, so email this one rather than calling.",
+  "phone": "",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Howard and Frederick counties",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Catonsville and Sykesville Physical Therapy",
+  "meta": "700 Geipe Road, Catonsville · two locations, since 2005",
+  "hook": "Accepts most major insurance plus workers compensation and auto. Specialty work like vestibular and hypermobility draws medical necessity denials.",
+  "phone": "410-747-8571",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Catonsville",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "TheraFit Rehab · Towson",
+  "meta": "1220A E Joppa Rd, Suite 109, Towson · PT, OT and speech",
+  "hook": "Six locations across two states. Ask early whether denials are handled in house.",
+  "phone": "410-415-1992",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Towson",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Mady and Mules Physical Therapy · Lutherville",
+  "meta": "1212 York Road, Suite C-101, Lutherville",
+  "hook": "Sister practice to Howard County PT. If Ellicott City says no, this is a second door into the same network.",
+  "phone": "410-321-0377",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Lutherville",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Mady and Mules Physical Therapy · Overlea",
+  "meta": "7672 Belair Road, Baltimore",
+  "hook": "Third site in the same network.",
+  "phone": "410-663-6450",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Baltimore",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "FYZICAL Therapy and Balance Center · Lutherville",
+  "meta": "30 E Padonia Rd, Suite 104, Lutherville",
+  "hook": "A locally owned franchise location, so the owner is local even though the brand is not. Balance and vestibular therapy draws medical necessity denials.",
+  "phone": "410-823-8061",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Lutherville",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Eagle Physical Therapy and Rehabilitation",
+  "meta": "Catonsville and Baltimore · PT, OT and speech",
+  "hook": "Accepts Medicare, workers compensation and private insurance. Their site blocked an automated read, so confirm the number yourself.",
+  "phone": "",
+  "site": "",
+  "type": "rehab",
+  "payers": [
+   "Medicare"
+  ],
+  "city": "OT and speech",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "4 Oaks Physical Therapy",
+  "meta": "4201 Mitchellville Rd, Suite 100, Bowie",
+  "hook": "Six Maryland locations and tied to a larger multi state group, so billing is probably centralised. One call tells you.",
+  "phone": "301-464-5444",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Bowie",
+  "list": "List 1 · August",
+  "flags": []
+ },
+ {
+  "name": "Children at Play · pediatric occupational therapy",
+  "meta": "205 Ridgely Avenue, Annapolis",
+  "hook": "Pediatric OT often runs private pay, which would mean no denied insurance claims at all. First question decides it. Number not published, so look it up.",
+  "phone": "",
+  "site": "",
+  "type": "rehab",
+  "payers": [],
+  "city": "Annapolis",
+  "list": "List 1 · August",
+  "flags": []
+ }
+]
